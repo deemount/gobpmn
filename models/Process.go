@@ -3,13 +3,19 @@ package models
 // Process ...
 type Process struct {
 	ID                string `xml:"id,attr"`
+	Name              string `xml:"name,attr,omitempty"`
 	IsExecutable      string `xml:"isExecutable,attr"`
 	CamundaVersionTag string `xml:"camunda:versionTag,attr,omitempty"`
 }
 
 // SetID ...
-func (proc *Process) SetID() {
-	proc.ID = "Process_"
+func (proc *Process) SetID(suffix string) {
+	proc.ID = "Process_" + suffix
+}
+
+// SetName ...
+func (proc *Process) SetName(name string) {
+	proc.Name = name
 }
 
 // SetIsExecutable ...
@@ -18,6 +24,6 @@ func (proc *Process) SetIsExecutable() {
 }
 
 // SetCamundaVersionTag ...
-func (proc *Process) SetCamundaVersionTag() {
-	proc.CamundaVersionTag = "0.1"
+func (proc *Process) SetCamundaVersionTag(tag string) {
+	proc.CamundaVersionTag = tag
 }

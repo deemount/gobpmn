@@ -3,12 +3,16 @@ package repository
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
+	"io/ioutil"
+	"os"
 
 	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/utils"
 )
 
 const ()
+
+var counter int = 0
 
 // BPMNF ...
 type BPMNF struct {
@@ -17,43 +21,76 @@ type BPMNF struct {
 
 // NewBPMNF ...
 func NewBPMNF() *BPMNF {
+	files, _ := ioutil.ReadDir("files/")
+	counter = len(files)
+	counter++
 	return &BPMNF{}
 }
 
-// Create ...
-func (bpm BPMNF) Create() string {
+// Set ...
+func (bpm BPMNF) Set() {
 
-	d := bpm.Def
+	defHash := utils.GenerateHash()
 
 	// set namespaces
-	d.SetBpmn()
-	d.SetXSD()
-	d.SetBpmndi()
+	bpm.Def.SetBpmn()
+	//d.SetXSD()
+	bpm.Def.SetBpmndi()
 
 	//
-	d.SetDefinitionsID()
-	d.SetTargetNamespace()
+	bpm.Def.SetDefinitionsID(defHash)
+	bpm.Def.SetTargetNamespace()
 
 	// set exporter
-	d.SetExporter()
-	d.SetExporterVersion()
+	bpm.Def.SetExporter()
+	bpm.Def.SetExporterVersion()
 
 	// set process
-	d.Proc.SetID()
-	d.Proc.SetIsExecutable()
-	d.Proc.SetCamundaVersionTag()
+	procHash := utils.GenerateHash()
+	cVersionTag := ""
+	name := ""
+	bpm.Def.Proc.SetID(procHash)
+	bpm.Def.Proc.SetName(name)
+	bpm.Def.Proc.SetIsExecutable()
+	bpm.Def.Proc.SetCamundaVersionTag(cVersionTag)
 
 	// set diagram
-	d.Diagram.SetID()
+	var n int64 = 1
+	bpm.Def.Diagram.SetID(n)
 
 	// set plane
-	d.Diagram.Plane.SetID()
-	d.Diagram.Plane.SetElement()
+	bpm.Def.Diagram.Plane.SetID(n)
+	bpm.Def.Diagram.Plane.SetElement(procHash)
 
-	log.Printf("%#v", d)
+}
 
-	out, _ := xml.MarshalIndent(&d, " ", "  ")
+// Create ...
+func (bpm BPMNF) Create() error {
 
-	return fmt.Sprintf("%v", xml.Header+string(out))
+	var err error
 
+	// marshal xml to byte slice
+	b, _ := xml.MarshalIndent(&bpm.Def, " ", "  ")
+
+	// create file
+	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", counter) + ".bpmn")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	// add xml header
+	w := []byte(fmt.Sprintf("%v", xml.Header+string(b)))
+
+	// write bytes to file
+	_, err = f.Write(w)
+	if err != nil {
+		return err
+	}
+	err = f.Sync()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

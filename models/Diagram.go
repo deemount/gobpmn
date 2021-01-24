@@ -1,5 +1,7 @@
 package models
 
+import "strconv"
+
 // Diagram ...
 type Diagram struct {
 	ID    string `xml:"id,attr"`
@@ -7,6 +9,6 @@ type Diagram struct {
 }
 
 // SetID ...
-func (dia *Diagram) SetID() {
-	dia.ID = "BPMNDiagram_"
+func (dia *Diagram) SetID(num int64) {
+	dia.ID = "BPMNDiagram_" + strconv.FormatInt(num, 16)
 }

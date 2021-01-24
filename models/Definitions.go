@@ -8,9 +8,9 @@ import (
 type Definitions struct {
 	XMLName         xml.Name `xml:"bpmn:definitions"`
 	Bpmn            string   `xml:"xmlns:bpmn,attr"`
-	Xsd             string   `xml:"xmlns:xsd,attr"`
+	Xsd             string   `xml:"xmlns:xsd,attr,omitempty"`
 	Bpmndi          string   `xml:"xmlns:bpmndi,attr"`
-	CamundaSchema   string   `xml:"xmlns:camunda,attr"`
+	CamundaSchema   string   `xml:"xmlns:camunda,attr,omitempty"`
 	ID              string   `xml:"id,attr"`
 	TargetNamespace string   `xml:"targetNamespace,attr"`
 	Exporter        string   `xml:"exporter,attr"`
@@ -40,8 +40,8 @@ func (def *Definitions) SetXSD() {
 }
 
 // SetDefinitionsID ...
-func (def *Definitions) SetDefinitionsID() {
-	def.ID = "Definitions_"
+func (def *Definitions) SetDefinitionsID(suffix string) {
+	def.ID = "Definitions_" + suffix
 }
 
 // SetTargetNamespace ...
