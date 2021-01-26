@@ -10,8 +10,6 @@ import (
 	"github.com/deemount/gobpmn/utils"
 )
 
-const ()
-
 var counter int = 0
 
 // BPMNF ...
@@ -20,15 +18,17 @@ type BPMNF struct {
 }
 
 // NewBPMNF ...
-func NewBPMNF() *BPMNF {
+func NewBPMNF() BPMNF {
 	files, _ := ioutil.ReadDir("files/")
 	counter = len(files)
-	counter++
-	return &BPMNF{}
+	if counter == 0 {
+		counter++
+	}
+	return BPMNF{}
 }
 
 // Set ...
-func (bpm BPMNF) Set() {
+func (bpm *BPMNF) Set() {
 
 	defHash := utils.GenerateHash()
 
@@ -65,12 +65,12 @@ func (bpm BPMNF) Set() {
 }
 
 // Create ...
-func (bpm BPMNF) Create() error {
+func (bpm *BPMNF) Create() error {
 
 	var err error
 
 	// marshal xml to byte slice
-	b, _ := xml.MarshalIndent(&bpm.Def, " ", "  ")
+	b, _ := xml.MarshalIndent(bpm.Def, " ", "  ")
 
 	// create file
 	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", counter) + ".bpmn")
@@ -93,4 +93,5 @@ func (bpm BPMNF) Create() error {
 	}
 
 	return nil
+
 }

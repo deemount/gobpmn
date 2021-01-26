@@ -10,13 +10,16 @@ This is part of my journey through BPMN. To teach myself, I opened the Camunda M
 
 ### Status ###
 
+* no refactoring actually
 * still in development
 * creates a simple diagram_*.bpmn file
 
 ### To Do's ###
 
-* Naming Conventions for ID's
+* Naming conventions for ID's
 * Add more comments
+* Add testing and benchmarks
+* Add configuration options
 * Building architecture
 
 ### Links ###
@@ -36,5 +39,5 @@ This is part of my journey through BPMN. To teach myself, I opened the Camunda M
 
 ### History ###
 
-* 2021-01-24: First Upload
+* 2021-01-24: First Upload/ Stable Realease
 * 2021-01-23: Initialize Repository
