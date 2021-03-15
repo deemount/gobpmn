@@ -14,6 +14,29 @@ This is part of my journey through BPMN. To teach myself, I opened the Camunda M
 * still in development
 * creates a simple diagram_*.bpmn file
 
+### Example ###
+
+Create a simple bpmn-file with start and intermediate throw event
+
+```
+package main
+
+import (
+	"github.com/deemount/gobpmn/repository"
+)
+
+func main() {
+
+	bpmnf := repository.NewBPMNF()
+	bpmnf.Set()
+	err := bpmnf.Create()
+	if err != nil {
+		panic(err)
+	}
+
+}
+```
+
 ### To Do's ###
 
 * Naming conventions for ID's
@@ -39,6 +62,7 @@ This is part of my journey through BPMN. To teach myself, I opened the Camunda M
 
 ### History ###
 
+* 2021-03-15: Added more elements and delved deeper into structure
 * 2021-01-26: Update
 * 2021-01-24: First Upload/ Stable Realease
 * 2021-01-23: Initialize Repository
