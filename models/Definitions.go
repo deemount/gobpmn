@@ -6,19 +6,20 @@ import (
 
 // Definitions ...
 type Definitions struct {
-	XMLName         xml.Name `xml:"bpmn:definitions"`
-	Bpmn            string   `xml:"xmlns:bpmn,attr"`
-	Xsd             string   `xml:"xmlns:xsd,attr,omitempty"`
-	Bpmndi          string   `xml:"xmlns:bpmndi,attr"`
-	DC              string   `xml:"xmlns:dc,attr,omitempty"`
-	Bioc            string   `xml:"xmlns:bioc,attr,omitempty"`
-	CamundaSchema   string   `xml:"xmlns:camunda,attr,omitempty"`
-	ID              string   `xml:"id,attr"`
-	TargetNamespace string   `xml:"targetNamespace,attr"`
-	Exporter        string   `xml:"exporter,attr"`
-	ExporterVersion string   `xml:"exporterVersion,attr"`
-	Proc            Process  `xml:"bpmn:process"`
-	Diagram         Diagram  `xml:"bpmndi:BPMNDiagram"`
+	XMLName         xml.Name      `xml:"bpmn:definitions"`
+	Bpmn            string        `xml:"xmlns:bpmn,attr"`
+	Xsd             string        `xml:"xmlns:xsd,attr,omitempty"`
+	Bpmndi          string        `xml:"xmlns:bpmndi,attr"`
+	DC              string        `xml:"xmlns:dc,attr,omitempty"`
+	Bioc            string        `xml:"xmlns:bioc,attr,omitempty"`
+	CamundaSchema   string        `xml:"xmlns:camunda,attr,omitempty"`
+	ID              string        `xml:"id,attr"`
+	TargetNamespace string        `xml:"targetNamespace,attr"`
+	Exporter        string        `xml:"exporter,attr"`
+	ExporterVersion string        `xml:"exporterVersion,attr"`
+	Collab          Collaboration `xml:"bpmn:collaboration"`
+	Proc            Process       `xml:"bpmn:process"`
+	Diagram         Diagram       `xml:"bpmndi:BPMNDiagram"`
 }
 
 // SetBpmn ...

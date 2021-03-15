@@ -16,6 +16,16 @@ func (p *Plane) SetID(num int64) {
 }
 
 // SetElement ...
-func (p *Plane) SetElement(suffix string) {
+func (p *Plane) SetElement(name, suffix string) {
+	p.Element = name + "_" + suffix
+}
+
+// SetProcessElement ...
+func (p *Plane) SetProcessElement(suffix string) {
 	p.Element = "Process_" + suffix
+}
+
+// SetCollaborationElement ...
+func (p *Plane) SetCollaborationElement(suffix string) {
+	p.Element = "Collaboration_" + suffix
 }

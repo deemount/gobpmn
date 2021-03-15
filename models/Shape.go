@@ -7,11 +7,12 @@ import (
 
 // Shape ...
 type Shape struct {
-	ID      string `xml:"id,attr"`
-	Element string `xml:"bpmnElement,attr"`
-	Stroke  string `xml:"bioc:stroke,attr,omitempty"`
-	Fill    string `xml:"bioc:fill,attr,omitempty"`
-	Bounds  Bounds `xml:"dc:Bounds"`
+	ID           string `xml:"id,attr"`
+	Element      string `xml:"bpmnElement,attr"`
+	Stroke       string `xml:"bioc:stroke,attr,omitempty"`
+	Fill         string `xml:"bioc:fill,attr,omitempty"`
+	IsHorizontal string `xml:"isHorizontal,attr,omitempty"`
+	Bounds       Bounds `xml:"dc:Bounds"`
 }
 
 // SetStartEventID ...
@@ -111,4 +112,11 @@ func (sh *Shape) SetStrokePurple() {
 // SetFillPurple ...
 func (sh *Shape) SetFillPurple() {
 	sh.Fill = "rgb(225, 190, 231)"
+}
+
+/**/
+
+// SetIsHorizontal ...
+func (sh *Shape) SetIsHorizontal(is bool) {
+	sh.IsHorizontal = strconv.FormatBool(is)
 }
