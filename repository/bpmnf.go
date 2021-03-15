@@ -27,12 +27,17 @@ type Options struct {
 	// other values
 	CVersionTag string
 	Name        string
-	FormKey     string
+
+	// start event
+	FormKey string
 
 	// bool
 	HasCollab     bool
 	HasStartEvent bool
 	HasFirstState bool
+
+	// collaboration
+	FirstParticipantName string
 }
 
 // BPMNF ...
@@ -85,7 +90,7 @@ func (bpm *BPMNF) setCollaboration() {
 
 	bpm.Def.Collab.SetID(bpm.Opts.CollaboHash)
 	bpm.Def.Collab.Participant.SetID(bpm.Opts.ParticipantHash)
-	bpm.Def.Collab.Participant.SetName("Person 1")
+	bpm.Def.Collab.Participant.SetName(bpm.Opts.FirstParticipantName)
 	bpm.Def.Collab.Participant.SetProcessRef(bpm.Opts.ProcHash)
 
 }

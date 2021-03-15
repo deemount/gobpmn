@@ -31,6 +31,8 @@ func main() {
 	var ch string = utils.GenerateHash()
 	var pp string = utils.GenerateHash()
 
+	var fpn string = "Person 1"
+
 	bpmnf := repository.NewBPMNF(
 		utils.N(n),
 		utils.Counter(c),
@@ -45,7 +47,8 @@ func main() {
 		utils.PartHash(pp),
 		utils.HasCollab(hasCollab),
 		utils.HasStartEvent(hasStartEvent),
-		utils.HasFirstState(hasFirstState))
+		utils.HasFirstState(hasFirstState),
+		utils.FirstParticipantName(fpn))
 
 	bpmnf.Set()
 	err := bpmnf.Create()

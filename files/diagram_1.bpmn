@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_3c1e192b" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
-   <bpmn:collaboration id="Collaboration_48a9d5a6">
-     <bpmn:participant id="Participant_0e8466e8" processRef="Process_941da0af"></bpmn:participant>
+ <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_54f5978b" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
+   <bpmn:collaboration id="Collaboration_f3cd0a4d">
+     <bpmn:participant id="Participant_c57135aa" name="Person 1" processRef="Process_7ea5cb93"></bpmn:participant>
    </bpmn:collaboration>
-   <bpmn:process id="Process_941da0af" isExecutable="true">
+   <bpmn:process id="Process_7ea5cb93" isExecutable="true">
      <bpmn:startEvent id="StartEvent_1" camunda:formKey="create">
-       <bpmn:outgoing>Flow_4413dce8</bpmn:outgoing>
+       <bpmn:outgoing>Flow_7f378661</bpmn:outgoing>
      </bpmn:startEvent>
-     <bpmn:intermediateThrowEvent id="Event_21f030f5">
-       <bpmn:incoming>Flow_4413dce8</bpmn:incoming>
+     <bpmn:intermediateThrowEvent id="Event_d7340b66">
+       <bpmn:incoming>Flow_7f378661</bpmn:incoming>
      </bpmn:intermediateThrowEvent>
-     <bpmn:sequenceFlow id="Flow_4413dce8" sourceRef="StartEvent_1" targetRef="Event_21f030f5"></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_7f378661" sourceRef="StartEvent_1" targetRef="Event_d7340b66"></bpmn:sequenceFlow>
    </bpmn:process>
    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_48a9d5a6">
-       <bpmndi:BPMNEdge id="Flow_4413dce8_di" bpmnElement="Flow_4413dce8">
+     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_f3cd0a4d">
+       <bpmndi:BPMNEdge id="Flow_7f378661_di" bpmnElement="Flow_7f378661">
          <di:waypoint x="190" y="100"></di:waypoint>
          <di:waypoint x="250" y="100"></di:waypoint>
        </bpmndi:BPMNEdge>
-       <bpmndi:BPMNShape id="Participant_0e8466e8_di" bpmnElement="Participant_0e8466e8" isHorizontal="true">
+       <bpmndi:BPMNShape id="Participant_c57135aa_di" bpmnElement="Participant_c57135aa" isHorizontal="true">
          <dc:Bounds x="100" y="10" width="600" height="300"></dc:Bounds>
        </bpmndi:BPMNShape>
        <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
          <dc:Bounds x="150" y="80" width="40" height="40"></dc:Bounds>
        </bpmndi:BPMNShape>
-       <bpmndi:BPMNShape id="Event_21f030f5_di" bpmnElement="Event_21f030f5" bioc:stroke="black" bioc:fill="white">
+       <bpmndi:BPMNShape id="Event_d7340b66_di" bpmnElement="Event_d7340b66" bioc:stroke="black" bioc:fill="white">
          <dc:Bounds x="250" y="80" width="40" height="40"></dc:Bounds>
        </bpmndi:BPMNShape>
      </bpmndi:BPMNPlane>

@@ -99,3 +99,10 @@ func HasCollab(b bool) repository.BPMNFOption {
 		return o
 	}
 }
+
+func FirstParticipantName(n string) repository.BPMNFOption {
+	return func(o repository.Options) repository.Options {
+		o.FirstParticipantName = n
+		return o
+	}
+}
