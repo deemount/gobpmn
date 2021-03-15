@@ -10,6 +10,8 @@ type Definitions struct {
 	Bpmn            string   `xml:"xmlns:bpmn,attr"`
 	Xsd             string   `xml:"xmlns:xsd,attr,omitempty"`
 	Bpmndi          string   `xml:"xmlns:bpmndi,attr"`
+	DC              string   `xml:"xmlns:dc,attr,omitempty"`
+	Bioc            string   `xml:"xmlns:bioc,attr,omitempty"`
 	CamundaSchema   string   `xml:"xmlns:camunda,attr,omitempty"`
 	ID              string   `xml:"id,attr"`
 	TargetNamespace string   `xml:"targetNamespace,attr"`
@@ -27,6 +29,16 @@ func (def *Definitions) SetBpmn() {
 // SetBpmndi ...
 func (def *Definitions) SetBpmndi() {
 	def.Bpmndi = "http://www.omg.org/spec/BPMN/20100524/DI"
+}
+
+// SetDC ...
+func (def *Definitions) SetDC() {
+	def.DC = "http://www.omg.org/spec/DD/20100524/DC"
+}
+
+// SetBioc ...
+func (def *Definitions) SetBioc() {
+	def.Bioc = "http://bpmn.io/schema/bpmn/biocolor/1.0"
 }
 
 // SetCamundaSchema ...

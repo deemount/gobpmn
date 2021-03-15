@@ -4,8 +4,10 @@ import "strconv"
 
 // Plane ...
 type Plane struct {
-	ID      string `xml:"id,attr"`
-	Element string `xml:"bpmnElement,attr"`
+	ID      string  `xml:"id,attr"`
+	Element string  `xml:"bpmnElement,attr"`
+	Edge    Edge    `xml:"bpmndi:BPMNEdge"`
+	Shape   []Shape `xml:"bpmndi:BPMNShape"`
 }
 
 // SetID ...
