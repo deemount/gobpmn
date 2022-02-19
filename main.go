@@ -1,59 +1,71 @@
 package main
 
 import (
-	"io/ioutil"
+	"fmt"
+
+	"github.com/streadway/amqp"
 
 	"github.com/deemount/gobpmn/repository"
-	"github.com/deemount/gobpmn/utils"
 )
 
 func main() {
 
-	files, _ := ioutil.ReadDir("files/")
-	var n int64 = 1
-	var c int64 = int64(len(files))
-
-	var dh string = utils.GenerateHash()
-	var ph string = utils.GenerateHash()
-	var fh string = utils.GenerateHash()
-	var eh string = utils.GenerateHash()
-
-	var cvt string = ""
-	var name string = ""
-
-	// start event option
-	var hasStartEvent = true
-	var hasFirstState = true
-	var fk string = "create"
-
-	// collaboration option
-	var hasCollab = true
-	var ch string = utils.GenerateHash()
-	var pp string = utils.GenerateHash()
-
-	var fpn string = "Person 1"
-
-	bpmnf := repository.NewBPMNF(
-		utils.N(n),
-		utils.Counter(c),
-		utils.DefHash(dh),
-		utils.ProcHash(ph),
-		utils.FlowHash(fh),
-		utils.EventHash(eh),
-		utils.CVersionTag(cvt),
-		utils.Name(name),
-		utils.FormKey(fk),
-		utils.CollaboHash(ch),
-		utils.PartHash(pp),
-		utils.HasCollab(hasCollab),
-		utils.HasStartEvent(hasStartEvent),
-		utils.HasFirstState(hasFirstState),
-		utils.FirstParticipantName(fpn))
-
+	bpmnf := repository.NewBPMNF()
 	bpmnf.Set()
 	err := bpmnf.Create()
 	if err != nil {
 		panic(err)
 	}
+
+	/*AMQP & RabbitMQ*/
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	defer conn.Close()
+
+	fmt.Println("Successfully connected to RabbitMQ Instance")
+
+	ch, err := conn.Channel()
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	defer ch.Close()
+
+	q, err := ch.QueueDeclare(
+		"TestQueue",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+	fmt.Println(q)
+
+	err = ch.Publish(
+		"",
+		"TestQueue",
+		false,
+		false,
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        []byte("Hello World"),
+		},
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+	fmt.Println("Successfully published message to the queue")
 
 }

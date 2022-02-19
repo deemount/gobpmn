@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 )
 
-// Definitions ...
+// Definitions represents the root element
 type Definitions struct {
 	XMLName         xml.Name      `xml:"bpmn:definitions"`
 	Bpmn            string        `xml:"xmlns:bpmn,attr"`
@@ -17,9 +17,10 @@ type Definitions struct {
 	TargetNamespace string        `xml:"targetNamespace,attr"`
 	Exporter        string        `xml:"exporter,attr"`
 	ExporterVersion string        `xml:"exporterVersion,attr"`
-	Collab          Collaboration `xml:"bpmn:collaboration"`
-	Proc            Process       `xml:"bpmn:process"`
-	Diagram         Diagram       `xml:"bpmndi:BPMNDiagram"`
+	Collab          Collaboration `xml:"bpmn:collaboration,omitempty"`
+	Proc            []Process     `xml:"bpmn:process,omitempty"`
+	Category        []Category    `xml:"bpmn:category,omitempty"`
+	Diagram         Diagram       `xml:"bpmndi:BPMNDiagram,omitempty"`
 }
 
 // SetBpmn ...
@@ -70,4 +71,9 @@ func (def *Definitions) SetExporter() {
 // SetExporterVersion ...
 func (def *Definitions) SetExporterVersion() {
 	def.ExporterVersion = "4.5.0"
+}
+
+// SetNumOfProcess
+func (def *Definitions) SetProcess(num int) []Process {
+	return make([]Process, num)
 }

@@ -1,43 +1,41 @@
 package models
 
-import "fmt"
-
 // Bounds ...
 type Bounds struct {
-	X      string `xml:"x,attr,omitempty"`
-	Y      string `xml:"y,attr,omitempty"`
-	Width  string `xml:"width,attr,omitempty"`
-	Height string `xml:"height,attr,omitempty"`
+	X      int `xml:"x,attr,omitempty"`
+	Y      int `xml:"y,attr,omitempty"`
+	Width  int `xml:"width,attr,omitempty"`
+	Height int `xml:"height,attr,omitempty"`
 }
 
 // SetCoordinates ...
-func (bnds *Bounds) SetCoordinates(x, y int64) {
-	bnds.X = fmt.Sprintf("%d", x)
-	bnds.Y = fmt.Sprintf("%d", y)
+func (bnds *Bounds) SetCoordinates(x, y int) {
+	bnds.X = x
+	bnds.Y = y
 }
 
 // SetX ...
-func (bnds *Bounds) SetX(x int64) {
-	bnds.X = fmt.Sprintf("%d", x)
+func (bnds *Bounds) SetX(x int) {
+	bnds.X = x
 }
 
 // SetY ...
-func (bnds *Bounds) SetY(y int64) {
-	bnds.Y = fmt.Sprintf("%d", y)
+func (bnds *Bounds) SetY(y int) {
+	bnds.Y = y
 }
 
 // SetSize ...
-func (bnds *Bounds) SetSize(width, height int64) {
-	bnds.Width = fmt.Sprintf("%d", width)
-	bnds.Height = fmt.Sprintf("%d", height)
+func (bnds *Bounds) SetSize(width, height int) {
+	bnds.Width = width
+	bnds.Height = height
 }
 
 // SetWidth ...
-func (bnds *Bounds) SetWidth(width int64) {
-	bnds.Width = fmt.Sprintf("%d", width)
+func (bnds *Bounds) SetWidth(width int) {
+	bnds.Width = width
 }
 
 // SetHeight ...
-func (bnds *Bounds) SetHeight(height int64) {
-	bnds.Height = fmt.Sprintf("%d", height)
+func (bnds *Bounds) SetHeight(height int) {
+	bnds.Height = height
 }

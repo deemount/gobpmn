@@ -5,7 +5,7 @@ import "strconv"
 // Diagram ...
 type Diagram struct {
 	ID    string `xml:"id,attr"`
-	Plane Plane  `xml:"bpmndi:BPMNPlane"`
+	Plane Plane  `xml:"bpmndi:BPMNPlane,omitempty"`
 }
 
 // SetID ...

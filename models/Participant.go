@@ -5,6 +5,8 @@ type Participant struct {
 	ID         string `xml:"id,attr"`
 	Name       string `xml:"name,attr,omitempty"`
 	ProcessRef string `xml:"processRef,attr"`
+	//ExtensionEl ExtensionElements       `xml:"bpmn:extensionElements,omitempty"`
+	//Multipli    ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty"`
 }
 
 // SetID ...

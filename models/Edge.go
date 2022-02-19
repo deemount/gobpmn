@@ -4,6 +4,7 @@ package models
 type Edge struct {
 	ID       string     `xml:"id,attr"`
 	Element  string     `xml:"bpmnElement,attr"`
+	Label    Label      `xml:"bpmndi:BPMNLabel,omitempty"`
 	Waypoint []Waypoint `xml:"di:waypoint"`
 }
 

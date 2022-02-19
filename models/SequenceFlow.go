@@ -1,7 +1,5 @@
 package models
 
-import "strconv"
-
 // SequenceFlow ...
 type SequenceFlow struct {
 	ID        string `xml:"id,attr"`
@@ -14,22 +12,12 @@ func (sf *SequenceFlow) SetID(suffix string) {
 	sf.ID = "Flow_" + suffix
 }
 
-// SetStartEvent ...
-func (sf *SequenceFlow) SetStartEvent(num int64) {
-	sf.SourceRef = "StartEvent_" + strconv.FormatInt(num, 16)
-}
-
 // SetSourceRef ...
-func (sf *SequenceFlow) SetSourceRef(name string, num int64) {
-	sf.SourceRef = name + "_" + strconv.FormatInt(num, 16)
-}
-
-// SetEventRef ...
-func (sf *SequenceFlow) SetEventRef(suffix string) {
-	sf.TargetRef = "Event_" + suffix
+func (sf *SequenceFlow) SetSourceRef(sourceRef string) {
+	sf.SourceRef = sourceRef
 }
 
 // SetTargetRef ...
-func (sf *SequenceFlow) SetTargetRef(name string, suffix string) {
-	sf.TargetRef = name + "_" + suffix
+func (sf *SequenceFlow) SetTargetRef(targetRef string) {
+	sf.TargetRef = targetRef
 }

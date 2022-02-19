@@ -3,194 +3,209 @@ package repository
 import (
 	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"os"
-	"strconv"
 
 	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/utils"
 )
-
-// Options ...
-type Options struct {
-
-	// integer values
-	N       int64
-	Counter int64
-
-	// hash values
-	DefHash         string
-	ProcHash        string
-	FlowHash        string
-	EventHash       string
-	ParticipantHash string
-	CollaboHash     string
-
-	// other values
-	CVersionTag string
-	Name        string
-
-	// start event
-	FormKey string
-
-	// bool
-	HasCollab     bool
-	HasStartEvent bool
-	HasFirstState bool
-
-	// collaboration
-	FirstParticipantName string
-}
 
 // BPMNF ...
 type BPMNF struct {
-	// options
-	Opts Options
-	// models
-	Def models.Definitions
+	BPMNFCounter int
+	Def          models.Definitions
 }
-
-type BPMNFOption func(o Options) Options
 
 // NewBPMNF ...
-func NewBPMNF(opt ...BPMNFOption) BPMNF {
-	opts := Options{}
-	for _, o := range opt {
-		opts = o(opts)
+func NewBPMNF() BPMNF {
+	files, _ := ioutil.ReadDir("files/")
+	counter := len(files)
+	if counter == 0 {
+		counter++
 	}
-	// count up
-	if opts.Counter == 0 {
-		opts.Counter++
-	}
-	return BPMNF{Opts: opts}
+	return BPMNF{BPMNFCounter: counter}
 }
 
-// setDefinitions ...
-func (bpm *BPMNF) setDefinitions() {
-
-	// set namespaces
-	bpm.Def.SetBpmn()
-	//d.SetXSD()
-	bpm.Def.SetBpmndi()
-
-	// set specification
-	bpm.Def.SetDC()
-	bpm.Def.SetBioc()
-
-	//
-	bpm.Def.SetDefinitionsID(bpm.Opts.DefHash)
-	bpm.Def.SetTargetNamespace()
-
-	// set exporter
-	bpm.Def.SetExporter()
-	bpm.Def.SetExporterVersion()
-
-}
-
-// setCollaboration ...
-func (bpm *BPMNF) setCollaboration() {
-
-	bpm.Def.Collab.SetID(bpm.Opts.CollaboHash)
-	bpm.Def.Collab.Participant.SetID(bpm.Opts.ParticipantHash)
-	bpm.Def.Collab.Participant.SetName(bpm.Opts.FirstParticipantName)
-	bpm.Def.Collab.Participant.SetProcessRef(bpm.Opts.ProcHash)
-
-}
-
-// setProcess
-func (bpm *BPMNF) setProcess() {
-
-	// set process
-	bpm.Def.Proc.SetID(bpm.Opts.ProcHash)
-	bpm.Def.Proc.SetName(bpm.Opts.Name)
-	bpm.Def.Proc.SetIsExecutable()
-	bpm.Def.Proc.SetCamundaVersionTag(bpm.Opts.CVersionTag)
-
-	// set diagram
-	bpm.Def.Diagram.SetID(bpm.Opts.N)
-
-	// set start event
-	if bpm.Opts.HasStartEvent {
-		bpm.Def.Proc.StartEvent.SetID(bpm.Opts.N)
-		bpm.Def.Proc.StartEvent.SetCamundaFormKey(bpm.Opts.FormKey)
-		bpm.Def.Proc.StartEvent.Outgoing.SetFlow(bpm.Opts.FlowHash)
-
-		// set intermediate throw event
-		bpm.Def.Proc.IntermediateThrowEvent.SetID(bpm.Opts.EventHash)
-		bpm.Def.Proc.IntermediateThrowEvent.Incoming.SetFlow(bpm.Opts.FlowHash)
-
-		// set sequence flow (start event)
-		bpm.Def.Proc.SequenceFlow.SetID(bpm.Opts.FlowHash)
-		bpm.Def.Proc.SequenceFlow.SetStartEvent(bpm.Opts.N)
-		bpm.Def.Proc.SequenceFlow.SetEventRef(bpm.Opts.EventHash)
-	}
-
-}
-
-// setDiagram
-func (bpm *BPMNF) setDiagram() {
-
-	// assign
-	var collab models.Shape
-	var startEvent models.Shape
-	var firstState models.Shape
-
-	// set plane
-	bpm.Def.Diagram.Plane.SetID(bpm.Opts.N)
-	if bpm.Opts.HasCollab {
-		bpm.Def.Diagram.Plane.SetCollaborationElement(bpm.Opts.CollaboHash)
-	} else {
-		bpm.Def.Diagram.Plane.SetProcessElement(bpm.Opts.ProcHash)
-	}
-
-	// set edge
-	bpm.Def.Diagram.Plane.Edge.SetID(bpm.Opts.FlowHash)
-	bpm.Def.Diagram.Plane.Edge.SetElement(bpm.Opts.FlowHash)
-	bpm.Def.Diagram.Plane.Edge.Waypoint = append(bpm.Def.Diagram.Plane.Edge.Waypoint,
-		models.Waypoint{X: "190", Y: "100"},
-		models.Waypoint{X: "250", Y: "100"})
-
-	if bpm.Opts.HasCollab {
-		collab = models.Shape{
-			ID:           fmt.Sprintf("Participant_%s_di", bpm.Opts.ParticipantHash),
-			Element:      fmt.Sprintf("Participant_%s", bpm.Opts.ParticipantHash),
-			IsHorizontal: strconv.FormatBool(true),
-			Bounds:       models.Bounds{X: "100", Y: "10", Width: "600", Height: "300"},
-		}
-	}
-
-	if bpm.Opts.HasStartEvent {
-		startEvent = models.Shape{
-			ID:      fmt.Sprintf("_BPMNShape_StartEvent_%d", bpm.Opts.N+1),
-			Element: fmt.Sprintf("StartEvent_%d", bpm.Opts.N),
-			Stroke:  "rgb(67, 160, 71)",
-			Fill:    "rgb(200, 230, 201)",
-			Bounds:  models.Bounds{X: "150", Y: "80", Width: "40", Height: "40"},
-		}
-		if bpm.Opts.HasFirstState {
-			firstState = models.Shape{
-				ID:      fmt.Sprintf("Event_%s_di", bpm.Opts.EventHash),
-				Element: fmt.Sprintf("Event_%s", bpm.Opts.EventHash),
-				Stroke:  "black",
-				Fill:    "white",
-				Bounds:  models.Bounds{X: "250", Y: "80", Width: "40", Height: "40"},
-			}
-		}
-	}
-
-	// set shape
-	bpm.Def.Diagram.Plane.Shape = []models.Shape{collab, startEvent, firstState}
-
-}
-
-// Set sets the definitions, process and diagram elements in the instance
+// Set ...
 func (bpm *BPMNF) Set() {
 
-	if bpm.Opts.HasCollab {
-		bpm.setCollaboration()
-	}
-	bpm.setDefinitions()
-	bpm.setProcess()
-	bpm.setDiagram()
+	// set namespaces
+	def := &bpm.Def
+	def.SetBpmn()
+	def.SetBpmndi()
+	def.SetDC()
 
+	// set definitions id & target namespace
+	defHash := utils.GenerateHash()
+	def.SetDefinitionsID(defHash)
+
+	def.SetTargetNamespace()
+
+	// set exporter & version
+	def.SetExporter()
+	def.SetExporterVersion()
+
+	//++
+
+	// set collaboration
+	collabHash := utils.GenerateHash()
+	collab := &def.Collab
+	collab.SetID(collabHash)
+
+	// set participant
+	collab.Participant = collab.SetParticipant(1)
+
+	participHash := utils.GenerateHash()
+	collab.Participant[0].SetID(participHash)
+
+	// set process reference
+	procHash := utils.GenerateHash()
+	collab.Participant[0].SetProcessRef(procHash)
+
+	// set process
+	def.Proc = def.SetProcess(1)
+	def.Proc[0].SetID(procHash)
+	name := "Test"
+	def.Proc[0].SetName(name)
+	isExecutable := true
+	def.Proc[0].SetIsExecutable(isExecutable)
+	cVersionTag := "v0.1.0"
+	def.Proc[0].SetCamundaVersionTag(cVersionTag)
+
+	// set start event
+	var stevN int64 = 1
+	outFromStartEvent := utils.GenerateHash()
+	def.Proc[0].SetStartEvent(1)
+	def.Proc[0].StartEvent[0].SetID(stevN)
+	def.Proc[0].StartEvent[0].SetOutgoing(1)
+	def.Proc[0].StartEvent[0].Outgoing[0].SetFlow(outFromStartEvent)
+
+	// set task
+	taskHash := utils.GenerateHash()
+	outFromTask := utils.GenerateHash()
+	def.Proc[0].SetTask(1)
+	def.Proc[0].Task[0].SetID(taskHash)
+	def.Proc[0].Task[0].SetIncoming(1)
+	def.Proc[0].Task[0].Incoming[0].SetFlow(outFromStartEvent)
+	def.Proc[0].Task[0].SetOutgoing(1)
+	def.Proc[0].Task[0].Outgoing[0].SetFlow(outFromTask)
+
+	/*
+		// set end event
+		endEventHash := utils.GenerateHash()
+		def.Proc[0].EndEvent = []models.EndEvent{
+			{
+				ID: fmt.Sprintf("Event_%s", endEventHash),
+				Incoming: []models.Incoming{
+					{
+						Flow: fmt.Sprintf("Flow_%s", outFromTask),
+					},
+				},
+			},
+		}
+
+		// set sequence flow
+		def.Proc[0].SequenceFlow = []models.SequenceFlow{
+			{
+				ID:        fmt.Sprintf("Flow_%s", outFromStartEvent),
+				SourceRef: fmt.Sprintf("StartEvent_%d", stevN),
+				TargetRef: fmt.Sprintf("Activity_%s", taskHash),
+			},
+			{
+				ID:        fmt.Sprintf("Flow_%s", outFromTask),
+				SourceRef: fmt.Sprintf("Activity_%s", taskHash),
+				TargetRef: fmt.Sprintf("Event_%s", endEventHash),
+			},
+		}
+
+		//++
+
+		// set diagram
+		var n int64 = 1
+		diagram := def.Diagram
+		diagram.SetID(n)
+
+		// set plane
+		plane := diagram.Plane
+		plane.SetID(n)
+		plane.SetElement("collaboration", procHash)
+
+		// set shape
+		plane.Shape = []models.Shape{
+			{
+				ID:           fmt.Sprintf("Participant_%s_di", participHash),
+				Element:      fmt.Sprintf("Participant_%s", participHash),
+				IsHorizontal: "true",
+				Bounds: models.Bounds{
+					X:      129,
+					Y:      60,
+					Width:  600,
+					Height: 250,
+				},
+			},
+			{
+				ID:      fmt.Sprintf("_BPMNShape_StartEvent_%d", stevN+1),
+				Element: fmt.Sprintf("StartEvent_%d", stevN),
+				Bounds: models.Bounds{
+					X:      179,
+					Y:      159,
+					Width:  36,
+					Height: 36,
+				},
+			},
+			{
+				ID:      fmt.Sprintf("Activity_%s_di", taskHash),
+				Element: fmt.Sprintf("Activity_%s", taskHash),
+				Bounds: models.Bounds{
+					X:      270,
+					Y:      137,
+					Width:  100,
+					Height: 80,
+				},
+			},
+			{
+				ID:      fmt.Sprintf("Event_%s_di", endEventHash),
+				Element: fmt.Sprintf("Event_%s", endEventHash),
+				Bounds: models.Bounds{
+					X:      432,
+					Y:      159,
+					Width:  36,
+					Height: 36,
+				},
+			},
+		}
+
+		plane.Edge = []models.Edge{
+			{
+				ID:      fmt.Sprintf("Flow_%s_di", outFromStartEvent),
+				Element: fmt.Sprintf("Flow_%s", outFromStartEvent),
+				Waypoint: []models.Waypoint{
+					{
+						X: 215,
+						Y: 177,
+					},
+					{
+						X: 270,
+						Y: 177,
+					},
+				},
+			},
+			{
+				ID:      fmt.Sprintf("Flow_%s_di", outFromStartEvent),
+				Element: fmt.Sprintf("Flow_%s", outFromStartEvent),
+				Waypoint: []models.Waypoint{
+					{
+						X: 215,
+						Y: 177,
+					},
+					{
+						X: 270,
+						Y: 177,
+					},
+				},
+			},
+		}
+	*/
 }
 
 // Create ...
@@ -199,10 +214,10 @@ func (bpm *BPMNF) Create() error {
 	var err error
 
 	// marshal xml to byte slice
-	b, _ := xml.MarshalIndent(bpm.Def, " ", "  ")
+	b, _ := xml.MarshalIndent(&bpm.Def, " ", "  ")
 
 	// create file
-	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", bpm.Opts.Counter) + ".bpmn")
+	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", bpm.BPMNFCounter) + ".bpmn")
 	if err != nil {
 		return err
 	}
