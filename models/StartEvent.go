@@ -4,20 +4,26 @@ import "strconv"
 
 // StartEvent ...
 type StartEvent struct {
-	ID                    string `xml:"id,attr"`
-	IsInterrupting        bool   `xml:"isInterrupting,attr,omitempty"`
-	CamundaFormKey        string `xml:"camunda:formKey,attr,omitempty"`
-	CamundaFormRef        string `xml:"camunda:formRef,attr,omitempty"`
-	CamundaFormRefBind    string `xml:"camunda:formRefBinding,attr,omitempty"`
-	CamundaFormRefVersion string `xml:"camunda:formRefVersion,attr,omitempty"`
-	CamundaAsyncBef       bool   `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAft       bool   `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaJobPrio        int    `xml:"camunda:jobPriority,attr,omitempty"`
-	CamundaInit           string `xml:"camunda:initiator,attr,omitempty"`
-	//CondidEventDef        ConditionalEventDefinition `xml:"bpmn:conditionalEventDefintion,omitempty"`
-	//ExtensionEl           ExtensionElements          `xml:"bpmn:extensionElements,omitempty"`
-	Outgoing []Outgoing `xml:"bpmn:outgoing,omitempty"`
+	ID                    string                       `xml:"id,attr"`
+	IsInterrupting        bool                         `xml:"isInterrupting,attr,omitempty"`
+	CamundaFormKey        string                       `xml:"camunda:formKey,attr,omitempty"`
+	CamundaFormRef        string                       `xml:"camunda:formRef,attr,omitempty"`
+	CamundaFormRefBind    string                       `xml:"camunda:formRefBinding,attr,omitempty"`
+	CamundaFormRefVersion string                       `xml:"camunda:formRefVersion,attr,omitempty"`
+	CamundaAsyncBef       bool                         `xml:"camunda:asyncBefore,attr,omitempty"`
+	CamundaAsyncAft       bool                         `xml:"camunda:asyncAfter,attr,omitempty"`
+	CamundaJobPrio        int                          `xml:"camunda:jobPriority,attr,omitempty"`
+	CamundaInit           string                       `xml:"camunda:initiator,attr,omitempty"`
+	ExtensionElements     []ExtensionElements          `xml:"bpmn:extensionElements,omitempty"`
+	ConditionalEventDef   []ConditionalEventDefinition `xml:"bpmn:conditionalEventDefintion,omitempty"`
+	MsgEventDef           []MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty"`
+	TimerEventDef         []TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty"`
+	Outgoing              []Outgoing                   `xml:"bpmn:outgoing,omitempty"`
 }
+
+/* Attributes */
+
+/** BPMN **/
 
 // SetID ...
 func (stev *StartEvent) SetID(num int64) {
@@ -29,7 +35,7 @@ func (stev *StartEvent) SetIsInterrupting(isInterrupt bool) {
 	stev.IsInterrupting = isInterrupt
 }
 
-/**/
+/** Camunda **/
 
 // SetCamundaFormKey ...
 func (stev *StartEvent) SetCamundaFormKey(key string) {
@@ -70,6 +76,28 @@ func (stev *StartEvent) SetCamundaJobPriority(priority int) {
 // SetCamundaInitiator ...
 func (stev *StartEvent) SetCamundaInitiator(initiator string) {
 	stev.CamundaInit = initiator
+}
+
+/*** Make Elements ***/
+
+// SetExtensionElements ...
+func (stev *StartEvent) SetExtensionElements() {
+	stev.ExtensionElements = make([]ExtensionElements, 1)
+}
+
+// SetConditionalEventDefinition ...
+func (stev *StartEvent) SetConditionalEventDefinition() {
+	stev.ConditionalEventDef = make([]ConditionalEventDefinition, 1)
+}
+
+// SetMsgEventDefinition ...
+func (stev *StartEvent) SetMsgEventDefinition() {
+	stev.MsgEventDef = make([]MessageEventDefinition, 1)
+}
+
+// SetTimerEventDefinition ...
+func (stev *StartEvent) SetTimerEventDefinition() {
+	stev.TimerEventDef = make([]TimerEventDefinition, 1)
 }
 
 // SetOutgoing ...

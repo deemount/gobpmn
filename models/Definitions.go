@@ -20,8 +20,14 @@ type Definitions struct {
 	Collab          Collaboration `xml:"bpmn:collaboration,omitempty"`
 	Proc            []Process     `xml:"bpmn:process,omitempty"`
 	Category        []Category    `xml:"bpmn:category,omitempty"`
+	Msg             []Message     `xml:"bpmn:message,omitempty"`
+	Signal          []Signal      `xml:"bpmn:signal,omitempty"`
 	Diagram         Diagram       `xml:"bpmndi:BPMNDiagram,omitempty"`
 }
+
+/* Attributes */
+
+/** BPMN **/
 
 // SetBpmn ...
 func (def *Definitions) SetBpmn() {
@@ -43,11 +49,6 @@ func (def *Definitions) SetBioc() {
 	def.Bioc = "http://bpmn.io/schema/bpmn/biocolor/1.0"
 }
 
-// SetCamundaSchema ...
-func (def *Definitions) SetCamundaSchema() {
-	def.CamundaSchema = "http://camunda.org/schema/1.0/bpmn"
-}
-
 // SetXSD ...
 func (def *Definitions) SetXSD() {
 	def.Xsd = "http://www.w3.org/2001/XMLSchema"
@@ -63,6 +64,13 @@ func (def *Definitions) SetTargetNamespace() {
 	def.TargetNamespace = "http://bpmn.io/schema/bpmn"
 }
 
+/** Camunda **/
+
+// SetCamundaSchema ...
+func (def *Definitions) SetCamundaSchema() {
+	def.CamundaSchema = "http://camunda.org/schema/1.0/bpmn"
+}
+
 // SetExporter ...
 func (def *Definitions) SetExporter() {
 	def.Exporter = "Camunda Modeler"
@@ -73,7 +81,19 @@ func (def *Definitions) SetExporterVersion() {
 	def.ExporterVersion = "4.5.0"
 }
 
-// SetNumOfProcess
+/* Elements */
+
+// SetProcess ...
 func (def *Definitions) SetProcess(num int) []Process {
 	return make([]Process, num)
+}
+
+// SetMessage ...
+func (def *Definitions) SetMessage(num int) {
+	def.Msg = make([]Message, num)
+}
+
+// SetSignal ...
+func (def *Definitions) SetSignal(num int) {
+	def.Signal = make([]Signal, num)
 }

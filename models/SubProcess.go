@@ -11,12 +11,43 @@ type SubProcess struct {
 	SequenceFlow     []SequenceFlow `xml:"bpmn:sequenceFlow,omitempty"`
 }
 
+/* Attributes */
+
+/** BPMN **/
+
 // SetID ...
-func (sproc *SubProcess) SetID(suffix string) {
-	sproc.ID = "Activity_" + suffix
+func (subprocess *SubProcess) SetID(suffix string) {
+	subprocess.ID = "Activity_" + suffix
 }
 
 // SetTriggeredByEvent ...
-func (sproc *SubProcess) SetTriggeredByEvent(triggered bool) {
-	sproc.TriggeredByEvent = triggered
+func (subprocess *SubProcess) SetTriggeredByEvent(triggered bool) {
+	subprocess.TriggeredByEvent = triggered
+}
+
+/* Elements */
+
+// SetStartEvent ...
+func (subprocess *SubProcess) SetStartEvent(num int) {
+	subprocess.StartEvent = make([]StartEvent, num)
+}
+
+// SetTask ...
+func (subprocess *SubProcess) SetTask(num int) {
+	subprocess.Task = make([]Task, num)
+}
+
+// SetUserTask ...
+func (subprocess *SubProcess) SetUserTask(num int) {
+	subprocess.UserTask = make([]UserTask, num)
+}
+
+// SetEndEvent ...
+func (subprocess *SubProcess) SetEndEvent(num int) {
+	subprocess.EndEvent = make([]EndEvent, num)
+}
+
+// SetSequenceFlow ...
+func (subprocess *SubProcess) SetSequenceFlow(num int) {
+	subprocess.SequenceFlow = make([]SequenceFlow, num)
 }

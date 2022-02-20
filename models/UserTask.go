@@ -11,6 +11,10 @@ type UserTask struct {
 	Outgoing            []Outgoing `xml:"bpmn:outgoing,omitempty"`
 }
 
+/* Attributes */
+
+/** BPMN **/
+
 // SetID ...
 func (ut *UserTask) SetID(suffix string) {
 	ut.ID = "Activity_" + suffix
@@ -21,7 +25,7 @@ func (ut *UserTask) SetName(name string) {
 	ut.Name = name
 }
 
-/* Camunda */
+/** Camunda **/
 
 // SetCamundaFormKey ...
 func (ut *UserTask) SetCamundaFormKey(formKey string) {

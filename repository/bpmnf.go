@@ -10,20 +10,33 @@ import (
 	"github.com/deemount/gobpmn/utils"
 )
 
-// BPMNF ...
-type BPMNF struct {
-	BPMNFCounter int
-	Def          models.Definitions
+type Options struct {
+	// integer values
+	Counter int
 }
 
+// BPMNF ...
+type BPMNF struct {
+	// options
+	Opts Options
+	Def  models.Definitions
+}
+
+type BPMNFOption func(o Options) Options
+
 // NewBPMNF ...
-func NewBPMNF() BPMNF {
-	files, _ := ioutil.ReadDir("files/")
-	counter := len(files)
-	if counter == 0 {
-		counter++
+func NewBPMNF(opt ...BPMNFOption) BPMNF {
+	opts := Options{}
+	for _, o := range opt {
+		opts = o(opts)
 	}
-	return BPMNF{BPMNFCounter: counter}
+	files, _ := ioutil.ReadDir("files/")
+	opts.Counter = len(files)
+	// count up
+	if opts.Counter == 0 {
+		opts.Counter++
+	}
+	return BPMNF{Opts: opts}
 }
 
 // Set ...
@@ -47,7 +60,7 @@ func (bpm *BPMNF) Set() {
 
 	//++
 
-	// set collaboration
+	/** set collaboration **/
 	collabHash := utils.GenerateHash()
 	collab := &def.Collab
 	collab.SetID(collabHash)
@@ -62,7 +75,8 @@ func (bpm *BPMNF) Set() {
 	procHash := utils.GenerateHash()
 	collab.Participant[0].SetProcessRef(procHash)
 
-	// set process
+	/** set process **/
+	// element
 	def.Proc = def.SetProcess(1)
 	def.Proc[0].SetID(procHash)
 	name := "Test"
@@ -72,52 +86,56 @@ func (bpm *BPMNF) Set() {
 	cVersionTag := "v0.1.0"
 	def.Proc[0].SetCamundaVersionTag(cVersionTag)
 
-	// set start event
+	/** set start event **/
+	// generics
 	var stevN int64 = 1
 	outFromStartEvent := utils.GenerateHash()
+	// element
 	def.Proc[0].SetStartEvent(1)
 	def.Proc[0].StartEvent[0].SetID(stevN)
+	// Outgoing
 	def.Proc[0].StartEvent[0].SetOutgoing(1)
 	def.Proc[0].StartEvent[0].Outgoing[0].SetFlow(outFromStartEvent)
 
-	// set task
+	/** set task **/
+	// generics
 	taskHash := utils.GenerateHash()
 	outFromTask := utils.GenerateHash()
+	// element
 	def.Proc[0].SetTask(1)
 	def.Proc[0].Task[0].SetID(taskHash)
+	// Incoming
 	def.Proc[0].Task[0].SetIncoming(1)
 	def.Proc[0].Task[0].Incoming[0].SetFlow(outFromStartEvent)
+	// Outgoing
 	def.Proc[0].Task[0].SetOutgoing(1)
 	def.Proc[0].Task[0].Outgoing[0].SetFlow(outFromTask)
 
+	/** set end event **/
+	// generics
+	endEventHash := utils.GenerateHash()
+	// element
+	def.Proc[0].SetEndEvent(1)
+	def.Proc[0].EndEvent[0].SetID(endEventHash)
+	// Incoming
+	def.Proc[0].EndEvent[0].SetIncoming(1)
+	def.Proc[0].EndEvent[0].Incoming[0].SetFlow(outFromTask)
+
+	// set sequence flow
+	def.Proc[0].SequenceFlow = []models.SequenceFlow{
+		{
+			ID:        fmt.Sprintf("Flow_%s", outFromStartEvent),
+			SourceRef: fmt.Sprintf("StartEvent_%d", stevN),
+			TargetRef: fmt.Sprintf("Activity_%s", taskHash),
+		},
+		{
+			ID:        fmt.Sprintf("Flow_%s", outFromTask),
+			SourceRef: fmt.Sprintf("Activity_%s", taskHash),
+			TargetRef: fmt.Sprintf("Event_%s", endEventHash),
+		},
+	}
+
 	/*
-		// set end event
-		endEventHash := utils.GenerateHash()
-		def.Proc[0].EndEvent = []models.EndEvent{
-			{
-				ID: fmt.Sprintf("Event_%s", endEventHash),
-				Incoming: []models.Incoming{
-					{
-						Flow: fmt.Sprintf("Flow_%s", outFromTask),
-					},
-				},
-			},
-		}
-
-		// set sequence flow
-		def.Proc[0].SequenceFlow = []models.SequenceFlow{
-			{
-				ID:        fmt.Sprintf("Flow_%s", outFromStartEvent),
-				SourceRef: fmt.Sprintf("StartEvent_%d", stevN),
-				TargetRef: fmt.Sprintf("Activity_%s", taskHash),
-			},
-			{
-				ID:        fmt.Sprintf("Flow_%s", outFromTask),
-				SourceRef: fmt.Sprintf("Activity_%s", taskHash),
-				TargetRef: fmt.Sprintf("Event_%s", endEventHash),
-			},
-		}
-
 		//++
 
 		// set diagram
@@ -217,7 +235,7 @@ func (bpm *BPMNF) Create() error {
 	b, _ := xml.MarshalIndent(&bpm.Def, " ", "  ")
 
 	// create file
-	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", bpm.BPMNFCounter) + ".bpmn")
+	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", bpm.Opts.Counter) + ".bpmn")
 	if err != nil {
 		return err
 	}
