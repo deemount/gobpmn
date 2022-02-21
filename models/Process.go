@@ -15,11 +15,16 @@ type Process struct {
 	IntermediateThrowEvent   []IntermediateThrowEvent `xml:"bpmn:intermediateThrowEvent,omitempty"`
 	Task                     []Task                   `xml:"bpmn:task,omitempty"`
 	UserTask                 []UserTask               `xml:"bpmn:userTask,omitempty"`
+	ReceiveTask              []ReceiveTask            `xml:"bpmn:receiveTask,omitempty"`
 	//BoundEvent               []BoundaryEvent          `xml:"bpmn:boundaryEvent,omitemnpty"`
-	EndEvent []EndEvent `xml:"bpmn:endEvent,omitempty"`
-	//ExclGate                 []ExclusiveGateway       `xml:"bpmn:exclusiveGateway,omitempty"`
-	SubProcess   []SubProcess   `xml:"bpmn:subProcess,omitempty"`
-	SequenceFlow []SequenceFlow `xml:"bpmn:sequenceFlow,omitempty"`
+	EndEvent       []EndEvent          `xml:"bpmn:endEvent,omitempty"`
+	ExclusiveGate  []ExclusiveGateway  `xml:"bpmn:exclusiveGateway,omitempty"`
+	InclusiveGate  []InclusiveGateway  `xml:"bpmn:inclusiveGateway,omitempty"`
+	ParallelGate   []ParallelGateway   `xml:"bpmn:parallelGateway,omitempty"`
+	ComplexGate    []ComplexGateway    `xml:"bpmn:complexGateway,omitempty"`
+	EventBasedGate []EventBasedGateway `xml:"bpmn:eventBasedGateway,omitempty"`
+	SubProcess     []SubProcess        `xml:"bpmn:subProcess,omitempty"`
+	SequenceFlow   []SequenceFlow      `xml:"bpmn:sequenceFlow,omitempty"`
 	//CallActivity             []CallActivity           `xml:"bpmn:callActivity,omitempty"`
 	//Group                    []Group                  `xml:"bpmn:group,omitempty"`
 }

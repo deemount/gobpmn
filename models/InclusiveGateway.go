@@ -22,3 +22,10 @@ func (inclusivegate *InclusiveGateway) SetID(suffix string) {
 func (inclusivegate *InclusiveGateway) SetName(name string) {
 	inclusivegate.Name = name
 }
+
+/* Elements */
+
+// SetExtensionElements ...
+func (inclusivegate *InclusiveGateway) SetExtensionElements() {
+	inclusivegate.ExtensionElements = make([]ExtensionElements, 1)
+}

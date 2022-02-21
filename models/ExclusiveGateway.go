@@ -22,3 +22,10 @@ func (exclusivegate *ExclusiveGateway) SetID(suffix string) {
 func (exclusivegate *ExclusiveGateway) SetName(name string) {
 	exclusivegate.Name = name
 }
+
+/* Elements */
+
+// SetExtensionElements ...
+func (exclusivegate *ExclusiveGateway) SetExtensionElements() {
+	exclusivegate.ExtensionElements = make([]ExtensionElements, 1)
+}

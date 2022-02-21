@@ -22,3 +22,10 @@ func (parallelgate *ParallelGateway) SetID(suffix string) {
 func (parallelgate *ParallelGateway) SetName(name string) {
 	parallelgate.Name = name
 }
+
+/* Elements */
+
+// SetExtensionElements ...
+func (parallelgate *ParallelGateway) SetExtensionElements() {
+	parallelgate.ExtensionElements = make([]ExtensionElements, 1)
+}
