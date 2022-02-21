@@ -1,10 +1,6 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/streadway/amqp"
-
 	"github.com/deemount/gobpmn/repository"
 )
 
@@ -17,55 +13,56 @@ func main() {
 		panic(err)
 	}
 
-	/*AMQP & RabbitMQ*/
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-	defer conn.Close()
+	/*
+		//AMQP & RabbitMQ
+		conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		defer conn.Close()
 
-	fmt.Println("Successfully connected to RabbitMQ Instance")
+		fmt.Println("Successfully connected to RabbitMQ Instance")
 
-	ch, err := conn.Channel()
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-	defer ch.Close()
+		ch, err := conn.Channel()
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		defer ch.Close()
 
-	q, err := ch.QueueDeclare(
-		"TestQueue",
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
+		q, err := ch.QueueDeclare(
+			"TestQueue",
+			false,
+			false,
+			false,
+			false,
+			nil,
+		)
 
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
 
-	fmt.Println(q)
+		fmt.Println(q)
 
-	err = ch.Publish(
-		"",
-		"TestQueue",
-		false,
-		false,
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte("Hello World"),
-		},
-	)
+		err = ch.Publish(
+			"",
+			"TestQueue",
+			false,
+			false,
+			amqp.Publishing{
+				ContentType: "text/plain",
+				Body:        []byte("Hello World"),
+			},
+		)
 
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
 
-	fmt.Println("Successfully published message to the queue")
-
+		fmt.Println("Successfully published message to the queue")
+	*/
 }

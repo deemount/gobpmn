@@ -6,6 +6,7 @@ type CamundaInputParameter struct {
 	VariableAssignmentValue string          `xml:",innerxml,omitempty"`
 	CamundaScript           []CamundaScript `xml:"camunda:script,omitempty"`
 	CamundaList             []CamundaList   `xml:"camunda:list,omitempty"`
+	CamundaMap              []CamundaMap    `xml:"camunda:map,omitempty"`
 }
 
 /* Attributes */
@@ -34,4 +35,9 @@ func (cip *CamundaInputParameter) SetCamundaScript() {
 // SetCamundaList ...
 func (cip *CamundaInputParameter) SetCamundaList() {
 	cip.CamundaList = make([]CamundaList, 1)
+}
+
+// SetCamundaMap ...
+func (cip *CamundaInputParameter) SetCamundaMap() {
+	cip.CamundaMap = make([]CamundaMap, 1)
 }
