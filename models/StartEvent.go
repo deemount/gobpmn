@@ -54,6 +54,7 @@ func (stev *StartEvent) SetCamundaFormRefBinding(bind string) {
 	stev.CamundaFormRefBind = bind
 }
 
+// SetCamundaFormRefVersion ...
 func (stev *StartEvent) SetCamundaFormRefVersion(version string) {
 	stev.CamundaFormRefVersion = version
 }

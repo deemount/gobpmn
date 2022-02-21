@@ -2,8 +2,8 @@ package models
 
 import "fmt"
 
-// InclusiveGateway ...
-type InclusiveGateway struct {
+// ParallelGateway ...
+type ParallelGateway struct {
 	ID                string              `xml:"id,attr"`
 	Name              string              `xml:"name,attr,omitempty"`
 	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
@@ -14,11 +14,11 @@ type InclusiveGateway struct {
 /** BPMN **/
 
 // SetID ...
-func (inclusivegate *InclusiveGateway) SetID(suffix string) {
-	inclusivegate.ID = fmt.Sprintf("_%s", suffix)
+func (parallelgate *ParallelGateway) SetID(suffix string) {
+	parallelgate.ID = fmt.Sprintf("Gateway_%s", suffix)
 }
 
 // SetName ...
-func (inclusivegate *InclusiveGateway) SetName(name string) {
-	inclusivegate.Name = name
+func (parallelgate *ParallelGateway) SetName(name string) {
+	parallelgate.Name = name
 }
