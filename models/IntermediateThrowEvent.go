@@ -7,6 +7,8 @@ type IntermediateThrowEvent struct {
 	ID                string              `xml:"id,attr,omitempty"`
 	Name              string              `xml:"name,attr,omitempty"`
 	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
+	Incoming          []Incoming          `xml:"bpmn:incoming,omitempty"`
+	Outgoing          []Outgoing          `xml:"bpmn:outgoing,omitempty"`
 }
 
 /* Attributes */

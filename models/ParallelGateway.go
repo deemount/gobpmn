@@ -7,6 +7,8 @@ type ParallelGateway struct {
 	ID                string              `xml:"id,attr"`
 	Name              string              `xml:"name,attr,omitempty"`
 	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
+	Incoming          []Incoming          `xml:"bpmn:incoming,omitempty"`
+	Outgoing          []Outgoing          `xml:"bpmn:outgoing,omitempty"`
 }
 
 /* Attributes */
@@ -29,3 +31,7 @@ func (parallelgate *ParallelGateway) SetName(name string) {
 func (parallelgate *ParallelGateway) SetExtensionElements() {
 	parallelgate.ExtensionElements = make([]ExtensionElements, 1)
 }
+
+// SetIncoming ...
+
+// SetOutgoing ...

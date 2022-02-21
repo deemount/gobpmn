@@ -2,29 +2,33 @@ package models
 
 // Process ...
 type Process struct {
-	ID                       string                   `xml:"id,attr"`
-	Name                     string                   `xml:"name,attr,omitempty"`
-	IsExecutable             bool                     `xml:"isExecutable,attr"`
-	CamundaVersionTag        string                   `xml:"camunda:versionTag,attr,omitempty"`
-	CamundaJobPriority       int                      `xml:"camunda:jobPriority,attr,omitempty"`
-	CamundaTaskPriority      int                      `xml:"camunda:taskPriority,attr,omitempty"`
-	CamundaCandidStartGroups string                   `xml:"camunda:candidateStarterGroups,attr,omitempty"`
-	CamundaCandidStartUsers  string                   `xml:"camunda:candidateStarterUsers,attr,omitempty"`
-	StartEvent               []StartEvent             `xml:"bpmn:startEvent,omitemnpty"`
-	IntermediateCatchEvent   []IntermediateCatchEvent `xml:"bpmn:intermediateCatchEvent,omitempty"`
-	IntermediateThrowEvent   []IntermediateThrowEvent `xml:"bpmn:intermediateThrowEvent,omitempty"`
-	Task                     []Task                   `xml:"bpmn:task,omitempty"`
-	UserTask                 []UserTask               `xml:"bpmn:userTask,omitempty"`
-	ReceiveTask              []ReceiveTask            `xml:"bpmn:receiveTask,omitempty"`
+	ID                       string       `xml:"id,attr"`
+	Name                     string       `xml:"name,attr,omitempty"`
+	IsExecutable             bool         `xml:"isExecutable,attr"`
+	CamundaVersionTag        string       `xml:"camunda:versionTag,attr,omitempty"`
+	CamundaJobPriority       int          `xml:"camunda:jobPriority,attr,omitempty"`
+	CamundaTaskPriority      int          `xml:"camunda:taskPriority,attr,omitempty"`
+	CamundaCandidStartGroups string       `xml:"camunda:candidateStarterGroups,attr,omitempty"`
+	CamundaCandidStartUsers  string       `xml:"camunda:candidateStarterUsers,attr,omitempty"`
+	StartEvent               []StartEvent `xml:"bpmn:startEvent,omitemnpty"`
 	//BoundEvent               []BoundaryEvent          `xml:"bpmn:boundaryEvent,omitemnpty"`
-	EndEvent       []EndEvent          `xml:"bpmn:endEvent,omitempty"`
-	ExclusiveGate  []ExclusiveGateway  `xml:"bpmn:exclusiveGateway,omitempty"`
-	InclusiveGate  []InclusiveGateway  `xml:"bpmn:inclusiveGateway,omitempty"`
-	ParallelGate   []ParallelGateway   `xml:"bpmn:parallelGateway,omitempty"`
-	ComplexGate    []ComplexGateway    `xml:"bpmn:complexGateway,omitempty"`
-	EventBasedGate []EventBasedGateway `xml:"bpmn:eventBasedGateway,omitempty"`
-	SubProcess     []SubProcess        `xml:"bpmn:subProcess,omitempty"`
-	SequenceFlow   []SequenceFlow      `xml:"bpmn:sequenceFlow,omitempty"`
+	EndEvent               []EndEvent               `xml:"bpmn:endEvent,omitempty"`
+	IntermediateCatchEvent []IntermediateCatchEvent `xml:"bpmn:intermediateCatchEvent,omitempty"`
+	IntermediateThrowEvent []IntermediateThrowEvent `xml:"bpmn:intermediateThrowEvent,omitempty"`
+	Task                   []Task                   `xml:"bpmn:task,omitempty"`
+	UserTask               []UserTask               `xml:"bpmn:userTask,omitempty"`
+	ManualTask             []ManualTask             `xml:"bpmn:manualTask,omitempty"`
+	ReceiveTask            []ReceiveTask            `xml:"bpmn:receiveTask,omitempty"`
+	ScriptTask             []ScriptTask             `xml:"bpmn:scriptTask,omitempty"`
+	SendTask               []SendTask               `xml:"bpmn:sendTask,omitempty"`
+	ServiceTask            []ServiceTask            `xml:"bpmn:serviceTask,omitempty"`
+	ExclusiveGate          []ExclusiveGateway       `xml:"bpmn:exclusiveGateway,omitempty"`
+	InclusiveGate          []InclusiveGateway       `xml:"bpmn:inclusiveGateway,omitempty"`
+	ParallelGate           []ParallelGateway        `xml:"bpmn:parallelGateway,omitempty"`
+	ComplexGate            []ComplexGateway         `xml:"bpmn:complexGateway,omitempty"`
+	EventBasedGate         []EventBasedGateway      `xml:"bpmn:eventBasedGateway,omitempty"`
+	SubProcess             []SubProcess             `xml:"bpmn:subProcess,omitempty"`
+	SequenceFlow           []SequenceFlow           `xml:"bpmn:sequenceFlow,omitempty"`
 	//CallActivity             []CallActivity           `xml:"bpmn:callActivity,omitempty"`
 	//Group                    []Group                  `xml:"bpmn:group,omitempty"`
 }

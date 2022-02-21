@@ -1,7 +1,7 @@
 package models
 
-// ServiceTask ...
-type ServiceTask struct {
+// ManualTask ...
+type ManualTask struct {
 	ID   string `xml:"id,attr,omitempty"`
 	Name string `xml:"name,attr,omitempty"`
 }
