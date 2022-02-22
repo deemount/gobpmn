@@ -2,22 +2,25 @@ package models
 
 // ExtensionElements ...
 type ExtensionElements struct {
-	Properties                 []Properties                 `xml:"bpmn:properties,omitempty"`
+	CamundaProperties          []CamundaProperties          `xml:"camunda:properties,omitempty"`
 	CamundaFailedJobRetryCycle []CamundaFailedJobRetryCycle `xml:"camunda:failedJobRetryCycle,omitempty"`
+	CamundaFormData            []CamundaFormData            `xml:"camunda:formData,omitempty"`
 	CamundaInputOutput         []CamundaInputOutput         `xml:"camunda:inputOutput,attr,omitempty"`
 	CamundaExecListener        []CamundaExecutionListener   `xml:"camunda:executionListener,omitempty"`
 }
 
 /* Elements */
 
-// SetProperties ...
-func (extel *ExtensionElements) SetProperties() {
-	extel.Properties = make([]Properties, 1)
-}
+/** Camunda **/
 
 // SetCamundaFailedJobRetryCycle ...
 func (extel *ExtensionElements) SetCamundaFailedJobRetryCycle() {
 	extel.CamundaFailedJobRetryCycle = make([]CamundaFailedJobRetryCycle, 1)
+}
+
+// SetCamundaProperties ...
+func (extel *ExtensionElements) SetCamundaProperties() {
+	extel.CamundaProperties = make([]CamundaProperties, 1)
 }
 
 // SetCamundaInputOutput ...
