@@ -14,6 +14,7 @@ type BoundaryEvent struct {
 	ErrorEventDefinition       []ErrorEventDefinition       `xml:"bpmn:errorEventDefinition,omitempty"`
 	SignalEventDefinition      []SignalEventDefinition      `xml:"bpmn:signalEventDefinition,omitempty"`
 	CompensateEventDefinition  []CompensateEventDefinition  `xml:"bpmn:compensateEventDefinition,omitempty"`
+	Outgoing                   []Outgoing                   `xml:"bpmn:outgoing,omitempty"`
 }
 
 /* Attributes */
@@ -38,6 +39,8 @@ func (be *BoundaryEvent) SetCancelActivity(cancel bool) {
 /* Elements */
 
 /** BPMN **/
+
+/*** Event Definition ***/
 
 // SetMessageEventDefinition ...
 func (be *BoundaryEvent) SetMessageEventDefinition() {
@@ -72,4 +75,11 @@ func (be *BoundaryEvent) SetSignalEventDefinition() {
 // SetCompensateEventDefinition ...
 func (be *BoundaryEvent) SetCompensateEventDefinition() {
 	be.CompensateEventDefinition = make([]CompensateEventDefinition, 1)
+}
+
+/*** Marker ***/
+
+// SetOutgoing ...
+func (be *BoundaryEvent) SetOutgoing() {
+	be.Outgoing = make([]Outgoing, 1)
 }

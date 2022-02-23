@@ -2,12 +2,16 @@ package models
 
 // Participant ...
 type Participant struct {
-	ID         string `xml:"id,attr"`
-	Name       string `xml:"name,attr,omitempty"`
-	ProcessRef string `xml:"processRef,attr"`
-	//ExtensionEl ExtensionElements       `xml:"bpmn:extensionElements,omitempty"`
-	//Multipli    ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty"`
+	ID                      string                    `xml:"id,attr"`
+	Name                    string                    `xml:"name,attr,omitempty"`
+	ProcessRef              string                    `xml:"processRef,attr"`
+	Documentation           []Documentation           `xml:"bpmn:documentation,omitempty"`
+	ParticipantMultiplicity []ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty"`
 }
+
+/* Attributes */
+
+/** BPMN **/
 
 // SetID ...
 func (pp *Participant) SetID(suffix string) {
@@ -22,4 +26,13 @@ func (pp *Participant) SetName(name string) {
 // SetProcessRef ...
 func (pp *Participant) SetProcessRef(suffix string) {
 	pp.ProcessRef = "Process_" + suffix
+}
+
+/* Elements */
+
+/** BPMN **/
+
+// SetParticipantMultiplicity ...
+func (participant *Participant) SetParticipantMultiplicity() {
+	participant.ParticipantMultiplicity = make([]ParticipantMultiplicity, 1)
 }

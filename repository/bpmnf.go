@@ -42,18 +42,18 @@ func NewBPMNF(opt ...BPMNFOption) BPMNF {
 // Set ...
 func (bpm *BPMNF) Set() {
 
+	//++
+
+	/** set definitions **/
 	// set namespaces
 	def := &bpm.Def
 	def.SetBpmn()
 	def.SetBpmndi()
 	def.SetDC()
-
 	// set definitions id & target namespace
 	defHash := utils.GenerateHash()
-	def.SetDefinitionsID(defHash)
-
+	def.SetID(defHash)
 	def.SetTargetNamespace()
-
 	// set exporter & version
 	def.SetExporter()
 	def.SetExporterVersion()
@@ -62,67 +62,64 @@ func (bpm *BPMNF) Set() {
 
 	/** set collaboration **/
 	collabHash := utils.GenerateHash()
-	collab := &def.Collab
-	collab.SetID(collabHash)
-
+	def.SetCollaboration()
+	def.Collaboration[0].SetID(collabHash)
 	// set participant
-	collab.Participant = collab.SetParticipant(1)
-
+	def.Collaboration[0].SetParticipant(1)
 	participHash := utils.GenerateHash()
-	collab.Participant[0].SetID(participHash)
-
+	def.Collaboration[0].Participant[0].SetID(participHash)
 	// set process reference
 	procHash := utils.GenerateHash()
-	collab.Participant[0].SetProcessRef(procHash)
+	def.Collaboration[0].Participant[0].SetProcessRef(procHash)
 
 	/** set process **/
 	// element
-	def.Proc = def.SetProcess(1)
-	def.Proc[0].SetID(procHash)
+	def.SetProcess(1)
+	def.Process[0].SetID(procHash)
 	name := "Test"
-	def.Proc[0].SetName(name)
+	def.Process[0].SetName(name)
 	isExecutable := true
-	def.Proc[0].SetIsExecutable(isExecutable)
+	def.Process[0].SetIsExecutable(isExecutable)
 	cVersionTag := "v0.1.0"
-	def.Proc[0].SetCamundaVersionTag(cVersionTag)
+	def.Process[0].SetCamundaVersionTag(cVersionTag)
 
 	/** set start event **/
 	// generics
 	var stevN int64 = 1
 	outFromStartEvent := utils.GenerateHash()
 	// element
-	def.Proc[0].SetStartEvent(1)
-	def.Proc[0].StartEvent[0].SetID(stevN)
+	def.Process[0].SetStartEvent(1)
+	def.Process[0].StartEvent[0].SetID(stevN)
 	// Outgoing
-	def.Proc[0].StartEvent[0].SetOutgoing(1)
-	def.Proc[0].StartEvent[0].Outgoing[0].SetFlow(outFromStartEvent)
+	def.Process[0].StartEvent[0].SetOutgoing(1)
+	def.Process[0].StartEvent[0].Outgoing[0].SetFlow(outFromStartEvent)
 
 	/** set task **/
 	// generics
 	taskHash := utils.GenerateHash()
 	outFromTask := utils.GenerateHash()
 	// element
-	def.Proc[0].SetTask(1)
-	def.Proc[0].Task[0].SetID(taskHash)
+	def.Process[0].SetTask(1)
+	def.Process[0].Task[0].SetID(taskHash)
 	// Incoming
-	def.Proc[0].Task[0].SetIncoming(1)
-	def.Proc[0].Task[0].Incoming[0].SetFlow(outFromStartEvent)
+	def.Process[0].Task[0].SetIncoming(1)
+	def.Process[0].Task[0].Incoming[0].SetFlow(outFromStartEvent)
 	// Outgoing
-	def.Proc[0].Task[0].SetOutgoing(1)
-	def.Proc[0].Task[0].Outgoing[0].SetFlow(outFromTask)
+	def.Process[0].Task[0].SetOutgoing(1)
+	def.Process[0].Task[0].Outgoing[0].SetFlow(outFromTask)
 
 	/** set end event **/
 	// generics
 	endEventHash := utils.GenerateHash()
 	// element
-	def.Proc[0].SetEndEvent(1)
-	def.Proc[0].EndEvent[0].SetID(endEventHash)
+	def.Process[0].SetEndEvent(1)
+	def.Process[0].EndEvent[0].SetID(endEventHash)
 	// Incoming
-	def.Proc[0].EndEvent[0].SetIncoming(1)
-	def.Proc[0].EndEvent[0].Incoming[0].SetFlow(outFromTask)
+	def.Process[0].EndEvent[0].SetIncoming(1)
+	def.Process[0].EndEvent[0].Incoming[0].SetFlow(outFromTask)
 
 	// set sequence flow
-	def.Proc[0].SequenceFlow = []models.SequenceFlow{
+	def.Process[0].SequenceFlow = []models.SequenceFlow{
 		{
 			ID:        fmt.Sprintf("Flow_%s", outFromStartEvent),
 			SourceRef: fmt.Sprintf("StartEvent_%d", stevN),
