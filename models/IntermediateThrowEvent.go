@@ -9,6 +9,8 @@ type IntermediateThrowEvent struct {
 	ExtensionElements         []ExtensionElements         `xml:"bpmn:extensionElements,omitempty"`
 	Incoming                  []Incoming                  `xml:"bpmn:incoming,omitempty"`
 	Outgoing                  []Outgoing                  `xml:"bpmn:outgoing,omitempty"`
+	CompensateEventDefinition []CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty"`
+	LinkEventDefinition       []LinkEventDefinition       `xml:"bpmn:linkEventDefinition,omitempty"`
 	EscalationEventDefinition []EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty"`
 	MessageEventDefinition    []MessageEventDefinition    `xml:"bpmn:messageEventDefinition,omitempty"`
 }
@@ -44,6 +46,11 @@ func (ite *IntermediateThrowEvent) SetIncoming(num int) {
 // SetOutgoing ...
 func (ite *IntermediateThrowEvent) SetOutgoing(num int) {
 	ite.Outgoing = make([]Outgoing, num)
+}
+
+// SetLinkEventDefinition ...
+func (ite *IntermediateThrowEvent) SetLinkEventDefinition() {
+	ite.LinkEventDefinition = make([]LinkEventDefinition, 1)
 }
 
 // SetEscalationEventDefinition ...
