@@ -2,16 +2,14 @@ package models
 
 // CamundaProperties ...
 type CamundaProperties struct {
-	Name  string `xml:"name,attr,omitempty"`
-	Value string `xml:"value,attr,omitempty"`
+	CamundaProperty []CamundaProperty `xml:"camunda:properties,omitempty"`
 }
 
-// SetName ...
-func (cproperties *CamundaProperties) SetName(name string) {
-	cproperties.Name = name
-}
+/* Elements */
 
-// SetValue ...
-func (cproperties *CamundaProperties) SetValue(value string) {
-	cproperties.Value = value
+/** Camunda **/
+
+// SetCamundaProperties ...
+func (cproperties *CamundaProperties) SetName(num int) {
+	cproperties.CamundaProperty = make([]CamundaProperty, num)
 }
