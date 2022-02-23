@@ -11,7 +11,7 @@ type Process struct {
 	CamundaCandidStartGroups string       `xml:"camunda:candidateStarterGroups,attr,omitempty"`
 	CamundaCandidStartUsers  string       `xml:"camunda:candidateStarterUsers,attr,omitempty"`
 	StartEvent               []StartEvent `xml:"bpmn:startEvent,omitemnpty"`
-	//BoundEvent               []BoundaryEvent          `xml:"bpmn:boundaryEvent,omitemnpty"`
+	//BoundaryEvent               []BoundaryEvent          `xml:"bpmn:boundaryEvent,omitemnpty"`
 	EndEvent               []EndEvent               `xml:"bpmn:endEvent,omitempty"`
 	IntermediateCatchEvent []IntermediateCatchEvent `xml:"bpmn:intermediateCatchEvent,omitempty"`
 	IntermediateThrowEvent []IntermediateThrowEvent `xml:"bpmn:intermediateThrowEvent,omitempty"`
@@ -29,7 +29,7 @@ type Process struct {
 	EventBasedGate         []EventBasedGateway      `xml:"bpmn:eventBasedGateway,omitempty"`
 	SubProcess             []SubProcess             `xml:"bpmn:subProcess,omitempty"`
 	SequenceFlow           []SequenceFlow           `xml:"bpmn:sequenceFlow,omitempty"`
-	//CallActivity             []CallActivity           `xml:"bpmn:callActivity,omitempty"`
+	CallActivity           []CallActivity           `xml:"bpmn:callActivity,omitempty"`
 	//Group                    []Group                  `xml:"bpmn:group,omitempty"`
 }
 
@@ -135,13 +135,12 @@ func (proc *Process) SetSequenceFlow(num int) {
 	proc.SequenceFlow = make([]SequenceFlow, num)
 }
 
-/*
-
 // SetCallActivity ...
 func (proc *Process) SetCallActivity(num int) {
 	proc.CallActivity = make([]CallActivity, num)
 }
 
+/*
 // SetGroup ...
 func (proc *Process) SetGroup(num int) {
 	proc.Group = make([]Group, num)

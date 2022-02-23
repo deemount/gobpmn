@@ -5,8 +5,11 @@ type ExtensionElements struct {
 	CamundaProperties          []CamundaProperties          `xml:"camunda:properties,omitempty"`
 	CamundaFailedJobRetryCycle []CamundaFailedJobRetryCycle `xml:"camunda:failedJobRetryCycle,omitempty"`
 	CamundaFormData            []CamundaFormData            `xml:"camunda:formData,omitempty"`
-	CamundaInputOutput         []CamundaInputOutput         `xml:"camunda:inputOutput,attr,omitempty"`
-	CamundaExecListener        []CamundaExecutionListener   `xml:"camunda:executionListener,omitempty"`
+	CamundaInputOutput         []CamundaInputOutput         `xml:"camunda:inputOutput,omitempty"`
+	CamundaTaskListener        []CamundaTaskListener        `xml:"camunda:taskListener,omitempty"`
+	CamundaExecutionListener   []CamundaExecutionListener   `xml:"camunda:executionListener,omitempty"`
+	CamundaIn                  []CamundaIn                  `xml:"camunda:in,omitempty"`
+	CamundaOut                 []CamundaOut                 `xml:"camunda:out,omitempty"`
 }
 
 /* Elements */
@@ -30,5 +33,15 @@ func (extel *ExtensionElements) SetCamundaInputOutput() {
 
 // SetCamundaExecutionListener ...
 func (extel *ExtensionElements) SetCmaundaExecutionListener(num int) {
-	extel.CamundaExecListener = make([]CamundaExecutionListener, num)
+	extel.CamundaExecutionListener = make([]CamundaExecutionListener, num)
+}
+
+// SetCamundaIn ...
+func (extel *ExtensionElements) SetCamundaIn(num int) {
+	extel.CamundaIn = make([]CamundaIn, num)
+}
+
+// SetCamundaOut ...
+func (extel *ExtensionElements) SetCamundaOut(num int) {
+	extel.CamundaOut = make([]CamundaOut, num)
 }
