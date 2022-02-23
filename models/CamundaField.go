@@ -1,9 +1,9 @@
 package models
 
 type CamundaField struct {
-	Name          string              `xml:"name,attr,omitempty"`
-	CamundaExpr   []CamundaExpression `xml:"camunda:expression,innerxml,omitempty"`
-	CamundaString []CamundaString     `xml:"camunda:string,innerxml,omitempty"`
+	Name              string              `xml:"name,attr,omitempty"`
+	CamundaExpression []CamundaExpression `xml:"camunda:expression,innerxml,omitempty"`
+	CamundaString     []CamundaString     `xml:"camunda:string,innerxml,omitempty"`
 }
 
 /* Attributes */

@@ -58,6 +58,8 @@ func (ee *EndEvent) SetIncoming(num int) {
 	ee.Incoming = make([]Incoming, num)
 }
 
+/*** Event Definitions ***/
+
 // SetCompensateEventDefinition ...
 func (ee *EndEvent) SetCompensateEventDefinition() {
 	ee.CompensateEventDefinition = make([]CompensateEventDefinition, 1)

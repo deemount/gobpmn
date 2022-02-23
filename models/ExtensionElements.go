@@ -16,14 +16,19 @@ type ExtensionElements struct {
 
 /** Camunda **/
 
+// SetCamundaProperties ...
+func (extel *ExtensionElements) SetCamundaProperties() {
+	extel.CamundaProperties = make([]CamundaProperties, 1)
+}
+
 // SetCamundaFailedJobRetryCycle ...
 func (extel *ExtensionElements) SetCamundaFailedJobRetryCycle() {
 	extel.CamundaFailedJobRetryCycle = make([]CamundaFailedJobRetryCycle, 1)
 }
 
-// SetCamundaProperties ...
-func (extel *ExtensionElements) SetCamundaProperties() {
-	extel.CamundaProperties = make([]CamundaProperties, 1)
+// SetCamundaFormData ...
+func (extel *ExtensionElements) SetCamundaFormData() {
+	extel.CamundaFormData = make([]CamundaFormData, 1)
 }
 
 // SetCamundaInputOutput ...
@@ -31,8 +36,13 @@ func (extel *ExtensionElements) SetCamundaInputOutput() {
 	extel.CamundaInputOutput = make([]CamundaInputOutput, 1)
 }
 
+// SetCamundaTaskListener ...
+func (extel *ExtensionElements) SetCamundaTaskListener(num int) {
+	extel.CamundaTaskListener = make([]CamundaTaskListener, num)
+}
+
 // SetCamundaExecutionListener ...
-func (extel *ExtensionElements) SetCmaundaExecutionListener(num int) {
+func (extel *ExtensionElements) SetCamundaExecutionListener(num int) {
 	extel.CamundaExecutionListener = make([]CamundaExecutionListener, num)
 }
 

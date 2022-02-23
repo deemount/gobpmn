@@ -4,10 +4,14 @@ import "fmt"
 
 // Group ...
 type Group struct {
-	ID             string            `xml:"id,attr,omitempty"`
-	CategoryValRef string            `xml:"categoryValueRef,attr,omitempty"`
-	ExtensionEl    ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
+	ID                string              `xml:"id,attr,omitempty"`
+	CategoryValueRef  string              `xml:"categoryValueRef,attr,omitempty"`
+	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
 }
+
+/* Attributes */
+
+/** BPMN **/
 
 // SetID ...
 func (group *Group) SetID(suffix string) {
@@ -16,5 +20,11 @@ func (group *Group) SetID(suffix string) {
 
 // SetCategoryValRef ...
 func (group *Group) SetCategoryValueRef(suffix string) {
-	group.CategoryValRef = fmt.Sprintf("_%s", suffix)
+	group.CategoryValueRef = fmt.Sprintf("_%s", suffix)
 }
+
+/* Elements */
+
+/** BPMN **/
+
+// SetExtensionElements ...
