@@ -2,13 +2,24 @@ package models
 
 // SubProcess ...
 type SubProcess struct {
-	ID               string         `xml:"id,attr"`
-	TriggeredByEvent bool           `xml:"triggeredByEvent,attr,omitempty"`
-	StartEvent       []StartEvent   `xml:"bpmn:startEvent,omitemnpty"`
-	Task             []Task         `xml:"bpmn:task,omitempty"`
-	UserTask         []UserTask     `xml:"bpm:userTask,omitempty"`
-	EndEvent         []EndEvent     `xml:"bpmn:endEvent,omitempty"`
-	SequenceFlow     []SequenceFlow `xml:"bpmn:sequenceFlow,omitempty"`
+	ID                 string              `xml:"id,attr"`
+	Name               string              `xml:"name,attr,omitempty"`
+	TriggeredByEvent   bool                `xml:"triggeredByEvent,attr,omitempty"`
+	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty"`
+	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty"`
+	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty"`
+	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty"`
+	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
+	StartEvent         []StartEvent        `xml:"bpmn:startEvent,omitemnpty"`
+	EndEvent           []EndEvent          `xml:"bpmn:endEvent,omitempty"`
+	Task               []Task              `xml:"bpmn:task,omitempty"`
+	UserTask           []UserTask          `xml:"bpmn:userTask,omitempty"`
+	ManualTask         []ManualTask        `xml:"bpmn:manualTask,omitempty"`
+	ReceiveTask        []ReceiveTask       `xml:"bpmn:receiveTask,omitempty"`
+	ScriptTask         []ScriptTask        `xml:"bpmn:scriptTask,omitempty"`
+	SendTask           []SendTask          `xml:"bpmn:sendTask,omitempty"`
+	ServiceTask        []ServiceTask       `xml:"bpmn:serviceTask,omitempty"`
+	SequenceFlow       []SequenceFlow      `xml:"bpmn:sequenceFlow,omitempty"`
 }
 
 /* Attributes */
@@ -20,10 +31,23 @@ func (subprocess *SubProcess) SetID(suffix string) {
 	subprocess.ID = "Activity_" + suffix
 }
 
+// SetName ...
+func (subprocess *SubProcess) SetName(name string) {
+	subprocess.Name = name
+}
+
 // SetTriggeredByEvent ...
 func (subprocess *SubProcess) SetTriggeredByEvent(triggered bool) {
 	subprocess.TriggeredByEvent = triggered
 }
+
+/** Camunda **/
+
+// SetCamundaAsyncBefore ...
+
+// SetCamundaAsyncAfter ...
+
+// SetCamundaJobPriority ...
 
 /* Elements */
 

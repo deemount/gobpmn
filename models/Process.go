@@ -25,6 +25,7 @@ type Process struct {
 	ServiceTask              []ServiceTask            `xml:"bpmn:serviceTask,omitempty"`
 	CallActivity             []CallActivity           `xml:"bpmn:callActivity,omitempty"`
 	SubProcess               []SubProcess             `xml:"bpmn:subProcess,omitempty"`
+	Transaction              []Transaction            `xml:"bpmn:transaction,omitempty"`
 	ExclusiveGateway         []ExclusiveGateway       `xml:"bpmn:exclusiveGateway,omitempty"`
 	InclusiveGateway         []InclusiveGateway       `xml:"bpmn:inclusiveGateway,omitempty"`
 	ParallelGateway          []ParallelGateway        `xml:"bpmn:parallelGateway,omitempty"`
@@ -163,6 +164,11 @@ func (proc *Process) SetCallActivity(num int) {
 // SetSubProcess ...
 func (proc *Process) SetSubProcess(num int) {
 	proc.SubProcess = make([]SubProcess, num)
+}
+
+// SetTransaction ...
+func (proc *Process) SetTransaction(num int) {
+	proc.Transaction = make([]Transaction, num)
 }
 
 /*** Gateway ***/
