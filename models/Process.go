@@ -10,6 +10,7 @@ type Process struct {
 	CamundaTaskPriority      int                      `xml:"camunda:taskPriority,attr,omitempty"`
 	CamundaCandidStartGroups string                   `xml:"camunda:candidateStarterGroups,attr,omitempty"`
 	CamundaCandidStartUsers  string                   `xml:"camunda:candidateStarterUsers,attr,omitempty"`
+	LaneSet                  []LaneSet                `xml:"bpmn:laneSet,omitempty"`
 	StartEvent               []StartEvent             `xml:"bpmn:startEvent,omitemnpty"`
 	BoundaryEvent            []BoundaryEvent          `xml:"bpmn:boundaryEvent,omitemnpty"`
 	EndEvent                 []EndEvent               `xml:"bpmn:endEvent,omitempty"`
@@ -82,6 +83,13 @@ func (proc *Process) SetCamundaCandidStartUsers(users string) {
 /* Elements */
 
 /** BPMN **/
+
+/** LaneSet **/
+
+// SetLaneSet ...
+func (proc *Process) SetLaneSet() {
+	proc.LaneSet = make([]LaneSet, 1)
+}
 
 /*** Event ***/
 
