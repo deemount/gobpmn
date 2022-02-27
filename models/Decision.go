@@ -1,5 +1,12 @@
 package models
 
+// DecisionRepository ...
+type DecisionRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
+// Decision ...
 type Decision struct {
 	ID            string        `xml:"id,attr"`
 	Name          string        `xml:"name,attr,omitempty"`

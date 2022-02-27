@@ -19,6 +19,7 @@ type SubProcess struct {
 	ScriptTask         []ScriptTask        `xml:"bpmn:scriptTask,omitempty"`
 	SendTask           []SendTask          `xml:"bpmn:sendTask,omitempty"`
 	ServiceTask        []ServiceTask       `xml:"bpmn:serviceTask,omitempty"`
+	SubProcess         []SubProcess        `xml:"bpmn:subProcess,omitempty"` // is that possible ?
 	ExclusiveGateway   []ExclusiveGateway  `xml:"bpmn:exclusiveGateway,omitempty"`
 	InclusiveGateway   []InclusiveGateway  `xml:"bpmn:inclusiveGateway,omitempty"`
 	ParallelGateway    []ParallelGateway   `xml:"bpmn:parallelGateway,omitempty"`

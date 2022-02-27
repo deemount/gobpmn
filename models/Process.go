@@ -1,5 +1,11 @@
 package models
 
+// ProcessRepository ...
+type ProcessRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // Process ...
 type Process struct {
 	ID                       string                   `xml:"id,attr"`

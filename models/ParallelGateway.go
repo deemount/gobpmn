@@ -2,6 +2,12 @@ package models
 
 import "fmt"
 
+// ParallelGatewayRepository ...
+type ParallelGatewayRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // ParallelGateway ...
 type ParallelGateway struct {
 	ID                string              `xml:"id,attr"`
@@ -33,5 +39,11 @@ func (parallelgate *ParallelGateway) SetExtensionElements() {
 }
 
 // SetIncoming ...
+func (parallelgate *ParallelGateway) SetIncoming(num int) {
+	parallelgate.Incoming = make([]Incoming, num)
+}
 
 // SetOutgoing ...
+func (parallelgate *ParallelGateway) SetOutgoing(num int) {
+	parallelgate.Outgoing = make([]Outgoing, num)
+}

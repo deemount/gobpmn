@@ -2,6 +2,12 @@ package models
 
 import "fmt"
 
+// CallActivityRepository ...
+type CallActivityRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // CallActivity ...
 type CallActivity struct {
 	ID                               string                             `xml:"id,attr,omitempty"`

@@ -15,28 +15,34 @@ type Options struct {
 	Counter int
 }
 
+// BPMNFRepository ...
+type BPMNFRepository interface {
+	Set()
+	Create() error
+}
+
 // BPMNF ...
 type BPMNF struct {
 	// options
-	Opts Options
-	Def  models.Definitions
+	Options Options
+	Def     models.Definitions
 }
 
 type BPMNFOption func(o Options) Options
 
 // NewBPMNF ...
 func NewBPMNF(opt ...BPMNFOption) BPMNF {
-	opts := Options{}
+	options := Options{}
 	for _, o := range opt {
-		opts = o(opts)
+		options = o(options)
 	}
 	files, _ := ioutil.ReadDir("files/")
-	opts.Counter = len(files)
+	options.Counter = len(files)
 	// count up
-	if opts.Counter == 0 {
-		opts.Counter++
+	if options.Counter == 0 {
+		options.Counter++
 	}
-	return BPMNF{Opts: opts}
+	return BPMNF{Options: options}
 }
 
 // Set ...
@@ -60,9 +66,18 @@ func (bpm *BPMNF) Set() {
 
 	//++
 
-	/** set collaboration **/
-	collabHash := utils.GenerateHash()
+	/* set definition elements */
 	def.SetCollaboration()
+	def.SetProcess(1)
+	def.Process[0].SetStartEvent(1)
+	def.Process[0].SetTask(1)
+	def.Process[0].SetEndEvent(1)
+	def.Process[0].SetSequenceFlow(2)
+
+	/* set elements attributes */
+
+	/** set collaboration attributes **/
+	collabHash := utils.GenerateHash()
 	def.Collaboration[0].SetID(collabHash)
 	// set participant
 	def.Collaboration[0].SetParticipant(1)
@@ -72,9 +87,8 @@ func (bpm *BPMNF) Set() {
 	procHash := utils.GenerateHash()
 	def.Collaboration[0].Participant[0].SetProcessRef(procHash)
 
-	/** set process **/
+	/** set process attributes **/
 	// element
-	def.SetProcess(1)
 	def.Process[0].SetID(procHash)
 	name := "Test"
 	def.Process[0].SetName(name)
@@ -83,23 +97,19 @@ func (bpm *BPMNF) Set() {
 	cVersionTag := "v0.1.0"
 	def.Process[0].SetCamundaVersionTag(cVersionTag)
 
-	/** set start event **/
+	/** set start event attributes **/
 	// generics
 	var stevN int64 = 1
 	outFromStartEvent := utils.GenerateHash()
-	// element
-	def.Process[0].SetStartEvent(1)
 	def.Process[0].StartEvent[0].SetID(stevN)
 	// Outgoing
 	def.Process[0].StartEvent[0].SetOutgoing(1)
 	def.Process[0].StartEvent[0].Outgoing[0].SetFlow(outFromStartEvent)
 
-	/** set task **/
+	/** set task attributes **/
 	// generics
 	taskHash := utils.GenerateHash()
 	outFromTask := utils.GenerateHash()
-	// element
-	def.Process[0].SetTask(1)
 	def.Process[0].Task[0].SetID(taskHash)
 	// Incoming
 	def.Process[0].Task[0].SetIncoming(1)
@@ -108,43 +118,36 @@ func (bpm *BPMNF) Set() {
 	def.Process[0].Task[0].SetOutgoing(1)
 	def.Process[0].Task[0].Outgoing[0].SetFlow(outFromTask)
 
-	/** set end event **/
+	/** set end event attributes **/
 	// generics
 	endEventHash := utils.GenerateHash()
-	// element
-	def.Process[0].SetEndEvent(1)
 	def.Process[0].EndEvent[0].SetID(endEventHash)
 	// Incoming
 	def.Process[0].EndEvent[0].SetIncoming(1)
 	def.Process[0].EndEvent[0].Incoming[0].SetFlow(outFromTask)
 
-	// set sequence flow
-	def.Process[0].SequenceFlow = []models.SequenceFlow{
-		{
-			ID:        fmt.Sprintf("Flow_%s", outFromStartEvent),
-			SourceRef: fmt.Sprintf("StartEvent_%d", stevN),
-			TargetRef: fmt.Sprintf("Activity_%s", taskHash),
-		},
-		{
-			ID:        fmt.Sprintf("Flow_%s", outFromTask),
-			SourceRef: fmt.Sprintf("Activity_%s", taskHash),
-			TargetRef: fmt.Sprintf("Event_%s", endEventHash),
-		},
-	}
+	/** set sequence flow attributes **/
+	def.Process[0].SequenceFlow[0].SetID(outFromStartEvent)
+	def.Process[0].SequenceFlow[0].SetSourceRef(fmt.Sprintf("StartEvent_%d", stevN))
+	def.Process[0].SequenceFlow[0].SetTargetRef(fmt.Sprintf("Activity_%s", taskHash))
+
+	def.Process[0].SequenceFlow[1].SetID(outFromTask)
+	def.Process[0].SequenceFlow[1].SetSourceRef(fmt.Sprintf("Activity_%s", taskHash))
+	def.Process[0].SequenceFlow[1].SetTargetRef(fmt.Sprintf("Event_%s", endEventHash))
+
+	//++
+
+	// set diagram
+	var n int64 = 1
+	def.SetDiagram()
+	def.Diagram[0].SetID(n)
+
+	// set plane
+	def.Diagram[0].SetPlane()
+	def.Diagram[0].Plane[0].SetID(n)
+	def.Diagram[0].Plane[0].SetElement("collaboration", procHash)
 
 	/*
-		//++
-
-		// set diagram
-		var n int64 = 1
-		diagram := def.Diagram
-		diagram.SetID(n)
-
-		// set plane
-		plane := diagram.Plane
-		plane.SetID(n)
-		plane.SetElement("collaboration", procHash)
-
 		// set shape
 		plane.Shape = []models.Shape{
 			{
@@ -232,7 +235,7 @@ func (bpm *BPMNF) Create() error {
 	b, _ := xml.MarshalIndent(&bpm.Def, " ", "  ")
 
 	// create file
-	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", bpm.Opts.Counter) + ".bpmn")
+	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", bpm.Options.Counter) + ".bpmn")
 	if err != nil {
 		return err
 	}
