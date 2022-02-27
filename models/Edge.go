@@ -1,19 +1,41 @@
 package models
 
+import "fmt"
+
 // Edge ...
 type Edge struct {
 	ID       string     `xml:"id,attr"`
 	Element  string     `xml:"bpmnElement,attr"`
-	Label    Label      `xml:"bpmndi:BPMNLabel,omitempty"`
 	Waypoint []Waypoint `xml:"di:waypoint"`
 }
 
+/* Attributes */
+
 // SetID ...
-func (e *Edge) SetID(suffix string) {
-	e.ID = "Flow_" + suffix + "_di"
+func (edge *Edge) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "association":
+		edge.ID = fmt.Sprintf("Association_%s_di", suffix)
+	case "flow":
+		edge.ID = fmt.Sprintf("Flow_%s_di", suffix)
+	}
 }
 
 // SetElement ...
-func (e *Edge) SetElement(suffix string) {
-	e.Element = "Flow_" + suffix
+func (edge *Edge) SetElement(typ string, suffix interface{}) {
+	switch typ {
+	case "association":
+		edge.Element = fmt.Sprintf("Association_%s", suffix)
+	case "flow":
+		edge.Element = fmt.Sprintf("Flow_%s", suffix)
+	}
+}
+
+/* Elements */
+
+/** BPMNDI **/
+
+// SetWaypoint ...
+func (edge *Edge) SetWaypoint() {
+	edge.Waypoint = make([]Waypoint, 2)
 }

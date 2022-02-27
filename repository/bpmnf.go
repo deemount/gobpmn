@@ -73,6 +73,10 @@ func (bpm *BPMNF) Set() {
 	def.Process[0].SetTask(1)
 	def.Process[0].SetEndEvent(1)
 	def.Process[0].SetSequenceFlow(2)
+	def.SetDiagram()
+	def.Diagram[0].SetPlane()
+	def.Diagram[0].Plane[0].SetShape(4)
+	def.Diagram[0].Plane[0].SetEdge(2)
 
 	/* set elements attributes */
 
@@ -86,6 +90,14 @@ func (bpm *BPMNF) Set() {
 	// set process reference
 	procHash := utils.GenerateHash()
 	def.Collaboration[0].Participant[0].SetProcessRef(procHash)
+
+	/*** set shape attributes (collaboration) ***/
+	def.Diagram[0].Plane[0].Shape[0].SetID("participant", participHash)
+	def.Diagram[0].Plane[0].Shape[0].SetElement("participant", participHash)
+	def.Diagram[0].Plane[0].Shape[0].SetIsHorizontal(true)
+	def.Diagram[0].Plane[0].Shape[0].SetBounds()
+	def.Diagram[0].Plane[0].Shape[0].Bounds[0].SetCoordinates(129, 60)
+	def.Diagram[0].Plane[0].Shape[0].Bounds[0].SetSize(600, 250)
 
 	/** set process attributes **/
 	// element
@@ -106,6 +118,13 @@ func (bpm *BPMNF) Set() {
 	def.Process[0].StartEvent[0].SetOutgoing(1)
 	def.Process[0].StartEvent[0].Outgoing[0].SetFlow(outFromStartEvent)
 
+	/*** set shape attributes (startevent) ***/
+	def.Diagram[0].Plane[0].Shape[1].SetID("startevent", stevN+1)
+	def.Diagram[0].Plane[0].Shape[1].SetElement("startevent", stevN)
+	def.Diagram[0].Plane[0].Shape[1].SetBounds()
+	def.Diagram[0].Plane[0].Shape[1].Bounds[0].SetCoordinates(179, 150)
+	def.Diagram[0].Plane[0].Shape[1].Bounds[0].SetSize(36, 36)
+
 	/** set task attributes **/
 	// generics
 	taskHash := utils.GenerateHash()
@@ -118,6 +137,13 @@ func (bpm *BPMNF) Set() {
 	def.Process[0].Task[0].SetOutgoing(1)
 	def.Process[0].Task[0].Outgoing[0].SetFlow(outFromTask)
 
+	/*** set shape attributes (task) ***/
+	def.Diagram[0].Plane[0].Shape[2].SetID("activity", taskHash)
+	def.Diagram[0].Plane[0].Shape[2].SetElement("activity", taskHash)
+	def.Diagram[0].Plane[0].Shape[2].SetBounds()
+	def.Diagram[0].Plane[0].Shape[2].Bounds[0].SetCoordinates(270, 137)
+	def.Diagram[0].Plane[0].Shape[2].Bounds[0].SetSize(100, 80)
+
 	/** set end event attributes **/
 	// generics
 	endEventHash := utils.GenerateHash()
@@ -126,104 +152,46 @@ func (bpm *BPMNF) Set() {
 	def.Process[0].EndEvent[0].SetIncoming(1)
 	def.Process[0].EndEvent[0].Incoming[0].SetFlow(outFromTask)
 
+	/*** set shape attributes (endevent) ***/
+	def.Diagram[0].Plane[0].Shape[3].SetID("event", endEventHash)
+	def.Diagram[0].Plane[0].Shape[3].SetElement("event", endEventHash)
+	def.Diagram[0].Plane[0].Shape[3].SetBounds()
+	def.Diagram[0].Plane[0].Shape[3].Bounds[0].SetCoordinates(432, 159)
+	def.Diagram[0].Plane[0].Shape[3].Bounds[0].SetSize(36, 36)
+
 	/** set sequence flow attributes **/
+
+	// #1
 	def.Process[0].SequenceFlow[0].SetID(outFromStartEvent)
 	def.Process[0].SequenceFlow[0].SetSourceRef(fmt.Sprintf("StartEvent_%d", stevN))
 	def.Process[0].SequenceFlow[0].SetTargetRef(fmt.Sprintf("Activity_%s", taskHash))
+	/*** set shape attributes (sequence flow #1) ***/
+	def.Diagram[0].Plane[0].Edge[0].SetID("flow", outFromStartEvent)
+	def.Diagram[0].Plane[0].Edge[0].SetElement("flow", outFromStartEvent)
+	def.Diagram[0].Plane[0].Edge[0].SetWaypoint()
+	def.Diagram[0].Plane[0].Edge[0].Waypoint[0].SetCoordinates(215, 177)
+	def.Diagram[0].Plane[0].Edge[0].Waypoint[1].SetCoordinates(270, 177)
 
+	// #2
 	def.Process[0].SequenceFlow[1].SetID(outFromTask)
 	def.Process[0].SequenceFlow[1].SetSourceRef(fmt.Sprintf("Activity_%s", taskHash))
 	def.Process[0].SequenceFlow[1].SetTargetRef(fmt.Sprintf("Event_%s", endEventHash))
-
+	/*** set shape attributes (sequence flow #2) ***/
+	def.Diagram[0].Plane[0].Edge[1].SetID("flow", outFromStartEvent)
+	def.Diagram[0].Plane[0].Edge[1].SetElement("flow", outFromStartEvent)
+	def.Diagram[0].Plane[0].Edge[1].SetWaypoint()
+	def.Diagram[0].Plane[0].Edge[1].Waypoint[0].SetCoordinates(370, 177)
+	def.Diagram[0].Plane[0].Edge[1].Waypoint[1].SetCoordinates(432, 177)
 	//++
 
-	// set diagram
+	/** set diagram attributes **/
 	var n int64 = 1
-	def.SetDiagram()
 	def.Diagram[0].SetID(n)
 
-	// set plane
-	def.Diagram[0].SetPlane()
+	/** set plane attributes **/
 	def.Diagram[0].Plane[0].SetID(n)
 	def.Diagram[0].Plane[0].SetElement("collaboration", procHash)
 
-	/*
-		// set shape
-		plane.Shape = []models.Shape{
-			{
-				ID:           fmt.Sprintf("Participant_%s_di", participHash),
-				Element:      fmt.Sprintf("Participant_%s", participHash),
-				IsHorizontal: "true",
-				Bounds: models.Bounds{
-					X:      129,
-					Y:      60,
-					Width:  600,
-					Height: 250,
-				},
-			},
-			{
-				ID:      fmt.Sprintf("_BPMNShape_StartEvent_%d", stevN+1),
-				Element: fmt.Sprintf("StartEvent_%d", stevN),
-				Bounds: models.Bounds{
-					X:      179,
-					Y:      159,
-					Width:  36,
-					Height: 36,
-				},
-			},
-			{
-				ID:      fmt.Sprintf("Activity_%s_di", taskHash),
-				Element: fmt.Sprintf("Activity_%s", taskHash),
-				Bounds: models.Bounds{
-					X:      270,
-					Y:      137,
-					Width:  100,
-					Height: 80,
-				},
-			},
-			{
-				ID:      fmt.Sprintf("Event_%s_di", endEventHash),
-				Element: fmt.Sprintf("Event_%s", endEventHash),
-				Bounds: models.Bounds{
-					X:      432,
-					Y:      159,
-					Width:  36,
-					Height: 36,
-				},
-			},
-		}
-
-		plane.Edge = []models.Edge{
-			{
-				ID:      fmt.Sprintf("Flow_%s_di", outFromStartEvent),
-				Element: fmt.Sprintf("Flow_%s", outFromStartEvent),
-				Waypoint: []models.Waypoint{
-					{
-						X: 215,
-						Y: 177,
-					},
-					{
-						X: 270,
-						Y: 177,
-					},
-				},
-			},
-			{
-				ID:      fmt.Sprintf("Flow_%s_di", outFromStartEvent),
-				Element: fmt.Sprintf("Flow_%s", outFromStartEvent),
-				Waypoint: []models.Waypoint{
-					{
-						X: 215,
-						Y: 177,
-					},
-					{
-						X: 270,
-						Y: 177,
-					},
-				},
-			},
-		}
-	*/
 }
 
 // Create ...

@@ -17,6 +17,8 @@ func (diagram *Diagram) SetID(num int64) {
 
 /* Elements */
 
+/** BPMNDI **/
+
 // SetPlane ...
 func (diagram *Diagram) SetPlane() {
 	diagram.Plane = make([]Plane, 1)

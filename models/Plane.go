@@ -1,6 +1,9 @@
 package models
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 // Plane ...
 type Plane struct {
@@ -10,22 +13,45 @@ type Plane struct {
 	Edge    []Edge  `xml:"bpmndi:BPMNEdge"`
 }
 
+/* Attributes */
+
+/** BPMN **/
+
 // SetID ...
-func (p *Plane) SetID(num int64) {
-	p.ID = "BPMNPlane_" + strconv.FormatInt(num, 16)
+func (plane *Plane) SetID(num int64) {
+	plane.ID = "BPMNPlane_" + strconv.FormatInt(num, 16)
 }
 
 // SetElement ...
-func (p *Plane) SetElement(typ string, suffix string) {
+func (plane *Plane) SetElement(typ string, suffix string) {
 	switch typ {
 	case "process":
-		p.Element = "Process_" + suffix
+		plane.Element = "Process_" + suffix
 	case "collaboration":
-		p.Element = "Collaboration_" + suffix
+		plane.Element = "Collaboration_" + suffix
 	}
 }
 
-// SetCollaborationElement ...
-func (p *Plane) SetCollaborationElement(suffix string) {
-	p.Element = "Collaboration_" + suffix
+// SetAttrProcessElement ...
+func (plane *Plane) SetAttrProcessElement(suffix string) {
+	plane.Element = fmt.Sprintf("Process_%s", suffix)
+}
+
+// SetAttrCollaborationElement ...
+func (plane *Plane) SetAttrCollaborationElement(suffix string) {
+	plane.Element = fmt.Sprintf("Collaboration_%s", suffix)
+}
+
+/* Elements */
+
+/** BPMNDI **/
+
+// SetShape ...
+func (plane *Plane) SetShape(num int) {
+	plane.Shape = make([]Shape, num)
+}
+
+// SetEdge ...
+func (plane *Plane) SetEdge(num int) {
+	plane.Edge = make([]Edge, num)
 }

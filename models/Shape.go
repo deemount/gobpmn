@@ -1,5 +1,7 @@
 package models
 
+import "fmt"
+
 // Shape ...
 type Shape struct {
 	ID           string   `xml:"id,attr"`
@@ -14,19 +16,31 @@ type Shape struct {
 /** BPMN **/
 
 // SetID ...
-func (shape *Shape) SetID(typ string, suffix string) {
+func (shape *Shape) SetID(typ string, suffix interface{}) {
 	switch typ {
+	case "activity":
+		shape.ID = fmt.Sprintf("Activity_%s_di", suffix)
 	case "collaboration":
-		shape.ID = "Participant_" + suffix + "_di"
+		shape.ID = fmt.Sprintf("Participant_%s_di", suffix)
+	case "event":
+		shape.ID = fmt.Sprintf("Event_%s_di", suffix)
+	case "startevent":
+		shape.ID = fmt.Sprintf("_BPMNShape_StartEvent_%d", suffix)
 	}
 
 }
 
 // SetElement ...
-func (shape *Shape) SetElement(typ string, suffix string) {
+func (shape *Shape) SetElement(typ string, suffix interface{}) {
 	switch typ {
+	case "activity":
+		shape.Element = fmt.Sprintf("Activity_%s", suffix)
 	case "collaboration":
-		shape.Element = "Participant_" + suffix
+		shape.Element = fmt.Sprintf("Participant_%s", suffix)
+	case "event":
+		shape.Element = fmt.Sprintf("Event_%s", suffix)
+	case "startevent":
+		shape.Element = fmt.Sprintf("StartEvent_%d", suffix)
 	}
 }
 

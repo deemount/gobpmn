@@ -30,80 +30,89 @@ type Definitions struct {
 /** BPMN **/
 
 // SetBpmn ...
-func (def *Definitions) SetBpmn() {
-	def.Bpmn = "http://www.omg.org/spec/BPMN/20100524/MODEL"
+func (definitions *Definitions) SetBpmn() {
+	definitions.Bpmn = "http://www.omg.org/spec/BPMN/20100524/MODEL"
 }
 
 // SetBpmndi ...
-func (def *Definitions) SetBpmndi() {
-	def.Bpmndi = "http://www.omg.org/spec/BPMN/20100524/DI"
+func (definitions *Definitions) SetBpmndi() {
+	definitions.Bpmndi = "http://www.omg.org/spec/BPMN/20100524/DI"
 }
 
 // SetDC ...
-func (def *Definitions) SetDC() {
-	def.DC = "http://www.omg.org/spec/DD/20100524/DC"
+func (definitions *Definitions) SetDC() {
+	definitions.DC = "http://www.omg.org/spec/DD/20100524/DC"
 }
 
 // SetBioc ...
-func (def *Definitions) SetBioc() {
-	def.Bioc = "http://bpmn.io/schema/bpmn/biocolor/1.0"
+func (definitions *Definitions) SetBioc() {
+	definitions.Bioc = "http://bpmn.io/schema/bpmn/biocolor/1.0"
 }
 
 // SetXSD ...
-func (def *Definitions) SetXSD() {
-	def.Xsd = "http://www.w3.org/2001/XMLSchema"
+func (definitions *Definitions) SetXSD() {
+	definitions.Xsd = "http://www.w3.org/2001/XMLSchema"
 }
 
 // SetDefinitionsID ...
-func (def *Definitions) SetID(suffix string) {
-	def.ID = "Definitions_" + suffix
+func (definitions *Definitions) SetID(suffix string) {
+	definitions.ID = "Definitions_" + suffix
 }
 
 // SetTargetNamespace ...
-func (def *Definitions) SetTargetNamespace() {
-	def.TargetNamespace = "http://bpmn.io/schema/bpmn"
+func (definitions *Definitions) SetTargetNamespace() {
+	definitions.TargetNamespace = "http://bpmn.io/schema/bpmn"
 }
 
 /** Camunda **/
 
 // SetCamundaSchema ...
-func (def *Definitions) SetCamundaSchema() {
-	def.CamundaSchema = "http://camunda.org/schema/1.0/bpmn"
+func (definitions *Definitions) SetCamundaSchema() {
+	definitions.CamundaSchema = "http://camunda.org/schema/1.0/bpmn"
 }
 
 // SetExporter ...
-func (def *Definitions) SetExporter() {
-	def.Exporter = "Camunda Modeler"
+func (definitions *Definitions) SetExporter() {
+	definitions.Exporter = "Camunda Modeler"
 }
 
 // SetExporterVersion ...
-func (def *Definitions) SetExporterVersion() {
-	def.ExporterVersion = "4.5.0"
+func (definitions *Definitions) SetExporterVersion() {
+	definitions.ExporterVersion = "4.5.0"
 }
 
 /* Elements */
 
 /** BPMN **/
-func (def *Definitions) SetCollaboration() {
-	def.Collaboration = make([]Collaboration, 1)
+
+// SetCollaboration ...
+func (definitions *Definitions) SetCollaboration() {
+	definitions.Collaboration = make([]Collaboration, 1)
 }
 
 // SetProcess ...
-func (def *Definitions) SetProcess(num int) {
-	def.Process = make([]Process, num)
+func (definitions *Definitions) SetProcess(num int) {
+	definitions.Process = make([]Process, num)
 }
 
 // SetMessage ...
-func (def *Definitions) SetMessage(num int) {
-	def.Msg = make([]Message, num)
+func (definitions *Definitions) SetCategory(num int) {
+	definitions.Category = make([]Category, num)
+}
+
+// SetMessage ...
+func (definitions *Definitions) SetMessage(num int) {
+	definitions.Msg = make([]Message, num)
 }
 
 // SetSignal ...
-func (def *Definitions) SetSignal(num int) {
-	def.Signal = make([]Signal, num)
+func (definitions *Definitions) SetSignal(num int) {
+	definitions.Signal = make([]Signal, num)
 }
 
+/** BPMNDI **/
+
 // SetDiagram ...
-func (def *Definitions) SetDiagram() {
-	def.Diagram = make([]Diagram, 1)
+func (definitions *Definitions) SetDiagram() {
+	definitions.Diagram = make([]Diagram, 1)
 }

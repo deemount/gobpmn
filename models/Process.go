@@ -46,45 +46,45 @@ type Process struct {
 /** BPMN **/
 
 // SetID ...
-func (proc *Process) SetID(suffix string) {
-	proc.ID = "Process_" + suffix
+func (process *Process) SetID(suffix string) {
+	process.ID = "Process_" + suffix
 }
 
 // SetName ...
-func (proc *Process) SetName(name string) {
-	proc.Name = name
+func (process *Process) SetName(name string) {
+	process.Name = name
 }
 
 // SetIsExecutable ...
-func (proc *Process) SetIsExecutable(isExec bool) {
-	proc.IsExecutable = isExec
+func (process *Process) SetIsExecutable(isExec bool) {
+	process.IsExecutable = isExec
 }
 
 /** Camunda **/
 
 // SetCamundaVersionTag ...
-func (proc *Process) SetCamundaVersionTag(tag string) {
-	proc.CamundaVersionTag = tag
+func (process *Process) SetCamundaVersionTag(tag string) {
+	process.CamundaVersionTag = tag
 }
 
 // SetCamundaJobpriority ...
-func (proc *Process) SetCamundaJobPriority(priority int) {
-	proc.CamundaJobPriority = priority
+func (process *Process) SetCamundaJobPriority(priority int) {
+	process.CamundaJobPriority = priority
 }
 
 // SetCamundaTaskPriority ...
-func (proc *Process) SetCamundaTaskPriority(priority int) {
-	proc.CamundaTaskPriority = priority
+func (process *Process) SetCamundaTaskPriority(priority int) {
+	process.CamundaTaskPriority = priority
 }
 
 // SetCamundaCandidStartGroups ...
-func (proc *Process) SetCamundaCandidStartGroups(groups string) {
-	proc.CamundaCandidStartGroups = groups
+func (process *Process) SetCamundaCandidStartGroups(groups string) {
+	process.CamundaCandidStartGroups = groups
 }
 
 // SetCamundaCandidStartUsers
-func (proc *Process) SetCamundaCandidStartUsers(users string) {
-	proc.CamundaCandidStartUsers = users
+func (process *Process) SetCamundaCandidStartUsers(users string) {
+	process.CamundaCandidStartUsers = users
 }
 
 /* Elements */
@@ -94,124 +94,124 @@ func (proc *Process) SetCamundaCandidStartUsers(users string) {
 /** LaneSet **/
 
 // SetLaneSet ...
-func (proc *Process) SetLaneSet() {
-	proc.LaneSet = make([]LaneSet, 1)
+func (process *Process) SetLaneSet() {
+	process.LaneSet = make([]LaneSet, 1)
 }
 
 /*** Event ***/
 
 // SetStartEvent ...
-func (proc *Process) SetStartEvent(num int) {
-	proc.StartEvent = make([]StartEvent, num)
+func (process *Process) SetStartEvent(num int) {
+	process.StartEvent = make([]StartEvent, num)
 }
 
 // SetBoundEvent ...
-func (proc *Process) SetBoundaryEvent(num int) {
-	proc.BoundaryEvent = make([]BoundaryEvent, num)
+func (process *Process) SetBoundaryEvent(num int) {
+	process.BoundaryEvent = make([]BoundaryEvent, num)
 }
 
 // SetEndEvent ...
-func (proc *Process) SetEndEvent(num int) {
-	proc.EndEvent = make([]EndEvent, num)
+func (process *Process) SetEndEvent(num int) {
+	process.EndEvent = make([]EndEvent, num)
 }
 
 // SetIntermedCatchEvent ...
-func (proc *Process) SetIntermedCatchEvent(num int) {
-	proc.IntermediateCatchEvent = make([]IntermediateCatchEvent, num)
+func (process *Process) SetIntermedCatchEvent(num int) {
+	process.IntermediateCatchEvent = make([]IntermediateCatchEvent, num)
 }
 
 // SetIntermedThrowEvent ...
-func (proc *Process) SetIntermedThrowEvent(num int) {
-	proc.IntermediateThrowEvent = make([]IntermediateThrowEvent, num)
+func (process *Process) SetIntermedThrowEvent(num int) {
+	process.IntermediateThrowEvent = make([]IntermediateThrowEvent, num)
 }
 
 /*** Task ***/
 
 // SetTask ...
-func (proc *Process) SetTask(num int) {
-	proc.Task = make([]Task, num)
+func (process *Process) SetTask(num int) {
+	process.Task = make([]Task, num)
 }
 
 // SetUserTask ...
-func (proc *Process) SetUserTask(num int) {
-	proc.UserTask = make([]UserTask, num)
+func (process *Process) SetUserTask(num int) {
+	process.UserTask = make([]UserTask, num)
 }
 
 // SetManualTask ...
-func (proc *Process) SetManualTask(num int) {
-	proc.ManualTask = make([]ManualTask, num)
+func (process *Process) SetManualTask(num int) {
+	process.ManualTask = make([]ManualTask, num)
 }
 
 // SetReceiveTask ...
-func (proc *Process) SetReceiveTask(num int) {
-	proc.ReceiveTask = make([]ReceiveTask, num)
+func (process *Process) SetReceiveTask(num int) {
+	process.ReceiveTask = make([]ReceiveTask, num)
 }
 
 // SetScriptTask ...
-func (proc *Process) SetScriptTask(num int) {
-	proc.ScriptTask = make([]ScriptTask, num)
+func (process *Process) SetScriptTask(num int) {
+	process.ScriptTask = make([]ScriptTask, num)
 }
 
 // SetSendTask ...
-func (proc *Process) SetSendTask(num int) {
-	proc.SendTask = make([]SendTask, num)
+func (process *Process) SetSendTask(num int) {
+	process.SendTask = make([]SendTask, num)
 }
 
 // SetServiceTask ...
-func (proc *Process) SetServiceTask(num int) {
-	proc.ServiceTask = make([]ServiceTask, num)
+func (process *Process) SetServiceTask(num int) {
+	process.ServiceTask = make([]ServiceTask, num)
 }
 
 // SetCallActivity ...
-func (proc *Process) SetCallActivity(num int) {
-	proc.CallActivity = make([]CallActivity, num)
+func (process *Process) SetCallActivity(num int) {
+	process.CallActivity = make([]CallActivity, num)
 }
 
 // SetSubProcess ...
-func (proc *Process) SetSubProcess(num int) {
-	proc.SubProcess = make([]SubProcess, num)
+func (process *Process) SetSubProcess(num int) {
+	process.SubProcess = make([]SubProcess, num)
 }
 
 // SetTransaction ...
-func (proc *Process) SetTransaction(num int) {
-	proc.Transaction = make([]Transaction, num)
+func (process *Process) SetTransaction(num int) {
+	process.Transaction = make([]Transaction, num)
 }
 
 /*** Gateway ***/
 
 // SetExclusiveGateway
-func (proc *Process) SetExclusiveGateway(num int) {
-	proc.ExclusiveGateway = make([]ExclusiveGateway, num)
+func (process *Process) SetExclusiveGateway(num int) {
+	process.ExclusiveGateway = make([]ExclusiveGateway, num)
 }
 
 // SetInclsuiveGateway
-func (proc *Process) SetInclusiveGateway(num int) {
-	proc.InclusiveGateway = make([]InclusiveGateway, num)
+func (process *Process) SetInclusiveGateway(num int) {
+	process.InclusiveGateway = make([]InclusiveGateway, num)
 }
 
 // SetParallelGateway
-func (proc *Process) SetParallelGateway(num int) {
-	proc.ParallelGateway = make([]ParallelGateway, num)
+func (process *Process) SetParallelGateway(num int) {
+	process.ParallelGateway = make([]ParallelGateway, num)
 }
 
 // SetComplexGateway
-func (proc *Process) SetComplexGateway(num int) {
-	proc.ComplexGateway = make([]ComplexGateway, num)
+func (process *Process) SetComplexGateway(num int) {
+	process.ComplexGateway = make([]ComplexGateway, num)
 }
 
 // SetEventBasedGateway
-func (proc *Process) SetEventBasedGateway(num int) {
-	proc.EventBasedGateway = make([]EventBasedGateway, num)
+func (process *Process) SetEventBasedGateway(num int) {
+	process.EventBasedGateway = make([]EventBasedGateway, num)
 }
 
 /*** Marker ***/
 
 // SetSequenceFlow ...
-func (proc *Process) SetSequenceFlow(num int) {
-	proc.SequenceFlow = make([]SequenceFlow, num)
+func (process *Process) SetSequenceFlow(num int) {
+	process.SequenceFlow = make([]SequenceFlow, num)
 }
 
 // SetGroup ...
-func (proc *Process) SetGroup(num int) {
-	proc.Group = make([]Group, num)
+func (process *Process) SetGroup(num int) {
+	process.Group = make([]Group, num)
 }
