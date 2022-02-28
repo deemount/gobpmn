@@ -2,16 +2,22 @@ package models
 
 import "fmt"
 
+// IntermediateCatchEventRepository ...
+type IntermediateCatchEventRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // IntermediateCatchEvent ...
 type IntermediateCatchEvent struct {
-	ID                         string                       `xml:"id,attr,omitempty"`
-	Name                       string                       `xml:"name,attr,omitempty"`
-	ExtensionElements          []ExtensionElements          `xml:"bpmn:extensionElements,omitempty"`
-	Incoming                   []Incoming                   `xml:"bpmn:incoming,omitempty"`
-	Outgoing                   []Outgoing                   `xml:"bpmn:outgoing,omitempty"`
-	ConditionalEventDefinition []ConditionalEventDefinition `xml:"bpmn:conditionalEventDefinition,omitempty"`
-	TimerEventDefinition       []TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty"`
-	MessageEventDefinition     []MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty"`
+	ID                         string                       `xml:"id,attr,omitempty" json:"id"`
+	Name                       string                       `xml:"name,attr,omitempty" json:"name,omitempty"`
+	ExtensionElements          []ExtensionElements          `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming                   []Incoming                   `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing                   []Outgoing                   `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	ConditionalEventDefinition []ConditionalEventDefinition `xml:"bpmn:conditionalEventDefinition,omitempty" json:"conditionalEventDefinition,omitempty"`
+	TimerEventDefinition       []TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
+	MessageEventDefinition     []MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
 }
 
 /* Attributes */

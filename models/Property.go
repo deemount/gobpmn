@@ -2,9 +2,11 @@ package models
 
 // Property ...
 type Property struct {
-	Name  string `xml:"name,attr,omitempty"`
-	Value string `xml:"value,attr,omitempty"`
+	Name  string `xml:"name,attr,omitempty" json:"name,omitempty"`
+	Value string `xml:"value,attr,omitempty" json:"value,omitempty"`
 }
+
+/* Attributes */
 
 // SetName ...
 func (prop *Property) SetName(name string) {

@@ -4,10 +4,14 @@ import "fmt"
 
 // Condition ...
 type Condition struct {
-	ConditionType string `xml:"xsi:type,attr,omitempty"`
-	ScriptFormat  string `xml:"language,attr,omitempty"`
-	Script        string `xml:",innerxml,omitempty"`
+	ConditionType string `xml:"xsi:type,attr,omitempty" json:"conditionType,omitempty"`
+	ScriptFormat  string `xml:"language,attr,omitempty" json:"scriptFormat,omitempty"`
+	Script        string `xml:",innerxml,omitempty" json:"script,omitempty"`
 }
+
+/* Attributes */
+
+/** BPMN **/
 
 // SetConditionType ...
 func (condition *Condition) SetConditionType() {

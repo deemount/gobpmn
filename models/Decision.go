@@ -8,9 +8,9 @@ type DecisionRepository interface {
 
 // Decision ...
 type Decision struct {
-	ID            string        `xml:"id,attr"`
-	Name          string        `xml:"name,attr,omitempty"`
-	DecisionTable DecisionTable `xml:"decisionTable"`
+	ID            string          `xml:"id,attr" json:"id"`
+	Name          string          `xml:"name,attr,omitempty" json:"name,omitempty"`
+	DecisionTable []DecisionTable `xml:"decisionTable" json:"decisionTable,omitempty"`
 }
 
 // SetID ...

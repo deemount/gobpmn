@@ -2,7 +2,7 @@ package models
 
 // CamundaFormData ...
 type CamundaFormData struct {
-	CamundaFormField []CamundaFormField `xml:"camunda:formField,omitempty"`
+	CamundaFormField []CamundaFormField `xml:"camunda:formField,omitempty" json:"formData,omitempty"`
 }
 
 /* Elements */

@@ -4,8 +4,8 @@ import "fmt"
 
 // LaneSet ...
 type LaneSet struct {
-	ID   string `xml:"id,attr"`
-	Lane []Lane `xml:"bpmn:lane,omitempty"`
+	ID   string `xml:"id,attr" json:"id"`
+	Lane []Lane `xml:"bpmn:lane,omitempty" json:"lane,omitempty"`
 }
 
 /* Attributes */

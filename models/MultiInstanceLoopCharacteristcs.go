@@ -2,14 +2,14 @@ package models
 
 // MultiInstanceLoopCharacteristics ...
 type MultiInstanceLoopCharacteristics struct {
-	IsSequential           bool                  `xml:"isSequential,attr,omitempty"`
-	CamundaAsyncBefore     bool                  `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAfter      bool                  `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaCollection      string                `xml:"camunda:collection,attr,omitempty"`
-	CamundaElementVariable string                `xml:"camunda:elementVariable,attr,omitempty"`
-	ExtensionElements      []ExtensionElements   `xml:"bpmn:extensionElements,omitempty"`
-	LoopCardinality        []LoopCardinality     `xml:"bpmn:loopCardinality,omitempty"`
-	CompletionCondition    []CompletionCondition `xml:"bpmn:completionCondition,omitempty"`
+	IsSequential           bool                  `xml:"isSequential,attr,omitempty" json:"isSequential,omitempty"`
+	CamundaAsyncBefore     bool                  `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter      bool                  `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaCollection      string                `xml:"camunda:collection,attr,omitempty" json:"collection,omitempty"`
+	CamundaElementVariable string                `xml:"camunda:elementVariable,attr,omitempty" json:"elementVariable,omitempty"`
+	ExtensionElements      []ExtensionElements   `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	LoopCardinality        []LoopCardinality     `xml:"bpmn:loopCardinality,omitempty" json:"loopCardinality,omitempty"`
+	CompletionCondition    []CompletionCondition `xml:"bpmn:completionCondition,omitempty" json:"completionCondition,omitempty"`
 }
 
 /* Attributes */

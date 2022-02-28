@@ -2,17 +2,23 @@ package models
 
 import "fmt"
 
-// SetIntermediateThrowEvent ...
+// IntermediateThrowEventRepository ...
+type IntermediateThrowEventRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
+// IntermediateThrowEvent ...
 type IntermediateThrowEvent struct {
-	ID                        string                      `xml:"id,attr,omitempty"`
-	Name                      string                      `xml:"name,attr,omitempty"`
-	ExtensionElements         []ExtensionElements         `xml:"bpmn:extensionElements,omitempty"`
-	Incoming                  []Incoming                  `xml:"bpmn:incoming,omitempty"`
-	Outgoing                  []Outgoing                  `xml:"bpmn:outgoing,omitempty"`
-	CompensateEventDefinition []CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty"`
-	LinkEventDefinition       []LinkEventDefinition       `xml:"bpmn:linkEventDefinition,omitempty"`
-	EscalationEventDefinition []EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty"`
-	MessageEventDefinition    []MessageEventDefinition    `xml:"bpmn:messageEventDefinition,omitempty"`
+	ID                        string                      `xml:"id,attr,omitempty" json:"id"`
+	Name                      string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
+	ExtensionElements         []ExtensionElements         `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming                  []Incoming                  `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing                  []Outgoing                  `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	CompensateEventDefinition []CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
+	LinkEventDefinition       []LinkEventDefinition       `xml:"bpmn:linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
+	EscalationEventDefinition []EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	MessageEventDefinition    []MessageEventDefinition    `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
 }
 
 /* Attributes */

@@ -4,7 +4,7 @@ import "fmt"
 
 // ErrorEventDefinition ...
 type ErrorEventDefinition struct {
-	ID string `xml:"id,attr,omitempty"`
+	ID string `xml:"id,attr,omitempty" json:"id"`
 }
 
 /* Attributes */

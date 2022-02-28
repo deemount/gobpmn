@@ -4,7 +4,7 @@ import "fmt"
 
 // LinkEventDefinition ...
 type LinkEventDefinition struct {
-	ID string `xml:"id,attr,omitempty"`
+	ID string `xml:"id,attr,omitempty" json:"id"`
 }
 
 /* Attributes */

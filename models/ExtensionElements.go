@@ -2,14 +2,14 @@ package models
 
 // ExtensionElements ...
 type ExtensionElements struct {
-	CamundaProperties          []CamundaProperties          `xml:"camunda:properties,omitempty"`
-	CamundaFailedJobRetryCycle []CamundaFailedJobRetryCycle `xml:"camunda:failedJobRetryCycle,omitempty"`
-	CamundaFormData            []CamundaFormData            `xml:"camunda:formData,omitempty"`
-	CamundaInputOutput         []CamundaInputOutput         `xml:"camunda:inputOutput,omitempty"`
-	CamundaTaskListener        []CamundaTaskListener        `xml:"camunda:taskListener,omitempty"`
-	CamundaExecutionListener   []CamundaExecutionListener   `xml:"camunda:executionListener,omitempty"`
-	CamundaIn                  []CamundaIn                  `xml:"camunda:in,omitempty"`
-	CamundaOut                 []CamundaOut                 `xml:"camunda:out,omitempty"`
+	CamundaProperties          []CamundaProperties          `xml:"camunda:properties,omitempty" json:"properties,omitempty"`
+	CamundaFailedJobRetryCycle []CamundaFailedJobRetryCycle `xml:"camunda:failedJobRetryCycle,omitempty" json:"failedJobRetryCycle,omitempty"`
+	CamundaFormData            []CamundaFormData            `xml:"camunda:formData,omitempty" json:"formData,omitempty"`
+	CamundaInputOutput         []CamundaInputOutput         `xml:"camunda:inputOutput,omitempty" json:"inputOutput,omitempty"`
+	CamundaTaskListener        []CamundaTaskListener        `xml:"camunda:taskListener,omitempty" json:"taskListener,omitempty"`
+	CamundaExecutionListener   []CamundaExecutionListener   `xml:"camunda:executionListener,omitempty" json:"executionListener,omitempty"`
+	CamundaIn                  []CamundaIn                  `xml:"camunda:in,omitempty" json:"in,omitempty"`
+	CamundaOut                 []CamundaOut                 `xml:"camunda:out,omitempty" json:"out,omitempty"`
 }
 
 /* Elements */

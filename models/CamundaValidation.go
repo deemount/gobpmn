@@ -2,7 +2,7 @@ package models
 
 // CamundaValidation ...
 type CamundaValidation struct {
-	CamundaConstraint []CamundaConstraint `xml:"camunda:constraint,omitempty"`
+	CamundaConstraint []CamundaConstraint `xml:"camunda:constraint,omitempty" json:"constraint,omitempty"`
 }
 
 /* Elements */
@@ -10,6 +10,6 @@ type CamundaValidation struct {
 /** Camunda **/
 
 // SetCamundaConstraint ...
-func (cvalid *CamundaValidation) SetCamundaConstraint(num int) {
-	cvalid.CamundaConstraint = make([]CamundaConstraint, num)
+func (validation *CamundaValidation) SetCamundaConstraint(num int) {
+	validation.CamundaConstraint = make([]CamundaConstraint, num)
 }

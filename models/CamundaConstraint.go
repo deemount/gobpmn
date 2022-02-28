@@ -2,8 +2,8 @@ package models
 
 // CamundaConstraint ...
 type CamundaConstraint struct {
-	Name   string `xml:"name,attr,omitempty"`
-	Config string `xml:"config,attr,omitempty"`
+	Name   string `xml:"name,attr,omitempty" json:"name"`
+	Config string `xml:"config,attr,omitempty" json:"config,omitempty"`
 }
 
 /* Attributes */

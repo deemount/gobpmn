@@ -3,8 +3,8 @@ package models
 import "fmt"
 
 type Message struct {
-	ID   string `xml:"id,attr,omitempty"`
-	Name string `xml:"name,attr,omitempty"`
+	ID   string `xml:"id,attr,omitempty" json:"id"`
+	Name string `xml:"name,attr,omitempty" json:"name,omitempty"`
 }
 
 // SetID ...

@@ -7,10 +7,10 @@ import (
 
 // Plane ...
 type Plane struct {
-	ID      string  `xml:"id,attr"`
-	Element string  `xml:"bpmnElement,attr"`
-	Shape   []Shape `xml:"bpmndi:BPMNShape"`
-	Edge    []Edge  `xml:"bpmndi:BPMNEdge"`
+	ID      string  `xml:"id,attr" json:"-"`
+	Element string  `xml:"bpmnElement,attr" json:"-"`
+	Shape   []Shape `xml:"bpmndi:BPMNShape" json:"-"`
+	Edge    []Edge  `xml:"bpmndi:BPMNEdge" json:"-"`
 }
 
 /* Attributes */

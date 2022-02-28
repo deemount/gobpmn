@@ -2,9 +2,9 @@ package models
 
 // ConditionalEventDefinition ...
 type ConditionalEventDefinition struct {
-	ID                  string      `xml:"id,attr"`
-	CamundaVariableName string      `xml:"camunda:variableName"`
-	Condition           []Condition `xml:"bpmn:condition,omitempty"`
+	ID                  string      `xml:"id,attr" json:"id"`
+	CamundaVariableName string      `xml:"camunda:variableName" json:"variableName,omitempty"`
+	Condition           []Condition `xml:"bpmn:condition,omitempty" json:"condition,omitempty"`
 }
 
 /* Attributes */
@@ -12,20 +12,20 @@ type ConditionalEventDefinition struct {
 /** BPMN **/
 
 // SetID ...
-func (ced *ConditionalEventDefinition) SetID(suffix string) {
-	ced.ID = "ConditionalEventDefinition_" + suffix
+func (conditionalEventDefinition *ConditionalEventDefinition) SetID(suffix string) {
+	conditionalEventDefinition.ID = "ConditionalEventDefinition_" + suffix
 }
 
 /** Camunda **/
 
 // SetCamudnaVariableName ...
-func (ced *ConditionalEventDefinition) SetCamundaVariableName(variableName string) {
-	ced.CamundaVariableName = variableName
+func (conditionalEventDefinition *ConditionalEventDefinition) SetCamundaVariableName(variableName string) {
+	conditionalEventDefinition.CamundaVariableName = variableName
 }
 
 /* Elements */
 
 // SetCondition ...
-func (ced *ConditionalEventDefinition) SetCondition() {
-	ced.Condition = make([]Condition, 1)
+func (conditionalEventDefinition *ConditionalEventDefinition) SetCondition() {
+	conditionalEventDefinition.Condition = make([]Condition, 1)
 }

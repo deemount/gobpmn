@@ -4,11 +4,11 @@ import "fmt"
 
 // Shape ...
 type Shape struct {
-	ID           string   `xml:"id,attr"`
-	Element      string   `xml:"bpmnElement,attr"`
-	IsHorizontal bool     `xml:"isHorizontal,attr,omitempty"`
-	Bounds       []Bounds `xml:"dc:Bounds"`
-	Label        []Label  `xml:"bpmndi:BPMNLabel"`
+	ID           string   `xml:"id,attr" json:"-"`
+	Element      string   `xml:"bpmnElement,attr" json:"-"`
+	IsHorizontal bool     `xml:"isHorizontal,attr,omitempty" json:"-"`
+	Bounds       []Bounds `xml:"dc:Bounds" json:"-"`
+	Label        []Label  `xml:"bpmndi:BPMNLabel" json:"-"`
 }
 
 /* Attributes */

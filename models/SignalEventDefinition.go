@@ -4,8 +4,8 @@ import "fmt"
 
 // SignalEventDefinition ...
 type SignalEventDefinition struct {
-	ID        string `xml:"id,attr,omitempty"`
-	SignalRef string `xml:"signalRef,attr,omitempty"`
+	ID        string `xml:"id,attr,omitempty" json:"id"`
+	SignalRef string `xml:"signalRef,attr,omitempty" json:"signalRef,omitempty"`
 }
 
 // SetID ...

@@ -4,9 +4,13 @@ import "fmt"
 
 // MessageEventDefinition ...
 type MessageEventDefinition struct {
-	ID     string `xml:"id,attr,omitempty"`
-	MsgRef string `xml:"messageRef,attr,omitempty"`
+	ID     string `xml:"id,attr,omitempty" json:"id"`
+	MsgRef string `xml:"messageRef,attr,omitempty" json:"messageRef,omitempty"`
 }
+
+/* Attributes */
+
+/** BPMN **/
 
 // SetID ...
 func (med *MessageEventDefinition) SetID(suffix string) {

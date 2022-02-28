@@ -1,12 +1,20 @@
 package models
 
+import "fmt"
+
+// ParticipantRepository ...
+type ParticipantRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // Participant ...
 type Participant struct {
-	ID                      string                    `xml:"id,attr"`
-	Name                    string                    `xml:"name,attr,omitempty"`
-	ProcessRef              string                    `xml:"processRef,attr"`
-	Documentation           []Documentation           `xml:"bpmn:documentation,omitempty"`
-	ParticipantMultiplicity []ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty"`
+	ID                      string                    `xml:"id,attr" json:"id"`
+	Name                    string                    `xml:"name,attr,omitempty" json:"name,omitempty"`
+	ProcessRef              string                    `xml:"processRef,attr" json:"processRef,omitempty"`
+	Documentation           []Documentation           `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ParticipantMultiplicity []ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty" json:"participantMultiplicity,omitempty"`
 }
 
 /* Attributes */
@@ -14,18 +22,18 @@ type Participant struct {
 /** BPMN **/
 
 // SetID ...
-func (pp *Participant) SetID(suffix string) {
-	pp.ID = "Participant_" + suffix
+func (participant *Participant) SetID(suffix string) {
+	participant.ID = fmt.Sprintf("Participant_%s", suffix)
 }
 
 // SetName ...
-func (pp *Participant) SetName(name string) {
-	pp.Name = name
+func (participant *Participant) SetName(name string) {
+	participant.Name = name
 }
 
 // SetProcessRef ...
-func (pp *Participant) SetProcessRef(suffix string) {
-	pp.ProcessRef = "Process_" + suffix
+func (participant *Participant) SetProcessRef(suffix string) {
+	participant.ProcessRef = fmt.Sprintf("Process_%s", suffix)
 }
 
 /* Elements */

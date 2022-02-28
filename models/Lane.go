@@ -4,8 +4,8 @@ import "fmt"
 
 // Lane ...
 type Lane struct {
-	ID          string        `xml:"id,attr"`
-	FlowNodeRef []FlowNodeRef `xml:"bpmn:flowNodeRef,omitempty"`
+	ID          string        `xml:"id,attr" json:"id"`
+	FlowNodeRef []FlowNodeRef `xml:"bpmn:flowNodeRef,omitempty" json:"flowNodeRef,omitempty"`
 }
 
 /* Attributes */

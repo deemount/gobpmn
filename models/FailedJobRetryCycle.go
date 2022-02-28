@@ -1,5 +1,4 @@
 package models
 
 // CamundaFailedJobyRetryCycle ...
-type CamundaFailedJobRetryCycle struct {
-}
+type CamundaFailedJobRetryCycle struct{}

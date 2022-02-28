@@ -5,6 +5,7 @@ import "strconv"
 // StartEvent ...
 type StartEvent struct {
 	ID                    string                       `xml:"id,attr" json:"id"`
+	Name                  string                       `xml:"name,attr,omitempty" json:"name,omitempty"`
 	IsInterrupting        bool                         `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
 	CamundaFormKey        string                       `xml:"camunda:formKey,attr,omitempty" json:"formKey,omitempty"`
 	CamundaFormRef        string                       `xml:"camunda:formRef,attr,omitempty" json:"formRef,omitempty"`
@@ -26,82 +27,87 @@ type StartEvent struct {
 /** BPMN **/
 
 // SetID ...
-func (stev *StartEvent) SetID(num int64) {
-	stev.ID = "StartEvent_" + strconv.FormatInt(num, 16)
+func (startEvent *StartEvent) SetID(num int64) {
+	startEvent.ID = "StartEvent_" + strconv.FormatInt(num, 16)
+}
+
+// SetName ...
+func (startEvent *StartEvent) SetName(name string) {
+	startEvent.Name = name
 }
 
 // SetIsInterrupting ...
-func (stev *StartEvent) SetIsInterrupting(isInterrupt bool) {
-	stev.IsInterrupting = isInterrupt
+func (startEvent *StartEvent) SetIsInterrupting(isInterrupt bool) {
+	startEvent.IsInterrupting = isInterrupt
 }
 
 /** Camunda **/
 
 // SetCamundaFormKey ...
-func (stev *StartEvent) SetCamundaFormKey(key string) {
-	stev.CamundaFormKey = key
+func (startEvent *StartEvent) SetCamundaFormKey(key string) {
+	startEvent.CamundaFormKey = key
 }
 
 // SetCamundaFormRef ...
-func (stev *StartEvent) SetCamundaFormRef(ref string) {
-	stev.CamundaFormRef = ref
+func (startEvent *StartEvent) SetCamundaFormRef(ref string) {
+	startEvent.CamundaFormRef = ref
 }
 
 // SetCamundaFormRefBinding ...
 // possible arguments: latest, deployment, version
 // version is dependent to attribute camunda:formRefVersion
-func (stev *StartEvent) SetCamundaFormRefBinding(bind string) {
-	stev.CamundaFormRefBind = bind
+func (startEvent *StartEvent) SetCamundaFormRefBinding(bind string) {
+	startEvent.CamundaFormRefBind = bind
 }
 
 // SetCamundaFormRefVersion ...
-func (stev *StartEvent) SetCamundaFormRefVersion(version string) {
-	stev.CamundaFormRefVersion = version
+func (startEvent *StartEvent) SetCamundaFormRefVersion(version string) {
+	startEvent.CamundaFormRefVersion = version
 }
 
 // SetCamundaAsyncBefore ...
-func (stev *StartEvent) SetCamundaAsyncBefore(asyncBefore bool) {
-	stev.CamundaAsyncBefore = asyncBefore
+func (startEvent *StartEvent) SetCamundaAsyncBefore(asyncBefore bool) {
+	startEvent.CamundaAsyncBefore = asyncBefore
 }
 
 // SetCamundaAsyncAfter ...
-func (stev *StartEvent) SetCamundaAsyncAfter(asyncAfter bool) {
-	stev.CamundaAsyncAfter = asyncAfter
+func (startEvent *StartEvent) SetCamundaAsyncAfter(asyncAfter bool) {
+	startEvent.CamundaAsyncAfter = asyncAfter
 }
 
 // SetCamundaJobPriority ...
-func (stev *StartEvent) SetCamundaJobPriority(priority int) {
-	stev.CamundaJobPriority = priority
+func (startEvent *StartEvent) SetCamundaJobPriority(priority int) {
+	startEvent.CamundaJobPriority = priority
 }
 
 // SetCamundaInitiator ...
-func (stev *StartEvent) SetCamundaInitiator(initiator string) {
-	stev.CamundaInit = initiator
+func (startEvent *StartEvent) SetCamundaInitiator(initiator string) {
+	startEvent.CamundaInit = initiator
 }
 
 /*** Make Elements ***/
 
 // SetExtensionElements ...
-func (stev *StartEvent) SetExtensionElements() {
-	stev.ExtensionElements = make([]ExtensionElements, 1)
+func (startEvent *StartEvent) SetExtensionElements() {
+	startEvent.ExtensionElements = make([]ExtensionElements, 1)
 }
 
 // SetConditionalEventDefinition ...
-func (stev *StartEvent) SetConditionalEventDefinition() {
-	stev.ConditionalEventDef = make([]ConditionalEventDefinition, 1)
+func (startEvent *StartEvent) SetConditionalEventDefinition() {
+	startEvent.ConditionalEventDef = make([]ConditionalEventDefinition, 1)
 }
 
 // SetMsgEventDefinition ...
-func (stev *StartEvent) SetMsgEventDefinition() {
-	stev.MsgEventDef = make([]MessageEventDefinition, 1)
+func (startEvent *StartEvent) SetMsgEventDefinition() {
+	startEvent.MsgEventDef = make([]MessageEventDefinition, 1)
 }
 
 // SetTimerEventDefinition ...
-func (stev *StartEvent) SetTimerEventDefinition() {
-	stev.TimerEventDef = make([]TimerEventDefinition, 1)
+func (startEvent *StartEvent) SetTimerEventDefinition() {
+	startEvent.TimerEventDef = make([]TimerEventDefinition, 1)
 }
 
 // SetOutgoing ...
-func (stev *StartEvent) SetOutgoing(num int) {
-	stev.Outgoing = make([]Outgoing, num)
+func (startEvent *StartEvent) SetOutgoing(num int) {
+	startEvent.Outgoing = make([]Outgoing, num)
 }

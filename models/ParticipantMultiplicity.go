@@ -1,4 +1,4 @@
 package models
 
-type ParticipantMultiplicity struct {
-}
+// ParticipantMultiplicity ...
+type ParticipantMultiplicity struct{}

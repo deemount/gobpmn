@@ -4,12 +4,12 @@ import "fmt"
 
 // Documentation ...
 type Documentation struct {
-	ElementDocumentation string `xml:",innerxml,omitempty"`
+	ElementDocumentation string `xml:",innerxml,omitempty" json:"elementDeocumentation,omitempty"`
 }
 
 /* Content */
 
 // SetElementDocumentation ...
-func (docu *Documentation) SetElementDocumentation(elementDocu string) {
-	docu.ElementDocumentation = fmt.Sprintf("%s", elementDocu)
+func (documentation *Documentation) SetElementDocumentation(elementDocu string) {
+	documentation.ElementDocumentation = fmt.Sprintf("%s", elementDocu)
 }

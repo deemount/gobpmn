@@ -2,7 +2,7 @@ package models
 
 // FlowNodeRef ...
 type FlowNodeRef struct {
-	ID string `xml:",innerxml,omitempty"`
+	ID string `xml:",innerxml,omitempty" json:"id"`
 }
 
 /* Content */

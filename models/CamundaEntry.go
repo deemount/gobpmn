@@ -2,8 +2,8 @@ package models
 
 // CamundaEntry ...
 type CamundaEntry struct {
-	Key   string `xml:"key,attr,omitempty"`
-	Value string `xml:",innerxml,omitempty"`
+	Key   string `xml:"key,attr,omitempty" json:"key"`
+	Value string `xml:",innerxml,omitempty" json:"value,omitempty"`
 }
 
 /* Attributes */

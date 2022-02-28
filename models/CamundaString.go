@@ -1,4 +1,4 @@
 package models
 
-type CamundaString struct {
-}
+// CamundaString ...
+type CamundaString struct{}

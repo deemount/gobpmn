@@ -2,10 +2,16 @@ package models
 
 import "fmt"
 
+// SignalRepository ...
+type SignalRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // Signal ...
 type Signal struct {
-	ID   string `xml:"id,attr,omitempty"`
-	Name string `xml:"name,attr,omitempty"`
+	ID   string `xml:"id,attr,omitempty" json:"id"`
+	Name string `xml:"name,attr,omitempty" json:"name,omitempty"`
 }
 
 /* Attributes */

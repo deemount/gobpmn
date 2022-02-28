@@ -2,10 +2,10 @@ package models
 
 // CamundaTaskListener ...
 type CamundaTaskListener struct {
-	Class        string         `xml:"class,attr,omitempty"`
-	Event        string         `xml:"event,attr,omitempty"`
-	ListenerID   string         `xml:"id,attr,omitempty"`
-	CamundaField []CamundaField `xml:"camunda:field,omitempty"`
+	Class        string         `xml:"class,attr,omitempty" json:"class,omitempty"`
+	Event        string         `xml:"event,attr,omitempty" json:"event,omitempty"`
+	ListenerID   string         `xml:"id,attr,omitempty" json:"listenerId,omitempty"`
+	CamundaField []CamundaField `xml:"camunda:field,omitempty" json:"field,omitempty"`
 }
 
 /* Attributes */
