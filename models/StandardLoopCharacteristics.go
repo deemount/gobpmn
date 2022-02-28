@@ -1,5 +1,4 @@
 package models
 
 // StandardLoopCharacteristics ...
-type StandardLoopCharacteristics struct {
-}
+type StandardLoopCharacteristics struct{}
