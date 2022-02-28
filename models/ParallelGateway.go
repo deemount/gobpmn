@@ -10,11 +10,15 @@ type ParallelGatewayRepository interface {
 
 // ParallelGateway ...
 type ParallelGateway struct {
-	ID                string              `xml:"id,attr"`
-	Name              string              `xml:"name,attr,omitempty"`
-	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
-	Incoming          []Incoming          `xml:"bpmn:incoming,omitempty"`
-	Outgoing          []Outgoing          `xml:"bpmn:outgoing,omitempty"`
+	ID                 string              `xml:"id,attr" json:"id"`
+	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
+	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
+	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming           []Incoming          `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 /* Attributes */
@@ -22,28 +26,28 @@ type ParallelGateway struct {
 /** BPMN **/
 
 // SetID ...
-func (parallelgate *ParallelGateway) SetID(suffix string) {
-	parallelgate.ID = fmt.Sprintf("Gateway_%s", suffix)
+func (parallelGateway *ParallelGateway) SetID(suffix string) {
+	parallelGateway.ID = fmt.Sprintf("Gateway_%s", suffix)
 }
 
 // SetName ...
-func (parallelgate *ParallelGateway) SetName(name string) {
-	parallelgate.Name = name
+func (parallelGateway *ParallelGateway) SetName(name string) {
+	parallelGateway.Name = name
 }
 
 /* Elements */
 
 // SetExtensionElements ...
-func (parallelgate *ParallelGateway) SetExtensionElements() {
-	parallelgate.ExtensionElements = make([]ExtensionElements, 1)
+func (parallelGateway *ParallelGateway) SetExtensionElements() {
+	parallelGateway.ExtensionElements = make([]ExtensionElements, 1)
 }
 
 // SetIncoming ...
-func (parallelgate *ParallelGateway) SetIncoming(num int) {
-	parallelgate.Incoming = make([]Incoming, num)
+func (parallelGateway *ParallelGateway) SetIncoming(num int) {
+	parallelGateway.Incoming = make([]Incoming, num)
 }
 
 // SetOutgoing ...
-func (parallelgate *ParallelGateway) SetOutgoing(num int) {
-	parallelgate.Outgoing = make([]Outgoing, num)
+func (parallelGateway *ParallelGateway) SetOutgoing(num int) {
+	parallelGateway.Outgoing = make([]Outgoing, num)
 }

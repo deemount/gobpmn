@@ -2,10 +2,14 @@ package models
 
 // Incoming ...
 type Incoming struct {
-	Flow string `xml:",innerxml"`
+	Flow string `xml:",innerxml" json:"flow"`
 }
 
+/* Content */
+
+/** BPMN **/
+
 // SetFlow ...
-func (ig *Incoming) SetFlow(suffix string) {
-	ig.Flow = "Flow_" + suffix
+func (incoming *Incoming) SetFlow(suffix string) {
+	incoming.Flow = "Flow_" + suffix
 }

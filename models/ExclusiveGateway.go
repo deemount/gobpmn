@@ -10,15 +10,15 @@ type ExclusiveGatewayRepository interface {
 
 // ExclusiveGateway ...
 type ExclusiveGateway struct {
-	ID                 string              `xml:"id,attr"`
-	Name               string              `xml:"name,attr,omitempty"`
-	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty"`
-	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
-	Incoming           []Incoming          `xml:"bpmn:incoming,omitempty"`
-	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty"`
+	ID                 string              `xml:"id,attr" json:"id"`
+	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
+	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
+	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming           []Incoming          `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 /* Attributes */
@@ -26,45 +26,45 @@ type ExclusiveGateway struct {
 /** BPMN **/
 
 // SetID ...
-func (exclusivegate *ExclusiveGateway) SetID(suffix string) {
-	exclusivegate.ID = fmt.Sprintf("Gateway_%s", suffix)
+func (exclusiveGateway *ExclusiveGateway) SetID(suffix string) {
+	exclusiveGateway.ID = fmt.Sprintf("Gateway_%s", suffix)
 }
 
 // SetName ...
-func (exclusivegate *ExclusiveGateway) SetName(name string) {
-	exclusivegate.Name = name
+func (exclusiveGateway *ExclusiveGateway) SetName(name string) {
+	exclusiveGateway.Name = name
 }
 
 /** Camunda **/
 
 // SetCamundaAsyncBefore ...
-func (exclusivegate *ExclusiveGateway) SetCamundaAsyncBefore(asyncBefore bool) {
-	exclusivegate.CamundaAsyncBefore = asyncBefore
+func (exclusiveGateway *ExclusiveGateway) SetCamundaAsyncBefore(asyncBefore bool) {
+	exclusiveGateway.CamundaAsyncBefore = asyncBefore
 }
 
 // SetCamundaAsyncAfter ...
-func (exclusivegate *ExclusiveGateway) SetCamundaAsyncAfter(asyncAfter bool) {
-	exclusivegate.CamundaAsyncAfter = asyncAfter
+func (exclusiveGateway *ExclusiveGateway) SetCamundaAsyncAfter(asyncAfter bool) {
+	exclusiveGateway.CamundaAsyncAfter = asyncAfter
 }
 
 // SetCamundaJobPriority ...
-func (exclusivegate *ExclusiveGateway) SetCamundaJobPriority(priority int) {
-	exclusivegate.CamundaJobPriority = priority
+func (exclusiveGateway *ExclusiveGateway) SetCamundaJobPriority(priority int) {
+	exclusiveGateway.CamundaJobPriority = priority
 }
 
 /* Elements */
 
 // SetExtensionElements ...
-func (exclusivegate *ExclusiveGateway) SetExtensionElements() {
-	exclusivegate.ExtensionElements = make([]ExtensionElements, 1)
+func (exclusiveGateway *ExclusiveGateway) SetExtensionElements() {
+	exclusiveGateway.ExtensionElements = make([]ExtensionElements, 1)
 }
 
 // SetIncoming ...
-func (exclusivegate *ExclusiveGateway) SetIncoming(num int) {
-	exclusivegate.Incoming = make([]Incoming, num)
+func (exclusiveGateway *ExclusiveGateway) SetIncoming(num int) {
+	exclusiveGateway.Incoming = make([]Incoming, num)
 }
 
 // SetOutgoing ...
-func (exclusivegate *ExclusiveGateway) SetOutgoing(num int) {
-	exclusivegate.Outgoing = make([]Outgoing, num)
+func (exclusiveGateway *ExclusiveGateway) SetOutgoing(num int) {
+	exclusiveGateway.Outgoing = make([]Outgoing, num)
 }

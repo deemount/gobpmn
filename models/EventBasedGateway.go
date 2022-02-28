@@ -10,15 +10,15 @@ type EventBasedGatewayRepository interface {
 
 // EventBasedGateway ...
 type EventBasedGateway struct {
-	ID                 string              `xml:"id,attr"`
-	Name               string              `xml:"name,attr,omitempty"`
-	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty"`
-	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
-	Incoming           []Incoming          `xml:"bpmn:incoming,omitempty"`
-	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty"`
+	ID                 string              `xml:"id,attr" json:"id"`
+	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
+	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
+	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming           []Incoming          `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 /* Attributes */
@@ -26,45 +26,45 @@ type EventBasedGateway struct {
 /** BPMN **/
 
 // SetID ...
-func (eventbasedgate *EventBasedGateway) SetID(suffix string) {
-	eventbasedgate.ID = fmt.Sprintf("Gateway_%s", suffix)
+func (eventBasedGateway *EventBasedGateway) SetID(suffix string) {
+	eventBasedGateway.ID = fmt.Sprintf("Gateway_%s", suffix)
 }
 
 // SetName ...
-func (eventbasedgate *EventBasedGateway) SetName(name string) {
-	eventbasedgate.Name = name
+func (eventBasedGateway *EventBasedGateway) SetName(name string) {
+	eventBasedGateway.Name = name
 }
 
 /** Camunda **/
 
 // SetCamundaAsyncBefore ...
-func (eventbasedgate *EventBasedGateway) SetCamundaAsyncBefore(asyncBefore bool) {
-	eventbasedgate.CamundaAsyncBefore = asyncBefore
+func (eventBasedGateway *EventBasedGateway) SetCamundaAsyncBefore(asyncBefore bool) {
+	eventBasedGateway.CamundaAsyncBefore = asyncBefore
 }
 
 // SetCamundaAsyncAfter ...
-func (eventbasedgate *EventBasedGateway) SetCamundaAsyncAfter(asyncAfter bool) {
-	eventbasedgate.CamundaAsyncAfter = asyncAfter
+func (eventBasedGateway *EventBasedGateway) SetCamundaAsyncAfter(asyncAfter bool) {
+	eventBasedGateway.CamundaAsyncAfter = asyncAfter
 }
 
 // SetCamundaJobPriority ...
-func (eventbasedgate *EventBasedGateway) SetCamundaJobPriority(priority int) {
-	eventbasedgate.CamundaJobPriority = priority
+func (eventBasedGateway *EventBasedGateway) SetCamundaJobPriority(priority int) {
+	eventBasedGateway.CamundaJobPriority = priority
 }
 
 /* Elements */
 
 // SetExtensionElements ...
-func (eventbasedgate *EventBasedGateway) SetExtensionElements() {
-	eventbasedgate.ExtensionElements = make([]ExtensionElements, 1)
+func (eventBasedGateway *EventBasedGateway) SetExtensionElements() {
+	eventBasedGateway.ExtensionElements = make([]ExtensionElements, 1)
 }
 
 // SetIncoming ...
-func (eventbasedgate *EventBasedGateway) SetIncoming(num int) {
-	eventbasedgate.Incoming = make([]Incoming, num)
+func (eventBasedGateway *EventBasedGateway) SetIncoming(num int) {
+	eventBasedGateway.Incoming = make([]Incoming, num)
 }
 
 // SetOutgoing ...
-func (eventbasedgate *EventBasedGateway) SetOutgoing(num int) {
-	eventbasedgate.Outgoing = make([]Outgoing, num)
+func (eventBasedGateway *EventBasedGateway) SetOutgoing(num int) {
+	eventBasedGateway.Outgoing = make([]Outgoing, num)
 }

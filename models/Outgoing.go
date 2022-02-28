@@ -4,14 +4,14 @@ import "fmt"
 
 // Outgoing ...
 type Outgoing struct {
-	Flow string `xml:",innerxml" json:"flow,omitempty"`
+	Flow string `xml:",innerxml" json:"flow"`
 }
 
-/* Attributes */
+/* Content */
 
 /** BPMN **/
 
 // SetFlow ...
-func (og *Outgoing) SetFlow(suffix string) {
-	og.Flow = fmt.Sprintf("Flow_%s", suffix)
+func (outgoing *Outgoing) SetFlow(suffix string) {
+	outgoing.Flow = fmt.Sprintf("Flow_%s", suffix)
 }
