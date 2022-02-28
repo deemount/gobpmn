@@ -2,6 +2,12 @@ package models
 
 import "strconv"
 
+// StartEventRepository ...
+type StartEventRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // StartEvent ...
 type StartEvent struct {
 	ID                    string                       `xml:"id,attr" json:"id"`

@@ -2,7 +2,7 @@ package models
 
 // Text ...
 type Text struct {
-	Text string `xml:",innerxml,omitempty"`
+	Text string `xml:",innerxml,omitempty" json:"text,omitempty"`
 }
 
 /* Content */

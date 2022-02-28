@@ -1,31 +1,37 @@
 package models
 
+// SubProcessRepository ...
+type SubProcessRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // SubProcess ...
 type SubProcess struct {
-	ID                 string              `xml:"id,attr"`
-	Name               string              `xml:"name,attr,omitempty"`
-	TriggeredByEvent   bool                `xml:"triggeredByEvent,attr,omitempty"`
-	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty"`
-	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
-	StartEvent         []StartEvent        `xml:"bpmn:startEvent,omitemnpty"`
-	EndEvent           []EndEvent          `xml:"bpmn:endEvent,omitempty"`
-	Task               []Task              `xml:"bpmn:task,omitempty"`
-	UserTask           []UserTask          `xml:"bpmn:userTask,omitempty"`
-	ManualTask         []ManualTask        `xml:"bpmn:manualTask,omitempty"`
-	ReceiveTask        []ReceiveTask       `xml:"bpmn:receiveTask,omitempty"`
-	ScriptTask         []ScriptTask        `xml:"bpmn:scriptTask,omitempty"`
-	SendTask           []SendTask          `xml:"bpmn:sendTask,omitempty"`
-	ServiceTask        []ServiceTask       `xml:"bpmn:serviceTask,omitempty"`
-	SubProcess         []SubProcess        `xml:"bpmn:subProcess,omitempty"` // is that possible ?
-	ExclusiveGateway   []ExclusiveGateway  `xml:"bpmn:exclusiveGateway,omitempty"`
-	InclusiveGateway   []InclusiveGateway  `xml:"bpmn:inclusiveGateway,omitempty"`
-	ParallelGateway    []ParallelGateway   `xml:"bpmn:parallelGateway,omitempty"`
-	ComplexGateway     []ComplexGateway    `xml:"bpmn:complexGateway,omitempty"`
-	EventBasedGateway  []EventBasedGateway `xml:"bpmn:eventBasedGateway,omitempty"`
-	SequenceFlow       []SequenceFlow      `xml:"bpmn:sequenceFlow,omitempty"`
+	ID                 string              `xml:"id,attr" json:"id"`
+	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	TriggeredByEvent   bool                `xml:"triggeredByEvent,attr,omitempty" json:"triggeredByEvent,omitempty"`
+	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	StartEvent         []StartEvent        `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty"`
+	EndEvent           []EndEvent          `xml:"bpmn:endEvent,omitempty" json:"endEvent,omitempty"`
+	Task               []Task              `xml:"bpmn:task,omitempty" json:"task,omitempty"`
+	UserTask           []UserTask          `xml:"bpmn:userTask,omitempty" json:"userTask,omitempty"`
+	ManualTask         []ManualTask        `xml:"bpmn:manualTask,omitempty" json:"manualTask,omitempty"`
+	ReceiveTask        []ReceiveTask       `xml:"bpmn:receiveTask,omitempty" json:"receiveTask,omitempty"`
+	ScriptTask         []ScriptTask        `xml:"bpmn:scriptTask,omitempty" json:"scriptTask,omitempty"`
+	SendTask           []SendTask          `xml:"bpmn:sendTask,omitempty" json:"sendTask,omitempty"`
+	ServiceTask        []ServiceTask       `xml:"bpmn:serviceTask,omitempty" json:"serviceTask,omitempty"`
+	SubProcess         []SubProcess        `xml:"bpmn:subProcess,omitempty" json:"subProcess,omitempty"` // is that possible ?
+	ExclusiveGateway   []ExclusiveGateway  `xml:"bpmn:exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty"`
+	InclusiveGateway   []InclusiveGateway  `xml:"bpmn:inclusiveGateway,omitempty" json:"inclusiveGateway,omitempty"`
+	ParallelGateway    []ParallelGateway   `xml:"bpmn:parallelGateway,omitempty" json:"parallelGateway,omitempty"`
+	ComplexGateway     []ComplexGateway    `xml:"bpmn:complexGateway,omitempty" json:"complexGateway,omitempty"`
+	EventBasedGateway  []EventBasedGateway `xml:"bpmn:eventBasedGateway,omitempty" json:"eventBasedGateway,omitempty"`
+	SequenceFlow       []SequenceFlow      `xml:"bpmn:sequenceFlow,omitempty" json:"equenceFlow,omitempty"`
 }
 
 /* Attributes */

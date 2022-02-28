@@ -1,4 +1,4 @@
 package models
 
-type TextAnnotation struct {
-}
+// TextAnnotation ...
+type TextAnnotation struct{}

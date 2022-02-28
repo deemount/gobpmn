@@ -2,8 +2,8 @@ package models
 
 // Waypoint ...
 type Waypoint struct {
-	X int `xml:"x,attr"`
-	Y int `xml:"y,attr"`
+	X int `xml:"x,attr" json:"-"`
+	Y int `xml:"y,attr" json:"-"`
 }
 
 // SetX ...
