@@ -2,20 +2,20 @@ package models
 
 // EndEvent ...
 type EndEvent struct {
-	ID                        string                      `xml:"id,attr"`
-	Name                      string                      `xml:"name,attr,omitempty"`
-	CamundaAsyncBefore        bool                        `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAfter         bool                        `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaJobPriority        int                         `xml:"camunda:jobPriority,attr,omitempty"`
-	Documentation             []Documentation             `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements         []ExtensionElements         `xml:"bpmn:extensionElements,omitempty"`
-	Incoming                  []Incoming                  `xml:"bpmn:incoming,omitempty"`
-	CompensateEventDefinition []CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty"`
-	EscalationEventDefinition []EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty"`
-	MessageEventDefinition    []MessageEventDefinition    `xml:"bpmn:messageEventDefinition,omitempty"`
-	ErrorEventDefinition      []ErrorEventDefinition      `xml:"bpmn:errorEventDefinition,omitempty"`
-	SignalEventDefinition     []SignalEventDefinition     `xml:"bpmn:signalEventDefinition,omitempty"`
-	TerminateEventDefinition  []TerminateEventDefinition  `xml:"bpmn:terminateEventDefinition,omitempty"`
+	ID                        string                      `xml:"id,attr" json:"id"`
+	Name                      string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore        bool                        `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter         bool                        `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaJobPriority        int                         `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation             []Documentation             `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements         []ExtensionElements         `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming                  []Incoming                  `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	CompensateEventDefinition []CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
+	EscalationEventDefinition []EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	MessageEventDefinition    []MessageEventDefinition    `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	ErrorEventDefinition      []ErrorEventDefinition      `xml:"bpmn:errorEventDefinition,omitempty" json:"errorEventDefinition,omitempty"`
+	SignalEventDefinition     []SignalEventDefinition     `xml:"bpmn:signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
+	TerminateEventDefinition  []TerminateEventDefinition  `xml:"bpmn:terminateEventDefinition,omitempty" json:"terminateEventDefinition,omitempty"`
 }
 
 /* Attributes */

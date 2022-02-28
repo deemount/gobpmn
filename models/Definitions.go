@@ -6,23 +6,23 @@ import (
 
 // Definitions represents the root element
 type Definitions struct {
-	XMLName         xml.Name        `xml:"bpmn:definitions"`
-	Bpmn            string          `xml:"xmlns:bpmn,attr"`
-	Xsd             string          `xml:"xmlns:xsd,attr,omitempty"`
-	Bpmndi          string          `xml:"xmlns:bpmndi,attr"`
-	DC              string          `xml:"xmlns:dc,attr,omitempty"`
-	Bioc            string          `xml:"xmlns:bioc,attr,omitempty"`
-	CamundaSchema   string          `xml:"xmlns:camunda,attr,omitempty"`
-	ID              string          `xml:"id,attr"`
-	TargetNamespace string          `xml:"targetNamespace,attr"`
-	Exporter        string          `xml:"exporter,attr"`
-	ExporterVersion string          `xml:"exporterVersion,attr"`
-	Collaboration   []Collaboration `xml:"bpmn:collaboration,omitempty"`
-	Process         []Process       `xml:"bpmn:process,omitempty"`
-	Category        []Category      `xml:"bpmn:category,omitempty"`
-	Msg             []Message       `xml:"bpmn:message,omitempty"`
-	Signal          []Signal        `xml:"bpmn:signal,omitempty"`
-	Diagram         []Diagram       `xml:"bpmndi:BPMNDiagram,omitempty"`
+	XMLName         xml.Name        `xml:"bpmn:definitions" json:"-"`
+	Bpmn            string          `xml:"xmlns:bpmn,attr" json:"-"`
+	Xsd             string          `xml:"xmlns:xsd,attr,omitempty" json:"-"`
+	Bpmndi          string          `xml:"xmlns:bpmndi,attr" json:"-"`
+	DC              string          `xml:"xmlns:dc,attr,omitempty" json:"-"`
+	Bioc            string          `xml:"xmlns:bioc,attr,omitempty" json:"-"`
+	CamundaSchema   string          `xml:"xmlns:camunda,attr,omitempty" json:"-"`
+	ID              string          `xml:"id,attr" json:"id"`
+	TargetNamespace string          `xml:"targetNamespace,attr" json:"-"`
+	Exporter        string          `xml:"exporter,attr" json:"-"`
+	ExporterVersion string          `xml:"exporterVersion,attr" json:"-"`
+	Collaboration   []Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration"`
+	Process         []Process       `xml:"bpmn:process,omitempty" json:"process"`
+	Category        []Category      `xml:"bpmn:category,omitempty" json:"category,omitempty"`
+	Msg             []Message       `xml:"bpmn:message,omitempty" json:"message,omitempty"`
+	Signal          []Signal        `xml:"bpmn:signal,omitempty" json:"signal,omitempty"`
+	Diagram         []Diagram       `xml:"bpmndi:BPMNDiagram,omitempty" json:"-"`
 }
 
 /* Attributes */

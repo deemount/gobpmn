@@ -1,29 +1,51 @@
 package models
 
-// Task ...
-type Task struct {
-	ID       string     `xml:"id,attr"`
-	Name     string     `xml:"name,attr,omitempty"`
-	Incoming []Incoming `xml:"bpmn:incoming,omitempty"`
-	Outgoing []Outgoing `xml:"bpmn:outgoing,omitempty"`
+import "fmt"
+
+// TaskRepository ...
+type TaskRepository interface {
+	SetID(suffix string)
+	SetName(name string)
 }
 
+// Task ...
+type Task struct {
+	ID                string              `xml:"id,attr" json:"id"`
+	Name              string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming          []Incoming          `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing          []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+}
+
+/* Attributes */
+
+/** BPMN **/
+
 // SetID ...
-func (tk *Task) SetID(suffix string) {
-	tk.ID = "Activity_" + suffix
+func (task *Task) SetID(suffix string) {
+	task.ID = fmt.Sprintf("Activity_%s", suffix)
 }
 
 // SetName ...
-func (tk *Task) SetName(name string) {
-	tk.Name = name
+func (task *Task) SetName(name string) {
+	task.Name = name
+}
+
+/* Elements */
+
+/** BPMN **/
+
+// SetExtensionElements ...
+func (task *Task) SetExtensionElements() {
+	task.ExtensionElements = make([]ExtensionElements, 1)
 }
 
 // SetIncoming ...
-func (tk *Task) SetIncoming(num int) {
-	tk.Incoming = make([]Incoming, num)
+func (task *Task) SetIncoming(num int) {
+	task.Incoming = make([]Incoming, num)
 }
 
 // SetOutgoing ...
-func (tk *Task) SetOutgoing(num int) {
-	tk.Outgoing = make([]Outgoing, num)
+func (task *Task) SetOutgoing(num int) {
+	task.Outgoing = make([]Outgoing, num)
 }

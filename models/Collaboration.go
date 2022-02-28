@@ -4,11 +4,11 @@ import "fmt"
 
 // Collaboration ...
 type Collaboration struct {
-	ID                string              `xml:"id,attr"`
-	Documentation     []Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
-	Participant       []Participant       `xml:"bpmn:participant"`
-	MessageFlow       []MessageFlow       `xml:"bpmn:messageFlow,omitempty"`
+	ID                string              `xml:"id,attr" json:"id,omitempty"`
+	Documentation     []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Participant       []Participant       `xml:"bpmn:participant" json:"participant,omitempty"`
+	MessageFlow       []MessageFlow       `xml:"bpmn:messageFlow,omitempty" json:"messageFlow,omitempty"`
 }
 
 /* Attributes */

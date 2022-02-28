@@ -20,12 +20,19 @@ func (shape *Shape) SetID(typ string, suffix interface{}) {
 	switch typ {
 	case "activity":
 		shape.ID = fmt.Sprintf("Activity_%s_di", suffix)
+		break
 	case "collaboration":
 		shape.ID = fmt.Sprintf("Participant_%s_di", suffix)
+		break
 	case "event":
 		shape.ID = fmt.Sprintf("Event_%s_di", suffix)
+		break
+	case "participant":
+		shape.ID = fmt.Sprintf("Participant_%s_di", suffix)
+		break
 	case "startevent":
 		shape.ID = fmt.Sprintf("_BPMNShape_StartEvent_%d", suffix)
+		break
 	}
 
 }
@@ -35,12 +42,19 @@ func (shape *Shape) SetElement(typ string, suffix interface{}) {
 	switch typ {
 	case "activity":
 		shape.Element = fmt.Sprintf("Activity_%s", suffix)
+		break
 	case "collaboration":
 		shape.Element = fmt.Sprintf("Participant_%s", suffix)
+		break
 	case "event":
 		shape.Element = fmt.Sprintf("Event_%s", suffix)
+		break
+	case "participant":
+		shape.Element = fmt.Sprintf("Participant_%s", suffix)
+		break
 	case "startevent":
 		shape.Element = fmt.Sprintf("StartEvent_%d", suffix)
+		break
 	}
 }
 

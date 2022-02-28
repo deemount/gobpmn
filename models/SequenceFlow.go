@@ -2,9 +2,9 @@ package models
 
 // SequenceFlow ...
 type SequenceFlow struct {
-	ID        string `xml:"id,attr"`
-	SourceRef string `xml:"sourceRef,attr"`
-	TargetRef string `xml:"targetRef,attr"`
+	ID        string `xml:"id,attr" json:"id"`
+	SourceRef string `xml:"sourceRef,attr" json:"sourceRef"`
+	TargetRef string `xml:"targetRef,attr" json:"targetRef"`
 }
 
 // SetID ...
