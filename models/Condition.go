@@ -5,7 +5,7 @@ import "fmt"
 // Condition ...
 type Condition struct {
 	ConditionType string `xml:"xsi:type,attr,omitempty" json:"conditionType,omitempty"`
-	ScriptFormat  string `xml:"language,attr,omitempty" json:"scriptFormat,omitempty"`
+	ScriptFormat  string `xml:"language,attr,omitempty" json:"language,omitempty"`
 	Script        string `xml:",innerxml,omitempty" json:"script,omitempty"`
 }
 

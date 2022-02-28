@@ -1,23 +1,51 @@
 package models
 
-// SequenceFlow ...
-type SequenceFlow struct {
-	ID        string `xml:"id,attr" json:"id"`
-	SourceRef string `xml:"sourceRef,attr" json:"sourceRef"`
-	TargetRef string `xml:"targetRef,attr" json:"targetRef"`
+import "fmt"
+
+// SequenceFlowRepository ...
+type SequenceFlowRepository interface {
+	SetID(suffix string)
+	SetName(name string)
 }
 
+// SequenceFlow ...
+type SequenceFlow struct {
+	ID                  string                `xml:"id,attr" json:"id"`
+	Name                string                `xml:"name,attr,omitempty" json:"name,omitempty"`
+	SourceRef           string                `xml:"sourceRef,attr" json:"sourceRef"`
+	TargetRef           string                `xml:"targetRef,attr" json:"targetRef"`
+	ConditionExpression []ConditionExpression `xml:"bpmn:conditionExpression,omitempty"`
+}
+
+/* Attributes */
+
+/** BPMN **/
+
 // SetID ...
-func (sf *SequenceFlow) SetID(suffix string) {
-	sf.ID = "Flow_" + suffix
+func (sequenceFlow *SequenceFlow) SetID(suffix string) {
+	sequenceFlow.ID = fmt.Sprintf("Flow_%s", suffix)
+}
+
+// SetName ...
+func (sequenceFlow *SequenceFlow) SetName(name string) {
+	sequenceFlow.Name = name
 }
 
 // SetSourceRef ...
-func (sf *SequenceFlow) SetSourceRef(sourceRef string) {
-	sf.SourceRef = sourceRef
+func (sequenceFlow *SequenceFlow) SetSourceRef(sourceRef string) {
+	sequenceFlow.SourceRef = sourceRef
 }
 
 // SetTargetRef ...
-func (sf *SequenceFlow) SetTargetRef(targetRef string) {
-	sf.TargetRef = targetRef
+func (sequenceFlow *SequenceFlow) SetTargetRef(targetRef string) {
+	sequenceFlow.TargetRef = targetRef
+}
+
+/* Elements */
+
+/** BPMN **/
+
+// SetConditionExpression ...
+func (sequenceFlow *SequenceFlow) SetConditionExpression() {
+	sequenceFlow.ConditionExpression = make([]ConditionExpression, 1)
 }
