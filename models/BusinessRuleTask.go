@@ -10,16 +10,16 @@ type BusinessRuleTaskRepository interface {
 
 // BusinessRuleTask ...
 type BusinessRuleTask struct {
-	ID                 string              `xml:"id,attr"`
-	Name               string              `xml:"name,attr,omitempty"`
-	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty"`
-	CamundaClass       string              `xml:"camunda:class,attr,omitempty"`
-	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
-	Incoming           []Incoming          `xml:"bpmn:incoming,omitempty"`
-	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty"`
+	ID                 string              `xml:"id,attr" json:"id"`
+	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	CamundaClass       string              `xml:"camunda:class,attr,omitempty" json:"class,omitempty"`
+	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming           []Incoming          `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 /* Attributes */
@@ -27,35 +27,35 @@ type BusinessRuleTask struct {
 /** BPMN **/
 
 // SetID ...
-func (brt *BusinessRuleTask) SetID(suffix string) {
-	brt.ID = fmt.Sprintf("Activity_%s", suffix)
+func (businessRuleTask *BusinessRuleTask) SetID(suffix string) {
+	businessRuleTask.ID = fmt.Sprintf("Activity_%s", suffix)
 }
 
 // SetName ...
-func (brt *BusinessRuleTask) SetName(name string) {
-	brt.Name = name
+func (businessRuleTask *BusinessRuleTask) SetName(name string) {
+	businessRuleTask.Name = name
 }
 
 /** Camunda **/
 
 // SetCamundaAsyncBefore ...
-func (brt *BusinessRuleTask) SetCamundaAsyncBefore(asyncBefore bool) {
-	brt.CamundaAsyncBefore = asyncBefore
+func (businessRuleTask *BusinessRuleTask) SetCamundaAsyncBefore(asyncBefore bool) {
+	businessRuleTask.CamundaAsyncBefore = asyncBefore
 }
 
 // SetCamundaAsyncAfter ...
-func (brt *BusinessRuleTask) SetCamundaAsyncAfter(asyncAfter bool) {
-	brt.CamundaAsyncAfter = asyncAfter
+func (businessRuleTask *BusinessRuleTask) SetCamundaAsyncAfter(asyncAfter bool) {
+	businessRuleTask.CamundaAsyncAfter = asyncAfter
 }
 
 // SetCamundaJobPriority ...
-func (brt *BusinessRuleTask) SetCamundaJobPriority(priority int) {
-	brt.CamundaJobPriority = priority
+func (businessRuleTask *BusinessRuleTask) SetCamundaJobPriority(priority int) {
+	businessRuleTask.CamundaJobPriority = priority
 }
 
 // SetCamundaClass ...
-func (brt *BusinessRuleTask) SetCamundaClass(class string) {
-	brt.CamundaClass = class
+func (businessRuleTask *BusinessRuleTask) SetCamundaClass(class string) {
+	businessRuleTask.CamundaClass = class
 }
 
 /* Elements */
@@ -63,21 +63,21 @@ func (brt *BusinessRuleTask) SetCamundaClass(class string) {
 /** BPMN **/
 
 // SetDocumentation ...
-func (brt *BusinessRuleTask) SetDocumentation() {
-	brt.Documentation = make([]Documentation, 1)
+func (businessRuleTask *BusinessRuleTask) SetDocumentation() {
+	businessRuleTask.Documentation = make([]Documentation, 1)
 }
 
 // SetExtensionElements ...
-func (brt *BusinessRuleTask) SetExtensionElements() {
-	brt.ExtensionElements = make([]ExtensionElements, 1)
+func (businessRuleTask *BusinessRuleTask) SetExtensionElements() {
+	businessRuleTask.ExtensionElements = make([]ExtensionElements, 1)
 }
 
 // SetIncoming ...
-func (brt *BusinessRuleTask) SetIncoming(num int) {
-	brt.Incoming = make([]Incoming, num)
+func (businessRuleTask *BusinessRuleTask) SetIncoming(num int) {
+	businessRuleTask.Incoming = make([]Incoming, num)
 }
 
 // SetOutgoing ...
-func (brt *BusinessRuleTask) SetOutgoing(num int) {
-	brt.Outgoing = make([]Outgoing, num)
+func (businessRuleTask *BusinessRuleTask) SetOutgoing(num int) {
+	businessRuleTask.Outgoing = make([]Outgoing, num)
 }

@@ -2,24 +2,30 @@ package models
 
 import "fmt"
 
+// BusinessRuleTaskRepository ...
+type UserTaskRepository interface {
+	SetID(suffix string)
+	SetName(name string)
+}
+
 // UserTask ...
 type UserTask struct {
-	ID                  string              `xml:"id,attr"`
-	Name                string              `xml:"name,attr,omitempty"`
-	CamundaFormKey      string              `xml:"camunda:formKey,attr,omitempty"`
-	CamundaAsyncBef     bool                `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAft     bool                `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaJobPriority  int                 `xml:"camunda:jobPriority,attr,omitempty"`
-	CamundaAssignee     string              `xml:"camunda:assignee,attr,omitempty"`
-	CamundaCandidUsers  string              `xml:"camunda:candidateUsers,attr,omitempty"`
-	CamundaCandidGroups string              `xml:"camunda:candidateGroups,attr,omitempty"`
-	CamundaDueDate      string              `xml:"camunda:dueDate,attr,omitempty"`
-	CamundaFollowUpDate string              `xml:"camunda:followUpDate,attr,omitempty"`
-	CamundaPriority     int                 `xml:"camunda:priority,attr,omitempty"`
-	Documentation       []Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements   []ExtensionElements `xml:"bpmn:extensionElements,omitempty"`
-	Incoming            []Incoming          `xml:"bpmn:incoming,omitempty"`
-	Outgoing            []Outgoing          `xml:"bpmn:outgoing,omitempty"`
+	ID                  string              `xml:"id,attr" json:"id"`
+	Name                string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaFormKey      string              `xml:"camunda:formKey,attr,omitempty" json:"formKey,omitempty"`
+	CamundaAsyncBef     bool                `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAft     bool                `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaJobPriority  int                 `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	CamundaAssignee     string              `xml:"camunda:assignee,attr,omitempty" json:"assignee,omitempty"`
+	CamundaCandidUsers  string              `xml:"camunda:candidateUsers,attr,omitempty" json:"candidateUsers,omitempty"`
+	CamundaCandidGroups string              `xml:"camunda:candidateGroups,attr,omitempty" json:"candidateGroups,omitempty"`
+	CamundaDueDate      string              `xml:"camunda:dueDate,attr,omitempty" json:"dueDate,omitempty"`
+	CamundaFollowUpDate string              `xml:"camunda:followUpDate,attr,omitempty" json:"followUpDate,omitempty"`
+	CamundaPriority     int                 `xml:"camunda:priority,attr,omitempty" json:"priority,omitempty"`
+	Documentation       []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements   []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming            []Incoming          `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing            []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 /* Attributes */

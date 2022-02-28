@@ -4,17 +4,17 @@ import "fmt"
 
 // BoundaryEvent ...
 type BoundaryEvent struct {
-	ID                         string                       `xml:"id,attr,omitempty"`
-	AttachedToRef              string                       `xml:"attachedToRef,attr,omitempty"`
-	CancelActivity             bool                         `xml:"cancelActivity,attr,omitempty"`
-	MessageEventDefinition     []MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty"`
-	TimerEventDefinition       []TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty"`
-	EscalationEventDefinition  []EscalationEventDefinition  `xml:"bpmn:escalationEventDefinition,omitempty"`
-	ConditionalEventDefinition []ConditionalEventDefinition `xml:"bpmn:conditionalEventDefinition,omitempty"`
-	ErrorEventDefinition       []ErrorEventDefinition       `xml:"bpmn:errorEventDefinition,omitempty"`
-	SignalEventDefinition      []SignalEventDefinition      `xml:"bpmn:signalEventDefinition,omitempty"`
-	CompensateEventDefinition  []CompensateEventDefinition  `xml:"bpmn:compensateEventDefinition,omitempty"`
-	Outgoing                   []Outgoing                   `xml:"bpmn:outgoing,omitempty"`
+	ID                         string                       `xml:"id,attr" json:"id"`
+	AttachedToRef              string                       `xml:"attachedToRef,attr,omitempty" json:"attachedToRef,omitempty"`
+	CancelActivity             bool                         `xml:"cancelActivity,attr,omitempty" json:"cancelActivity,omitempty"`
+	MessageEventDefinition     []MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	TimerEventDefinition       []TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
+	EscalationEventDefinition  []EscalationEventDefinition  `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	ConditionalEventDefinition []ConditionalEventDefinition `xml:"bpmn:conditionalEventDefinition,omitempty" json:"conditionalEventDefinition,omitempty"`
+	ErrorEventDefinition       []ErrorEventDefinition       `xml:"bpmn:errorEventDefinition,omitempty" json:"errorEventDefinition,omitempty"`
+	SignalEventDefinition      []SignalEventDefinition      `xml:"bpmn:signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
+	CompensateEventDefinition  []CompensateEventDefinition  `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
+	Outgoing                   []Outgoing                   `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 /* Attributes */

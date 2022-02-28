@@ -10,20 +10,20 @@ type CallActivityRepository interface {
 
 // CallActivity ...
 type CallActivity struct {
-	ID                               string                             `xml:"id,attr,omitempty"`
-	Name                             string                             `xml:"name,attr,omitempty"`
-	CalledElement                    string                             `xml:"calledElement,attr,omitempty"`
-	CamundaAsyncBefore               bool                               `xml:"camunda:asyncBefore,attr,omitempty"`
-	CamundaAsyncAfter                bool                               `xml:"camunda:asyncAfter,attr,omitempty"`
-	CamundaJobPriority               int                                `xml:"camunda:jobPriority,attr,omitempty"`
-	CamundaCalledElementTenantID     string                             `xml:"camunda:calledElementTenantId,attr,omitempty"`
-	CamundaVariableMappingClass      string                             `xml:"camunda:variableMappingClass,attr,omitempty"`
-	Documentation                    []Documentation                    `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements                []ExtensionElements                `xml:"bpmn:extensionElements,omitempty"`
-	Incoming                         []Incoming                         `xml:"bpmn:incoming,omitempty"`
-	Outgoing                         []Outgoing                         `xml:"bpmn:outgoing,omitempty"`
-	StandardLoopCharacteristics      []StandardLoopCharacteristics      `xml:"bpmn:standardLoopCharacteristics,omitempty"`
-	MultiInstanceLoopCharacteristics []MultiInstanceLoopCharacteristics `xml:"bpmn:multiInstanceLoopCharacteristics"`
+	ID                               string                             `xml:"id,attr" json:"id"`
+	Name                             string                             `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CalledElement                    string                             `xml:"calledElement,attr,omitempty" json:"calledElement,omitempty"`
+	CamundaAsyncBefore               bool                               `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter                bool                               `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaJobPriority               int                                `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	CamundaCalledElementTenantID     string                             `xml:"camunda:calledElementTenantId,attr,omitempty" json:"calledElement,omitempty"`
+	CamundaVariableMappingClass      string                             `xml:"camunda:variableMappingClass,attr,omitempty" json:"variableMappingClass,omitempty"`
+	Documentation                    []Documentation                    `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements                []ExtensionElements                `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming                         []Incoming                         `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing                         []Outgoing                         `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	StandardLoopCharacteristics      []StandardLoopCharacteristics      `xml:"bpmn:standardLoopCharacteristics,omitempty" json:"standardLoopCharacteristics,omitempty"`
+	MultiInstanceLoopCharacteristics []MultiInstanceLoopCharacteristics `xml:"bpmn:multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics,omitempty"`
 }
 
 /* Attributes */

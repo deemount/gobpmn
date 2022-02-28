@@ -10,11 +10,15 @@ type TaskRepository interface {
 
 // Task ...
 type Task struct {
-	ID                string              `xml:"id,attr" json:"id"`
-	Name              string              `xml:"name,attr,omitempty" json:"name,omitempty"`
-	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []Incoming          `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	ID                 string              `xml:"id,attr,omitempty" json:"id"`
+	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation      []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming           []Incoming          `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 /* Attributes */
@@ -31,9 +35,31 @@ func (task *Task) SetName(name string) {
 	task.Name = name
 }
 
+/** Camunda **/
+
+// SetCamundaAsyncBefore ...
+func (task *Task) SetCamundaAsyncBefore(asyncBefore bool) {
+	task.CamundaAsyncBefore = asyncBefore
+}
+
+// SetCamundaAsyncAfter ...
+func (task *Task) SetCamundaAsyncAfter(asyncAfter bool) {
+	task.CamundaAsyncAfter = asyncAfter
+}
+
+// SetCamundaJobPriority ...
+func (task *Task) SetCamundaJobPriority(priority int) {
+	task.CamundaJobPriority = priority
+}
+
 /* Elements */
 
 /** BPMN **/
+
+// SetDocumentation ...
+func (task *Task) SetDocumentation() {
+	task.Documentation = make([]Documentation, 1)
+}
 
 // SetExtensionElements ...
 func (task *Task) SetExtensionElements() {
