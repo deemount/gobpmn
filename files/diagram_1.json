@@ -1,0 +1,67 @@
+{
+   "id": "Definitions_fa4ab6f5",
+   "collaboration": [
+     {
+       "id": "Collaboration_416f9b22",
+       "participant": [
+         {
+           "id": "Participant_2e4a69c2",
+           "processRef": "Process_ca5bbbe0"
+         }
+       ]
+     }
+   ],
+   "process": [
+     {
+       "id": "Process_ca5bbbe0",
+       "isExecutable": true,
+       "startEvent": [
+         {
+           "id": "StartEvent_1",
+           "outgoing": [
+             {
+               "flow": "Flow_59926681"
+             }
+           ]
+         }
+       ],
+       "endEvent": [
+         {
+           "id": "Event_4cb0b5af",
+           "incoming": [
+             {
+               "flow": "Flow_2349be64"
+             }
+           ]
+         }
+       ],
+       "task": [
+         {
+           "id": "Activity_ccf1fbc8",
+           "incoming": [
+             {
+               "flow": "Flow_59926681"
+             }
+           ],
+           "outgoing": [
+             {
+               "flow": "Flow_2349be64"
+             }
+           ]
+         }
+       ],
+       "sequenceFlow": [
+         {
+           "id": "Flow_59926681",
+           "sourceRef": "StartEvent_1",
+           "targetRef": "Activity_ccf1fbc8"
+         },
+         {
+           "id": "Flow_2349be64",
+           "sourceRef": "Activity_ccf1fbc8",
+           "targetRef": "Event_4cb0b5af"
+         }
+       ]
+     }
+   ]
+ }
