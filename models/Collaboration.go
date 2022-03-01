@@ -2,6 +2,11 @@ package models
 
 import "fmt"
 
+type CollaborationRepository interface {
+	SetID(suffix string)
+	GetID() string
+}
+
 // Collaboration ...
 type Collaboration struct {
 	ID                string              `xml:"id,attr" json:"id"`
@@ -10,6 +15,10 @@ type Collaboration struct {
 	Participant       []Participant       `xml:"bpmn:participant" json:"participant,omitempty"`
 	MessageFlow       []MessageFlow       `xml:"bpmn:messageFlow,omitempty" json:"messageFlow,omitempty"`
 }
+
+/**
+ * Default Setters
+ */
 
 /* Attributes */
 
@@ -42,4 +51,17 @@ func (collaboration *Collaboration) SetParticipant(num int) {
 // SetMessageFlow ...
 func (collaboration *Collaboration) SetMessageFlow(num int) {
 	collaboration.MessageFlow = make([]MessageFlow, num)
+}
+
+/**
+ * Default Getters
+ */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetID ...
+func (collaboration Collaboration) GetID() string {
+	return collaboration.ID
 }

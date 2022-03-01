@@ -69,16 +69,8 @@ func (bpm *BPMNF) Set() {
 
 	/* set elements attributes */
 
-	/** set definitions attributes **/
-	// generics
-	defHash := utils.GenerateHash()
-	def.SetBpmn()
-	def.SetBpmndi()
-	def.SetDC()
-	def.SetID(defHash)
-	def.SetTargetNamespace()
-	def.SetExporter()
-	def.SetExporterVersion()
+	/** set default definitions attributes **/
+	def.SetDefaultAttributes()
 
 	/** set collaboration attributes **/
 	// generics

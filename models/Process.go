@@ -1,9 +1,12 @@
 package models
 
+import "fmt"
+
 // ProcessRepository ...
 type ProcessRepository interface {
 	SetID(suffix string)
 	SetName(name string)
+	GetID() string
 }
 
 // Process ...
@@ -16,6 +19,7 @@ type Process struct {
 	CamundaTaskPriority      int                      `xml:"camunda:taskPriority,attr,omitempty" json:"taskPriority,omitempty"`
 	CamundaCandidStartGroups string                   `xml:"camunda:candidateStarterGroups,attr,omitempty" json:"candidateStarterGroups,omitempty"`
 	CamundaCandidStartUsers  string                   `xml:"camunda:candidateStarterUsers,attr,omitempty" json:"candidateStarterUsers,omitempty"`
+	Documentation            []Documentation          `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
 	LaneSet                  []LaneSet                `xml:"bpmn:laneSet,omitempty" json:"laneSet,omitempty"`
 	StartEvent               []StartEvent             `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty"`
 	BoundaryEvent            []BoundaryEvent          `xml:"bpmn:boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty"`
@@ -47,7 +51,7 @@ type Process struct {
 
 // SetID ...
 func (process *Process) SetID(suffix string) {
-	process.ID = "Process_" + suffix
+	process.ID = fmt.Sprintf("Process_%s", suffix)
 }
 
 // SetName ...
@@ -90,6 +94,13 @@ func (process *Process) SetCamundaCandidStartUsers(users string) {
 /* Elements */
 
 /** BPMN **/
+
+/** Documentation **/
+
+// SetDocumentation ...
+func (process *Process) SetDocumentation() {
+	process.Documentation = make([]Documentation, 1)
+}
 
 /** LaneSet **/
 
@@ -214,4 +225,17 @@ func (process *Process) SetSequenceFlow(num int) {
 // SetGroup ...
 func (process *Process) SetGroup(num int) {
 	process.Group = make([]Group, num)
+}
+
+/**
+ * Default Getters
+ */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetID ...
+func (process Process) GetID() string {
+	return process.ID
 }

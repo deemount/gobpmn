@@ -2,11 +2,11 @@ package models
 
 // CamundaOutputParameter ...
 type CamundaOutputParameter struct {
-	LocalVariableName       string          `xml:"name,attr,omitempty"`
-	VariableAssignmentValue string          `xml:",innerxml,omitempty"`
-	CamundaScript           []CamundaScript `xml:"camunda:script,omitempty"`
-	CamundaList             []CamundaList   `xml:"camunda:list,omitempty"`
-	CamundaMap              []CamundaMap    `xml:"camunda:map,omitempty"`
+	LocalVariableName       string          `xml:"name,attr,omitempty" json:"localVariableName,omitempty"`
+	VariableAssignmentValue string          `xml:",innerxml,omitempty" json:"variableAssignmentValue,omitempty"`
+	CamundaScript           []CamundaScript `xml:"camunda:script,omitempty" json:"script,omitempty"`
+	CamundaList             []CamundaList   `xml:"camunda:list,omitempty" json:"list,omitempty"`
+	CamundaMap              []CamundaMap    `xml:"camunda:map,omitempty" json:"map,omitempty"`
 }
 
 /* Attributes */
@@ -14,13 +14,13 @@ type CamundaOutputParameter struct {
 /** BPMN **/
 
 // SetName ...
-func (cop *CamundaOutputParameter) SetLocalVariableName(variable string) {
-	cop.LocalVariableName = variable
+func (outputParameter *CamundaOutputParameter) SetLocalVariableName(variable string) {
+	outputParameter.LocalVariableName = variable
 }
 
 // SetVariableAssignmentValue ...
-func (cop *CamundaOutputParameter) SetVariableAssignmentValue(value string) {
-	cop.VariableAssignmentValue = value
+func (outputParameter *CamundaOutputParameter) SetVariableAssignmentValue(value string) {
+	outputParameter.VariableAssignmentValue = value
 }
 
 /* Elements */
@@ -28,16 +28,16 @@ func (cop *CamundaOutputParameter) SetVariableAssignmentValue(value string) {
 /** Camunda **/
 
 // SetCamundaScript ...
-func (cop *CamundaOutputParameter) SetCamundaScript() {
-	cop.CamundaScript = make([]CamundaScript, 1)
+func (outputParameter *CamundaOutputParameter) SetCamundaScript() {
+	outputParameter.CamundaScript = make([]CamundaScript, 1)
 }
 
 // SetCamundaList ...
-func (cop *CamundaOutputParameter) SetCamundaList() {
-	cop.CamundaList = make([]CamundaList, 1)
+func (outputParameter *CamundaOutputParameter) SetCamundaList() {
+	outputParameter.CamundaList = make([]CamundaList, 1)
 }
 
 // SetCamundaMap ...
-func (cop *CamundaOutputParameter) SetCamundaMap() {
-	cop.CamundaMap = make([]CamundaMap, 1)
+func (outputParameter *CamundaOutputParameter) SetCamundaMap() {
+	outputParameter.CamundaMap = make([]CamundaMap, 1)
 }

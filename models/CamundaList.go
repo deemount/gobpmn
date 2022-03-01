@@ -2,7 +2,7 @@ package models
 
 // CamundaList ...
 type CamundaList struct {
-	CamundaValue []CamundaValue `xml:"camunda:value,omitempty"`
+	CamundaValue []CamundaValue `xml:"camunda:value,omitempty" json:"value,omitempty"`
 }
 
 /* Elements */
@@ -10,6 +10,6 @@ type CamundaList struct {
 /** Camunda **/
 
 // SetCamundaValue ...
-func (clist *CamundaList) SetCamundaValue(num int) {
-	clist.CamundaValue = make([]CamundaValue, num)
+func (list *CamundaList) SetCamundaValue(num int) {
+	list.CamundaValue = make([]CamundaValue, num)
 }

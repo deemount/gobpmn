@@ -2,7 +2,7 @@ package models
 
 // CamundaProperties ...
 type CamundaProperties struct {
-	CamundaProperty []CamundaProperty `xml:"camunda:properties,omitempty"`
+	CamundaProperty []CamundaProperty `xml:"camunda:properties,omitempty" json:"properties,omitempty"`
 }
 
 /* Elements */
@@ -10,6 +10,6 @@ type CamundaProperties struct {
 /** Camunda **/
 
 // SetCamundaProperties ...
-func (cproperties *CamundaProperties) SetName(num int) {
-	cproperties.CamundaProperty = make([]CamundaProperty, num)
+func (properties *CamundaProperties) SetName(num int) {
+	properties.CamundaProperty = make([]CamundaProperty, num)
 }

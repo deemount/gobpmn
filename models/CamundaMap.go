@@ -2,7 +2,7 @@ package models
 
 // CamundaMap ...
 type CamundaMap struct {
-	CamundaEntry []CamundaEntry `xml:"camunda:entry,omitempty"`
+	CamundaEntry []CamundaEntry `xml:"camunda:entry,omitempty" json:"entry,omitempty"`
 }
 
 /* Elements */
@@ -10,6 +10,6 @@ type CamundaMap struct {
 /** Camunda **/
 
 // SetCamundaEntry
-func (cmap *CamundaMap) SetCamundaEntry(num int) {
-	cmap.CamundaEntry = make([]CamundaEntry, num)
+func (mp *CamundaMap) SetCamundaEntry(num int) {
+	mp.CamundaEntry = make([]CamundaEntry, num)
 }

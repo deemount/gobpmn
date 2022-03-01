@@ -8,6 +8,6 @@ type CamundaFormData struct {
 /* Elements */
 
 // SetCamundaFormField ...
-func (cfd *CamundaFormData) SetCamundaFormField(num int) {
-	cfd.CamundaFormField = make([]CamundaFormField, num)
+func (formData *CamundaFormData) SetCamundaFormField(num int) {
+	formData.CamundaFormField = make([]CamundaFormField, num)
 }

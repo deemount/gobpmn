@@ -14,7 +14,7 @@ type SequenceFlow struct {
 	Name                string                `xml:"name,attr,omitempty" json:"name,omitempty"`
 	SourceRef           string                `xml:"sourceRef,attr" json:"sourceRef"`
 	TargetRef           string                `xml:"targetRef,attr" json:"targetRef"`
-	ConditionExpression []ConditionExpression `xml:"bpmn:conditionExpression,omitempty"`
+	ConditionExpression []ConditionExpression `xml:"bpmn:conditionExpression,omitempty" json:"conditionExpression,omitempty"`
 }
 
 /* Attributes */

@@ -11,19 +11,19 @@ type CamundaTaskListener struct {
 /* Attributes */
 
 // SetClass ...
-func (ctl *CamundaTaskListener) SetClass(class string) {
-	ctl.Class = class
+func (taskListener *CamundaTaskListener) SetClass(class string) {
+	taskListener.Class = class
 }
 
 // SetEvent ...
 // can be: assignment, create, complete, delete, update, timeout
-func (ctl *CamundaTaskListener) SetEvent(event string) {
-	ctl.Event = event
+func (taskListener *CamundaTaskListener) SetEvent(event string) {
+	taskListener.Event = event
 }
 
 // SetID ...
-func (ctl *CamundaTaskListener) SetListenerID(listenerID string) {
-	ctl.ListenerID = listenerID
+func (taskListener *CamundaTaskListener) SetListenerID(listenerID string) {
+	taskListener.ListenerID = listenerID
 }
 
 /* Elements */
@@ -31,6 +31,6 @@ func (ctl *CamundaTaskListener) SetListenerID(listenerID string) {
 /** Camunda **/
 
 // SetCamundaField ...
-func (ctl *CamundaTaskListener) SetCamundaField(num int) {
-	ctl.CamundaField = make([]CamundaField, num)
+func (taskListener *CamundaTaskListener) SetCamundaField(num int) {
+	taskListener.CamundaField = make([]CamundaField, num)
 }

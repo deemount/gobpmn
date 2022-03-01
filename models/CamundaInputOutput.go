@@ -2,8 +2,8 @@ package models
 
 // CamundaInputOutput ...
 type CamundaInputOutput struct {
-	CamundaInputParameter  []CamundaInputParameter  `xml:"camunda:inputParameter,omitempty"`
-	CamundaOutputParameter []CamundaOutputParameter `xml:"camunda:outputParameter,omitempty"`
+	CamundaInputParameter  []CamundaInputParameter  `xml:"camunda:inputParameter,omitempty" json:"inputParameter,omitempty"`
+	CamundaOutputParameter []CamundaOutputParameter `xml:"camunda:outputParameter,omitempty" json:"outputParameter,omitempty"`
 }
 
 /* Elements */
