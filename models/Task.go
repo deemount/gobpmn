@@ -21,6 +21,19 @@ type Task struct {
 	Outgoing           []Outgoing          `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
+// TTask ...
+type TTask struct {
+	ID                 string              `xml:"id,attr,omitempty" json:"id"`
+	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore bool                `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter  bool                `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaJobPriority int                 `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation      []Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming           []Incoming          `xml:"incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing           []Outgoing          `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+}
+
 /* Attributes */
 
 /** BPMN **/

@@ -18,8 +18,11 @@ type Definitions struct {
 	Bpmn                            string          `xml:"xmlns:bpmn,attr" json:"-"`
 	Xsd                             string          `xml:"xmlns:xsd,attr,omitempty" json:"-"`
 	Xsi                             string          `xml:"xmlns:xsi,omitempty" json:"-"`
-	Bpmndi                          string          `xml:"xmlns:bpmndi,attr" json:"-"`
+	XsiSchemaLocation               string          `xml:"xsi:schemaLocation,attr,omitempty" json:"-"`
+	BpmnDI                          string          `xml:"xmlns:bpmndi,attr" json:"-"`
+	OmgDI                           string          `xml:"xmlns:omgdi,attr,omitempty" json:"-"`
 	DC                              string          `xml:"xmlns:dc,attr,omitempty" json:"-"`
+	OmgDC                           string          `xml:"xmlns:omgdc,attr,omitempty" json:"-"`
 	Bioc                            string          `xml:"xmlns:bioc,attr,omitempty" json:"-"`
 	CamundaSchema                   string          `xml:"xmlns:camunda,attr,omitempty" json:"-"`
 	Zeebe                           string          `xml:"xmlns:zeebe,omitempty" json:"-"`
@@ -38,6 +41,16 @@ type Definitions struct {
 	Diagram                         []Diagram       `xml:"bpmndi:BPMNDiagram,omitempty" json:"-"`
 }
 
+type TDefinitions struct {
+	XMLName       xml.Name         `xml:"definitions" json:"-"`
+	ID            string           `xml:"id,attr" json:"id"`
+	Collaboration []TCollaboration `xml:"collaboration,omitempty" json:"collaboration"`
+	Process       []TProcess       `xml:"process,omitempty" json:"process"`
+	Category      []Category       `xml:"category,omitempty" json:"category,omitempty"`
+	Msg           []Message        `xml:"message,omitempty" json:"message,omitempty"`
+	Signal        []Signal         `xml:"signal,omitempty" json:"signal,omitempty"`
+}
+
 /**
  * Default Setters
  */
@@ -51,14 +64,24 @@ func (definitions *Definitions) SetBpmn() {
 	definitions.Bpmn = "http://www.omg.org/spec/BPMN/20100524/MODEL"
 }
 
-// SetBpmndi ...
-func (definitions *Definitions) SetBpmndi() {
-	definitions.Bpmndi = "http://www.omg.org/spec/BPMN/20100524/DI"
+// SetBpmnDI ...
+func (definitions *Definitions) SetBpmnDI() {
+	definitions.BpmnDI = "http://www.omg.org/spec/BPMN/20100524/DI"
+}
+
+// SetOmgDI ...
+func (definitions *Definitions) SetOmgDI() {
+	definitions.OmgDI = "http://www.omg.org/spec/DD/20100524/DI"
 }
 
 // SetDC ...
 func (definitions *Definitions) SetDC() {
 	definitions.DC = "http://www.omg.org/spec/DD/20100524/DC"
+}
+
+// SetOmgDC ...
+func (definitions *Definitions) SetOmgDC() {
+	definitions.OmgDC = "http://www.omg.org/spec/DD/20100524/DC"
 }
 
 // SetBioc ...
@@ -74,6 +97,11 @@ func (definitions *Definitions) SetXSD() {
 // SetXSI ...
 func (definitions *Definitions) SetXSI() {
 	definitions.Xsi = "http://www.w3.org/2001/XMLSchema-instance"
+}
+
+// SetXsiSchemaLocation ...
+func (definitions *Definitions) SetXsiSchemaLocation() {
+	definitions.XsiSchemaLocation = "http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
 }
 
 // SetDefinitionsID ...
@@ -169,7 +197,7 @@ func (definitions *Definitions) SetDiagram() {
 func (definitions *Definitions) SetDefaultAttributes() {
 	definitionsHash := utils.GenerateHash()
 	definitions.SetBpmn()
-	definitions.SetBpmndi()
+	definitions.SetBpmnDI()
 	definitions.SetDC()
 	definitions.SetID(definitionsHash)
 	definitions.SetTargetNamespace()

@@ -1,65 +1,66 @@
 {
-   "id": "Definitions_fa4ab6f5",
+   "id": "Definitions_38aff2f5",
    "collaboration": [
      {
-       "id": "Collaboration_416f9b22",
+       "id": "Collaboration_0871c694",
        "participant": [
          {
-           "id": "Participant_2e4a69c2",
-           "processRef": "Process_ca5bbbe0"
+           "id": "Participant_69a8b98b",
+           "processRef": "Process_ffec8727"
          }
        ]
      }
    ],
    "process": [
      {
-       "id": "Process_ca5bbbe0",
+       "id": "Process_ffec8727",
        "isExecutable": true,
        "startEvent": [
          {
            "id": "StartEvent_1",
+           "name": "Begin of",
            "outgoing": [
              {
-               "flow": "Flow_59926681"
+               "flow": "Flow_5a2d07f1"
              }
            ]
          }
        ],
        "endEvent": [
          {
-           "id": "Event_4cb0b5af",
+           "id": "Event_150bd07c",
            "incoming": [
              {
-               "flow": "Flow_2349be64"
+               "flow": "Flow_"
              }
            ]
          }
        ],
        "task": [
          {
-           "id": "Activity_ccf1fbc8",
+           "id": "Activity_9d48d464",
            "incoming": [
              {
-               "flow": "Flow_59926681"
+               "flow": "Flow_5a2d07f1"
              }
            ],
            "outgoing": [
              {
-               "flow": "Flow_2349be64"
+               "flow": "Flow_"
              }
            ]
          }
        ],
        "sequenceFlow": [
          {
-           "id": "Flow_59926681",
+           "id": "Flow_5a2d07f1",
            "sourceRef": "StartEvent_1",
-           "targetRef": "Activity_ccf1fbc8"
+           "targetRef": "Activity_9d48d464"
          },
          {
-           "id": "Flow_2349be64",
-           "sourceRef": "Activity_ccf1fbc8",
-           "targetRef": "Event_4cb0b5af"
+           "id": "Flow_",
+           "sourceRef": "Activity_9d48d464",
+           "targetRef": "Event_150bd07c"
          }
        ]
      }

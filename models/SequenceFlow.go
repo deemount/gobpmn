@@ -17,6 +17,15 @@ type SequenceFlow struct {
 	ConditionExpression []ConditionExpression `xml:"bpmn:conditionExpression,omitempty" json:"conditionExpression,omitempty"`
 }
 
+// TSequenceFlow ...
+type TSequenceFlow struct {
+	ID                  string                `xml:"id,attr" json:"id"`
+	Name                string                `xml:"name,attr,omitempty" json:"name,omitempty"`
+	SourceRef           string                `xml:"sourceRef,attr" json:"sourceRef"`
+	TargetRef           string                `xml:"targetRef,attr" json:"targetRef"`
+	ConditionExpression []ConditionExpression `xml:"conditionExpression,omitempty" json:"conditionExpression,omitempty"`
+}
+
 /* Attributes */
 
 /** BPMN **/

@@ -26,13 +26,13 @@ type IntermediateThrowEvent struct {
 /** BPMN **/
 
 // SetID ...
-func (ite *IntermediateThrowEvent) SetID(suffix string) {
-	ite.ID = fmt.Sprintf("Event_%s", suffix)
+func (intermediateThrowEvent *IntermediateThrowEvent) SetID(suffix string) {
+	intermediateThrowEvent.ID = fmt.Sprintf("Event_%s", suffix)
 }
 
 // SetName ...
-func (ite *IntermediateThrowEvent) SetName(name string) {
-	ite.Name = name
+func (intermediateThrowEvent *IntermediateThrowEvent) SetName(name string) {
+	intermediateThrowEvent.Name = name
 }
 
 /* Elements */
@@ -40,31 +40,31 @@ func (ite *IntermediateThrowEvent) SetName(name string) {
 /** BPMN **/
 
 // SetExtensionElements ...
-func (ite *IntermediateThrowEvent) SetExtensionElements() {
-	ite.ExtensionElements = make([]ExtensionElements, 1)
+func (intermediateThrowEvent *IntermediateThrowEvent) SetExtensionElements() {
+	intermediateThrowEvent.ExtensionElements = make([]ExtensionElements, 1)
 }
 
 // SetIncoming ...
-func (ite *IntermediateThrowEvent) SetIncoming(num int) {
-	ite.Incoming = make([]Incoming, num)
+func (intermediateThrowEvent *IntermediateThrowEvent) SetIncoming(num int) {
+	intermediateThrowEvent.Incoming = make([]Incoming, num)
 }
 
 // SetOutgoing ...
-func (ite *IntermediateThrowEvent) SetOutgoing(num int) {
-	ite.Outgoing = make([]Outgoing, num)
+func (intermediateThrowEvent *IntermediateThrowEvent) SetOutgoing(num int) {
+	intermediateThrowEvent.Outgoing = make([]Outgoing, num)
 }
 
 // SetLinkEventDefinition ...
-func (ite *IntermediateThrowEvent) SetLinkEventDefinition() {
-	ite.LinkEventDefinition = make([]LinkEventDefinition, 1)
+func (intermediateThrowEvent *IntermediateThrowEvent) SetLinkEventDefinition() {
+	intermediateThrowEvent.LinkEventDefinition = make([]LinkEventDefinition, 1)
 }
 
 // SetEscalationEventDefinition ...
-func (ite *IntermediateThrowEvent) SetEscalationEventDefinition() {
-	ite.EscalationEventDefinition = make([]EscalationEventDefinition, 1)
+func (intermediateThrowEvent *IntermediateThrowEvent) SetEscalationEventDefinition() {
+	intermediateThrowEvent.EscalationEventDefinition = make([]EscalationEventDefinition, 1)
 }
 
 // SetMessageEventDefinition ...
-func (ite *IntermediateThrowEvent) SetMessageEventDefinition() {
-	ite.MessageEventDefinition = make([]MessageEventDefinition, 1)
+func (intermediateThrowEvent *IntermediateThrowEvent) SetMessageEventDefinition() {
+	intermediateThrowEvent.MessageEventDefinition = make([]MessageEventDefinition, 1)
 }

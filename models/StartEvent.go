@@ -28,6 +28,26 @@ type StartEvent struct {
 	Outgoing              []Outgoing                   `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
+// TStartEvent ...
+type TStartEvent struct {
+	ID                  string                       `xml:"id,attr" json:"id"`
+	Name                string                       `xml:"name,attr,omitempty" json:"name,omitempty"`
+	IsInterrupting      bool                         `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
+	FormKey             string                       `xml:"formKey,attr,omitempty" json:"formKey,omitempty"`
+	FormRef             string                       `xml:"formRef,attr,omitempty" json:"formRef,omitempty"`
+	FormRefBind         string                       `xml:"formRefBinding,attr,omitempty" json:"formRefBind,omitempty"`
+	FormRefVersion      string                       `xml:"formRefVersion,attr,omitempty" json:"formRefVersion,omitempty"`
+	AsyncBefore         bool                         `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	AsyncAfter          bool                         `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	JobPriority         int                          `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Init                string                       `xml:"initiator,attr,omitempty" json:"init,omitempty"`
+	ExtensionElements   []ExtensionElements          `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ConditionalEventDef []ConditionalEventDefinition `xml:"conditionalEventDefintion,omitempty" json:"conditionalEventDefinition,omitempty"`
+	MsgEventDef         []MessageEventDefinition     `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	TimerEventDef       []TimerEventDefinition       `xml:"timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
+	Outgoing            []Outgoing                   `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+}
+
 /* Attributes */
 
 /** BPMN **/

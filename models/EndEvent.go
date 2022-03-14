@@ -18,6 +18,24 @@ type EndEvent struct {
 	TerminateEventDefinition  []TerminateEventDefinition  `xml:"bpmn:terminateEventDefinition,omitempty" json:"terminateEventDefinition,omitempty"`
 }
 
+// TEndEvent ...
+type TEndEvent struct {
+	ID                        string                      `xml:"id,attr" json:"id"`
+	Name                      string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore        bool                        `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter         bool                        `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaJobPriority        int                         `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation             []Documentation             `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements         []ExtensionElements         `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming                  []Incoming                  `xml:"incoming,omitempty" json:"incoming,omitempty"`
+	CompensateEventDefinition []CompensateEventDefinition `xml:"compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
+	EscalationEventDefinition []EscalationEventDefinition `xml:"escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	MessageEventDefinition    []MessageEventDefinition    `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	ErrorEventDefinition      []ErrorEventDefinition      `xml:"errorEventDefinition,omitempty" json:"errorEventDefinition,omitempty"`
+	SignalEventDefinition     []SignalEventDefinition     `xml:"signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
+	TerminateEventDefinition  []TerminateEventDefinition  `xml:"terminateEventDefinition,omitempty" json:"terminateEventDefinition,omitempty"`
+}
+
 /* Attributes */
 
 /** BPMN **/

@@ -45,6 +45,42 @@ type Process struct {
 	Group                    []Group                  `xml:"bpmn:group,omitempty" json:"group,omitempty"`
 }
 
+// TProcess ...
+type TProcess struct {
+	ID                     string                   `xml:"id,attr" json:"id"`
+	Name                   string                   `xml:"name,attr,omitempty" json:"name,omitempty"`
+	IsExecutable           bool                     `xml:"isExecutable,attr" json:"isExecutable,omitempty"`
+	VersionTag             string                   `xml:"versionTag,attr,omitempty" json:"versionTag,omitempty"`
+	JobPriority            int                      `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	TaskPriority           int                      `xml:"taskPriority,attr,omitempty" json:"taskPriority,omitempty"`
+	CandidStartGroups      string                   `xml:"candidateStarterGroups,attr,omitempty" json:"candidateStarterGroups,omitempty"`
+	CandidStartUsers       string                   `xml:"candidateStarterUsers,attr,omitempty" json:"candidateStarterUsers,omitempty"`
+	Documentation          []Documentation          `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	LaneSet                []LaneSet                `xml:"laneSet,omitempty" json:"laneSet,omitempty"`
+	StartEvent             []TStartEvent            `xml:"startEvent,omitemnpty" json:"startEvent,omitempty"`
+	BoundaryEvent          []BoundaryEvent          `xml:"boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty"`
+	EndEvent               []TEndEvent              `xml:"endEvent,omitempty" json:"endEvent,omitempty"`
+	IntermediateCatchEvent []IntermediateCatchEvent `xml:"intermediateCatchEvent,omitempty" json:"intermediateCatchEvent,omitempty"`
+	IntermediateThrowEvent []IntermediateThrowEvent `xml:"intermediateThrowEvent,omitempty" json:"intermediateThrowEvent,omitempty"`
+	Task                   []TTask                  `xml:"task,omitempty" json:"task,omitempty"`
+	UserTask               []UserTask               `xml:"userTask,omitempty" json:"userTask,omitempty"`
+	ManualTask             []ManualTask             `xml:"manualTask,omitempty" json:"manualTask,omitempty"`
+	ReceiveTask            []ReceiveTask            `xml:"receiveTask,omitempty" json:"receiveTask,omitempty"`
+	ScriptTask             []ScriptTask             `xml:"scriptTask,omitempty" json:"scriptTask,omitempty"`
+	SendTask               []SendTask               `xml:"sendTask,omitempty" json:"sendTask,omitempty"`
+	ServiceTask            []ServiceTask            `xml:"serviceTask,omitempty" json:"serviceTask,omitempty"`
+	CallActivity           []CallActivity           `xml:"callActivity,omitempty" json:"callActivity,omitempty"`
+	SubProcess             []SubProcess             `xml:"subProcess,omitempty" json:"subProcess,omitempty"`
+	Transaction            []Transaction            `xml:"transaction,omitempty" json:"transaction,omitempty"`
+	ExclusiveGateway       []ExclusiveGateway       `xml:"exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty"`
+	InclusiveGateway       []InclusiveGateway       `xml:"inclusiveGateway,omitempty" json:"inclusiveGateway,omitempty"`
+	ParallelGateway        []ParallelGateway        `xml:"parallelGateway,omitempty" json:"parallelGateway,omitempty"`
+	ComplexGateway         []ComplexGateway         `xml:"complexGateway,omitempty" json:"complexGateway,omitempty"`
+	EventBasedGateway      []EventBasedGateway      `xml:"eventBasedGateway,omitempty" json:"eventBasedGateway,omitempty"`
+	SequenceFlow           []TSequenceFlow          `xml:"sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
+	Group                  []Group                  `xml:"group,omitempty" json:"group,omitempty"`
+}
+
 /* Attributes */
 
 /** BPMN **/
@@ -127,12 +163,12 @@ func (process *Process) SetEndEvent(num int) {
 }
 
 // SetIntermedCatchEvent ...
-func (process *Process) SetIntermedCatchEvent(num int) {
+func (process *Process) SetIntermediateCatchEvent(num int) {
 	process.IntermediateCatchEvent = make([]IntermediateCatchEvent, num)
 }
 
 // SetIntermedThrowEvent ...
-func (process *Process) SetIntermedThrowEvent(num int) {
+func (process *Process) SetIntermediateThrowEvent(num int) {
 	process.IntermediateThrowEvent = make([]IntermediateThrowEvent, num)
 }
 

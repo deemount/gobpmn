@@ -16,6 +16,15 @@ type Collaboration struct {
 	MessageFlow       []MessageFlow       `xml:"bpmn:messageFlow,omitempty" json:"messageFlow,omitempty"`
 }
 
+// TCollaboration ...
+type TCollaboration struct {
+	ID                string              `xml:"id,attr" json:"id"`
+	Documentation     []Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Participant       []TParticipant      `xml:"participant" json:"participant,omitempty"`
+	MessageFlow       []MessageFlow       `xml:"messageFlow,omitempty" json:"messageFlow,omitempty"`
+}
+
 /**
  * Default Setters
  */

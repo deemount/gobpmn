@@ -9,28 +9,28 @@ import (
 	"github.com/deemount/gobpmn/models"
 )
 
-type DMNF struct {
-	DMNFCounter int
-	Def         models.DefinitionsDMN
+type DmnFactory struct {
+	DmnFactoryCounter int
+	Def               models.DefinitionsDMN
 }
 
-// NewBDMNF ...
-func NewDMNF() DMNF {
+// NewDmnFactory ...
+func NewDmnFactory() DmnFactory {
 	files, _ := ioutil.ReadDir("files/")
 	counter := len(files)
 	if counter == 0 {
 		counter++
 	}
-	return DMNF{DMNFCounter: counter}
+	return DmnFactory{DmnFactoryCounter: counter}
 }
 
 // Set ...
-func (dm *DMNF) Set() {
+func (dm *DmnFactory) Set() {
 
 }
 
 // Create ...
-func (dm *DMNF) Create() error {
+func (dm *DmnFactory) Create() error {
 
 	var err error
 
@@ -38,7 +38,7 @@ func (dm *DMNF) Create() error {
 	b, _ := xml.MarshalIndent(dm.Def, " ", "  ")
 
 	// create file
-	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", dm.DMNFCounter) + ".dmn")
+	f, err := os.Create("files/diagram_" + fmt.Sprintf("%d", dm.DmnFactoryCounter) + ".dmn")
 	if err != nil {
 		return err
 	}

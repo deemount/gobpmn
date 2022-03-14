@@ -17,6 +17,15 @@ type Participant struct {
 	ParticipantMultiplicity []ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty" json:"participantMultiplicity,omitempty"`
 }
 
+// TParticipant ...
+type TParticipant struct {
+	ID                      string                    `xml:"id,attr" json:"id"`
+	Name                    string                    `xml:"name,attr,omitempty" json:"name,omitempty"`
+	ProcessRef              string                    `xml:"processRef,attr" json:"processRef,omitempty"`
+	Documentation           []Documentation           `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ParticipantMultiplicity []ParticipantMultiplicity `xml:"participantMultiplicity,omitempty" json:"participantMultiplicity,omitempty"`
+}
+
 /* Attributes */
 
 /** BPMN **/
