@@ -67,7 +67,7 @@ func (simpleModel001 *SimpleModel001) SetElements() {
 	simpleModel001.def.Process[0].SetTask(1)
 	simpleModel001.def.Process[0].SetEndEvent(1)
 	simpleModel001.def.Process[0].SetSequenceFlow(2)
-	simpleModel001.def.SetDiagram()
+	simpleModel001.def.SetDiagram(1)
 	simpleModel001.def.Diagram[0].SetPlane()
 	simpleModel001.def.Diagram[0].Plane[0].SetShape(3)
 	simpleModel001.def.Diagram[0].Plane[0].SetEdge(2)
@@ -81,23 +81,24 @@ func (simpleModel001 *SimpleModel001) SetDefinitionsAttributes() {
 // SetProcess ...
 func (simpleModel001 *SimpleModel001) SetProcess() {
 	// generics
-	simpleModel001.def.Process[0].SetID(simpleModel001.ProcessHash)
+	simpleModel001.def.Process[0].SetID("hash", simpleModel001.ProcessHash)
 	simpleModel001.def.Process[0].SetIsExecutable(simpleModel001.isExecutable)
 }
 
 // SetStartEvent ...
 func (simpleModel001 *SimpleModel001) SetStartEvent() {
 	// generics
-	simpleModel001.def.Process[0].StartEvent[0].SetID(simpleModel001.StartEventCounter)
+	simpleModel001.def.Process[0].StartEvent[0].SetID("counter", simpleModel001.StartEventCounter)
 	// outgoing
 	simpleModel001.def.Process[0].StartEvent[0].SetOutgoing(1)
 	simpleModel001.def.Process[0].StartEvent[0].Outgoing[0].SetFlow(simpleModel001.FromStartEvent)
 	// shape attributes
-	simpleModel001.def.Diagram[0].Plane[0].Shape[0].SetID("startevent", simpleModel001.StartEventCounter+1)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[0].SetElement("startevent", simpleModel001.StartEventCounter)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[0].SetBounds()
-	simpleModel001.def.Diagram[0].Plane[0].Shape[0].Bounds[0].SetCoordinates(179, 159)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[0].Bounds[0].SetSize(36, 36)
+	p := simpleModel001.getPlane()
+	p.Shape[0].SetID("startevent", simpleModel001.StartEventCounter+1)
+	p.Shape[0].SetElement("startevent", simpleModel001.StartEventCounter)
+	p.Shape[0].SetBounds()
+	p.Shape[0].Bounds[0].SetCoordinates(179, 159)
+	p.Shape[0].Bounds[0].SetSize(36, 36)
 }
 
 // SetTask ...
@@ -111,11 +112,12 @@ func (simpleModel001 *SimpleModel001) SetTask() {
 	simpleModel001.def.Process[0].Task[0].SetOutgoing(1)
 	simpleModel001.def.Process[0].Task[0].Outgoing[0].SetFlow(simpleModel001.FromTask)
 	// shape attributes
-	simpleModel001.def.Diagram[0].Plane[0].Shape[1].SetID("activity", simpleModel001.TaskHash)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[1].SetElement("activity", simpleModel001.TaskHash)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[1].SetBounds()
-	simpleModel001.def.Diagram[0].Plane[0].Shape[1].Bounds[0].SetCoordinates(270, 137)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[1].Bounds[0].SetSize(100, 80)
+	p := simpleModel001.getPlane()
+	p.Shape[1].SetID("activity", simpleModel001.TaskHash)
+	p.Shape[1].SetElement("activity", simpleModel001.TaskHash)
+	p.Shape[1].SetBounds()
+	p.Shape[1].Bounds[0].SetCoordinates(270, 137)
+	p.Shape[1].Bounds[0].SetSize(100, 80)
 }
 
 // SetEndEvent ...
@@ -126,11 +128,12 @@ func (simpleModel001 *SimpleModel001) SetEndEvent() {
 	simpleModel001.def.Process[0].EndEvent[0].SetIncoming(1)
 	simpleModel001.def.Process[0].EndEvent[0].Incoming[0].SetFlow(simpleModel001.FromTask)
 	// shape attributes
-	simpleModel001.def.Diagram[0].Plane[0].Shape[2].SetID("event", simpleModel001.EndEventHash)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[2].SetElement("event", simpleModel001.EndEventHash)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[2].SetBounds()
-	simpleModel001.def.Diagram[0].Plane[0].Shape[2].Bounds[0].SetCoordinates(432, 159)
-	simpleModel001.def.Diagram[0].Plane[0].Shape[2].Bounds[0].SetSize(36, 36)
+	p := simpleModel001.getPlane()
+	p.Shape[2].SetID("event", simpleModel001.EndEventHash)
+	p.Shape[2].SetElement("event", simpleModel001.EndEventHash)
+	p.Shape[2].SetBounds()
+	p.Shape[2].Bounds[0].SetCoordinates(432, 159)
+	p.Shape[2].Bounds[0].SetSize(36, 36)
 }
 
 // SetFromStartEventSequenceFlow ...
@@ -140,11 +143,12 @@ func (simpleModel001 *SimpleModel001) SetFromStartEventSequenceFlow() {
 	simpleModel001.def.Process[0].SequenceFlow[0].SetSourceRef(fmt.Sprintf("StartEvent_%d", simpleModel001.StartEventCounter))
 	simpleModel001.def.Process[0].SequenceFlow[0].SetTargetRef(fmt.Sprintf("Activity_%s", simpleModel001.TaskHash))
 	// shape attributes
-	simpleModel001.def.Diagram[0].Plane[0].Edge[0].SetID("flow", simpleModel001.FromStartEvent)
-	simpleModel001.def.Diagram[0].Plane[0].Edge[0].SetElement("flow", simpleModel001.FromStartEvent)
-	simpleModel001.def.Diagram[0].Plane[0].Edge[0].SetWaypoint()
-	simpleModel001.def.Diagram[0].Plane[0].Edge[0].Waypoint[0].SetCoordinates(215, 177)
-	simpleModel001.def.Diagram[0].Plane[0].Edge[0].Waypoint[1].SetCoordinates(270, 177)
+	p := simpleModel001.getPlane()
+	p.Edge[0].SetID("flow", simpleModel001.FromStartEvent)
+	p.Edge[0].SetElement("flow", simpleModel001.FromStartEvent)
+	p.Edge[0].SetWaypoint()
+	p.Edge[0].Waypoint[0].SetCoordinates(215, 177)
+	p.Edge[0].Waypoint[1].SetCoordinates(270, 177)
 }
 
 // SetFromTaskSequenceFlow ...
@@ -154,11 +158,12 @@ func (simpleModel001 *SimpleModel001) SetFromTaskSequenceFlow() {
 	simpleModel001.def.Process[0].SequenceFlow[1].SetSourceRef(fmt.Sprintf("Activity_%s", simpleModel001.TaskHash))
 	simpleModel001.def.Process[0].SequenceFlow[1].SetTargetRef(fmt.Sprintf("Event_%s", simpleModel001.EndEventHash))
 	// shape attributes
-	simpleModel001.def.Diagram[0].Plane[0].Edge[1].SetID("flow", simpleModel001.FromTask)
-	simpleModel001.def.Diagram[0].Plane[0].Edge[1].SetElement("flow", simpleModel001.FromTask)
-	simpleModel001.def.Diagram[0].Plane[0].Edge[1].SetWaypoint()
-	simpleModel001.def.Diagram[0].Plane[0].Edge[1].Waypoint[0].SetCoordinates(370, 177)
-	simpleModel001.def.Diagram[0].Plane[0].Edge[1].Waypoint[1].SetCoordinates(432, 177)
+	p := simpleModel001.getPlane()
+	p.Edge[1].SetID("flow", simpleModel001.FromTask)
+	p.Edge[1].SetElement("flow", simpleModel001.FromTask)
+	p.Edge[1].SetWaypoint()
+	p.Edge[1].Waypoint[0].SetCoordinates(370, 177)
+	p.Edge[1].Waypoint[1].SetCoordinates(432, 177)
 }
 
 //
@@ -167,6 +172,12 @@ func (simpleModel001 *SimpleModel001) SetDiagram() {
 	var n int64 = 1
 	simpleModel001.def.Diagram[0].SetID(n)
 	// plane attributes
-	simpleModel001.def.Diagram[0].Plane[0].SetID(n)
-	simpleModel001.def.Diagram[0].Plane[0].SetElement("process", simpleModel001.ProcessHash)
+	p := simpleModel001.getPlane()
+	p.SetID(n)
+	p.SetElement("process", simpleModel001.ProcessHash)
+}
+
+// getPlane ...
+func (simpleModel001 SimpleModel001) getPlane() *models.Plane {
+	return &simpleModel001.def.Diagram[0].Plane[0]
 }

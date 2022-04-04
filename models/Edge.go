@@ -4,9 +4,10 @@ import "fmt"
 
 // Edge ...
 type Edge struct {
-	ID       string     `xml:"id,attr"`
-	Element  string     `xml:"bpmnElement,attr"`
-	Waypoint []Waypoint `xml:"di:waypoint"`
+	ID       string     `xml:"id,attr" json:"-"`
+	Element  string     `xml:"bpmnElement,attr" json:"-"`
+	Waypoint []Waypoint `xml:"di:waypoint" json:"-"`
+	Label    []Label    `xml:"bpmndi:BPMNLabel,omitempty" json:"-"`
 }
 
 /* Attributes */
@@ -38,4 +39,9 @@ func (edge *Edge) SetElement(typ string, suffix interface{}) {
 // SetWaypoint ...
 func (edge *Edge) SetWaypoint() {
 	edge.Waypoint = make([]Waypoint, 2)
+}
+
+// SetLabel ...
+func (edge *Edge) SetLabel() {
+	edge.Label = make([]Label, 1)
 }

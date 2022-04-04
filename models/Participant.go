@@ -4,17 +4,17 @@ import "fmt"
 
 // ParticipantRepository ...
 type ParticipantRepository interface {
-	SetID(suffix string)
+	SetID(typ string, suffix string)
 	SetName(name string)
 }
 
 // Participant ...
 type Participant struct {
-	ID                      string                    `xml:"id,attr" json:"id"`
-	Name                    string                    `xml:"name,attr,omitempty" json:"name,omitempty"`
-	ProcessRef              string                    `xml:"processRef,attr" json:"processRef,omitempty"`
-	Documentation           []Documentation           `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ParticipantMultiplicity []ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty" json:"participantMultiplicity,omitempty"`
+	ID                      string                    `xml:"id,attr" json:"id" csv:"ID"`
+	Name                    string                    `xml:"name,attr,omitempty" json:"name,omitempty" csv:"NAME"`
+	ProcessRef              string                    `xml:"processRef,attr" json:"processRef,omitempty" csv:"PROCESS_REF"`
+	Documentation           []Documentation           `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty" csv:"DOCUMENTATION"`
+	ParticipantMultiplicity []ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty" json:"participantMultiplicity,omitempty" csv:"PARTICIPANT_MULTIPLICITY"`
 }
 
 // TParticipant ...
@@ -31,8 +31,15 @@ type TParticipant struct {
 /** BPMN **/
 
 // SetID ...
-func (participant *Participant) SetID(suffix string) {
-	participant.ID = fmt.Sprintf("Participant_%s", suffix)
+func (participant *Participant) SetID(typ string, suffix string) {
+	switch typ {
+	case "participant":
+		participant.ID = fmt.Sprintf("Participant_%s", suffix)
+		break
+	case "id":
+		participant.ID = fmt.Sprintf("%s", suffix)
+		break
+	}
 }
 
 // SetName ...
@@ -41,8 +48,15 @@ func (participant *Participant) SetName(name string) {
 }
 
 // SetProcessRef ...
-func (participant *Participant) SetProcessRef(suffix string) {
-	participant.ProcessRef = fmt.Sprintf("Process_%s", suffix)
+func (participant *Participant) SetProcessRef(typ string, suffix string) {
+	switch typ {
+	case "process":
+		participant.ProcessRef = fmt.Sprintf("Process_%s", suffix)
+		break
+	case "id":
+		participant.ProcessRef = fmt.Sprintf("%s", suffix)
+		break
+	}
 }
 
 /* Elements */

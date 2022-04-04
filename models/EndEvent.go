@@ -22,9 +22,9 @@ type EndEvent struct {
 type TEndEvent struct {
 	ID                        string                      `xml:"id,attr" json:"id"`
 	Name                      string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore        bool                        `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter         bool                        `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority        int                         `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	AsyncBefore               bool                        `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	AsyncAfter                bool                        `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	JobPriority               int                         `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
 	Documentation             []Documentation             `xml:"documentation,omitempty" json:"documentation,omitempty"`
 	ExtensionElements         []ExtensionElements         `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 	Incoming                  []Incoming                  `xml:"incoming,omitempty" json:"incoming,omitempty"`
@@ -41,20 +41,25 @@ type TEndEvent struct {
 /** BPMN **/
 
 // SetID ...
-func (ee *EndEvent) SetID(suffix string) {
-	ee.ID = "Event_" + suffix
+func (endEvent *EndEvent) SetID(suffix string) {
+	endEvent.ID = "Event_" + suffix
+}
+
+// SetName ...
+func (endEvent *EndEvent) SetName(name string) {
+	endEvent.Name = name
 }
 
 /** Camunda **/
 
 // SetCamundaAsyncBefore ...
-func (ee *EndEvent) SetCamundaAsyncBefore(asyncBefore bool) {
-	ee.CamundaAsyncBefore = asyncBefore
+func (endEvent *EndEvent) SetCamundaAsyncBefore(asyncBefore bool) {
+	endEvent.CamundaAsyncBefore = asyncBefore
 }
 
 // SetCamundaAsyncBefore ...
-func (ee *EndEvent) SetCamundaAsyncAfter(asyncAfter bool) {
-	ee.CamundaAsyncAfter = asyncAfter
+func (endEvent *EndEvent) SetCamundaAsyncAfter(asyncAfter bool) {
+	endEvent.CamundaAsyncAfter = asyncAfter
 }
 
 /* Elements */
@@ -62,48 +67,48 @@ func (ee *EndEvent) SetCamundaAsyncAfter(asyncAfter bool) {
 /** BPMN **/
 
 // SetDocumentation ...
-func (ee *EndEvent) SetDocumentation() {
-	ee.Documentation = make([]Documentation, 1)
+func (endEvent *EndEvent) SetDocumentation() {
+	endEvent.Documentation = make([]Documentation, 1)
 }
 
 // SetExtensionElements ...
-func (ee *EndEvent) SetExtensionElements() {
-	ee.ExtensionElements = make([]ExtensionElements, 1)
+func (endEvent *EndEvent) SetExtensionElements() {
+	endEvent.ExtensionElements = make([]ExtensionElements, 1)
 }
 
 // SetIncoming ...
-func (ee *EndEvent) SetIncoming(num int) {
-	ee.Incoming = make([]Incoming, num)
+func (endEvent *EndEvent) SetIncoming(num int) {
+	endEvent.Incoming = make([]Incoming, num)
 }
 
 /*** Event Definitions ***/
 
 // SetCompensateEventDefinition ...
-func (ee *EndEvent) SetCompensateEventDefinition() {
-	ee.CompensateEventDefinition = make([]CompensateEventDefinition, 1)
+func (endEvent *EndEvent) SetCompensateEventDefinition() {
+	endEvent.CompensateEventDefinition = make([]CompensateEventDefinition, 1)
 }
 
 // SetEscalationEventDefinition ...
-func (ee *EndEvent) SetEscalationEventDefinition() {
-	ee.EscalationEventDefinition = make([]EscalationEventDefinition, 1)
+func (endEvent *EndEvent) SetEscalationEventDefinition() {
+	endEvent.EscalationEventDefinition = make([]EscalationEventDefinition, 1)
 }
 
 // SetMessageEventDefinition ...
-func (ee *EndEvent) SetMessageEventDefinition() {
-	ee.MessageEventDefinition = make([]MessageEventDefinition, 1)
+func (endEvent *EndEvent) SetMessageEventDefinition() {
+	endEvent.MessageEventDefinition = make([]MessageEventDefinition, 1)
 }
 
 // SetErrorEventDefinition ...
-func (ee *EndEvent) SetErrorEventDefinition() {
-	ee.ErrorEventDefinition = make([]ErrorEventDefinition, 1)
+func (endEvent *EndEvent) SetErrorEventDefinition() {
+	endEvent.ErrorEventDefinition = make([]ErrorEventDefinition, 1)
 }
 
 // SetSignalEventDefinition ...
-func (ee *EndEvent) SetSignalEventDefinition() {
-	ee.SignalEventDefinition = make([]SignalEventDefinition, 1)
+func (endEvent *EndEvent) SetSignalEventDefinition() {
+	endEvent.SignalEventDefinition = make([]SignalEventDefinition, 1)
 }
 
 // SetTerminateEventDefinition ...
-func (ee *EndEvent) SetTerminateEventDefinition() {
-	ee.TerminateEventDefinition = make([]TerminateEventDefinition, 1)
+func (endEvent *EndEvent) SetTerminateEventDefinition() {
+	endEvent.TerminateEventDefinition = make([]TerminateEventDefinition, 1)
 }

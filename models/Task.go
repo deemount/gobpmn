@@ -10,8 +10,8 @@ type TaskRepository interface {
 
 // Task ...
 type Task struct {
-	ID                 string              `xml:"id,attr,omitempty" json:"id"`
-	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	ID                 string              `xml:"id,attr,omitempty" json:"id" csv:"id"`
+	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty" csv:"name"`
 	CamundaAsyncBefore bool                `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
 	CamundaAsyncAfter  bool                `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
 	CamundaJobPriority int                 `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
@@ -23,15 +23,15 @@ type Task struct {
 
 // TTask ...
 type TTask struct {
-	ID                 string              `xml:"id,attr,omitempty" json:"id"`
-	Name               string              `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter  bool                `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority int                 `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []Incoming          `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []Outgoing          `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	ID                string              `xml:"id,attr,omitempty" json:"id"`
+	Name              string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	AsyncBefore       bool                `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	AsyncAfter        bool                `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	JobPriority       int                 `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation     []Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming          []Incoming          `xml:"incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing          []Outgoing          `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 /* Attributes */
@@ -87,4 +87,9 @@ func (task *Task) SetIncoming(num int) {
 // SetOutgoing ...
 func (task *Task) SetOutgoing(num int) {
 	task.Outgoing = make([]Outgoing, num)
+}
+
+// String ...
+func (task Task) String() string {
+	return fmt.Sprintf("id=%v, name=%v", task.ID, task.Name)
 }

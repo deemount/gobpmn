@@ -33,6 +33,9 @@ func (shape *Shape) SetID(typ string, suffix interface{}) {
 	case "startevent":
 		shape.ID = fmt.Sprintf("_BPMNShape_StartEvent_%d", suffix)
 		break
+	case "id":
+		shape.ID = fmt.Sprintf("%s_di", suffix)
+		break
 	}
 
 }
@@ -54,6 +57,9 @@ func (shape *Shape) SetElement(typ string, suffix interface{}) {
 		break
 	case "startevent":
 		shape.Element = fmt.Sprintf("StartEvent_%d", suffix)
+		break
+	case "id":
+		shape.Element = fmt.Sprintf("%s", suffix)
 		break
 	}
 }

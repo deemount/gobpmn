@@ -8,14 +8,11 @@ import (
 	"os"
 	"strings"
 
+	"github.com/gocarina/gocsv"
+
 	"github.com/deemount/gobpmn/examples"
 	"github.com/deemount/gobpmn/models"
 )
-
-type Options struct {
-	Counter     int
-	CurrentFile string
-}
 
 // BpmnFactoryRepository ...
 type BpmnFactoryRepository interface {
@@ -25,25 +22,28 @@ type BpmnFactoryRepository interface {
 // BpmnFactory ...
 type BpmnFactory struct {
 	// options
-	Options Options
+	Options BpmnOptions
 	Def     models.Definitions
 }
 
-type BpmnFactoryOption func(o Options) Options
+type BpmnFactoryOption func(o BpmnOptions) BpmnOptions
 
 // NewBpmnFactory ...
 func NewBpmnFactory(opt ...BpmnFactoryOption) BpmnFactory {
-	options := Options{}
+	options := BpmnOptions{}
 	for _, o := range opt {
 		options = o(options)
 	}
-	files, _ := ioutil.ReadDir("files/")
+	files, _ := ioutil.ReadDir("files/bpmn")
 	options.Counter = len(files)
-	fmt.Println(options.Counter)
+
 	// count up
 	if options.Counter == 0 {
+		options.Counter = 1
+	} else {
 		options.Counter++
 	}
+
 	options.CurrentFile = "diagram_" + fmt.Sprintf("%d", options.Counter)
 	return BpmnFactory{Options: options}
 }
@@ -55,22 +55,25 @@ func (bpmnFactory *BpmnFactory) set(modelName interface{}) {
 	def := &bpmnFactory.Def
 
 	if modelName == nil {
-		modelName = fmt.Sprintf("simple-model-00%d", 2)
+		modelName = fmt.Sprintf("00%d", 5)
 	}
 
 	/* set & create model */
 	switch modelName {
-	case "simple-model-001":
+	case "001":
 		model := examples.NewSimpleModel001(def)
 		model.Create()
-	case "simple-model-002":
+	case "002":
 		model := examples.NewSimpleModel002(def)
 		model.Create()
-	case "simple-model-003":
+	case "003":
 		model := examples.NewSimpleModel003(def)
 		model.Create()
-	case "simple-model-004":
-		model := examples.NewSimpleModel003(def)
+	case "004":
+		model := examples.NewSimpleModel004(def)
+		model.Create()
+	case "005":
+		model := examples.NewCollaborativeProcess(def)
 		model.Create()
 	}
 
@@ -101,6 +104,11 @@ func (bpmnFactory *BpmnFactory) Create() error {
 		return err
 	}
 
+	// create .csv
+	/*err = bpmnFactory.toCSV()
+	if err != nil {
+		return err
+	}*/
 	return nil
 
 }
@@ -119,7 +127,7 @@ func (bpmnFactory *BpmnFactory) toBPMN() error {
 	b, _ := xml.MarshalIndent(&bpmnFactory.Def, " ", "  ")
 
 	// create .bpmn file
-	f, err := os.Create("files/" + bpmnFactory.Options.CurrentFile + ".bpmn")
+	f, err := os.Create("files/bpmn/" + bpmnFactory.Options.CurrentFile + ".bpmn")
 	if err != nil {
 		return err
 	}
@@ -151,7 +159,7 @@ func (bpmnFactory *BpmnFactory) toXML() error {
 	b, _ := xml.MarshalIndent(&bpmnFactory.Def, " ", "  ")
 
 	// create .bpmn file
-	f, err := os.Create("xml/" + bpmnFactory.Options.CurrentFile + ".xml")
+	f, err := os.Create("files/xml/" + bpmnFactory.Options.CurrentFile + ".xml")
 	if err != nil {
 		return err
 	}
@@ -195,7 +203,7 @@ func (bpmnFactory *BpmnFactory) toJSON() error {
 	b, _ := json.MarshalIndent(&bpmnFactory.Def, " ", "  ")
 
 	// create .json file
-	f, err := os.Create("json/" + bpmnFactory.Options.CurrentFile + ".json")
+	f, err := os.Create("files/json/" + bpmnFactory.Options.CurrentFile + ".json")
 	if err != nil {
 		return err
 	}
@@ -210,6 +218,25 @@ func (bpmnFactory *BpmnFactory) toJSON() error {
 	err = f.Sync()
 	if err != nil {
 		return err
+	}
+
+	return nil
+
+}
+
+// toCSV ...
+func (bpmnFactory *BpmnFactory) toCSV() error {
+	var err error
+
+	f, err := os.Create("files/csv/" + bpmnFactory.Options.CurrentFile + ".csv")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	err = gocsv.MarshalFile(&bpmnFactory.Def, f)
+	if err != nil {
+		panic(err)
 	}
 
 	return nil

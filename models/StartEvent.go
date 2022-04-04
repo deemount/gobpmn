@@ -1,10 +1,10 @@
 package models
 
-import "strconv"
+import "fmt"
 
 // StartEventRepository ...
 type StartEventRepository interface {
-	SetID(suffix string)
+	SetID(typ string, suffix interface{})
 	SetName(name string)
 }
 
@@ -53,8 +53,15 @@ type TStartEvent struct {
 /** BPMN **/
 
 // SetID ...
-func (startEvent *StartEvent) SetID(num int64) {
-	startEvent.ID = "StartEvent_" + strconv.FormatInt(num, 16)
+func (startEvent *StartEvent) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "counter":
+		startEvent.ID = fmt.Sprintf("StartEvent_%d", suffix)
+		break
+	case "event":
+		startEvent.ID = fmt.Sprintf("Event_%s", suffix)
+		break
+	}
 }
 
 // SetName ...

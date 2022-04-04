@@ -185,8 +185,8 @@ func (definitions *Definitions) SetSignal(num int) {
 /** BPMNDI **/
 
 // SetDiagram ...
-func (definitions *Definitions) SetDiagram() {
-	definitions.Diagram = make([]Diagram, 1)
+func (definitions *Definitions) SetDiagram(num int) {
+	definitions.Diagram = make([]Diagram, num)
 }
 
 /**

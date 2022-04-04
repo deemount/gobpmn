@@ -22,7 +22,7 @@ type TCollaboration struct {
 	Documentation     []Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
 	ExtensionElements []ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 	Participant       []TParticipant      `xml:"participant" json:"participant,omitempty"`
-	MessageFlow       []MessageFlow       `xml:"messageFlow,omitempty" json:"messageFlow,omitempty"`
+	MessageFlow       []TMessageFlow      `xml:"messageFlow,omitempty" json:"messageFlow,omitempty"`
 }
 
 /**
@@ -34,8 +34,15 @@ type TCollaboration struct {
 /** BPMN **/
 
 // SetID ...
-func (collaboration *Collaboration) SetID(suffix string) {
-	collaboration.ID = fmt.Sprintf("Collaboration_%s", suffix)
+func (collaboration *Collaboration) SetID(typ string, suffix string) {
+	switch typ {
+	case "collaboration":
+		collaboration.ID = fmt.Sprintf("Collaboration_%s", suffix)
+		break
+	case "id":
+		collaboration.ID = fmt.Sprintf("%s", suffix)
+		break
+	}
 }
 
 /* Elements */

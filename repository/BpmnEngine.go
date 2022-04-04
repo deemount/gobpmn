@@ -78,7 +78,7 @@ func (engine *BpmnEngine) CreateInstance(processKey int64, variableContext map[s
 
 // fileExist ... function to check if file exists
 func (engine *BpmnEngine) fileExist(fileName string) bool {
-	_, error := os.Stat("files/" + fileName + ".bpmn")
+	_, error := os.Stat("files/bpmn/" + fileName + ".bpmn")
 	// check if error is "file not exists"
 	if os.IsNotExist(error) {
 		return false
@@ -91,7 +91,7 @@ func (engine *BpmnEngine) fileExist(fileName string) bool {
 // and returns ProcessInfo details for the deployed workflow
 func (engine *BpmnEngine) LoadFromFile(filename string) (*ProcessInfo, error) {
 	var err error
-	xmlData, err := ioutil.ReadFile("files/" + filename + ".bpmn")
+	xmlData, err := ioutil.ReadFile("files/bpmn/" + filename + ".bpmn")
 	if err != nil {
 		return nil, err
 	}
@@ -168,7 +168,7 @@ func (engine *BpmnEngine) requestFile(done chan func() (*ProcessInfo, error), b 
 
 // GetProcessInfo ...
 func (engine *BpmnEngine) GetProcessInfo(ctx context.Context, b BpmnFactory) (*ProcessInfo, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*1)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
 	defer cancel()
 	done := make(chan func() (*ProcessInfo, error))
 	go engine.requestFile(done, b)

@@ -20,6 +20,18 @@ type IntermediateCatchEvent struct {
 	MessageEventDefinition     []MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
 }
 
+// TIntermediateCatchEvent ...
+type TIntermediateCatchEvent struct {
+	ID                         string                       `xml:"id,attr,omitempty" json:"id"`
+	Name                       string                       `xml:"name,attr,omitempty" json:"name,omitempty"`
+	ExtensionElements          []ExtensionElements          `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming                   []Incoming                   `xml:"incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing                   []Outgoing                   `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	ConditionalEventDefinition []ConditionalEventDefinition `xml:"conditionalEventDefinition,omitempty" json:"conditionalEventDefinition,omitempty"`
+	TimerEventDefinition       []TimerEventDefinition       `xml:"timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
+	MessageEventDefinition     []MessageEventDefinition     `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+}
+
 /* Attributes */
 
 /** BPMN **/

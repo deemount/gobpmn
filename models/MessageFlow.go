@@ -2,12 +2,24 @@ package models
 
 import "fmt"
 
+// MessageFlow ...
 type MessageFlow struct {
 	ID                string              `xml:"id,attr" json:"id"`
+	Name              string              `xml:"name,attr,omitempty" json:"name,omitempty"`
 	SourceRef         string              `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
 	TargetRef         string              `xml:"targetRef,attr" json:"targetRef,omitempty"`
 	Documentation     []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
 	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+}
+
+// TMessageFlow ...
+type TMessageFlow struct {
+	ID                string              `xml:"id,attr" json:"id"`
+	Name              string              `xml:"name,attr,omitempty" json:"name,omitempty"`
+	SourceRef         string              `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
+	TargetRef         string              `xml:"targetRef,attr" json:"targetRef,omitempty"`
+	Documentation     []Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 /* Attributes */
@@ -15,8 +27,20 @@ type MessageFlow struct {
 /** BPMN **/
 
 // SetID ...
-func (messageFlow *MessageFlow) SetID(suffix string) {
-	messageFlow.ID = fmt.Sprintf("Flow_%s", suffix)
+func (messageFlow *MessageFlow) SetID(typ string, suffix string) {
+	switch typ {
+	case "flow":
+		messageFlow.ID = fmt.Sprintf("Flow_%s", suffix)
+		break
+	case "id":
+		messageFlow.ID = fmt.Sprintf("%s", suffix)
+		break
+	}
+}
+
+// SetName ...
+func (messageFlow *MessageFlow) SetName(name string) {
+	messageFlow.Name = name
 }
 
 // SetSourceRef ...
