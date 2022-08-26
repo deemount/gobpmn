@@ -1,6 +1,8 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type CollaborationRepository interface {
 	SetID(suffix string)
@@ -80,4 +82,28 @@ func (collaboration *Collaboration) SetMessageFlow(num int) {
 // GetID ...
 func (collaboration Collaboration) GetID() string {
 	return collaboration.ID
+}
+
+/* Elements */
+
+/** BPMN **/
+
+// GetDocumentation ...
+func (collaboration Collaboration) GetDocumentation() *Documentation {
+	return &collaboration.Documentation[0]
+}
+
+// GetExtensionElements ...
+func (collaboration Collaboration) GetExtensionElements() *ExtensionElements {
+	return &collaboration.ExtensionElements[0]
+}
+
+// GetParticipant ...
+func (collaboration Collaboration) GetParticipant(num int) *Participant {
+	return &collaboration.Participant[num]
+}
+
+// GetMessageFlow ...
+func (collaboration Collaboration) GetMessageFlow(num int) *MessageFlow {
+	return &collaboration.MessageFlow[num]
 }

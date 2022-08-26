@@ -4,4 +4,5 @@ package repository
 type BpmnOptions struct {
 	Counter     int
 	CurrentFile string
+	ModelType   string
 }

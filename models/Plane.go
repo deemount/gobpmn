@@ -27,10 +27,10 @@ func (plane *Plane) SetID(num int64) {
 func (plane *Plane) SetElement(typ string, suffix string) {
 	switch typ {
 	case "process":
-		plane.Element = "Process_" + suffix
+		plane.Element = fmt.Sprintf("Process_%s", suffix)
 		break
 	case "collaboration":
-		plane.Element = "Collaboration_" + suffix
+		plane.Element = fmt.Sprintf("Collaboration_%s", suffix)
 		break
 	case "id":
 		plane.Element = fmt.Sprintf("%s", suffix)
@@ -60,6 +60,24 @@ func (plane *Plane) SetShape(num int) {
 // SetEdge ...
 func (plane *Plane) SetEdge(num int) {
 	plane.Edge = make([]Edge, num)
+}
+
+/**
+ * Default Getters
+ */
+
+/* Elements */
+
+/** BPMN **/
+
+// GetShape ...
+func (plane Plane) GetShape(num int) *Shape {
+	return &plane.Shape[num]
+}
+
+// GetEdge ...
+func (plane Plane) GetEdge(num int) *Edge {
+	return &plane.Edge[num]
 }
 
 /* Specification */

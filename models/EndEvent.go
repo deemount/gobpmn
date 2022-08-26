@@ -1,5 +1,7 @@
 package models
 
+import "fmt"
+
 // EndEvent ...
 type EndEvent struct {
 	ID                        string                      `xml:"id,attr" json:"id"`
@@ -41,8 +43,15 @@ type TEndEvent struct {
 /** BPMN **/
 
 // SetID ...
-func (endEvent *EndEvent) SetID(suffix string) {
-	endEvent.ID = "Event_" + suffix
+func (endEvent *EndEvent) SetID(typ string, suffix string) {
+	switch typ {
+	case "event":
+		endEvent.ID = fmt.Sprintf("Event_%s", suffix)
+		break
+	case "id":
+		endEvent.ID = fmt.Sprintf("%s", suffix)
+		break
+	}
 }
 
 // SetName ...

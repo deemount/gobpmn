@@ -1,48 +1,48 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // ProcessRepository ...
 type ProcessRepository interface {
-	SetID(suffix string)
-	SetName(name string)
-	GetID() string
+	GetID() *string
 }
 
 // Process ...
 type Process struct {
-	ID                       string                   `xml:"id,attr" json:"id" csv:"ID"`
-	Name                     string                   `xml:"name,attr,omitempty" json:"name,omitempty" csv:"NAME"`
-	IsExecutable             bool                     `xml:"isExecutable,attr" json:"isExecutable,omitempty" csv:"IS_EXECUTABLE"`
-	CamundaVersionTag        string                   `xml:"camunda:versionTag,attr,omitempty" json:"versionTag,omitempty" csv:"VERSION_TAG"`
-	CamundaJobPriority       int                      `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty" csv:"JOB_PRIORITY"`
-	CamundaTaskPriority      int                      `xml:"camunda:taskPriority,attr,omitempty" json:"taskPriority,omitempty" csv:"TASK_PRIORITY"`
-	CamundaCandidStartGroups string                   `xml:"camunda:candidateStarterGroups,attr,omitempty" json:"candidateStarterGroups,omitempty" csv:"CANDIDATE_STARTER_GROUPS"`
-	CamundaCandidStartUsers  string                   `xml:"camunda:candidateStarterUsers,attr,omitempty" json:"candidateStarterUsers,omitempty" csv:"CANDIDATE_STARTER_USERS"`
-	Documentation            []Documentation          `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty" csv:"-"`
-	LaneSet                  []LaneSet                `xml:"bpmn:laneSet,omitempty" json:"laneSet,omitempty" csv:"-"`
-	StartEvent               []StartEvent             `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty" csv:"-"`
-	BoundaryEvent            []BoundaryEvent          `xml:"bpmn:boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty" csv:"-"`
-	EndEvent                 []EndEvent               `xml:"bpmn:endEvent,omitempty" json:"endEvent,omitempty"`
-	IntermediateCatchEvent   []IntermediateCatchEvent `xml:"bpmn:intermediateCatchEvent,omitempty" json:"intermediateCatchEvent,omitempty" csv:"-"`
-	IntermediateThrowEvent   []IntermediateThrowEvent `xml:"bpmn:intermediateThrowEvent,omitempty" json:"intermediateThrowEvent,omitempty" csv:"-"`
-	Task                     []Task                   `xml:"bpmn:task,omitempty" json:"task,omitempty" csv:"-"`
-	UserTask                 []UserTask               `xml:"bpmn:userTask,omitempty" json:"userTask,omitempty" csv:"-"`
-	ManualTask               []ManualTask             `xml:"bpmn:manualTask,omitempty" json:"manualTask,omitempty" csv:"-"`
-	ReceiveTask              []ReceiveTask            `xml:"bpmn:receiveTask,omitempty" json:"receiveTask,omitempty" csv:"-"`
-	ScriptTask               []ScriptTask             `xml:"bpmn:scriptTask,omitempty" json:"scriptTask,omitempty" csv:"-"`
-	SendTask                 []SendTask               `xml:"bpmn:sendTask,omitempty" json:"sendTask,omitempty" csv:"-"`
-	ServiceTask              []ServiceTask            `xml:"bpmn:serviceTask,omitempty" json:"serviceTask,omitempty" csv:"-"`
-	CallActivity             []CallActivity           `xml:"bpmn:callActivity,omitempty" json:"callActivity,omitempty" csv:"-"`
-	SubProcess               []SubProcess             `xml:"bpmn:subProcess,omitempty" json:"subProcess,omitempty" csv:"-"`
-	Transaction              []Transaction            `xml:"bpmn:transaction,omitempty" json:"transaction,omitempty" csv:"-"`
-	ExclusiveGateway         []ExclusiveGateway       `xml:"bpmn:exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty" csv:"-"`
-	InclusiveGateway         []InclusiveGateway       `xml:"bpmn:inclusiveGateway,omitempty" json:"inclusiveGateway,omitempty" csv:"-"`
-	ParallelGateway          []ParallelGateway        `xml:"bpmn:parallelGateway,omitempty" json:"parallelGateway,omitempty" csv:"-"`
-	ComplexGateway           []ComplexGateway         `xml:"bpmn:complexGateway,omitempty" json:"complexGateway,omitempty" csv:"-"`
-	EventBasedGateway        []EventBasedGateway      `xml:"bpmn:eventBasedGateway,omitempty" json:"eventBasedGateway,omitempty" csv:"-"`
-	SequenceFlow             []SequenceFlow           `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty" csv:"-"`
-	Group                    []Group                  `xml:"bpmn:group,omitempty" json:"group,omitempty" csv:"-"`
+	ID                     string                   `xml:"id,attr" json:"id" csv:"ID"`
+	Name                   string                   `xml:"name,attr,omitempty" json:"name,omitempty" csv:"NAME"`
+	IsExecutable           bool                     `xml:"isExecutable,attr" json:"isExecutable,omitempty" csv:"IS_EXECUTABLE"`
+	VersionTag             string                   `xml:"camunda:versionTag,attr,omitempty" json:"versionTag,omitempty" csv:"VERSION_TAG"`
+	JobPriority            int                      `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty" csv:"JOB_PRIORITY"`
+	TaskPriority           int                      `xml:"camunda:taskPriority,attr,omitempty" json:"taskPriority,omitempty" csv:"TASK_PRIORITY"`
+	CandidateStarterGroups string                   `xml:"camunda:candidateStarterGroups,attr,omitempty" json:"candidateStarterGroups,omitempty" csv:"CANDIDATE_STARTER_GROUPS"`
+	CandidateStarterUsers  string                   `xml:"camunda:candidateStarterUsers,attr,omitempty" json:"candidateStarterUsers,omitempty" csv:"CANDIDATE_STARTER_USERS"`
+	Documentation          []Documentation          `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty" csv:"-"`
+	LaneSet                []LaneSet                `xml:"bpmn:laneSet,omitempty" json:"laneSet,omitempty" csv:"-"`
+	StartEvent             []StartEvent             `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty" csv:"-"`
+	BoundaryEvent          []BoundaryEvent          `xml:"bpmn:boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty" csv:"-"`
+	EndEvent               []EndEvent               `xml:"bpmn:endEvent,omitempty" json:"endEvent,omitempty"`
+	IntermediateCatchEvent []IntermediateCatchEvent `xml:"bpmn:intermediateCatchEvent,omitempty" json:"intermediateCatchEvent,omitempty" csv:"-"`
+	IntermediateThrowEvent []IntermediateThrowEvent `xml:"bpmn:intermediateThrowEvent,omitempty" json:"intermediateThrowEvent,omitempty" csv:"-"`
+	Task                   []Task                   `xml:"bpmn:task,omitempty" json:"task,omitempty" csv:"-"`
+	UserTask               []UserTask               `xml:"bpmn:userTask,omitempty" json:"userTask,omitempty" csv:"-"`
+	ManualTask             []ManualTask             `xml:"bpmn:manualTask,omitempty" json:"manualTask,omitempty" csv:"-"`
+	ReceiveTask            []ReceiveTask            `xml:"bpmn:receiveTask,omitempty" json:"receiveTask,omitempty" csv:"-"`
+	ScriptTask             []ScriptTask             `xml:"bpmn:scriptTask,omitempty" json:"scriptTask,omitempty" csv:"-"`
+	SendTask               []SendTask               `xml:"bpmn:sendTask,omitempty" json:"sendTask,omitempty" csv:"-"`
+	ServiceTask            []ServiceTask            `xml:"bpmn:serviceTask,omitempty" json:"serviceTask,omitempty" csv:"-"`
+	CallActivity           []CallActivity           `xml:"bpmn:callActivity,omitempty" json:"callActivity,omitempty" csv:"-"`
+	SubProcess             []SubProcess             `xml:"bpmn:subProcess,omitempty" json:"subProcess,omitempty" csv:"-"`
+	Transaction            []Transaction            `xml:"bpmn:transaction,omitempty" json:"transaction,omitempty" csv:"-"`
+	ExclusiveGateway       []ExclusiveGateway       `xml:"bpmn:exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty" csv:"-"`
+	InclusiveGateway       []InclusiveGateway       `xml:"bpmn:inclusiveGateway,omitempty" json:"inclusiveGateway,omitempty" csv:"-"`
+	ParallelGateway        []ParallelGateway        `xml:"bpmn:parallelGateway,omitempty" json:"parallelGateway,omitempty" csv:"-"`
+	ComplexGateway         []ComplexGateway         `xml:"bpmn:complexGateway,omitempty" json:"complexGateway,omitempty" csv:"-"`
+	EventBasedGateway      []EventBasedGateway      `xml:"bpmn:eventBasedGateway,omitempty" json:"eventBasedGateway,omitempty" csv:"-"`
+	SequenceFlow           []SequenceFlow           `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty" csv:"-"`
+	Group                  []Group                  `xml:"bpmn:group,omitempty" json:"group,omitempty" csv:"-"`
 }
 
 // TProcess ...
@@ -53,8 +53,8 @@ type TProcess struct {
 	VersionTag             string                    `xml:"versionTag,attr,omitempty" json:"versionTag,omitempty"`
 	JobPriority            int                       `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
 	TaskPriority           int                       `xml:"taskPriority,attr,omitempty" json:"taskPriority,omitempty"`
-	CandidStartGroups      string                    `xml:"candidateStarterGroups,attr,omitempty" json:"candidateStarterGroups,omitempty"`
-	CandidStartUsers       string                    `xml:"candidateStarterUsers,attr,omitempty" json:"candidateStarterUsers,omitempty"`
+	CandidateStarterGroups string                    `xml:"candidateStarterGroups,attr,omitempty" json:"candidateStarterGroups,omitempty"`
+	CandidateStarterUsers  string                    `xml:"candidateStarterUsers,attr,omitempty" json:"candidateStarterUsers,omitempty"`
 	Documentation          []Documentation           `xml:"documentation,omitempty" json:"documentation,omitempty"`
 	LaneSet                []LaneSet                 `xml:"laneSet,omitempty" json:"laneSet,omitempty"`
 	StartEvent             []TStartEvent             `xml:"startEvent,omitemnpty" json:"startEvent,omitempty"`
@@ -108,29 +108,29 @@ func (process *Process) SetIsExecutable(isExec bool) {
 
 /** Camunda **/
 
-// SetCamundaVersionTag ...
-func (process *Process) SetCamundaVersionTag(tag string) {
-	process.CamundaVersionTag = tag
+// SetVersionTag ...
+func (process *Process) SetVersionTag(tag string) {
+	process.VersionTag = tag
 }
 
-// SetCamundaJobpriority ...
-func (process *Process) SetCamundaJobPriority(priority int) {
-	process.CamundaJobPriority = priority
+// SetJobpriority ...
+func (process *Process) SetJobPriority(priority int) {
+	process.JobPriority = priority
 }
 
-// SetCamundaTaskPriority ...
-func (process *Process) SetCamundaTaskPriority(priority int) {
-	process.CamundaTaskPriority = priority
+// SetTaskPriority ...
+func (process *Process) SetTaskPriority(priority int) {
+	process.TaskPriority = priority
 }
 
-// SetCamundaCandidStartGroups ...
-func (process *Process) SetCamundaCandidStartGroups(groups string) {
-	process.CamundaCandidStartGroups = groups
+// SetCandidateStarterGroups ...
+func (process *Process) SetCandidateStarterGroups(groups string) {
+	process.CandidateStarterGroups = groups
 }
 
-// SetCamundaCandidStartUsers
-func (process *Process) SetCamundaCandidStartUsers(users string) {
-	process.CamundaCandidStartUsers = users
+// SetCandidateStarterUsers
+func (process *Process) SetCandiddateStarterUsers(users string) {
+	process.CandidateStarterUsers = users
 }
 
 /* Elements */
@@ -278,6 +278,152 @@ func (process *Process) SetGroup(num int) {
 /** BPMN **/
 
 // GetID ...
-func (process Process) GetID() string {
-	return process.ID
+func (process Process) GetID() *string {
+	return &process.ID
+}
+
+// GetName ...
+func (process Process) GetName() *string {
+	return &process.Name
+}
+
+// GetIsExecutable ...
+func (process Process) GetIsExecutable() *bool {
+	return &process.IsExecutable
+}
+
+/* Elements */
+
+/** BPMN **/
+
+/** Documentation **/
+
+// GetDocumentation ...
+func (process Process) GetDocumentation() *Documentation {
+	return &process.Documentation[0]
+}
+
+/** LaneSet **/
+
+// GetLaneSet ...
+func (process Process) GetLaneSet() *LaneSet {
+	return &process.LaneSet[0]
+}
+
+/*** Event ***/
+
+// GetStartEvent ...
+func (process Process) GetStartEvent(num int) *StartEvent {
+	return &process.StartEvent[num]
+}
+
+// GetBoundaryEvent ...
+func (process Process) GetBoundaryEvent(num int) *BoundaryEvent {
+	return &process.BoundaryEvent[num]
+}
+
+// GetEndEvent ...
+func (process Process) GetEndEvent(num int) *EndEvent {
+	return &process.EndEvent[num]
+}
+
+// GetIntermedCatchEvent ...
+func (process Process) GetIntermediateCatchEvent(num int) *IntermediateCatchEvent {
+	return &process.IntermediateCatchEvent[num]
+}
+
+// GetIntermedThrowEvent ...
+func (process Process) GetIntermediateThrowEvent(num int) *IntermediateThrowEvent {
+	return &process.IntermediateThrowEvent[num]
+}
+
+/*** Task ***/
+
+// GetTask ...
+func (process Process) GetTask(num int) *Task {
+	return &process.Task[num]
+}
+
+// GetUserTask ...
+func (process Process) GetUserTask(num int) *UserTask {
+	return &process.UserTask[num]
+}
+
+// GetManualTask ...
+func (process Process) GetManualTask(num int) *ManualTask {
+	return &process.ManualTask[num]
+}
+
+// GetReceiveTask ...
+func (process Process) GetReceiveTask(num int) *ReceiveTask {
+	return &process.ReceiveTask[num]
+}
+
+// GetScriptTask ...
+func (process Process) GetScriptTask(num int) *ScriptTask {
+	return &process.ScriptTask[num]
+}
+
+// GetSendTask ...
+func (process Process) GetSendTask(num int) *SendTask {
+	return &process.SendTask[num]
+}
+
+// GetServiceTask ...
+func (process Process) GetServiceTask(num int) *ServiceTask {
+	return &process.ServiceTask[num]
+}
+
+// GetCallActivity ...
+func (process Process) GetCallActivity(num int) *CallActivity {
+	return &process.CallActivity[num]
+}
+
+// GetSubProcess ...
+func (process Process) GetSubProcess(num int) *SubProcess {
+	return &process.SubProcess[num]
+}
+
+// GetTransaction ...
+func (process Process) GetTransaction(num int) *Transaction {
+	return &process.Transaction[num]
+}
+
+/*** Gateway ***/
+
+// GetExclusiveGateway
+func (process Process) GetExclusiveGateway(num int) *ExclusiveGateway {
+	return &process.ExclusiveGateway[num]
+}
+
+// GetInclsuiveGateway
+func (process Process) GetInclusiveGateway(num int) *InclusiveGateway {
+	return &process.InclusiveGateway[num]
+}
+
+// GetParallelGateway
+func (process Process) GetParallelGateway(num int) *ParallelGateway {
+	return &process.ParallelGateway[num]
+}
+
+// GetComplexGateway
+func (process Process) GetComplexGateway(num int) *ComplexGateway {
+	return &process.ComplexGateway[num]
+}
+
+// GetEventBasedGateway
+func (process Process) GetEventBasedGateway(num int) *EventBasedGateway {
+	return &process.EventBasedGateway[num]
+}
+
+/*** Marker ***/
+
+// GetSequenceFlow ...
+func (process Process) GetSequenceFlow(num int) *SequenceFlow {
+	return &process.SequenceFlow[num]
+}
+
+// GetGroup ...
+func (process Process) GetGroup(num int) *Group {
+	return &process.Group[num]
 }

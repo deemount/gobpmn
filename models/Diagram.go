@@ -28,6 +28,19 @@ func (diagram *Diagram) SetPlane() {
 	diagram.Plane = make([]Plane, 1)
 }
 
+/**
+ * Default Getters
+ */
+
+/* Elements */
+
+/** BPMN **/
+
+// GetPlane ...
+func (diagram Diagram) GetPlane() *Plane {
+	return &diagram.Plane[0]
+}
+
 /* Specification */
 
 // Description ...

@@ -16,7 +16,7 @@ type CallActivity struct {
 	CamundaAsyncBefore               bool                               `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
 	CamundaAsyncAfter                bool                               `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
 	CamundaJobPriority               int                                `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	CamundaCalledElementTenantID     string                             `xml:"camunda:calledElementTenantId,attr,omitempty" json:"calledElement,omitempty"`
+	CamundaCalledElementTenantID     string                             `xml:"camunda:calledElementTenantId,attr,omitempty" json:"calledElementTenantId,omitempty"`
 	CamundaVariableMappingClass      string                             `xml:"camunda:variableMappingClass,attr,omitempty" json:"variableMappingClass,omitempty"`
 	Documentation                    []Documentation                    `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
 	ExtensionElements                []ExtensionElements                `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`

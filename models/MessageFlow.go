@@ -1,6 +1,9 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 // MessageFlow ...
 type MessageFlow struct {
@@ -21,6 +24,10 @@ type TMessageFlow struct {
 	Documentation     []Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
 	ExtensionElements []ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
+
+/**
+ * Default Setters
+ */
 
 /* Attributes */
 
@@ -44,13 +51,41 @@ func (messageFlow *MessageFlow) SetName(name string) {
 }
 
 // SetSourceRef ...
-func (messageFlow *MessageFlow) SetSourceRef(sourceRef string) {
-	messageFlow.SourceRef = sourceRef
+func (messageFlow *MessageFlow) SetSourceRef(typ string, sourceRef string) {
+	switch typ {
+	case "activity":
+		messageFlow.SourceRef = fmt.Sprintf("Activity_%s", sourceRef)
+		break
+	case "event":
+		messageFlow.SourceRef = fmt.Sprintf("Event_%s", sourceRef)
+		break
+	case "id":
+		messageFlow.SourceRef = fmt.Sprintf("%s", sourceRef)
+		break
+	case "participant":
+		messageFlow.SourceRef = fmt.Sprintf("Participant_%s", sourceRef)
+		break
+	}
 }
 
 // SetTargetRef ...
-func (messageFlow *MessageFlow) SetTargetRef(targetRef string) {
-	messageFlow.TargetRef = targetRef
+func (messageFlow *MessageFlow) SetTargetRef(typ string, targetRef string) {
+	switch typ {
+	case "activity":
+		messageFlow.TargetRef = fmt.Sprintf("Activity_%s", targetRef)
+		break
+	case "event":
+		messageFlow.TargetRef = fmt.Sprintf("Event_%s", targetRef)
+		break
+	case "id":
+		messageFlow.TargetRef = fmt.Sprintf("%s", targetRef)
+		break
+	case "participant":
+		messageFlow.TargetRef = fmt.Sprintf("Participant_%s", targetRef)
+		break
+	default:
+		log.Panic("no typ set in target ref for message flow")
+	}
 }
 
 /* Elements */
@@ -65,4 +100,26 @@ func (messageFlow *MessageFlow) SetDocumentation() {
 // SetExtensionElements ...
 func (messageFlow *MessageFlow) SetExtensionElements() {
 	messageFlow.ExtensionElements = make([]ExtensionElements, 1)
+}
+
+/**
+ * Default Getters
+ */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetID ...
+func (messageFlow MessageFlow) GetID() string {
+	return messageFlow.ID
+}
+
+/* Elements */
+
+/** BPMN **/
+
+// GetDocumentation ...
+func (messageFlow MessageFlow) GetDocumentation() *Documentation {
+	return &messageFlow.Documentation[0]
 }

@@ -34,6 +34,10 @@ type TTask struct {
 	Outgoing          []Outgoing          `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
+/**
+ * Default Setters
+ */
+
 /* Attributes */
 
 /** BPMN **/

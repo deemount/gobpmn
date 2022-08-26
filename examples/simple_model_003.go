@@ -1,8 +1,6 @@
 package examples
 
 import (
-	"fmt"
-
 	"github.com/deemount/gobpmn/models"
 	"github.com/deemount/gobpmn/utils"
 )
@@ -182,7 +180,7 @@ func (simpleModel003 *SimpleModel003) SetTaskState() {
 // SetEndEvent ...
 func (simpleModel003 *SimpleModel003) SetEndEvent() {
 	// generics
-	simpleModel003.def.Process[0].EndEvent[0].SetID(simpleModel003.EndEventHash)
+	simpleModel003.def.Process[0].EndEvent[0].SetID("event", simpleModel003.EndEventHash)
 	simpleModel003.def.Process[0].EndEvent[0].SetName("End of process")
 	// incoming
 	simpleModel003.def.Process[0].EndEvent[0].SetIncoming(1)
@@ -200,8 +198,8 @@ func (simpleModel003 *SimpleModel003) SetEndEvent() {
 func (simpleModel003 *SimpleModel003) SetFromStartEventSequenceFlow() {
 	// generics
 	simpleModel003.def.Process[0].SequenceFlow[0].SetID(simpleModel003.FromStartEvent)
-	simpleModel003.def.Process[0].SequenceFlow[0].SetSourceRef(fmt.Sprintf("StartEvent_%d", simpleModel003.StartEventCounter))
-	simpleModel003.def.Process[0].SequenceFlow[0].SetTargetRef(fmt.Sprintf("Event_%s", simpleModel003.StartEventStateHash))
+	simpleModel003.def.Process[0].SequenceFlow[0].SetSourceRef("startevent", simpleModel003.StartEventCounter)
+	simpleModel003.def.Process[0].SequenceFlow[0].SetTargetRef("event", simpleModel003.StartEventStateHash)
 	// shape attributes
 	p := simpleModel003.getPlane()
 	p.Edge[0].SetID("flow", simpleModel003.FromStartEvent)
@@ -215,8 +213,8 @@ func (simpleModel003 *SimpleModel003) SetFromStartEventSequenceFlow() {
 func (simpleModel003 *SimpleModel003) SetFromStartEventStateSequenceFlow() {
 	// generics
 	simpleModel003.def.Process[0].SequenceFlow[1].SetID(simpleModel003.FromStartEventState)
-	simpleModel003.def.Process[0].SequenceFlow[1].SetSourceRef(fmt.Sprintf("Event_%s", simpleModel003.StartEventStateHash))
-	simpleModel003.def.Process[0].SequenceFlow[1].SetTargetRef(fmt.Sprintf("Activity_%s", simpleModel003.TaskHash))
+	simpleModel003.def.Process[0].SequenceFlow[1].SetSourceRef("event", simpleModel003.StartEventStateHash)
+	simpleModel003.def.Process[0].SequenceFlow[1].SetTargetRef("activity", simpleModel003.TaskHash)
 	// shape attributes
 	p := simpleModel003.getPlane()
 	p.Edge[1].SetID("flow", simpleModel003.FromStartEventState)
@@ -230,8 +228,8 @@ func (simpleModel003 *SimpleModel003) SetFromStartEventStateSequenceFlow() {
 func (simpleModel003 *SimpleModel003) SetFromTaskSequenceFlow() {
 	// generics
 	simpleModel003.def.Process[0].SequenceFlow[2].SetID(simpleModel003.FromTask)
-	simpleModel003.def.Process[0].SequenceFlow[2].SetSourceRef(fmt.Sprintf("Activity_%s", simpleModel003.TaskHash))
-	simpleModel003.def.Process[0].SequenceFlow[2].SetTargetRef(fmt.Sprintf("Event_%s", simpleModel003.TaskStateHash))
+	simpleModel003.def.Process[0].SequenceFlow[2].SetSourceRef("activity", simpleModel003.TaskHash)
+	simpleModel003.def.Process[0].SequenceFlow[2].SetTargetRef("event", simpleModel003.TaskStateHash)
 	// shape attributes
 	p := simpleModel003.getPlane()
 	p.Edge[2].SetID("flow", simpleModel003.FromTask)
@@ -245,8 +243,8 @@ func (simpleModel003 *SimpleModel003) SetFromTaskSequenceFlow() {
 func (simpleModel003 *SimpleModel003) SetFromTaskStateSequenceFlow() {
 	// generics
 	simpleModel003.def.Process[0].SequenceFlow[3].SetID(simpleModel003.FromTaskState)
-	simpleModel003.def.Process[0].SequenceFlow[3].SetSourceRef(fmt.Sprintf("Event_%s", simpleModel003.TaskStateHash))
-	simpleModel003.def.Process[0].SequenceFlow[3].SetTargetRef(fmt.Sprintf("Event_%s", simpleModel003.EndEventHash))
+	simpleModel003.def.Process[0].SequenceFlow[3].SetSourceRef("event", simpleModel003.TaskStateHash)
+	simpleModel003.def.Process[0].SequenceFlow[3].SetTargetRef("event", simpleModel003.EndEventHash)
 	// shape attributes
 	p := simpleModel003.getPlane()
 	p.Edge[3].SetID("flow", simpleModel003.FromTaskState)

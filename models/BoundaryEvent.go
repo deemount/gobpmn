@@ -5,6 +5,7 @@ import "fmt"
 // BoundaryEvent ...
 type BoundaryEvent struct {
 	ID                         string                       `xml:"id,attr" json:"id"`
+	Name                       string                       `xml:"name,attr,omitempty" json:"name,omitempty"`
 	AttachedToRef              string                       `xml:"attachedToRef,attr,omitempty" json:"attachedToRef,omitempty"`
 	CancelActivity             bool                         `xml:"cancelActivity,attr,omitempty" json:"cancelActivity,omitempty"`
 	MessageEventDefinition     []MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
@@ -17,6 +18,26 @@ type BoundaryEvent struct {
 	Outgoing                   []Outgoing                   `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
+// TBoundaryEvent ...
+type TBoundaryEvent struct {
+	ID                         string                       `xml:"id,attr" json:"id"`
+	Name                       string                       `xml:"name,attr,omitempty" json:"name,omitempty"`
+	AttachedToRef              string                       `xml:"attachedToRef,attr,omitempty" json:"attachedToRef,omitempty"`
+	CancelActivity             bool                         `xml:"cancelActivity,attr,omitempty" json:"cancelActivity,omitempty"`
+	MessageEventDefinition     []MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	TimerEventDefinition       []TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
+	EscalationEventDefinition  []EscalationEventDefinition  `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	ConditionalEventDefinition []ConditionalEventDefinition `xml:"bpmn:conditionalEventDefinition,omitempty" json:"conditionalEventDefinition,omitempty"`
+	ErrorEventDefinition       []ErrorEventDefinition       `xml:"bpmn:errorEventDefinition,omitempty" json:"errorEventDefinition,omitempty"`
+	SignalEventDefinition      []SignalEventDefinition      `xml:"bpmn:signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
+	CompensateEventDefinition  []CompensateEventDefinition  `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
+	Outgoing                   []Outgoing                   `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+}
+
+/**
+ * Default Setters
+ */
+
 /* Attributes */
 
 /** BPMN **/
@@ -24,6 +45,11 @@ type BoundaryEvent struct {
 // SetID ...
 func (be *BoundaryEvent) SetID(suffix string) {
 	be.ID = fmt.Sprintf("Event_%s", suffix)
+}
+
+// SetName ...
+func (be *BoundaryEvent) SetName(name string) {
+	be.ID = name
 }
 
 // SetAttachedToRef ...

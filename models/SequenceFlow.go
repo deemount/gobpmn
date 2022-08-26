@@ -41,13 +41,39 @@ func (sequenceFlow *SequenceFlow) SetName(name string) {
 }
 
 // SetSourceRef ...
-func (sequenceFlow *SequenceFlow) SetSourceRef(sourceRef string) {
-	sequenceFlow.SourceRef = sourceRef
+func (sequenceFlow *SequenceFlow) SetSourceRef(typ string, sourceRef interface{}) {
+	switch typ {
+	case "activity":
+		sequenceFlow.SourceRef = fmt.Sprintf("Activity_%s", sourceRef)
+		break
+	case "event":
+		sequenceFlow.SourceRef = fmt.Sprintf("Event_%s", sourceRef)
+		break
+	case "startevent":
+		sequenceFlow.SourceRef = fmt.Sprintf("StartEvent_%s", sourceRef)
+		break
+	case "id":
+		sequenceFlow.SourceRef = fmt.Sprintf("%s", sourceRef)
+		break
+	}
 }
 
 // SetTargetRef ...
-func (sequenceFlow *SequenceFlow) SetTargetRef(targetRef string) {
-	sequenceFlow.TargetRef = targetRef
+func (sequenceFlow *SequenceFlow) SetTargetRef(typ string, targetRef interface{}) {
+	switch typ {
+	case "activity":
+		sequenceFlow.TargetRef = fmt.Sprintf("Activity_%s", targetRef)
+		break
+	case "event":
+		sequenceFlow.TargetRef = fmt.Sprintf("Event_%s", targetRef)
+		break
+	case "startevent":
+		sequenceFlow.TargetRef = fmt.Sprintf("StartEvent_%s", targetRef)
+		break
+	case "id":
+		sequenceFlow.TargetRef = fmt.Sprintf("%s", targetRef)
+		break
+	}
 }
 
 /* Elements */

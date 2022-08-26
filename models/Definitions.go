@@ -8,8 +8,41 @@ import (
 
 // DefinitionsRepository ...
 type DefinitionsRepository interface {
+	SetBpmn()
+	SetBpmnDI()
+	SetOmgDI()
+	SetDC()
+	SetOmgDC()
+	SetBioc()
+	SetXSD()
+	SetXSI()
+	SetXsiSchemaLocation()
 	SetID(suffix string)
+	SetTargetNamespace()
+	SetCamundaSchema()
+	SetZeebeSchema()
+	SetModelerSchema()
+	SetModelerExecutionPlatform()
+	SetModelerExecutionPlatformVersion(version string)
+	SetExporter()
+	SetExporterVersion(version string)
+
+	SetCollaboration()
+	SetProcess(num int)
+	SetCategory(num int)
+	SetMessage(num int)
+	SetSignal(num int)
+	SetDiagram(num int)
+
+	SetDefaultAttributes()
+
 	GetID() string
+	GetCollaboration() *Collaboration
+	GetProcess(num int) *Process
+	GetCategory(num int) *Category
+	GetMessage(num int) *Message
+	GetSignal(num int) *Signal
+	GetDiagram(num int) *Diagram
 }
 
 // Definitions represents the root element
@@ -49,6 +82,10 @@ type TDefinitions struct {
 	Category      []Category       `xml:"category,omitempty" json:"category,omitempty"`
 	Msg           []Message        `xml:"message,omitempty" json:"message,omitempty"`
 	Signal        []Signal         `xml:"signal,omitempty" json:"signal,omitempty"`
+}
+
+func NewDefinitions() DefinitionsRepository {
+	return &Definitions{}
 }
 
 /**
@@ -167,7 +204,7 @@ func (definitions *Definitions) SetProcess(num int) {
 	definitions.Process = make([]Process, num)
 }
 
-// SetMessage ...
+// SetCategory ...
 func (definitions *Definitions) SetCategory(num int) {
 	definitions.Category = make([]Category, num)
 }
@@ -214,4 +251,40 @@ func (definitions *Definitions) SetDefaultAttributes() {
 // GetID ...
 func (definitions Definitions) GetID() string {
 	return definitions.ID
+}
+
+/* Elements */
+
+/** BPMN **/
+
+// GetCollaboration ...
+func (definitions Definitions) GetCollaboration() *Collaboration {
+	return &definitions.Collaboration[0]
+}
+
+// GetProcess ...
+func (definitions Definitions) GetProcess(num int) *Process {
+	return &definitions.Process[num]
+}
+
+// GetCategory ...
+func (definitions Definitions) GetCategory(num int) *Category {
+	return &definitions.Category[num]
+}
+
+// GetMessage ...
+func (definitions Definitions) GetMessage(num int) *Message {
+	return &definitions.Msg[num]
+}
+
+// GetSignal ...
+func (definitions Definitions) GetSignal(num int) *Signal {
+	return &definitions.Signal[num]
+}
+
+/** BPMNDI **/
+
+// SetDiagram ...
+func (definitions Definitions) GetDiagram(num int) *Diagram {
+	return &definitions.Diagram[num]
 }

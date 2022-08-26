@@ -12,7 +12,7 @@ type ParticipantRepository interface {
 type Participant struct {
 	ID                      string                    `xml:"id,attr" json:"id" csv:"ID"`
 	Name                    string                    `xml:"name,attr,omitempty" json:"name,omitempty" csv:"NAME"`
-	ProcessRef              string                    `xml:"processRef,attr" json:"processRef,omitempty" csv:"PROCESS_REF"`
+	ProcessRef              string                    `xml:"processRef,attr,omitempty" json:"processRef,omitempty" csv:"PROCESS_REF"`
 	Documentation           []Documentation           `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty" csv:"DOCUMENTATION"`
 	ParticipantMultiplicity []ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty" json:"participantMultiplicity,omitempty" csv:"PARTICIPANT_MULTIPLICITY"`
 }

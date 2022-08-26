@@ -79,3 +79,55 @@ func (ice *IntermediateCatchEvent) SetTimerEventDefinition() {
 func (ice *IntermediateCatchEvent) SetMessageEventDefinition() {
 	ice.MessageEventDefinition = make([]MessageEventDefinition, 1)
 }
+
+/**
+ * Default Getters
+ */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetID ...
+func (ice IntermediateCatchEvent) GetID(suffix string) *string {
+	return &ice.ID
+}
+
+// GetName ...
+func (ice IntermediateCatchEvent) GetName(name string) *string {
+	return &ice.Name
+}
+
+/* Elements */
+
+/** BPMN **/
+
+// GetExtensionElements ...
+func (ice IntermediateCatchEvent) GetExtensionElements() *ExtensionElements {
+	return &ice.ExtensionElements[0]
+}
+
+// GetIncoming ...
+func (ice IntermediateCatchEvent) GetIncoming(num int) *Incoming {
+	return &ice.Incoming[num]
+}
+
+// GetOutgoing ...
+func (ice IntermediateCatchEvent) GetOutgoing(num int) *Outgoing {
+	return &ice.Outgoing[num]
+}
+
+// GetConditionalEventDefinition ...
+func (ice IntermediateCatchEvent) GetConditionalEventDefinition() *ConditionalEventDefinition {
+	return &ice.ConditionalEventDefinition[0]
+}
+
+// GetTimerEventDefinition ...
+func (ice IntermediateCatchEvent) GetTimerEventDefinition() *TimerEventDefinition {
+	return &ice.TimerEventDefinition[0]
+}
+
+// GetMessageEventDefinition ...
+func (ice IntermediateCatchEvent) GetMessageEventDefinition() *MessageEventDefinition {
+	return &ice.MessageEventDefinition[0]
+}

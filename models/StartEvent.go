@@ -61,6 +61,9 @@ func (startEvent *StartEvent) SetID(typ string, suffix interface{}) {
 	case "event":
 		startEvent.ID = fmt.Sprintf("Event_%s", suffix)
 		break
+	case "id":
+		startEvent.ID = fmt.Sprintf("%s", suffix)
+		break
 	}
 }
 

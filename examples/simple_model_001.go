@@ -1,24 +1,15 @@
 package examples
 
 import (
-	"fmt"
-
 	"github.com/deemount/gobpmn/models"
 	"github.com/deemount/gobpmn/utils"
 )
 
 // SimpleModel001Repository ...
 type SimpleModel001Repository interface {
-	Create()
-	SetElements()
-	SetDefinitionsAttributes()
-	SetProcess()
-	SetStartEvent()
-	SetTask()
-	SetEndEvent()
-	SetFromStartEventSequenceFlow()
-	SetFromTaskSequenceFlow()
-	SetDiagram()
+	GetProcess()
+	GetDiagram()
+	GetPlane()
 }
 
 // SimpleModel001 ...
@@ -81,19 +72,21 @@ func (simpleModel001 *SimpleModel001) SetDefinitionsAttributes() {
 // SetProcess ...
 func (simpleModel001 *SimpleModel001) SetProcess() {
 	// generics
-	simpleModel001.def.Process[0].SetID("hash", simpleModel001.ProcessHash)
-	simpleModel001.def.Process[0].SetIsExecutable(simpleModel001.isExecutable)
+	simpleModel001.GetProcess().SetID("hash", simpleModel001.ProcessHash)
+	simpleModel001.GetProcess().SetIsExecutable(simpleModel001.isExecutable)
 }
 
 // SetStartEvent ...
 func (simpleModel001 *SimpleModel001) SetStartEvent() {
+	// assign
+	process := simpleModel001.GetProcess()
+	p := simpleModel001.GetPlane()
 	// generics
-	simpleModel001.def.Process[0].StartEvent[0].SetID("counter", simpleModel001.StartEventCounter)
+	process.StartEvent[0].SetID("counter", simpleModel001.StartEventCounter)
 	// outgoing
-	simpleModel001.def.Process[0].StartEvent[0].SetOutgoing(1)
-	simpleModel001.def.Process[0].StartEvent[0].Outgoing[0].SetFlow(simpleModel001.FromStartEvent)
+	process.StartEvent[0].SetOutgoing(1)
+	process.StartEvent[0].Outgoing[0].SetFlow(simpleModel001.FromStartEvent)
 	// shape attributes
-	p := simpleModel001.getPlane()
 	p.Shape[0].SetID("startevent", simpleModel001.StartEventCounter+1)
 	p.Shape[0].SetElement("startevent", simpleModel001.StartEventCounter)
 	p.Shape[0].SetBounds()
@@ -103,16 +96,18 @@ func (simpleModel001 *SimpleModel001) SetStartEvent() {
 
 // SetTask ...
 func (simpleModel001 *SimpleModel001) SetTask() {
+	// assign
+	process := simpleModel001.GetProcess()
+	p := simpleModel001.GetPlane()
 	// generics
-	simpleModel001.def.Process[0].Task[0].SetID(simpleModel001.TaskHash)
+	process.Task[0].SetID(simpleModel001.TaskHash)
 	// incoming
-	simpleModel001.def.Process[0].Task[0].SetIncoming(1)
-	simpleModel001.def.Process[0].Task[0].Incoming[0].SetFlow(simpleModel001.FromStartEvent)
+	process.Task[0].SetIncoming(1)
+	process.Task[0].Incoming[0].SetFlow(simpleModel001.FromStartEvent)
 	// outgoing
-	simpleModel001.def.Process[0].Task[0].SetOutgoing(1)
-	simpleModel001.def.Process[0].Task[0].Outgoing[0].SetFlow(simpleModel001.FromTask)
+	process.Task[0].SetOutgoing(1)
+	process.Task[0].Outgoing[0].SetFlow(simpleModel001.FromTask)
 	// shape attributes
-	p := simpleModel001.getPlane()
 	p.Shape[1].SetID("activity", simpleModel001.TaskHash)
 	p.Shape[1].SetElement("activity", simpleModel001.TaskHash)
 	p.Shape[1].SetBounds()
@@ -122,13 +117,15 @@ func (simpleModel001 *SimpleModel001) SetTask() {
 
 // SetEndEvent ...
 func (simpleModel001 *SimpleModel001) SetEndEvent() {
+	// assign
+	process := simpleModel001.GetProcess()
+	p := simpleModel001.GetPlane()
 	// generics
-	simpleModel001.def.Process[0].EndEvent[0].SetID(simpleModel001.EndEventHash)
+	process.EndEvent[0].SetID("event", simpleModel001.EndEventHash)
 	// incoming
-	simpleModel001.def.Process[0].EndEvent[0].SetIncoming(1)
-	simpleModel001.def.Process[0].EndEvent[0].Incoming[0].SetFlow(simpleModel001.FromTask)
+	process.EndEvent[0].SetIncoming(1)
+	process.EndEvent[0].Incoming[0].SetFlow(simpleModel001.FromTask)
 	// shape attributes
-	p := simpleModel001.getPlane()
 	p.Shape[2].SetID("event", simpleModel001.EndEventHash)
 	p.Shape[2].SetElement("event", simpleModel001.EndEventHash)
 	p.Shape[2].SetBounds()
@@ -138,12 +135,14 @@ func (simpleModel001 *SimpleModel001) SetEndEvent() {
 
 // SetFromStartEventSequenceFlow ...
 func (simpleModel001 *SimpleModel001) SetFromStartEventSequenceFlow() {
+	// assign
+	process := simpleModel001.GetProcess()
+	p := simpleModel001.GetPlane()
 	// generics
-	simpleModel001.def.Process[0].SequenceFlow[0].SetID(simpleModel001.FromStartEvent)
-	simpleModel001.def.Process[0].SequenceFlow[0].SetSourceRef(fmt.Sprintf("StartEvent_%d", simpleModel001.StartEventCounter))
-	simpleModel001.def.Process[0].SequenceFlow[0].SetTargetRef(fmt.Sprintf("Activity_%s", simpleModel001.TaskHash))
+	process.SequenceFlow[0].SetID(simpleModel001.FromStartEvent)
+	process.SequenceFlow[0].SetSourceRef("startevent", simpleModel001.StartEventCounter)
+	process.SequenceFlow[0].SetTargetRef("activity", simpleModel001.TaskHash)
 	// shape attributes
-	p := simpleModel001.getPlane()
 	p.Edge[0].SetID("flow", simpleModel001.FromStartEvent)
 	p.Edge[0].SetElement("flow", simpleModel001.FromStartEvent)
 	p.Edge[0].SetWaypoint()
@@ -153,12 +152,14 @@ func (simpleModel001 *SimpleModel001) SetFromStartEventSequenceFlow() {
 
 // SetFromTaskSequenceFlow ...
 func (simpleModel001 *SimpleModel001) SetFromTaskSequenceFlow() {
+	// assign
+	process := simpleModel001.GetProcess()
+	p := simpleModel001.GetPlane()
 	// generics
-	simpleModel001.def.Process[0].SequenceFlow[1].SetID(simpleModel001.FromTask)
-	simpleModel001.def.Process[0].SequenceFlow[1].SetSourceRef(fmt.Sprintf("Activity_%s", simpleModel001.TaskHash))
-	simpleModel001.def.Process[0].SequenceFlow[1].SetTargetRef(fmt.Sprintf("Event_%s", simpleModel001.EndEventHash))
+	process.SequenceFlow[1].SetID(simpleModel001.FromTask)
+	process.SequenceFlow[1].SetSourceRef("activity", simpleModel001.TaskHash)
+	process.SequenceFlow[1].SetTargetRef("event", simpleModel001.EndEventHash)
 	// shape attributes
-	p := simpleModel001.getPlane()
 	p.Edge[1].SetID("flow", simpleModel001.FromTask)
 	p.Edge[1].SetElement("flow", simpleModel001.FromTask)
 	p.Edge[1].SetWaypoint()
@@ -172,12 +173,28 @@ func (simpleModel001 *SimpleModel001) SetDiagram() {
 	var n int64 = 1
 	simpleModel001.def.Diagram[0].SetID(n)
 	// plane attributes
-	p := simpleModel001.getPlane()
+	p := simpleModel001.GetPlane()
 	p.SetID(n)
 	p.SetElement("process", simpleModel001.ProcessHash)
 }
 
-// getPlane ...
-func (simpleModel001 SimpleModel001) getPlane() *models.Plane {
+/**
+ *
+ * Getter
+ *
+ **/
+
+// GetProcess ...
+func (simpleModel001 SimpleModel001) GetProcess() *models.Process {
+	return &simpleModel001.def.Process[0]
+}
+
+// GetDiagram ...
+func (simpleModel001 SimpleModel001) GetDiagram() *models.Diagram {
+	return &simpleModel001.def.Diagram[0]
+}
+
+// GetPlane ...
+func (simpleModel001 SimpleModel001) GetPlane() *models.Plane {
 	return &simpleModel001.def.Diagram[0].Plane[0]
 }

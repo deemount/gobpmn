@@ -1,8 +1,6 @@
 package examples
 
 import (
-	"fmt"
-
 	"github.com/deemount/gobpmn/models"
 	"github.com/deemount/gobpmn/utils"
 )
@@ -150,7 +148,7 @@ func (simpleModel002 *SimpleModel002) SetTask() {
 // SetEndEvent ...
 func (simpleModel002 *SimpleModel002) SetEndEvent() {
 	// generics
-	simpleModel002.def.Process[0].EndEvent[0].SetID(simpleModel002.EndEventHash)
+	simpleModel002.def.Process[0].EndEvent[0].SetID("event", simpleModel002.EndEventHash)
 	simpleModel002.def.Process[0].StartEvent[0].SetName("End of Process")
 	// incoming
 	simpleModel002.def.Process[0].EndEvent[0].SetIncoming(1)
@@ -168,8 +166,8 @@ func (simpleModel002 *SimpleModel002) SetEndEvent() {
 func (simpleModel002 *SimpleModel002) SetFromStartEventSequenceFlow() {
 	// generics
 	simpleModel002.def.Process[0].SequenceFlow[0].SetID(simpleModel002.FromStartEvent)
-	simpleModel002.def.Process[0].SequenceFlow[0].SetSourceRef(fmt.Sprintf("StartEvent_%d", simpleModel002.StartEventCounter))
-	simpleModel002.def.Process[0].SequenceFlow[0].SetTargetRef(fmt.Sprintf("Activity_%s", simpleModel002.TaskHash))
+	simpleModel002.def.Process[0].SequenceFlow[0].SetSourceRef("startevent", simpleModel002.StartEventCounter)
+	simpleModel002.def.Process[0].SequenceFlow[0].SetTargetRef("activity", simpleModel002.TaskHash)
 	// shape attributes
 	p := simpleModel002.getPlane()
 	p.Edge[0].SetID("flow", simpleModel002.FromStartEvent)
@@ -183,8 +181,8 @@ func (simpleModel002 *SimpleModel002) SetFromStartEventSequenceFlow() {
 func (simpleModel002 *SimpleModel002) SetFromTaskSequenceFlow() {
 	// generics
 	simpleModel002.def.Process[0].SequenceFlow[1].SetID(simpleModel002.FromTask)
-	simpleModel002.def.Process[0].SequenceFlow[1].SetSourceRef(fmt.Sprintf("Activity_%s", simpleModel002.TaskHash))
-	simpleModel002.def.Process[0].SequenceFlow[1].SetTargetRef(fmt.Sprintf("Event_%s", simpleModel002.EndEventHash))
+	simpleModel002.def.Process[0].SequenceFlow[1].SetSourceRef("activity", simpleModel002.TaskHash)
+	simpleModel002.def.Process[0].SequenceFlow[1].SetTargetRef("evemt", simpleModel002.EndEventHash)
 	// shape attributes
 	p := simpleModel002.getPlane()
 	p.Edge[1].SetID("flow", simpleModel002.FromTask)
