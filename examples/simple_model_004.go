@@ -17,7 +17,7 @@ type simpleModel004 struct {
 	CollaborationHash   string
 	ParticipantHash     string
 	ProcessHash         string
-	StartEventCounter   int64
+	StartEventCounter   int
 	FromStartEvent      string
 	StartEventStateHash string
 	FromStartEventState string
@@ -29,9 +29,9 @@ type simpleModel004 struct {
 }
 
 // NewSimpleModel004 ...
-func NewSimpleModel004(def *models.Definitions) SimpleModel004Repository {
+func NewSimpleModel004() SimpleModel004Repository {
 	return &simpleModel004{
-		def:                 def,
+		def:                 new(models.Definitions),
 		isExecutable:        true,
 		CollaborationHash:   utils.GenerateHash(),
 		ParticipantHash:     utils.GenerateHash(),
@@ -49,43 +49,48 @@ func NewSimpleModel004(def *models.Definitions) SimpleModel004Repository {
 }
 
 // Create ...
-func (m004 simpleModel004) Create() simpleModel004 {
-	m004.setElements()
-	m004.setDefinitionsAttributes()
-	m004.setCollaboration()
-	m004.setProcess()
-	m004.setStartEvent()
-	m004.setStartEventState()
-	m004.setTask()
-	m004.setTaskState()
-	m004.setEndEvent()
-	m004.setFromStartEventSequenceFlow()
-	m004.setFromStartEventStateSequenceFlow()
-	m004.setFromTaskSequenceFlow()
-	m004.setFromTaskStateSequenceFlow()
-	m004.setDiagram()
-	return m004
+func (simpleModel004 simpleModel004) Create() simpleModel004 {
+	simpleModel004.setElements()
+	simpleModel004.setDefinitionsAttributes()
+	simpleModel004.setCollaboration()
+	simpleModel004.setProcess()
+	simpleModel004.setStartEvent()
+	simpleModel004.setStartEventState()
+	simpleModel004.setTask()
+	simpleModel004.setTaskState()
+	simpleModel004.setEndEvent()
+	simpleModel004.setFromStartEventSequenceFlow()
+	simpleModel004.setFromStartEventStateSequenceFlow()
+	simpleModel004.setFromTaskSequenceFlow()
+	simpleModel004.setFromTaskStateSequenceFlow()
+	simpleModel004.setDiagram()
+	return simpleModel004
+}
+
+// Def ...
+func (simpleModel004 *simpleModel004) Def() *models.Definitions {
+	return simpleModel004.def
 }
 
 // SetElements ...
-func (m004 *simpleModel004) setElements() {
-	m004.def.SetCollaboration()
-	m004.def.Collaboration[0].SetParticipant(1)
-	m004.def.SetProcess(1)
-	m004.def.Process[0].SetStartEvent(1)
-	m004.def.Process[0].SetTask(1)
-	m004.def.Process[0].SetEndEvent(1)
-	m004.def.Process[0].SetIntermediateThrowEvent(2)
-	m004.def.Process[0].SetSequenceFlow(4)
-	m004.def.SetDiagram(1)
-	m004.def.Diagram[0].SetPlane()
-	m004.def.Diagram[0].Plane[0].SetShape(6)
-	m004.def.Diagram[0].Plane[0].SetEdge(4)
+func (simpleModel004 *simpleModel004) setElements() {
+	simpleModel004.def.SetCollaboration()
+	simpleModel004.def.Collaboration[0].SetParticipant(1)
+	simpleModel004.def.SetProcess(1)
+	simpleModel004.def.Process[0].SetStartEvent(1)
+	simpleModel004.def.Process[0].SetTask(1)
+	simpleModel004.def.Process[0].SetEndEvent(1)
+	simpleModel004.def.Process[0].SetIntermediateThrowEvent(2)
+	simpleModel004.def.Process[0].SetSequenceFlow(4)
+	simpleModel004.def.SetDiagram(1)
+	simpleModel004.def.Diagram[0].SetPlane()
+	simpleModel004.def.Diagram[0].Plane[0].SetShape(6)
+	simpleModel004.def.Diagram[0].Plane[0].SetEdge(4)
 }
 
 // SetDefinitionsAttributes ...
-func (m004 *simpleModel004) setDefinitionsAttributes() {
-	m004.def.SetDefaultAttributes()
+func (simpleModel004 *simpleModel004) setDefinitionsAttributes() {
+	simpleModel004.def.SetDefaultAttributes()
 }
 
 // SetCollaboration ...
@@ -133,7 +138,7 @@ func (simpleModel004 *simpleModel004) setStartEvent() {
 // SetStartEventState ...
 func (simpleModel004 *simpleModel004) setStartEventState() {
 	// generics
-	simpleModel004.def.Process[0].IntermediateThrowEvent[0].SetID(simpleModel004.StartEventStateHash)
+	simpleModel004.def.Process[0].IntermediateThrowEvent[0].SetID("event", simpleModel004.StartEventStateHash)
 	simpleModel004.def.Process[0].IntermediateThrowEvent[0].SetName("State after event")
 	// incoming
 	simpleModel004.def.Process[0].IntermediateThrowEvent[0].SetIncoming(1)
@@ -153,7 +158,7 @@ func (simpleModel004 *simpleModel004) setStartEventState() {
 // SetTask ...
 func (simpleModel004 *simpleModel004) setTask() {
 	// generics
-	simpleModel004.def.Process[0].Task[0].SetID(simpleModel004.TaskHash)
+	simpleModel004.def.Process[0].Task[0].SetID("activity", simpleModel004.TaskHash)
 	simpleModel004.def.Process[0].Task[0].SetName("Do something")
 	// incoming
 	simpleModel004.def.Process[0].Task[0].SetIncoming(1)
@@ -173,7 +178,7 @@ func (simpleModel004 *simpleModel004) setTask() {
 // SetTaskState ...
 func (simpleModel004 *simpleModel004) setTaskState() {
 	// generics
-	simpleModel004.def.Process[0].IntermediateThrowEvent[1].SetID(simpleModel004.TaskStateHash)
+	simpleModel004.def.Process[0].IntermediateThrowEvent[1].SetID("event", simpleModel004.TaskStateHash)
 	simpleModel004.def.Process[0].IntermediateThrowEvent[1].SetName("State after task")
 	// incoming
 	simpleModel004.def.Process[0].IntermediateThrowEvent[1].SetIncoming(1)
@@ -210,7 +215,7 @@ func (simpleModel004 *simpleModel004) setEndEvent() {
 // SetFromStartEventSequenceFlow ...
 func (simpleModel004 *simpleModel004) setFromStartEventSequenceFlow() {
 	// generics
-	simpleModel004.def.Process[0].SequenceFlow[0].SetID(simpleModel004.FromStartEvent)
+	simpleModel004.def.Process[0].SequenceFlow[0].SetID("flow", simpleModel004.FromStartEvent)
 	simpleModel004.def.Process[0].SequenceFlow[0].SetSourceRef("startevent", simpleModel004.StartEventCounter)
 	simpleModel004.def.Process[0].SequenceFlow[0].SetTargetRef("event", simpleModel004.StartEventStateHash)
 	// shape attributes
@@ -225,7 +230,7 @@ func (simpleModel004 *simpleModel004) setFromStartEventSequenceFlow() {
 // SetFromStartEventStateSequenceFlow ...
 func (simpleModel004 *simpleModel004) setFromStartEventStateSequenceFlow() {
 	// generics
-	simpleModel004.def.Process[0].SequenceFlow[1].SetID(simpleModel004.FromStartEventState)
+	simpleModel004.def.Process[0].SequenceFlow[1].SetID("flow", simpleModel004.FromStartEventState)
 	simpleModel004.def.Process[0].SequenceFlow[1].SetSourceRef("event", simpleModel004.StartEventStateHash)
 	simpleModel004.def.Process[0].SequenceFlow[1].SetTargetRef("activity", simpleModel004.TaskHash)
 	// shape attributes
@@ -240,7 +245,7 @@ func (simpleModel004 *simpleModel004) setFromStartEventStateSequenceFlow() {
 // SetFromTaskSequenceFlow ...
 func (simpleModel004 *simpleModel004) setFromTaskSequenceFlow() {
 	// generics
-	simpleModel004.def.Process[0].SequenceFlow[2].SetID(simpleModel004.FromTask)
+	simpleModel004.def.Process[0].SequenceFlow[2].SetID("flow", simpleModel004.FromTask)
 	simpleModel004.def.Process[0].SequenceFlow[2].SetSourceRef("activity", simpleModel004.TaskHash)
 	simpleModel004.def.Process[0].SequenceFlow[2].SetTargetRef("event", simpleModel004.TaskStateHash)
 	// shape attributes
@@ -255,7 +260,7 @@ func (simpleModel004 *simpleModel004) setFromTaskSequenceFlow() {
 // SetFromTaskStateSequenceFlow ...
 func (simpleModel004 *simpleModel004) setFromTaskStateSequenceFlow() {
 	// generics
-	simpleModel004.def.Process[0].SequenceFlow[3].SetID(simpleModel004.FromTaskState)
+	simpleModel004.def.Process[0].SequenceFlow[3].SetID("flow", simpleModel004.FromTaskState)
 	simpleModel004.def.Process[0].SequenceFlow[3].SetSourceRef("event", simpleModel004.TaskStateHash)
 	simpleModel004.def.Process[0].SequenceFlow[3].SetTargetRef("event", simpleModel004.EndEventHash)
 	// shape attributes
@@ -274,7 +279,7 @@ func (simpleModel004 *simpleModel004) setDiagram() {
 	simpleModel004.def.Diagram[0].SetID(n)
 	// plane attributes
 	p := simpleModel004.getPlane()
-	p.SetID(n)
+	p.SetID("plane", n)
 	p.SetElement("collaboration", simpleModel004.CollaborationHash)
 }
 

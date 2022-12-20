@@ -3,24 +3,48 @@ package models
 import (
 	"fmt"
 	"log"
+
+	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/camunda"
 )
+
+// AssociationRepository ...
+type AssociationRepository interface {
+	SetID(typ string, suffix interface{})
+	SetSourceRef(typ string, sourceRef string)
+	SetTargetRef(typ string, targetRef string)
+
+	SetDocumentation()
+	SetExtensionElements()
+
+	GetID() *string
+	GetSourceRef() *string
+	GetTargetRef() *string
+
+	GetDocumentation() *attributes.Documentation
+	GetExtensionElements() *camunda.ExtensionElements
+}
 
 // Association ...
 type Association struct {
-	ID                string              `xml:"id,attr"`
-	SourceRef         string              `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-	TargetRef         string              `xml:"targetRef,attr" json:"targetRef,omitempty"`
-	Documentation     []Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ID                string                      `xml:"id,attr"`
+	SourceRef         string                      `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
+	TargetRef         string                      `xml:"targetRef,attr" json:"targetRef,omitempty"`
+	Documentation     []attributes.Documentation  `xml:"bpmn:documentation,omitempty"`
+	ExtensionElements []camunda.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 // TAssociation ...
 type TAssociation struct {
-	ID                string              `xml:"id,attr"`
-	SourceRef         string              `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-	TargetRef         string              `xml:"targetRef,attr" json:"targetRef,omitempty"`
-	Documentation     []Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ID                string                       `xml:"id,attr"`
+	SourceRef         string                       `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
+	TargetRef         string                       `xml:"targetRef,attr" json:"targetRef,omitempty"`
+	Documentation     []attributes.Documentation   `xml:"documentation,omitempty"`
+	ExtensionElements []camunda.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+}
+
+func NewAssociation() AssociationRepository {
+	return &Association{}
 }
 
 /**
@@ -32,8 +56,15 @@ type TAssociation struct {
 /** BPMN **/
 
 // SetID ...
-func (association *Association) SetID(suffix string) {
-	association.ID = fmt.Sprintf("Association_%s", suffix)
+func (association *Association) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "association":
+		association.ID = fmt.Sprintf("Association_%v", suffix)
+		break
+	case "id":
+		association.ID = fmt.Sprintf("%s", suffix)
+		break
+	}
 }
 
 // SetSourceRef ...
@@ -80,18 +111,18 @@ func (association *Association) SetTargetRef(typ string, targetRef string) {
 	}
 }
 
-/* Elements */
+/*** Make Elements ***/
 
 /** BPMN **/
 
 // SetDocumentation ...
 func (association *Association) SetDocumentation() {
-	association.Documentation = make([]Documentation, 1)
+	association.Documentation = make([]attributes.Documentation, 1)
 }
 
 // SetExtensionElements ...
 func (association *Association) SetExtensionElements() {
-	association.ExtensionElements = make([]ExtensionElements, 1)
+	association.ExtensionElements = make([]camunda.ExtensionElements, 1)
 }
 
 /**
@@ -103,8 +134,18 @@ func (association *Association) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (association Association) GetID() string {
-	return association.ID
+func (association Association) GetID() *string {
+	return &association.ID
+}
+
+// GetSourceRef ...
+func (association *Association) GetSourceRef() *string {
+	return &association.SourceRef
+}
+
+// GetTargetRef ...
+func (association Association) GetTargetRef() *string {
+	return &association.TargetRef
 }
 
 /* Elements */
@@ -112,6 +153,11 @@ func (association Association) GetID() string {
 /** BPMN **/
 
 // GetDocumentation ...
-func (association Association) GetDocumentation() *Documentation {
+func (association Association) GetDocumentation() *attributes.Documentation {
 	return &association.Documentation[0]
+}
+
+// GetExtensionElements ...
+func (association *Association) GetExtensionElements() *camunda.ExtensionElements {
+	return &association.ExtensionElements[0]
 }

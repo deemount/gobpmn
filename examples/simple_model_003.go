@@ -120,7 +120,7 @@ func (simpleModel003 *SimpleModel003) SetStartEvent() {
 // SetStartEventState ...
 func (simpleModel003 *SimpleModel003) SetStartEventState() {
 	// generics
-	simpleModel003.def.Process[0].IntermediateThrowEvent[0].SetID(simpleModel003.StartEventStateHash)
+	simpleModel003.def.Process[0].IntermediateThrowEvent[0].SetID("event", simpleModel003.StartEventStateHash)
 	simpleModel003.def.Process[0].IntermediateThrowEvent[0].SetName("State after event")
 	// incoming
 	simpleModel003.def.Process[0].IntermediateThrowEvent[0].SetIncoming(1)
@@ -140,7 +140,7 @@ func (simpleModel003 *SimpleModel003) SetStartEventState() {
 // SetTask ...
 func (simpleModel003 *SimpleModel003) SetTask() {
 	// generics
-	simpleModel003.def.Process[0].Task[0].SetID(simpleModel003.TaskHash)
+	simpleModel003.def.Process[0].Task[0].SetID("activity", simpleModel003.TaskHash)
 	simpleModel003.def.Process[0].Task[0].SetName("Do something")
 	// incoming
 	simpleModel003.def.Process[0].Task[0].SetIncoming(1)
@@ -160,7 +160,7 @@ func (simpleModel003 *SimpleModel003) SetTask() {
 // SetTaskState ...
 func (simpleModel003 *SimpleModel003) SetTaskState() {
 	// generics
-	simpleModel003.def.Process[0].IntermediateThrowEvent[1].SetID(simpleModel003.TaskStateHash)
+	simpleModel003.def.Process[0].IntermediateThrowEvent[1].SetID("event", simpleModel003.TaskStateHash)
 	simpleModel003.def.Process[0].IntermediateThrowEvent[1].SetName("State after task")
 	// incoming
 	simpleModel003.def.Process[0].IntermediateThrowEvent[1].SetIncoming(1)
@@ -197,7 +197,7 @@ func (simpleModel003 *SimpleModel003) SetEndEvent() {
 // SetFromStartEventSequenceFlow ...
 func (simpleModel003 *SimpleModel003) SetFromStartEventSequenceFlow() {
 	// generics
-	simpleModel003.def.Process[0].SequenceFlow[0].SetID(simpleModel003.FromStartEvent)
+	simpleModel003.def.Process[0].SequenceFlow[0].SetID("flow", simpleModel003.FromStartEvent)
 	simpleModel003.def.Process[0].SequenceFlow[0].SetSourceRef("startevent", simpleModel003.StartEventCounter)
 	simpleModel003.def.Process[0].SequenceFlow[0].SetTargetRef("event", simpleModel003.StartEventStateHash)
 	// shape attributes
@@ -212,7 +212,7 @@ func (simpleModel003 *SimpleModel003) SetFromStartEventSequenceFlow() {
 // SetFromStartEventStateSequenceFlow ...
 func (simpleModel003 *SimpleModel003) SetFromStartEventStateSequenceFlow() {
 	// generics
-	simpleModel003.def.Process[0].SequenceFlow[1].SetID(simpleModel003.FromStartEventState)
+	simpleModel003.def.Process[0].SequenceFlow[1].SetID("flow", simpleModel003.FromStartEventState)
 	simpleModel003.def.Process[0].SequenceFlow[1].SetSourceRef("event", simpleModel003.StartEventStateHash)
 	simpleModel003.def.Process[0].SequenceFlow[1].SetTargetRef("activity", simpleModel003.TaskHash)
 	// shape attributes
@@ -227,7 +227,7 @@ func (simpleModel003 *SimpleModel003) SetFromStartEventStateSequenceFlow() {
 // SetFromTaskSequenceFlow ...
 func (simpleModel003 *SimpleModel003) SetFromTaskSequenceFlow() {
 	// generics
-	simpleModel003.def.Process[0].SequenceFlow[2].SetID(simpleModel003.FromTask)
+	simpleModel003.def.Process[0].SequenceFlow[2].SetID("flow", simpleModel003.FromTask)
 	simpleModel003.def.Process[0].SequenceFlow[2].SetSourceRef("activity", simpleModel003.TaskHash)
 	simpleModel003.def.Process[0].SequenceFlow[2].SetTargetRef("event", simpleModel003.TaskStateHash)
 	// shape attributes
@@ -242,7 +242,7 @@ func (simpleModel003 *SimpleModel003) SetFromTaskSequenceFlow() {
 // SetFromTaskStateSequenceFlow ...
 func (simpleModel003 *SimpleModel003) SetFromTaskStateSequenceFlow() {
 	// generics
-	simpleModel003.def.Process[0].SequenceFlow[3].SetID(simpleModel003.FromTaskState)
+	simpleModel003.def.Process[0].SequenceFlow[3].SetID("flow", simpleModel003.FromTaskState)
 	simpleModel003.def.Process[0].SequenceFlow[3].SetSourceRef("event", simpleModel003.TaskStateHash)
 	simpleModel003.def.Process[0].SequenceFlow[3].SetTargetRef("event", simpleModel003.EndEventHash)
 	// shape attributes
@@ -261,7 +261,7 @@ func (simpleModel003 *SimpleModel003) SetDiagram() {
 	simpleModel003.def.Diagram[0].SetID(n)
 	// plane attributes
 	p := simpleModel003.getPlane()
-	p.SetID(n)
+	p.SetID("plane", n)
 	p.SetElement("process", simpleModel003.ProcessHash)
 }
 

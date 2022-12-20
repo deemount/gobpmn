@@ -2,8 +2,22 @@ package models
 
 import (
 	"fmt"
-	"strconv"
 )
+
+// PlaneRepository ...
+type PlaneRepository interface {
+	SetID(typ string, suffix interface{})
+	SetElement(typ string, suffix interface{})
+	SetAttrProcessElement(suffix string)
+	SetAttrCollaborationElement(suffix string)
+	SetShape(num int)
+	SetEdge(num int)
+
+	GetID() *string
+	GetShape(num int) *Shape
+	GetEdge(num int) *Edge
+	GetDescription() string
+}
 
 // Plane ...
 type Plane struct {
@@ -14,17 +28,32 @@ type Plane struct {
 	Edge        []Edge  `xml:"bpmndi:BPMNEdge" json:"-"`
 }
 
+func NewPlane() PlaneRepository {
+	return &Plane{}
+}
+
+/**
+ * Default Setters
+ */
+
 /* Attributes */
 
 /** BPMN **/
 
 // SetID ...
-func (plane *Plane) SetID(num int64) {
-	plane.ID = "BPMNPlane_" + strconv.FormatInt(num, 16)
+func (plane *Plane) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "plane":
+		//plane.ID = "BPMNPlane_" + strconv.FormatInt(num, 16)
+		plane.ID = fmt.Sprintf("BPMNPlane_%d", suffix)
+		break
+	case "id":
+		plane.ID = fmt.Sprintf("%s", suffix)
+	}
 }
 
 // SetElement ...
-func (plane *Plane) SetElement(typ string, suffix string) {
+func (plane *Plane) SetElement(typ string, suffix interface{}) {
 	switch typ {
 	case "process":
 		plane.Element = fmt.Sprintf("Process_%s", suffix)
@@ -65,6 +94,15 @@ func (plane *Plane) SetEdge(num int) {
 /**
  * Default Getters
  */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetID ...
+func (plane Plane) GetID() *string {
+	return &plane.ID
+}
 
 /* Elements */
 

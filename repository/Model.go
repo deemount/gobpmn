@@ -9,6 +9,9 @@ package repository
 
 import (
 	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/activities"
+	"github.com/deemount/gobpmn/models/events"
+	"github.com/deemount/gobpmn/models/marker"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -220,7 +223,7 @@ func (m *model) setDiagram() {
 	m.GetDiagram().SetID(n)
 	// plane attributes
 	p := m.GetPlane()
-	p.SetID(n)
+	p.SetID("plane", n)
 	p.SetElement("id", m.CollaborationID)
 }
 
@@ -273,7 +276,7 @@ func (m *model) setTask() {
 	// assign
 	e, d := m.GetTask()
 	// element
-	e.SetID(m.TaskHash)
+	e.SetID("activity", m.TaskHash)
 	e.SetName("Task")
 	// incoming
 	e.SetIncoming(1)
@@ -299,7 +302,7 @@ func (m *model) fromStartEvent() {
 	// assign
 	e, d := m.GetFromStartEvent()
 	// element
-	e.SetID(m.FromStartEventHash)
+	e.SetID("flow", m.FromStartEventHash)
 	e.SetSourceRef("event", m.StartEventHash)
 	e.SetTargetRef("activity", m.TaskHash)
 	// edge
@@ -314,7 +317,7 @@ func (m *model) fromTask() {
 	// assign
 	e, d := m.GetFromTask()
 	// element
-	e.SetID(m.FromTaskHash)
+	e.SetID("flow", m.FromTaskHash)
 	e.SetSourceRef("activity", m.TaskHash)
 	e.SetTargetRef("event", m.EndEventHash)
 	// edge
@@ -362,35 +365,35 @@ func (m model) GetPlane() *models.Plane {
  * @GetFromStartEvent -> models.SequenceFlow, models.Shape
  * @GetFromTask -> models.SequenceFlow
 **/
-func (m model) GetStartEvent() (*models.StartEvent, *models.Shape) {
+func (m model) GetStartEvent() (*events.StartEvent, *models.Shape) {
 	start := m.GetProcess().GetStartEvent(0)
 	plane := m.GetPlane()
 	shape := m.GetShapeStartEvent(plane)
 	return start, shape
 }
 
-func (m model) GetEndEvent() (*models.EndEvent, *models.Shape) {
+func (m model) GetEndEvent() (*events.EndEvent, *models.Shape) {
 	end := m.GetProcess().GetEndEvent(0)
 	plane := m.GetPlane()
 	shape := m.GetShapeEndEvent(plane)
 	return end, shape
 }
 
-func (m model) GetTask() (*models.Task, *models.Shape) {
+func (m model) GetTask() (*activities.Task, *models.Shape) {
 	task := m.GetProcess().GetTask(0)
 	plane := m.GetPlane()
 	shape := m.GetShapeTask(plane)
 	return task, shape
 }
 
-func (m model) GetFromStartEvent() (*models.SequenceFlow, *models.Edge) {
+func (m model) GetFromStartEvent() (*marker.SequenceFlow, *models.Edge) {
 	flow := m.GetProcess().GetSequenceFlow(0)
 	plane := m.GetPlane()
 	edge := m.GetEdgeFromStartEvent(plane)
 	return flow, edge
 }
 
-func (m model) GetFromTask() (*models.SequenceFlow, *models.Edge) {
+func (m model) GetFromTask() (*marker.SequenceFlow, *models.Edge) {
 	flow := m.GetProcess().GetSequenceFlow(1)
 	plane := m.GetPlane()
 	edge := m.GetEdgeFromTask(plane)

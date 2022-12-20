@@ -100,7 +100,7 @@ func (simpleModel001 *SimpleModel001) SetTask() {
 	process := simpleModel001.GetProcess()
 	p := simpleModel001.GetPlane()
 	// generics
-	process.Task[0].SetID(simpleModel001.TaskHash)
+	process.Task[0].SetID("activity", simpleModel001.TaskHash)
 	// incoming
 	process.Task[0].SetIncoming(1)
 	process.Task[0].Incoming[0].SetFlow(simpleModel001.FromStartEvent)
@@ -139,7 +139,7 @@ func (simpleModel001 *SimpleModel001) SetFromStartEventSequenceFlow() {
 	process := simpleModel001.GetProcess()
 	p := simpleModel001.GetPlane()
 	// generics
-	process.SequenceFlow[0].SetID(simpleModel001.FromStartEvent)
+	process.SequenceFlow[0].SetID("flow", simpleModel001.FromStartEvent)
 	process.SequenceFlow[0].SetSourceRef("startevent", simpleModel001.StartEventCounter)
 	process.SequenceFlow[0].SetTargetRef("activity", simpleModel001.TaskHash)
 	// shape attributes
@@ -156,7 +156,7 @@ func (simpleModel001 *SimpleModel001) SetFromTaskSequenceFlow() {
 	process := simpleModel001.GetProcess()
 	p := simpleModel001.GetPlane()
 	// generics
-	process.SequenceFlow[1].SetID(simpleModel001.FromTask)
+	process.SequenceFlow[1].SetID("flow", simpleModel001.FromTask)
 	process.SequenceFlow[1].SetSourceRef("activity", simpleModel001.TaskHash)
 	process.SequenceFlow[1].SetTargetRef("event", simpleModel001.EndEventHash)
 	// shape attributes
@@ -167,14 +167,13 @@ func (simpleModel001 *SimpleModel001) SetFromTaskSequenceFlow() {
 	p.Edge[1].Waypoint[1].SetCoordinates(432, 177)
 }
 
-//
 func (simpleModel001 *SimpleModel001) SetDiagram() {
 	// diagram attributes
 	var n int64 = 1
 	simpleModel001.def.Diagram[0].SetID(n)
 	// plane attributes
 	p := simpleModel001.GetPlane()
-	p.SetID(n)
+	p.SetID("plane", n)
 	p.SetElement("process", simpleModel001.ProcessHash)
 }
 

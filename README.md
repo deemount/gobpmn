@@ -18,23 +18,29 @@ This is part of my journey through BPMN. To teach myself, I opened the Camunda M
 
 Create a simple bpmn-file with start and intermediate throw event
 
-```
+```go
 package main
 
 import (
-	"github.com/deemount/gobpmn/repository"
+ "github.com/deemount/gobpmn/repository"
 )
 
 func main() {
 
-	bpmnf := repository.NewBPMNF()
-	bpmnf.Set()
-	err := bpmnf.Create()
-	if err != nil {
-		panic(err)
-	}
+ bpmnf := repository.NewBPMNF()
+ bpmnf.Set()
+ err := bpmnf.Create()
+ if err != nil {
+  panic(err)
+ }
 
 }
+```
+
+### Docker ###
+
+```bash
+docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 ```
 
 ### To Do's ###

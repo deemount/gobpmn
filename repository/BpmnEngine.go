@@ -1,18 +1,16 @@
 package repository
 
 import (
-	"context"
 	"crypto/md5"
 	"encoding/xml"
 	"hash/adler32"
 	"io/ioutil"
+	"log"
 	"os"
-	"time"
 
 	"github.com/bwmarrin/snowflake"
 
 	"github.com/deemount/gobpmn/models"
-	"github.com/deemount/gobpmn/spec/process_instance"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -36,27 +34,6 @@ func NewBpmnEngine(name string) BpmnEngine {
 	}
 }
 
-// CreateInstance creates a new instance for a process with given processKey
-func (engine *BpmnEngine) CreateInstance(processKey int64, variableContext map[string]interface{}) (*ProcessInstanceInfo, error) {
-	if variableContext == nil {
-		variableContext = map[string]interface{}{}
-	}
-	for _, process := range engine.Processes {
-		if process.ProcessKey == processKey {
-			processInstanceInfo := ProcessInstanceInfo{
-				processInfo:     &process,
-				instanceKey:     engine.generateKey(),
-				variableContext: variableContext,
-				createdAt:       time.Now(),
-				state:           process_instance.READY,
-			}
-			engine.ProcessInstances = append(engine.ProcessInstances, &processInstanceInfo)
-			return &processInstanceInfo, nil
-		}
-	}
-	return nil, nil
-}
-
 // fileExist ... function to check if file exists
 func (engine *BpmnEngine) fileExist(fileName string) bool {
 	_, error := os.Stat("files/bpmn/" + fileName + ".bpmn")
@@ -72,6 +49,7 @@ func (engine *BpmnEngine) fileExist(fileName string) bool {
 // and returns ProcessInfo details for the deployed workflow
 func (engine *BpmnEngine) LoadFromFile(filename string) (*ProcessInfo, error) {
 	var err error
+	log.Printf("engine: load bpmn file from %s", "files/bpmn/"+filename+".bpmn")
 	xmlData, err := ioutil.ReadFile("files/bpmn/" + filename + ".bpmn")
 	if err != nil {
 		return nil, err
@@ -80,22 +58,26 @@ func (engine *BpmnEngine) LoadFromFile(filename string) (*ProcessInfo, error) {
 }
 
 // LoadFromBytes loads a given BPMN file by xmlData byte array into the engine
-// and returns ProcessInfo details for the deployed workflow
+// and returns a pointer to ProcessInfo, which stores details for the deployed workflow
 func (engine *BpmnEngine) LoadFromBytes(xmlData []byte) (*ProcessInfo, error) {
 
 	// create checksum
 	md5sum := md5.Sum(xmlData)
 
-	// assign definitions
+	// assign tdefinitions
+	// Notice:
+	// If you use the models.Definitions, the unmarshal panics with
+	// panic: expected element type <bpmn:definitions> but have <definitions>
 	var definitions models.TDefinitions
 
 	// unmarshal xml data to parsed definitions
+	log.Println("engine: unmarshal file")
 	err := xml.Unmarshal(xmlData, &definitions)
 	if err != nil {
 		return nil, err
 	}
 
-	// fill process informations
+	// fill process informations into struct
 	processInfo := ProcessInfo{
 		Version: 1,
 		Def:     definitions,
@@ -134,6 +116,7 @@ func (engine *BpmnEngine) LoadFromBytes(xmlData []byte) (*ProcessInfo, error) {
 
 // requestFile ...
 func (engine *BpmnEngine) requestFile(done chan func() (*ProcessInfo, error), b BpmnFactory) {
+	log.Println("engine: request created file")
 	done <- (func() (*ProcessInfo, error) {
 		filename := b.GetCurrentlyCreatedFile()
 		if engine.fileExist(filename) {
@@ -145,16 +128,6 @@ func (engine *BpmnEngine) requestFile(done chan func() (*ProcessInfo, error), b 
 		}
 		return nil, nil
 	})
-}
-
-// GetProcessInfo ...
-func (engine *BpmnEngine) GetProcessInfo(ctx context.Context, b BpmnFactory) (*ProcessInfo, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
-	defer cancel()
-	done := make(chan func() (*ProcessInfo, error))
-	go engine.requestFile(done, b)
-	processInfo, err := (<-done)()
-	return processInfo, err
 }
 
 // generateKey ...

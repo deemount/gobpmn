@@ -12,6 +12,13 @@ type Diagram struct {
 	Plane       []Plane `xml:"bpmndi:BPMNPlane,omitempty"`
 }
 
+// Diagram ...
+type TDiagram struct {
+	ID          string  `xml:"id,attr"`
+	Description string  `xml:"-" json:"-"`
+	Plane       []Plane `xml:"bpmndi:BPMNPlane,omitempty"`
+}
+
 /* Attributes */
 
 // SetID ...

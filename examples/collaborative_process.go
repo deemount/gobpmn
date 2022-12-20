@@ -9,6 +9,9 @@ package examples
 
 import (
 	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/activities"
+	"github.com/deemount/gobpmn/models/events"
+	"github.com/deemount/gobpmn/models/marker"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -27,6 +30,8 @@ type CollaborativeProcess interface {
 /**************************************************************************************/
 /**
  * @OBJECTS
+ * Global
+ * @private collaborativeProcess
  * @private collaborativeProcessPool
  * @private collaborativeProcessMessage
  * Customer Support
@@ -38,8 +43,23 @@ type CollaborativeProcess interface {
  * @private collaborativeProcessCustomerSequence
  * @private collaborativeProcessCustomerTask
  *
- * @private collaborativeProcess
  **/
+
+// collaborativeProcess refers to models definition repository, globals and hashes
+type collaborativeProcess struct {
+	def models.DefinitionsRepository
+	/**** Global ****/
+	collaborativeProcessPool
+	collaborativeProcessMessage
+	/**** Customer Support Hashes ****/
+	collaborativeProcessCustomerSupportEvent
+	collaborativeProcessCustomerSupportSequence
+	collaborativeProcessCustomerSupportTask
+	/**** Customer Hashes ****/
+	collaborativeProcessCustomerEvent
+	collaborativeProcessCustomerSequence
+	collaborativeProcessCustomerTask
+}
 
 // collaborativeProcessPool ...
 type collaborativeProcessPool struct {
@@ -124,21 +144,6 @@ type collaborativeProcessCustomerTask struct {
 	ReceiptWarrantyRefusalHash string
 }
 
-// collaborativeProcess ...
-type collaborativeProcess struct {
-	def models.DefinitionsRepository
-	collaborativeProcessPool
-	collaborativeProcessMessage
-	/**** Customer Support Hashes ****/
-	collaborativeProcessCustomerSupportEvent
-	collaborativeProcessCustomerSupportSequence
-	collaborativeProcessCustomerSupportTask
-	/**** Customer Hashes ****/
-	collaborativeProcessCustomerEvent
-	collaborativeProcessCustomerSequence
-	collaborativeProcessCustomerTask
-}
-
 /**************************************************************************************/
 /**
  * @BUILDER
@@ -150,7 +155,10 @@ type collaborativeProcess struct {
 func NewCollaborativeProcess() CollaborativeProcess {
 	return &collaborativeProcess{
 		// you need to refer to the definitions struct to start building the model
-		def: new(models.Definitions),
+		// Notice:
+		// Also possible to use (look below)
+		// def: new(models.Definitions),
+		def: models.NewDefinitions(),
 		// Pool
 		collaborativeProcessPool: collaborativeProcessPool{
 			CustomerSupportIsExecutable: true,
@@ -372,6 +380,7 @@ func (cp *collaborativeProcess) setCollaboration() {
 	customerParticipant.SetID("id", cp.CustomerID)
 	customerParticipant.SetName("Customer")
 	customerParticipant.SetProcessRef("id", cp.CustomerProcessID)
+
 	// message flow
 	// claim
 	claim.SetID("flow", cp.CustomerToCustomerSupportMessageHash)
@@ -383,32 +392,19 @@ func (cp *collaborativeProcess) setCollaboration() {
 	refusal.SetName("refusal")
 	refusal.SetSourceRef("activity", cp.DenyWarrantyClaimHash)
 	refusal.SetTargetRef("activity", cp.ReceiptWarrantyRefusalHash)
+
 	// shape
+	// plane:shape:customersupport
 	cp.setPoolCustomerSupport()
+	// plane:shape:customer
 	cp.setPoolCustomer()
-	// edge attributes
-	// claim
-	edgeMsgClaim := cp.GetEdgeMessageClaim(cp.GetPlane())
-	edgeMsgClaim.SetID("flow", cp.CustomerToCustomerSupportMessageHash)
-	edgeMsgClaim.SetElement("flow", cp.CustomerToCustomerSupportMessageHash)
-	edgeMsgClaim.SetWaypoint()
-	edgeMsgClaim.Waypoint[0].SetCoordinates(370, 400)
-	edgeMsgClaim.Waypoint[1].SetCoordinates(370, 200)
-	edgeMsgClaim.SetLabel()
-	edgeMsgClaim.Label[0].SetBounds()
-	edgeMsgClaim.Label[0].Bounds[0].SetCoordinates(387, 290)
-	edgeMsgClaim.Label[0].Bounds[0].SetSize(26, 14)
-	// refusal
-	edgeMsgRefusal := cp.GetEdgeMessageRefusal(cp.GetPlane())
-	edgeMsgRefusal.SetID("flow", cp.CustomerSupportToCustomerMessageHash)
-	edgeMsgRefusal.SetElement("flow", cp.CustomerSupportToCustomerMessageHash)
-	edgeMsgRefusal.SetWaypoint()
-	edgeMsgRefusal.Waypoint[0].SetCoordinates(630, 200)
-	edgeMsgRefusal.Waypoint[1].SetCoordinates(630, 400)
-	edgeMsgRefusal.SetLabel()
-	edgeMsgRefusal.Label[0].SetBounds()
-	edgeMsgRefusal.Label[0].Bounds[0].SetCoordinates(643, 290)
-	edgeMsgRefusal.Label[0].Bounds[0].SetSize(34, 14)
+
+	// edge
+	// message:edge:claim
+	cp.setEdgeMessageClaim()
+	// message:edge:refusal
+	cp.setEdgeMessageRefusal()
+
 }
 
 /**** Customer Support Process ****/
@@ -416,8 +412,8 @@ func (cp *collaborativeProcess) setCollaboration() {
 /**
  * @Customer Support Process
  * @Process
- * @private setCustomerSupportPool
- * @private setCustomerSupportProcess
+ * @private setPoolCustomerSupport
+ * @private setProcessCustomerSupport
  **/
 
 // setCustomerSupportPool ...
@@ -494,7 +490,7 @@ func (cp *collaborativeProcess) setCheckIncomingClaim() {
 	// assign
 	e, d := cp.GetCheckIncomingClaim()
 	// element
-	e.SetID(cp.CheckIncomingClaimHash)
+	e.SetID("activity", cp.CheckIncomingClaimHash)
 	e.SetName("Check incoming claim")
 	// incoming
 	e.SetIncoming(1)
@@ -515,7 +511,7 @@ func (cp *collaborativeProcess) setDenyWarrantyClaim() {
 	// assign
 	e, d := cp.GetDenyWarrantyClaim()
 	// element
-	e.SetID(cp.DenyWarrantyClaimHash)
+	e.SetID("activity", cp.DenyWarrantyClaimHash)
 	e.SetName("Deny warranty claim")
 	// incoming
 	e.SetIncoming(1)
@@ -544,7 +540,7 @@ func (cp *collaborativeProcess) fromCustomerSupportStartEvent() {
 	// assign
 	e, d := cp.GetFromCustomerSupportStartEvent()
 	// element
-	e.SetID(cp.FromCustomerSupportStartEventHash)
+	e.SetID("flow", cp.FromCustomerSupportStartEventHash)
 	e.SetSourceRef("event", cp.CustomerSupportStartEventHash)
 	e.SetTargetRef("activity", cp.CheckIncomingClaimHash)
 	// edge
@@ -560,7 +556,8 @@ func (cp *collaborativeProcess) fromCheckIncomingClaim() {
 	// assign
 	e, d := cp.GetFromCheckIncomingClaim()
 	// element
-	e.SetID(cp.FromCheckIncomingClaimHash)
+	e.SetID("flow", cp.FromCheckIncomingClaimHash)
+	e.SetName("decide")
 	e.SetSourceRef("activity", cp.CheckIncomingClaimHash)
 	e.SetTargetRef("activity", cp.DenyWarrantyClaimHash)
 	// edge
@@ -569,6 +566,10 @@ func (cp *collaborativeProcess) fromCheckIncomingClaim() {
 	d.SetWaypoint()
 	d.Waypoint[0].SetCoordinates(420, 160)
 	d.Waypoint[1].SetCoordinates(580, 160)
+	d.SetLabel()
+	d.Label[0].SetBounds()
+	d.Label[0].Bounds[0].SetCoordinates(485, 142)
+	d.Label[0].Bounds[0].SetSize(33, 14)
 }
 
 // fromDenyWarrantyClaim ...
@@ -576,7 +577,7 @@ func (cp *collaborativeProcess) fromDenyWarrantyClaim() {
 	// assign
 	e, d := cp.GetFromDenyWarrantyClaim()
 	// element
-	e.SetID(cp.FromDenyWarrantyClaimHash)
+	e.SetID("flow", cp.FromDenyWarrantyClaimHash)
 	e.SetSourceRef("activity", cp.DenyWarrantyClaimHash)
 	e.SetTargetRef("event", cp.CustomerSupportEndEventHash)
 	// edge
@@ -585,6 +586,41 @@ func (cp *collaborativeProcess) fromDenyWarrantyClaim() {
 	d.SetWaypoint()
 	d.Waypoint[0].SetCoordinates(680, 160)
 	d.Waypoint[1].SetCoordinates(822, 160)
+}
+
+/**
+ * @Process
+ * @Message Edge
+ * @private
+ * @private
+ **/
+
+// setEdgeMessageClaim ...
+func (cp *collaborativeProcess) setEdgeMessageClaim() {
+	e := cp.GetEdgeMessageClaim(cp.GetPlane())
+	e.SetID("flow", cp.CustomerToCustomerSupportMessageHash)
+	e.SetElement("flow", cp.CustomerToCustomerSupportMessageHash)
+	e.SetWaypoint()
+	e.Waypoint[0].SetCoordinates(370, 400)
+	e.Waypoint[1].SetCoordinates(370, 200)
+	e.SetLabel()
+	e.Label[0].SetBounds()
+	e.Label[0].Bounds[0].SetCoordinates(387, 290)
+	e.Label[0].Bounds[0].SetSize(26, 14)
+}
+
+// setEdgeMessageRefusal ...
+func (cp *collaborativeProcess) setEdgeMessageRefusal() {
+	e := cp.GetEdgeMessageRefusal(cp.GetPlane())
+	e.SetID("flow", cp.CustomerSupportToCustomerMessageHash)
+	e.SetElement("flow", cp.CustomerSupportToCustomerMessageHash)
+	e.SetWaypoint()
+	e.Waypoint[0].SetCoordinates(630, 200)
+	e.Waypoint[1].SetCoordinates(630, 400)
+	e.SetLabel()
+	e.Label[0].SetBounds()
+	e.Label[0].Bounds[0].SetCoordinates(643, 290)
+	e.Label[0].Bounds[0].SetSize(34, 14)
 }
 
 /**** Customer Process ****/
@@ -669,7 +705,7 @@ func (cp *collaborativeProcess) setNoticeOfDefect() {
 	// assign
 	e, d := cp.GetNoticeOfDefect()
 	// element
-	e.SetID(cp.NoticeOfDefectHash)
+	e.SetID("activity", cp.NoticeOfDefectHash)
 	e.SetName("Notice of defect")
 	// incoming
 	e.SetIncoming(1)
@@ -690,7 +726,7 @@ func (cp *collaborativeProcess) setWaitingForAnswer() {
 	// assign
 	e, d := cp.GetWaitingForAnswer()
 	// element
-	e.SetID(cp.WaitingForAnswerHash)
+	e.SetID("event", cp.WaitingForAnswerHash)
 	e.SetName("Waiting for answer")
 	// incoming
 	e.SetIncoming(1)
@@ -700,7 +736,7 @@ func (cp *collaborativeProcess) setWaitingForAnswer() {
 	e.Outgoing[0].SetFlow(cp.FromWaitingForAnswerHash)
 	// timer event definition
 	t := cp.GetWaitingForAnswerTimerEventDefinition(e)
-	t.SetID(cp.TimerEventDefinitionWaitingForAnswerHash)
+	t.SetID("ted", cp.TimerEventDefinitionWaitingForAnswerHash)
 	t.SetTimeDuration()
 	t.TimeDuration[0].SetTimerDefinitionType()
 	t.TimeDuration[0].SetTimerDefinition("PT1M")
@@ -717,7 +753,7 @@ func (cp *collaborativeProcess) setReceiptWarrantyRefusal() {
 	// assign
 	e, d := cp.GetReceiptWarrantyRefusal()
 	// element
-	e.SetID(cp.ReceiptWarrantyRefusalHash)
+	e.SetID("activity", cp.ReceiptWarrantyRefusalHash)
 	e.SetName("Receipt warranty refusal")
 	// incoming
 	e.SetIncoming(1)
@@ -747,7 +783,7 @@ func (cp *collaborativeProcess) fromCustomerStartEvent() {
 	// assign
 	e, d := cp.GetFromCustomerStartEvent()
 	// element
-	e.SetID(cp.FromCustomerStartEventHash)
+	e.SetID("flow", cp.FromCustomerStartEventHash)
 	e.SetSourceRef("event", cp.CustomerStartEventHash)
 	e.SetTargetRef("activity", cp.NoticeOfDefectHash)
 	// edge
@@ -763,7 +799,7 @@ func (cp *collaborativeProcess) fromNoticeOfDefect() {
 	// assign
 	e, d := cp.GetFromNoticeOfDefect()
 	// element
-	e.SetID(cp.FromNoticeOfDefectHash)
+	e.SetID("flow", cp.FromNoticeOfDefectHash)
 	e.SetSourceRef("activity", cp.NoticeOfDefectHash)
 	e.SetTargetRef("event", cp.WaitingForAnswerHash)
 	// edge
@@ -779,7 +815,7 @@ func (cp *collaborativeProcess) fromWaitingForAnswer() {
 	// assign
 	e, d := cp.GetFromWaitingForAnswer()
 	// element
-	e.SetID(cp.FromWaitingForAnswerHash)
+	e.SetID("flow", cp.FromWaitingForAnswerHash)
 	e.SetSourceRef("event", cp.WaitingForAnswerHash)
 	e.SetTargetRef("activity", cp.ReceiptWarrantyRefusalHash)
 	// edge
@@ -795,7 +831,7 @@ func (cp *collaborativeProcess) fromReceiptWarrantyRefusal() {
 	// assign
 	e, d := cp.GetFromReceiptWarrantyRefusal()
 	// element
-	e.SetID(cp.FromReceiptWarrantyRefusalHash)
+	e.SetID("flow", cp.FromReceiptWarrantyRefusalHash)
 	e.SetSourceRef("activity", cp.ReceiptWarrantyRefusalHash)
 	e.SetTargetRef("event", cp.CustomerEndEventHash)
 	// edge
@@ -813,7 +849,7 @@ func (cp *collaborativeProcess) setDiagram() {
 	cp.GetDiagram().SetID(n)
 	// plane attributes
 	p := cp.GetPlane()
-	p.SetID(n)
+	p.SetID("plane", n)
 	p.SetElement("id", cp.CollaborationID)
 }
 
@@ -835,7 +871,7 @@ func (cp collaborativeProcess) GetCustomerSupportProcess() *models.Process {
 }
 
 // GetCustomerSupportStartEvent ...
-func (cp collaborativeProcess) GetCustomerSupportStartEvent() (*models.StartEvent, *models.Shape) {
+func (cp collaborativeProcess) GetCustomerSupportStartEvent() (*events.StartEvent, *models.Shape) {
 	start := cp.GetCustomerSupportProcess().GetStartEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCustomerSupportStartEvent(plane)
@@ -843,7 +879,7 @@ func (cp collaborativeProcess) GetCustomerSupportStartEvent() (*models.StartEven
 }
 
 // GetCustomerSupportEndEvent ...
-func (cp collaborativeProcess) GetCustomerSupportEndEvent() (*models.EndEvent, *models.Shape) {
+func (cp collaborativeProcess) GetCustomerSupportEndEvent() (*events.EndEvent, *models.Shape) {
 	end := cp.GetCustomerSupportProcess().GetEndEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCustomerSupportEndEvent(plane)
@@ -851,7 +887,7 @@ func (cp collaborativeProcess) GetCustomerSupportEndEvent() (*models.EndEvent, *
 }
 
 // GetCheckIncomingClaim ...
-func (cp collaborativeProcess) GetCheckIncomingClaim() (*models.Task, *models.Shape) {
+func (cp collaborativeProcess) GetCheckIncomingClaim() (*activities.Task, *models.Shape) {
 	task := cp.GetCustomerSupportProcess().GetTask(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCheckIncomingClaim(plane)
@@ -859,7 +895,7 @@ func (cp collaborativeProcess) GetCheckIncomingClaim() (*models.Task, *models.Sh
 }
 
 // GetDenyWarrantyClaim ...
-func (cp collaborativeProcess) GetDenyWarrantyClaim() (*models.Task, *models.Shape) {
+func (cp collaborativeProcess) GetDenyWarrantyClaim() (*activities.Task, *models.Shape) {
 	task := cp.GetCustomerSupportProcess().GetTask(1)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeDenyWarrantyClaim(plane)
@@ -867,7 +903,7 @@ func (cp collaborativeProcess) GetDenyWarrantyClaim() (*models.Task, *models.Sha
 }
 
 // GetFromCustomerSupportStartEvent ...
-func (cp collaborativeProcess) GetFromCustomerSupportStartEvent() (*models.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromCustomerSupportStartEvent() (*marker.SequenceFlow, *models.Edge) {
 	flow := cp.GetCustomerSupportProcess().GetSequenceFlow(0)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromCustomerSupportStartEvent(plane)
@@ -875,7 +911,7 @@ func (cp collaborativeProcess) GetFromCustomerSupportStartEvent() (*models.Seque
 }
 
 // GetFromCheckIncomingClaim ...
-func (cp collaborativeProcess) GetFromCheckIncomingClaim() (*models.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromCheckIncomingClaim() (*marker.SequenceFlow, *models.Edge) {
 	flow := cp.GetCustomerSupportProcess().GetSequenceFlow(1)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromCheckIncomingClaim(plane)
@@ -883,7 +919,7 @@ func (cp collaborativeProcess) GetFromCheckIncomingClaim() (*models.SequenceFlow
 }
 
 // GetFromDenyWarrantyClaim ...
-func (cp collaborativeProcess) GetFromDenyWarrantyClaim() (*models.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromDenyWarrantyClaim() (*marker.SequenceFlow, *models.Edge) {
 	flow := cp.GetCustomerSupportProcess().GetSequenceFlow(2)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromDenyWarrantyClaim(plane)
@@ -903,7 +939,7 @@ func (cp collaborativeProcess) GetCustomerParticipant(e *models.Collaboration) *
 }
 
 // GetCustomerStartEvent ...
-func (cp collaborativeProcess) GetCustomerStartEvent() (*models.StartEvent, *models.Shape) {
+func (cp collaborativeProcess) GetCustomerStartEvent() (*events.StartEvent, *models.Shape) {
 	start := cp.GetCustomerProcess().GetStartEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCustomerStartEvent(plane)
@@ -911,7 +947,7 @@ func (cp collaborativeProcess) GetCustomerStartEvent() (*models.StartEvent, *mod
 }
 
 // GetCustomerEndEvent ...
-func (cp collaborativeProcess) GetCustomerEndEvent() (*models.EndEvent, *models.Shape) {
+func (cp collaborativeProcess) GetCustomerEndEvent() (*events.EndEvent, *models.Shape) {
 	end := cp.GetCustomerProcess().GetEndEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCustomerEndEvent(plane)
@@ -919,7 +955,7 @@ func (cp collaborativeProcess) GetCustomerEndEvent() (*models.EndEvent, *models.
 }
 
 // GetNoticeOfDefect ...
-func (cp collaborativeProcess) GetNoticeOfDefect() (*models.Task, *models.Shape) {
+func (cp collaborativeProcess) GetNoticeOfDefect() (*activities.Task, *models.Shape) {
 	task := cp.GetCustomerProcess().GetTask(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeNoticeOfDefect(plane)
@@ -927,7 +963,7 @@ func (cp collaborativeProcess) GetNoticeOfDefect() (*models.Task, *models.Shape)
 }
 
 // GetWaitingForAnswer ...
-func (cp collaborativeProcess) GetWaitingForAnswer() (*models.IntermediateCatchEvent, *models.Shape) {
+func (cp collaborativeProcess) GetWaitingForAnswer() (*events.IntermediateCatchEvent, *models.Shape) {
 	timer := cp.GetCustomerProcess().GetIntermediateCatchEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeWaitingForAnswer(plane)
@@ -935,13 +971,13 @@ func (cp collaborativeProcess) GetWaitingForAnswer() (*models.IntermediateCatchE
 }
 
 // GetWaitingForAnswerTimerEventDefinition ...
-func (cp collaborativeProcess) GetWaitingForAnswerTimerEventDefinition(e *models.IntermediateCatchEvent) *models.TimerEventDefinition {
+func (cp collaborativeProcess) GetWaitingForAnswerTimerEventDefinition(e *events.IntermediateCatchEvent) *events.TimerEventDefinition {
 	e.SetTimerEventDefinition()
 	return e.GetTimerEventDefinition()
 }
 
 // GetReceiptWarrantyRefusal ...
-func (cp collaborativeProcess) GetReceiptWarrantyRefusal() (*models.Task, *models.Shape) {
+func (cp collaborativeProcess) GetReceiptWarrantyRefusal() (*activities.Task, *models.Shape) {
 	task := cp.GetCustomerProcess().GetTask(1)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeReceiptWarrantyRefusal(plane)
@@ -949,7 +985,7 @@ func (cp collaborativeProcess) GetReceiptWarrantyRefusal() (*models.Task, *model
 }
 
 // GetFromCustomerStartEvent ...
-func (cp collaborativeProcess) GetFromCustomerStartEvent() (*models.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromCustomerStartEvent() (*marker.SequenceFlow, *models.Edge) {
 	flow := cp.GetCustomerProcess().GetSequenceFlow(0)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromCustomerStartEvent(plane)
@@ -957,7 +993,7 @@ func (cp collaborativeProcess) GetFromCustomerStartEvent() (*models.SequenceFlow
 }
 
 // GetFromNoticeOfDefect ...
-func (cp collaborativeProcess) GetFromNoticeOfDefect() (*models.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromNoticeOfDefect() (*marker.SequenceFlow, *models.Edge) {
 	flow := cp.GetCustomerProcess().GetSequenceFlow(1)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromNoticeOfDefect(plane)
@@ -965,7 +1001,7 @@ func (cp collaborativeProcess) GetFromNoticeOfDefect() (*models.SequenceFlow, *m
 }
 
 // GetFromWaitingForAnswer ...
-func (cp collaborativeProcess) GetFromWaitingForAnswer() (*models.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromWaitingForAnswer() (*marker.SequenceFlow, *models.Edge) {
 	flow := cp.GetCustomerProcess().GetSequenceFlow(2)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromWaitingForAnswer(plane)
@@ -973,7 +1009,7 @@ func (cp collaborativeProcess) GetFromWaitingForAnswer() (*models.SequenceFlow, 
 }
 
 // GetFromReceiptWarrantyRefusal ...
-func (cp collaborativeProcess) GetFromReceiptWarrantyRefusal() (*models.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromReceiptWarrantyRefusal() (*marker.SequenceFlow, *models.Edge) {
 	flow := cp.GetCustomerProcess().GetSequenceFlow(3)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromReceiptWarrantyRefusal(plane)
@@ -983,12 +1019,12 @@ func (cp collaborativeProcess) GetFromReceiptWarrantyRefusal() (*models.Sequence
 /**** Messages ****/
 
 // GetMessageClaim ...
-func (cp collaborativeProcess) GetMessageClaim() *models.MessageFlow {
+func (cp collaborativeProcess) GetMessageClaim() *marker.MessageFlow {
 	return cp.GetCollaboration().GetMessageFlow(0)
 }
 
 // GetMessageRefusal ...
-func (cp collaborativeProcess) GetMessageRefusal() *models.MessageFlow {
+func (cp collaborativeProcess) GetMessageRefusal() *marker.MessageFlow {
 	return cp.GetCollaboration().GetMessageFlow(1)
 }
 

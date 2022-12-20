@@ -129,7 +129,7 @@ func (simpleModel002 *SimpleModel002) SetStartEvent() {
 // SetTask ...
 func (simpleModel002 *SimpleModel002) SetTask() {
 	// generics
-	simpleModel002.def.Process[0].Task[0].SetID(simpleModel002.TaskHash)
+	simpleModel002.def.Process[0].Task[0].SetID("activity", simpleModel002.TaskHash)
 	// incoming
 	simpleModel002.def.Process[0].Task[0].SetIncoming(1)
 	simpleModel002.def.Process[0].Task[0].Incoming[0].SetFlow(simpleModel002.FromStartEvent)
@@ -165,7 +165,7 @@ func (simpleModel002 *SimpleModel002) SetEndEvent() {
 // SetFromStartEventSequenceFlow ...
 func (simpleModel002 *SimpleModel002) SetFromStartEventSequenceFlow() {
 	// generics
-	simpleModel002.def.Process[0].SequenceFlow[0].SetID(simpleModel002.FromStartEvent)
+	simpleModel002.def.Process[0].SequenceFlow[0].SetID("flow", simpleModel002.FromStartEvent)
 	simpleModel002.def.Process[0].SequenceFlow[0].SetSourceRef("startevent", simpleModel002.StartEventCounter)
 	simpleModel002.def.Process[0].SequenceFlow[0].SetTargetRef("activity", simpleModel002.TaskHash)
 	// shape attributes
@@ -180,7 +180,7 @@ func (simpleModel002 *SimpleModel002) SetFromStartEventSequenceFlow() {
 // SetFromTaskSequenceFlow ...
 func (simpleModel002 *SimpleModel002) SetFromTaskSequenceFlow() {
 	// generics
-	simpleModel002.def.Process[0].SequenceFlow[1].SetID(simpleModel002.FromTask)
+	simpleModel002.def.Process[0].SequenceFlow[1].SetID("flow", simpleModel002.FromTask)
 	simpleModel002.def.Process[0].SequenceFlow[1].SetSourceRef("activity", simpleModel002.TaskHash)
 	simpleModel002.def.Process[0].SequenceFlow[1].SetTargetRef("evemt", simpleModel002.EndEventHash)
 	// shape attributes
@@ -199,7 +199,7 @@ func (simpleModel002 *SimpleModel002) SetDiagram() {
 	simpleModel002.def.Diagram[0].SetID(n)
 	// plane attributes
 	p := simpleModel002.getPlane()
-	p.SetID(n)
+	p.SetID("plane", n)
 	p.SetElement("collaboration", simpleModel002.CollaborationHash)
 }
 

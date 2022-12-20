@@ -2,6 +2,22 @@ package models
 
 import "fmt"
 
+// ShapeRepository ...
+type ShapeRepository interface {
+	SetID(typ string, suffix interface{})
+	SetElement(typ string, suffix interface{})
+	SetIsHorizontal(isHorizontal bool)
+	SetBounds()
+	SetLabel()
+
+	GetID() *string
+	GetElement() *string
+	GetIsHorizontal() *bool
+
+	GetBounds() *Bounds
+	GetLabel() *Label
+}
+
 // Shape ...
 type Shape struct {
 	ID           string   `xml:"id,attr" json:"-"`
@@ -10,6 +26,23 @@ type Shape struct {
 	Bounds       []Bounds `xml:"dc:Bounds" json:"-"`
 	Label        []Label  `xml:"bpmndi:BPMNLabel" json:"-"`
 }
+
+// TShape ...
+type TShape struct {
+	ID           string   `xml:"id,attr" json:"-"`
+	Element      string   `xml:"bpmnElement,attr" json:"-"`
+	IsHorizontal bool     `xml:"isHorizontal,attr,omitempty" json:"-"`
+	Bounds       []Bounds `xml:"Bounds" json:"-"`
+	Label        []Label  `xml:"BPMNLabel" json:"-"`
+}
+
+func NewShape() ShapeRepository {
+	return &Shape{}
+}
+
+/**
+ * Default Setters
+ */
 
 /* Attributes */
 
@@ -37,7 +70,6 @@ func (shape *Shape) SetID(typ string, suffix interface{}) {
 		shape.ID = fmt.Sprintf("%s_di", suffix)
 		break
 	}
-
 }
 
 // SetElement ...
@@ -69,7 +101,7 @@ func (shape *Shape) SetIsHorizontal(isHorizontal bool) {
 	shape.IsHorizontal = isHorizontal
 }
 
-/* Elements */
+/*** Make Elements ***/
 
 /** DC **/
 
@@ -83,4 +115,43 @@ func (shape *Shape) SetBounds() {
 // SetLabel ...
 func (shape *Shape) SetLabel() {
 	shape.Label = make([]Label, 1)
+}
+
+/**
+ * Default Getters
+ */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetID ...
+func (shape Shape) GetID() *string {
+	return &shape.ID
+}
+
+// GetElement ...
+func (shape Shape) GetElement() *string {
+	return &shape.Element
+}
+
+// GetIsHorizontal ...
+func (shape Shape) GetIsHorizontal() *bool {
+	return &shape.IsHorizontal
+}
+
+/* Elements */
+
+/** DC **/
+
+// SetBounds ...
+func (shape Shape) GetBounds() *Bounds {
+	return &shape.Bounds[0]
+}
+
+/** BPMNDI **/
+
+// SetLabel ...
+func (shape Shape) GetLabel() *Label {
+	return &shape.Label[0]
 }

@@ -16,7 +16,7 @@ func (factory *bpmnFactory) toJSON() error {
 	var err error
 
 	// marshal json to byte slice
-	b, _ := json.MarshalIndent(&factory.Def, " ", "  ")
+	b, _ := json.MarshalIndent(&factory.Repo, " ", "  ")
 
 	// create .json file
 	f, err := os.Create("files/json/" + factory.Options.CurrentFile + ".json")

@@ -2,7 +2,9 @@ package models
 
 import (
 	"encoding/xml"
+	"fmt"
 
+	"github.com/deemount/gobpmn/models/marker"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -17,7 +19,9 @@ type DefinitionsRepository interface {
 	SetXSD()
 	SetXSI()
 	SetXsiSchemaLocation()
-	SetID(suffix string)
+
+	SetID(typ string, suffix interface{})
+
 	SetTargetNamespace()
 	SetCamundaSchema()
 	SetZeebeSchema()
@@ -36,52 +40,54 @@ type DefinitionsRepository interface {
 
 	SetDefaultAttributes()
 
-	GetID() string
+	GetID() *string
+
 	GetCollaboration() *Collaboration
 	GetProcess(num int) *Process
-	GetCategory(num int) *Category
-	GetMessage(num int) *Message
-	GetSignal(num int) *Signal
+	GetCategory(num int) *marker.Category
+	GetMessage(num int) *marker.Message
+	GetSignal(num int) *marker.Signal
 	GetDiagram(num int) *Diagram
 }
 
 // Definitions represents the root element
 type Definitions struct {
-	XMLName                         xml.Name        `xml:"bpmn:definitions" json:"-"`
-	Bpmn                            string          `xml:"xmlns:bpmn,attr" json:"-"`
-	Xsd                             string          `xml:"xmlns:xsd,attr,omitempty" json:"-"`
-	Xsi                             string          `xml:"xmlns:xsi,omitempty" json:"-"`
-	XsiSchemaLocation               string          `xml:"xsi:schemaLocation,attr,omitempty" json:"-"`
-	BpmnDI                          string          `xml:"xmlns:bpmndi,attr" json:"-"`
-	OmgDI                           string          `xml:"xmlns:omgdi,attr,omitempty" json:"-"`
-	DC                              string          `xml:"xmlns:dc,attr,omitempty" json:"-"`
-	OmgDC                           string          `xml:"xmlns:omgdc,attr,omitempty" json:"-"`
-	Bioc                            string          `xml:"xmlns:bioc,attr,omitempty" json:"-"`
-	CamundaSchema                   string          `xml:"xmlns:camunda,attr,omitempty" json:"-"`
-	Zeebe                           string          `xml:"xmlns:zeebe,omitempty" json:"-"`
-	Modeler                         string          `xml:"xmlns:modeler,omitempty" json:"-"`
-	ModelerExecutionPlatform        string          `xml:"modeler:executionPlatform,omitempty" json:"-"`
-	ModelerExecutionPlatformVersion string          `xml:"modeler:executionPlatformVersion,omitempty" json:"-"`
-	ID                              string          `xml:"id,attr" json:"id"`
-	TargetNamespace                 string          `xml:"targetNamespace,attr" json:"-"`
-	Exporter                        string          `xml:"exporter,attr,omitempty" json:"-"`
-	ExporterVersion                 string          `xml:"exporterVersion,attr,omitempty" json:"-"`
-	Collaboration                   []Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration"`
-	Process                         []Process       `xml:"bpmn:process,omitempty" json:"process"`
-	Category                        []Category      `xml:"bpmn:category,omitempty" json:"category,omitempty"`
-	Msg                             []Message       `xml:"bpmn:message,omitempty" json:"message,omitempty"`
-	Signal                          []Signal        `xml:"bpmn:signal,omitempty" json:"signal,omitempty"`
-	Diagram                         []Diagram       `xml:"bpmndi:BPMNDiagram,omitempty" json:"-"`
+	XMLName                         xml.Name          `xml:"bpmn:definitions" json:"-"`
+	Bpmn                            string            `xml:"xmlns:bpmn,attr" json:"-"`
+	Xsd                             string            `xml:"xmlns:xsd,attr,omitempty" json:"-"`
+	Xsi                             string            `xml:"xmlns:xsi,omitempty" json:"-"`
+	XsiSchemaLocation               string            `xml:"xsi:schemaLocation,attr,omitempty" json:"-"`
+	BpmnDI                          string            `xml:"xmlns:bpmndi,attr" json:"-"`
+	OmgDI                           string            `xml:"xmlns:omgdi,attr,omitempty" json:"-"`
+	DC                              string            `xml:"xmlns:dc,attr,omitempty" json:"-"`
+	OmgDC                           string            `xml:"xmlns:omgdc,attr,omitempty" json:"-"`
+	Bioc                            string            `xml:"xmlns:bioc,attr,omitempty" json:"-"`
+	CamundaSchema                   string            `xml:"xmlns:camunda,attr,omitempty" json:"-"`
+	Zeebe                           string            `xml:"xmlns:zeebe,omitempty" json:"-"`
+	Modeler                         string            `xml:"xmlns:modeler,omitempty" json:"-"`
+	ModelerExecutionPlatform        string            `xml:"modeler:executionPlatform,omitempty" json:"-"`
+	ModelerExecutionPlatformVersion string            `xml:"modeler:executionPlatformVersion,omitempty" json:"-"`
+	ID                              string            `xml:"id,attr" json:"id"`
+	TargetNamespace                 string            `xml:"targetNamespace,attr" json:"-"`
+	Exporter                        string            `xml:"exporter,attr,omitempty" json:"-"`
+	ExporterVersion                 string            `xml:"exporterVersion,attr,omitempty" json:"-"`
+	Collaboration                   []Collaboration   `xml:"bpmn:collaboration,omitempty" json:"collaboration"`
+	Process                         []Process         `xml:"bpmn:process,omitempty" json:"process"`
+	Category                        []marker.Category `xml:"bpmn:category,omitempty" json:"category,omitempty"`
+	Msg                             []marker.Message  `xml:"bpmn:message,omitempty" json:"message,omitempty"`
+	Signal                          []marker.Signal   `xml:"bpmn:signal,omitempty" json:"signal,omitempty"`
+	Diagram                         []Diagram         `xml:"bpmndi:BPMNDiagram,omitempty" json:"-"`
 }
 
+// TDefinitions ...
 type TDefinitions struct {
-	XMLName       xml.Name         `xml:"definitions" json:"-"`
-	ID            string           `xml:"id,attr" json:"id"`
-	Collaboration []TCollaboration `xml:"collaboration,omitempty" json:"collaboration"`
-	Process       []TProcess       `xml:"process,omitempty" json:"process"`
-	Category      []Category       `xml:"category,omitempty" json:"category,omitempty"`
-	Msg           []Message        `xml:"message,omitempty" json:"message,omitempty"`
-	Signal        []Signal         `xml:"signal,omitempty" json:"signal,omitempty"`
+	XMLName       xml.Name           `xml:"definitions" json:"-"`
+	ID            string             `xml:"id,attr" json:"id"`
+	Collaboration []TCollaboration   `xml:"collaboration,omitempty" json:"collaboration"`
+	Process       []TProcess         `xml:"process,omitempty" json:"process"`
+	Category      []marker.TCategory `xml:"category,omitempty" json:"category,omitempty"`
+	Msg           []marker.TMessage  `xml:"message,omitempty" json:"message,omitempty"`
+	Signal        []marker.TSignal   `xml:"signal,omitempty" json:"signal,omitempty"`
 }
 
 func NewDefinitions() DefinitionsRepository {
@@ -141,9 +147,15 @@ func (definitions *Definitions) SetXsiSchemaLocation() {
 	definitions.XsiSchemaLocation = "http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
 }
 
-// SetDefinitionsID ...
-func (definitions *Definitions) SetID(suffix string) {
-	definitions.ID = "Definitions_" + suffix
+// SetID ...
+func (definitions *Definitions) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "definitions":
+		definitions.ID = fmt.Sprintf("Definitions_%v", suffix)
+		break
+	case "id":
+		definitions.ID = fmt.Sprintf("%s", suffix)
+	}
 }
 
 // SetTargetNamespace ...
@@ -206,17 +218,17 @@ func (definitions *Definitions) SetProcess(num int) {
 
 // SetCategory ...
 func (definitions *Definitions) SetCategory(num int) {
-	definitions.Category = make([]Category, num)
+	definitions.Category = make([]marker.Category, num)
 }
 
 // SetMessage ...
 func (definitions *Definitions) SetMessage(num int) {
-	definitions.Msg = make([]Message, num)
+	definitions.Msg = make([]marker.Message, num)
 }
 
 // SetSignal ...
 func (definitions *Definitions) SetSignal(num int) {
-	definitions.Signal = make([]Signal, num)
+	definitions.Signal = make([]marker.Signal, num)
 }
 
 /** BPMNDI **/
@@ -236,7 +248,7 @@ func (definitions *Definitions) SetDefaultAttributes() {
 	definitions.SetBpmn()
 	definitions.SetBpmnDI()
 	definitions.SetDC()
-	definitions.SetID(definitionsHash)
+	definitions.SetID("definitions", definitionsHash)
 	definitions.SetTargetNamespace()
 }
 
@@ -249,8 +261,8 @@ func (definitions *Definitions) SetDefaultAttributes() {
 /** BPMN **/
 
 // GetID ...
-func (definitions Definitions) GetID() string {
-	return definitions.ID
+func (definitions Definitions) GetID() *string {
+	return &definitions.ID
 }
 
 /* Elements */
@@ -268,17 +280,17 @@ func (definitions Definitions) GetProcess(num int) *Process {
 }
 
 // GetCategory ...
-func (definitions Definitions) GetCategory(num int) *Category {
+func (definitions Definitions) GetCategory(num int) *marker.Category {
 	return &definitions.Category[num]
 }
 
 // GetMessage ...
-func (definitions Definitions) GetMessage(num int) *Message {
+func (definitions Definitions) GetMessage(num int) *marker.Message {
 	return &definitions.Msg[num]
 }
 
 // GetSignal ...
-func (definitions Definitions) GetSignal(num int) *Signal {
+func (definitions Definitions) GetSignal(num int) *marker.Signal {
 	return &definitions.Signal[num]
 }
 

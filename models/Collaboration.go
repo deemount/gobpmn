@@ -2,29 +2,47 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/camunda"
+	"github.com/deemount/gobpmn/models/marker"
 )
 
+// CollaborationRepository ...
 type CollaborationRepository interface {
-	SetID(suffix string)
-	GetID() string
+	SetID(typ string, suffix interface{})
+	SetDocumentation()
+	SetExtensionElements()
+	SetParticipant(num int)
+	SetMessageFlow(num int)
+
+	GetID() *string
+	GetDocumentation() *attributes.Documentation
+	GetExtensionElements() *camunda.ExtensionElements
+	GetParticipant(num int) *Participant
+	GetMessageFlow(num int) *marker.MessageFlow
 }
 
 // Collaboration ...
 type Collaboration struct {
-	ID                string              `xml:"id,attr" json:"id"`
-	Documentation     []Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Participant       []Participant       `xml:"bpmn:participant" json:"participant,omitempty"`
-	MessageFlow       []MessageFlow       `xml:"bpmn:messageFlow,omitempty" json:"messageFlow,omitempty"`
+	ID                string                      `xml:"id,attr" json:"id"`
+	Documentation     []attributes.Documentation  `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []camunda.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Participant       []Participant               `xml:"bpmn:participant" json:"participant,omitempty"`
+	MessageFlow       []marker.MessageFlow        `xml:"bpmn:messageFlow,omitempty" json:"messageFlow,omitempty"`
 }
 
 // TCollaboration ...
 type TCollaboration struct {
-	ID                string              `xml:"id,attr" json:"id"`
-	Documentation     []Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Participant       []TParticipant      `xml:"participant" json:"participant,omitempty"`
-	MessageFlow       []TMessageFlow      `xml:"messageFlow,omitempty" json:"messageFlow,omitempty"`
+	ID                string                       `xml:"id,attr" json:"id"`
+	Documentation     []attributes.Documentation   `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []camunda.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Participant       []TParticipant               `xml:"participant" json:"participant,omitempty"`
+	MessageFlow       []marker.TMessageFlow        `xml:"messageFlow,omitempty" json:"messageFlow,omitempty"`
+}
+
+func NewCollaboration() CollaborationRepository {
+	return &Collaboration{}
 }
 
 /**
@@ -36,10 +54,10 @@ type TCollaboration struct {
 /** BPMN **/
 
 // SetID ...
-func (collaboration *Collaboration) SetID(typ string, suffix string) {
+func (collaboration *Collaboration) SetID(typ string, suffix interface{}) {
 	switch typ {
 	case "collaboration":
-		collaboration.ID = fmt.Sprintf("Collaboration_%s", suffix)
+		collaboration.ID = fmt.Sprintf("Collaboration_%v", suffix)
 		break
 	case "id":
 		collaboration.ID = fmt.Sprintf("%s", suffix)
@@ -47,18 +65,18 @@ func (collaboration *Collaboration) SetID(typ string, suffix string) {
 	}
 }
 
-/* Elements */
+/* Make Elements */
 
 /** BPMN **/
 
 // SetDocumentation ...
 func (collaboration *Collaboration) SetDocumentation() {
-	collaboration.Documentation = make([]Documentation, 1)
+	collaboration.Documentation = make([]attributes.Documentation, 1)
 }
 
 // SetExtensionElements ...
 func (collaboration *Collaboration) SetExtensionElements() {
-	collaboration.ExtensionElements = make([]ExtensionElements, 1)
+	collaboration.ExtensionElements = make([]camunda.ExtensionElements, 1)
 }
 
 // SetParticipant ...
@@ -68,7 +86,7 @@ func (collaboration *Collaboration) SetParticipant(num int) {
 
 // SetMessageFlow ...
 func (collaboration *Collaboration) SetMessageFlow(num int) {
-	collaboration.MessageFlow = make([]MessageFlow, num)
+	collaboration.MessageFlow = make([]marker.MessageFlow, num)
 }
 
 /**
@@ -80,8 +98,8 @@ func (collaboration *Collaboration) SetMessageFlow(num int) {
 /** BPMN **/
 
 // GetID ...
-func (collaboration Collaboration) GetID() string {
-	return collaboration.ID
+func (collaboration Collaboration) GetID() *string {
+	return &collaboration.ID
 }
 
 /* Elements */
@@ -89,12 +107,12 @@ func (collaboration Collaboration) GetID() string {
 /** BPMN **/
 
 // GetDocumentation ...
-func (collaboration Collaboration) GetDocumentation() *Documentation {
+func (collaboration Collaboration) GetDocumentation() *attributes.Documentation {
 	return &collaboration.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (collaboration Collaboration) GetExtensionElements() *ExtensionElements {
+func (collaboration Collaboration) GetExtensionElements() *camunda.ExtensionElements {
 	return &collaboration.ExtensionElements[0]
 }
 
@@ -104,6 +122,6 @@ func (collaboration Collaboration) GetParticipant(num int) *Participant {
 }
 
 // GetMessageFlow ...
-func (collaboration Collaboration) GetMessageFlow(num int) *MessageFlow {
+func (collaboration Collaboration) GetMessageFlow(num int) *marker.MessageFlow {
 	return &collaboration.MessageFlow[num]
 }

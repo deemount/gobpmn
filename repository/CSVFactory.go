@@ -22,7 +22,7 @@ func (factory *bpmnFactory) toCSV() error {
 	}
 	defer f.Close()
 
-	err = gocsv.MarshalFile(&factory.Def, f)
+	err = gocsv.MarshalFile(&factory.Repo, f)
 	if err != nil {
 		panic(err)
 	}
