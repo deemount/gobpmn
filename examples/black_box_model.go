@@ -8,8 +8,10 @@ package examples
  **/
 
 import (
-	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/canvas"
+	"github.com/deemount/gobpmn/models/core"
 	"github.com/deemount/gobpmn/models/marker"
+	"github.com/deemount/gobpmn/models/pool"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -50,7 +52,7 @@ type blackBoxMessage struct {
 }
 
 type blackBoxModel struct {
-	def models.DefinitionsRepository
+	def core.DefinitionsRepository
 	blackBoxPool
 	blackBoxMessage
 }
@@ -64,7 +66,7 @@ type blackBoxModel struct {
 
 func NewBlackBoxModel() BlackBoxModel {
 	return &blackBoxModel{
-		def: new(models.Definitions),
+		def: new(core.Definitions),
 		blackBoxPool: blackBoxPool{
 			CollaborationID:     utils.GenerateHash(),
 			CustomerID:          utils.GenerateHash(),
@@ -105,7 +107,7 @@ func (bb blackBoxModel) Create() blackBoxModel {
 }
 
 // Def ...
-func (bb *blackBoxModel) Def() *models.DefinitionsRepository {
+func (bb *blackBoxModel) Def() *core.DefinitionsRepository {
 	return &bb.def
 }
 
@@ -141,7 +143,8 @@ func (bb *blackBoxModel) setInnerElements() {
 	collaboration.SetParticipant(3)
 	collaboration.SetMessageFlow(5)
 
-	bb.GetDiagram().SetPlane()
+	diagram := bb.GetDiagram()
+	diagram.SetPlane()
 	plane := bb.GetPlane()
 
 	plane.SetShape(3)
@@ -301,7 +304,8 @@ func (bb *blackBoxModel) setPoolManufacturer() {
 
 func (bb *blackBoxModel) setDiagram() {
 	var n int64 = 1
-	bb.GetDiagram().SetID(n)
+	diagram := bb.GetDiagram()
+	diagram.SetID("diagram", n)
 	p := bb.GetPlane()
 	p.SetID("plane", n)
 	p.SetElement("collaboration", bb.CollaborationID)
@@ -320,22 +324,22 @@ func (bb *blackBoxModel) setDiagram() {
  * @GetMessageReplacementSupply -> models.MessageFlow
  * @GetMessageConfirmation -> models.MessageFlow
  * @GetMessageShipment -> models.MessageFlow
- * @GetDiagram -> models.Diagram
+ * @GetDiagram -> canvas.Diagram
 **/
 
-func (bb blackBoxModel) GetCollaboration() *models.Collaboration {
+func (bb blackBoxModel) GetCollaboration() *pool.Collaboration {
 	return bb.def.GetCollaboration()
 }
 
-func (bb blackBoxModel) GetParticipantCustomer(e *models.Collaboration) *models.Participant {
+func (bb blackBoxModel) GetParticipantCustomer(e *pool.Collaboration) *pool.Participant {
 	return e.GetParticipant(0)
 }
 
-func (bb blackBoxModel) GetParticipantCustomerSupport(e *models.Collaboration) *models.Participant {
+func (bb blackBoxModel) GetParticipantCustomerSupport(e *pool.Collaboration) *pool.Participant {
 	return e.GetParticipant(1)
 }
 
-func (bb blackBoxModel) GetParticipantManufacturer(e *models.Collaboration) *models.Participant {
+func (bb blackBoxModel) GetParticipantManufacturer(e *pool.Collaboration) *pool.Participant {
 	return e.GetParticipant(2)
 }
 
@@ -359,42 +363,42 @@ func (bb blackBoxModel) GetMessageShipment() *marker.MessageFlow {
 	return bb.GetCollaboration().GetMessageFlow(4)
 }
 
-func (bb blackBoxModel) GetDiagram() *models.Diagram {
+func (bb blackBoxModel) GetDiagram() *canvas.Diagram {
 	return bb.def.GetDiagram(0)
 }
 
-func (bb blackBoxModel) GetPlane() *models.Plane {
+func (bb blackBoxModel) GetPlane() *canvas.Plane {
 	return bb.GetDiagram().GetPlane()
 }
 
-func (bb blackBoxModel) GetShapePoolCustomer(e *models.Plane) *models.Shape {
+func (bb blackBoxModel) GetShapePoolCustomer(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(0)
 }
 
-func (bb blackBoxModel) GetShapePoolCustomerSupport(e *models.Plane) *models.Shape {
+func (bb blackBoxModel) GetShapePoolCustomerSupport(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(1)
 }
 
-func (bb blackBoxModel) GetShapePoolManufacturer(e *models.Plane) *models.Shape {
+func (bb blackBoxModel) GetShapePoolManufacturer(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(2)
 }
 
-func (bb blackBoxModel) GetEdgeMessageOrder(e *models.Plane) *models.Edge {
+func (bb blackBoxModel) GetEdgeMessageOrder(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(0)
 }
 
-func (bb blackBoxModel) GetEdgeMessageRequestSpareParts(e *models.Plane) *models.Edge {
+func (bb blackBoxModel) GetEdgeMessageRequestSpareParts(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(1)
 }
 
-func (bb blackBoxModel) GetEdgeMessageReplacementSupply(e *models.Plane) *models.Edge {
+func (bb blackBoxModel) GetEdgeMessageReplacementSupply(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(2)
 }
 
-func (bb blackBoxModel) GetEdgeMessageConfirmation(e *models.Plane) *models.Edge {
+func (bb blackBoxModel) GetEdgeMessageConfirmation(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(3)
 }
 
-func (bb blackBoxModel) GetEdgeMessageShipment(e *models.Plane) *models.Edge {
+func (bb blackBoxModel) GetEdgeMessageShipment(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(4)
 }

@@ -4,7 +4,8 @@ import "fmt"
 
 // TextRepository ...
 type TextRepository interface {
-	SetText(text string)
+	SetContent(text string)
+	GetContent() string
 }
 
 // Text ...
@@ -25,7 +26,7 @@ func NewText() TextRepository {
 /** BPMN **/
 
 // SetText ...
-func (txt *Text) SetText(text string) {
+func (txt *Text) SetContent(text string) {
 	txt.Text = fmt.Sprintf("%s", text)
 }
 
@@ -38,6 +39,6 @@ func (txt *Text) SetText(text string) {
 /** BPMN **/
 
 // GetText ...
-func (txt *Text) GetText() *string {
-	return &txt.Text
+func (txt Text) GetContent() string {
+	return txt.Text
 }

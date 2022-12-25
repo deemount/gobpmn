@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/deemount/gobpmn/examples"
-	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/core"
 )
 
 // BpmnFactory ...
@@ -21,8 +21,8 @@ type bpmnFactory struct {
 	// options
 	Options BpmnOptions
 	// using pointer to interface and struct for more flexibel modelling
-	Repo *models.DefinitionsRepository
-	Def  *models.Definitions
+	Repo core.DefinitionsRepository
+	Def  *core.Definitions
 }
 
 type BpmnFactoryOption func(o BpmnOptions) BpmnOptions

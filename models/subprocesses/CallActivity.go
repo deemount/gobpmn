@@ -4,44 +4,24 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/camunda"
 	"github.com/deemount/gobpmn/models/loop"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
 // CallActivityRepository ...
 type CallActivityRepository interface {
-	SetID(typ string, suffix interface{})
-	SetName(name string)
+	SubprocessesBase
+
 	SetCalledElement(element string)
-
-	SetCamundaAsyncBefore(asyncBefore bool)
-	SetCamundaAsyncAfter(asyncAfter bool)
-	SetCamundaJobPriority(priority int)
-	SetCamundaCalledElementTenantID(tenantID string)
-	SetCamundaVariableMappingClass(class string)
-
-	SetDocumentation()
-	SetExtensionElements()
-	SetIncoming(num int)
-	SetOutgoing(num int)
-	SetStandardLoopCharacteristics()
-	SetMultiInstanceLoopCharacteristics()
-
-	GetID() *string
-	GetName() *string
 	GetCalledElement() *string
 
-	GetCamundaAsyncBefore() *bool
-	GetCamundaAsyncAfter() *bool
-	GetCamundaJobPriority() *int
+	SetCamundaCalledElementTenantID(tenantID string)
+	SetCamundaVariableMappingClass(class string)
 	GetCamundaCalledElementTenantID() *string
 	GetCamundaVariableMappingClass() *string
 
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *camunda.ExtensionElements
-	GetIncoming(num int) *marker.Incoming
-	GetOutgoing(num int) *marker.Outgoing
+	SetStandardLoopCharacteristics()
+	SetMultiInstanceLoopCharacteristics()
 	GetStandardLoopCharacteristics() *loop.StandardLoopCharacteristics
 	GetMultiInstanceLoopCharacteristics() *loop.MultiInstanceLoopCharacteristics
 }
@@ -57,7 +37,7 @@ type CallActivity struct {
 	CamundaCalledElementTenantID     string                                  `xml:"camunda:calledElementTenantId,attr,omitempty" json:"calledElementTenantId,omitempty"`
 	CamundaVariableMappingClass      string                                  `xml:"camunda:variableMappingClass,attr,omitempty" json:"variableMappingClass,omitempty"`
 	Documentation                    []attributes.Documentation              `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements                []camunda.ExtensionElements             `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ExtensionElements                []attributes.ExtensionElements          `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
 	Incoming                         []marker.Incoming                       `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
 	Outgoing                         []marker.Outgoing                       `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 	StandardLoopCharacteristics      []loop.StandardLoopCharacteristics      `xml:"bpmn:standardLoopCharacteristics,omitempty" json:"standardLoopCharacteristics,omitempty"`
@@ -75,7 +55,7 @@ type TCallActivity struct {
 	CamundaCalledElementTenantID     string                                  `xml:"calledElementTenantId,attr,omitempty" json:"calledElementTenantId,omitempty"`
 	CamundaVariableMappingClass      string                                  `xml:"variableMappingClass,attr,omitempty" json:"variableMappingClass,omitempty"`
 	Documentation                    []attributes.Documentation              `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements                []camunda.TExtensionElements            `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ExtensionElements                []attributes.TExtensionElements         `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 	Incoming                         []marker.Incoming                       `xml:"incoming,omitempty" json:"incoming,omitempty"`
 	Outgoing                         []marker.Outgoing                       `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
 	StandardLoopCharacteristics      []loop.StandardLoopCharacteristics      `xml:"standardLoopCharacteristics,omitempty" json:"standardLoopCharacteristics,omitempty"`
@@ -153,7 +133,7 @@ func (ca *CallActivity) SetDocumentation() {
 
 // SetExtensionElements ...
 func (ca *CallActivity) SetExtensionElements() {
-	ca.ExtensionElements = make([]camunda.ExtensionElements, 1)
+	ca.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 // SetIncoming ...
@@ -185,12 +165,12 @@ func (ca *CallActivity) SetMultiInstanceLoopCharacteristics() {
 /** BPMN **/
 
 // GetID ...
-func (ca CallActivity) GetID() *string {
+func (ca CallActivity) GetID() STR_PTR {
 	return &ca.ID
 }
 
 // GetName ...
-func (ca CallActivity) GetName() *string {
+func (ca CallActivity) GetName() STR_PTR {
 	return &ca.Name
 }
 
@@ -236,7 +216,7 @@ func (ca CallActivity) GetDocumentation() *attributes.Documentation {
 }
 
 // GetExtensionElements ...
-func (ca CallActivity) GetExtensionElements() *camunda.ExtensionElements {
+func (ca CallActivity) GetExtensionElements() *attributes.ExtensionElements {
 	return &ca.ExtensionElements[0]
 }
 

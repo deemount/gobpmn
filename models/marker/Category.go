@@ -4,35 +4,35 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/camunda"
 )
 
 // CategoryRepository ...
 type CategoryRepository interface {
-	SetID(typ string, suffix interface{})
+	MarkerID
+
+	SetCategoryValue()
+	GetCategoryValue() *CategoryValue
 
 	SetDocumentation()
 	SetExtensionElements()
-
-	SetCategoryValue()
-
-	GetID() *string
+	GetDocumentation() *attributes.Documentation
+	GetExtensionElements() *attributes.ExtensionElements
 }
 
 // Category ...
 type Category struct {
-	ID                string                      `xml:"id,attr,omitempty" json:"id"`
-	CategoryValue     []CategoryValue             `xml:"bpmn:categoryValue,omitempty" json:"categoryValue,omitempty"`
-	Documentation     []attributes.Documentation  `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []camunda.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ID                string                         `xml:"id,attr,omitempty" json:"id"`
+	CategoryValue     []CategoryValue                `xml:"bpmn:categoryValue,omitempty" json:"categoryValue,omitempty"`
+	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 // Category ...
 type TCategory struct {
-	ID                string                       `xml:"id,attr,omitempty" json:"id"`
-	CategoryValue     []CategoryValue              `xml:"categoryValue,omitempty" json:"categoryValue,omitempty"`
-	Documentation     []attributes.Documentation   `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []camunda.TExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ID                string                          `xml:"id,attr,omitempty" json:"id"`
+	CategoryValue     []CategoryValue                 `xml:"categoryValue,omitempty" json:"categoryValue,omitempty"`
+	Documentation     []attributes.Documentation      `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []attributes.TExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 func NewCategory() CategoryRepository {
@@ -71,7 +71,7 @@ func (category *Category) SetDocumentation() {
 
 // SetExtensionElements ...
 func (category *Category) SetExtensionElements() {
-	category.ExtensionElements = make([]camunda.ExtensionElements, 1)
+	category.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 /**
@@ -83,7 +83,7 @@ func (category *Category) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (category Category) GetID() *string {
+func (category Category) GetID() STR_PTR {
 	return &category.ID
 }
 
@@ -91,12 +91,17 @@ func (category Category) GetID() *string {
 
 /** BPMN **/
 
+// SetCategoryValue...
+func (category Category) GetCategoryValue() *CategoryValue {
+	return &category.CategoryValue[0]
+}
+
 // GetDocumentation ...
 func (category Category) GetDocumentation() *attributes.Documentation {
 	return &category.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (category Category) GetExtensionElements() *camunda.ExtensionElements {
+func (category Category) GetExtensionElements() *attributes.ExtensionElements {
 	return &category.ExtensionElements[0]
 }

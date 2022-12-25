@@ -6,7 +6,11 @@ package examples
  *
  * Import models and utils package to build the model
  **/
-import "github.com/deemount/gobpmn/models"
+import (
+	"github.com/deemount/gobpmn/models/canvas"
+	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/process"
+)
 
 /**************************************************************************************/
 /**
@@ -26,7 +30,7 @@ type privateBusinessTask struct{}
 type privateBusinessSequence struct{}
 
 type privateBusinessModel struct {
-	def *models.Definitions
+	def *core.Definitions
 	privateBusinessEvent
 	privateBusinessTask
 	privateBusinessSequence
@@ -34,7 +38,7 @@ type privateBusinessModel struct {
 
 func NewPrivateBusiness() PrivateBusiness {
 	return &privateBusinessModel{
-		def:                     new(models.Definitions),
+		def:                     new(core.Definitions),
 		privateBusinessEvent:    privateBusinessEvent{},
 		privateBusinessTask:     privateBusinessTask{},
 		privateBusinessSequence: privateBusinessSequence{},
@@ -55,7 +59,8 @@ func (pb *privateBusinessModel) setMainElements() {
 }
 
 func (pb *privateBusinessModel) setInnerElements() {
-	pb.GetDiagram().SetPlane()
+	diagram := pb.GetDiagram()
+	diagram.SetPlane()
 	plane := pb.GetPlane()
 	plane.SetShape(5)
 	plane.SetEdge(4)
@@ -65,14 +70,14 @@ func (pb *privateBusinessModel) setDefinitionsAttributes() {
 	pb.def.SetDefaultAttributes()
 }
 
-func (pb privateBusinessModel) GetProcess() *models.Process {
+func (pb privateBusinessModel) GetProcess() *process.Process {
 	return pb.def.GetProcess(0)
 }
 
-func (pb privateBusinessModel) GetDiagram() *models.Diagram {
+func (pb privateBusinessModel) GetDiagram() *canvas.Diagram {
 	return pb.def.GetDiagram(0)
 }
 
-func (pb privateBusinessModel) GetPlane() *models.Plane {
+func (pb privateBusinessModel) GetPlane() *canvas.Plane {
 	return pb.GetDiagram().GetPlane()
 }

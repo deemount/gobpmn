@@ -8,10 +8,16 @@ package examples
  **/
 
 import (
-	"github.com/deemount/gobpmn/models"
-	"github.com/deemount/gobpmn/models/activities"
-	"github.com/deemount/gobpmn/models/events"
+	"log"
+
+	"github.com/deemount/gobpmn/models/canvas"
+	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/events/definitions"
+	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/marker"
+	"github.com/deemount/gobpmn/models/pool"
+	"github.com/deemount/gobpmn/models/process"
+	"github.com/deemount/gobpmn/models/tasks"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -47,7 +53,7 @@ type CollaborativeProcess interface {
 
 // collaborativeProcess refers to models definition repository, globals and hashes
 type collaborativeProcess struct {
-	def models.DefinitionsRepository
+	def core.DefinitionsRepository
 	/**** Global ****/
 	collaborativeProcessPool
 	collaborativeProcessMessage
@@ -156,9 +162,10 @@ func NewCollaborativeProcess() CollaborativeProcess {
 	return &collaborativeProcess{
 		// you need to refer to the definitions struct to start building the model
 		// Notice:
-		// Also possible to use (look below)
-		// def: new(models.Definitions),
-		def: models.NewDefinitions(),
+		// Also possible to use (look below), but allocates memory
+		// def: new(models.Definitions), // use factory function, if zero value is insufficent
+		// def: core.NewCore(), // Notice: creates <Core></Core> element as root, which actually the unmarshaler isn't possible to parse
+		def: core.NewDefinitions(),
 		// Pool
 		collaborativeProcessPool: collaborativeProcessPool{
 			CustomerSupportIsExecutable: true,
@@ -284,8 +291,8 @@ func (cp collaborativeProcess) Create() collaborativeProcess {
 }
 
 // Def ...
-func (cp *collaborativeProcess) Def() *models.DefinitionsRepository {
-	return &cp.def
+func (cp collaborativeProcess) Def() core.DefinitionsRepository {
+	return cp.def
 }
 
 /**************************************************************************************/
@@ -350,7 +357,9 @@ func (cp *collaborativeProcess) setInnerElements() {
 	customer.SetSequenceFlow(4)
 
 	// Diagram
-	cp.GetDiagram().SetPlane()
+	diagram := cp.GetDiagram()
+	log.Printf("%+v", diagram)
+	diagram.SetPlane()
 	plane := cp.GetPlane()
 	plane.SetShape(11)
 	plane.SetEdge(9)
@@ -846,7 +855,9 @@ func (cp *collaborativeProcess) fromReceiptWarrantyRefusal() {
 func (cp *collaborativeProcess) setDiagram() {
 	// diagram attributes
 	var n int64 = 1
-	cp.GetDiagram().SetID(n)
+	diagram := cp.GetDiagram()
+	log.Printf("%+v", diagram)
+	diagram.SetID("diagram", n)
 	// plane attributes
 	p := cp.GetPlane()
 	p.SetID("plane", n)
@@ -856,22 +867,22 @@ func (cp *collaborativeProcess) setDiagram() {
 /**** Getter ****/
 
 // GetCollaboration ...
-func (cp collaborativeProcess) GetCollaboration() *models.Collaboration {
+func (cp collaborativeProcess) GetCollaboration() *pool.Collaboration {
 	return cp.def.GetCollaboration()
 }
 
 // GetCustomerSupportParticipant ...
-func (cp collaborativeProcess) GetCustomerSupportParticipant(e *models.Collaboration) *models.Participant {
+func (cp collaborativeProcess) GetCustomerSupportParticipant(e *pool.Collaboration) *pool.Participant {
 	return e.GetParticipant(0)
 }
 
 // GetCustomerSupportProces ...
-func (cp collaborativeProcess) GetCustomerSupportProcess() *models.Process {
+func (cp collaborativeProcess) GetCustomerSupportProcess() *process.Process {
 	return cp.def.GetProcess(0)
 }
 
 // GetCustomerSupportStartEvent ...
-func (cp collaborativeProcess) GetCustomerSupportStartEvent() (*events.StartEvent, *models.Shape) {
+func (cp collaborativeProcess) GetCustomerSupportStartEvent() (*elements.StartEvent, *canvas.Shape) {
 	start := cp.GetCustomerSupportProcess().GetStartEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCustomerSupportStartEvent(plane)
@@ -879,7 +890,7 @@ func (cp collaborativeProcess) GetCustomerSupportStartEvent() (*events.StartEven
 }
 
 // GetCustomerSupportEndEvent ...
-func (cp collaborativeProcess) GetCustomerSupportEndEvent() (*events.EndEvent, *models.Shape) {
+func (cp collaborativeProcess) GetCustomerSupportEndEvent() (*elements.EndEvent, *canvas.Shape) {
 	end := cp.GetCustomerSupportProcess().GetEndEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCustomerSupportEndEvent(plane)
@@ -887,7 +898,7 @@ func (cp collaborativeProcess) GetCustomerSupportEndEvent() (*events.EndEvent, *
 }
 
 // GetCheckIncomingClaim ...
-func (cp collaborativeProcess) GetCheckIncomingClaim() (*activities.Task, *models.Shape) {
+func (cp collaborativeProcess) GetCheckIncomingClaim() (*tasks.Task, *canvas.Shape) {
 	task := cp.GetCustomerSupportProcess().GetTask(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCheckIncomingClaim(plane)
@@ -895,7 +906,7 @@ func (cp collaborativeProcess) GetCheckIncomingClaim() (*activities.Task, *model
 }
 
 // GetDenyWarrantyClaim ...
-func (cp collaborativeProcess) GetDenyWarrantyClaim() (*activities.Task, *models.Shape) {
+func (cp collaborativeProcess) GetDenyWarrantyClaim() (*tasks.Task, *canvas.Shape) {
 	task := cp.GetCustomerSupportProcess().GetTask(1)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeDenyWarrantyClaim(plane)
@@ -903,7 +914,7 @@ func (cp collaborativeProcess) GetDenyWarrantyClaim() (*activities.Task, *models
 }
 
 // GetFromCustomerSupportStartEvent ...
-func (cp collaborativeProcess) GetFromCustomerSupportStartEvent() (*marker.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromCustomerSupportStartEvent() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := cp.GetCustomerSupportProcess().GetSequenceFlow(0)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromCustomerSupportStartEvent(plane)
@@ -911,7 +922,7 @@ func (cp collaborativeProcess) GetFromCustomerSupportStartEvent() (*marker.Seque
 }
 
 // GetFromCheckIncomingClaim ...
-func (cp collaborativeProcess) GetFromCheckIncomingClaim() (*marker.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromCheckIncomingClaim() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := cp.GetCustomerSupportProcess().GetSequenceFlow(1)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromCheckIncomingClaim(plane)
@@ -919,7 +930,7 @@ func (cp collaborativeProcess) GetFromCheckIncomingClaim() (*marker.SequenceFlow
 }
 
 // GetFromDenyWarrantyClaim ...
-func (cp collaborativeProcess) GetFromDenyWarrantyClaim() (*marker.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromDenyWarrantyClaim() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := cp.GetCustomerSupportProcess().GetSequenceFlow(2)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromDenyWarrantyClaim(plane)
@@ -929,17 +940,17 @@ func (cp collaborativeProcess) GetFromDenyWarrantyClaim() (*marker.SequenceFlow,
 /*** CUSTOMER ***/
 
 // GetCustomerProcess ...
-func (cp collaborativeProcess) GetCustomerProcess() *models.Process {
+func (cp collaborativeProcess) GetCustomerProcess() *process.Process {
 	return cp.def.GetProcess(1)
 }
 
 // GetCustomerParticipant ...
-func (cp collaborativeProcess) GetCustomerParticipant(e *models.Collaboration) *models.Participant {
+func (cp collaborativeProcess) GetCustomerParticipant(e *pool.Collaboration) *pool.Participant {
 	return e.GetParticipant(1)
 }
 
 // GetCustomerStartEvent ...
-func (cp collaborativeProcess) GetCustomerStartEvent() (*events.StartEvent, *models.Shape) {
+func (cp collaborativeProcess) GetCustomerStartEvent() (*elements.StartEvent, *canvas.Shape) {
 	start := cp.GetCustomerProcess().GetStartEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCustomerStartEvent(plane)
@@ -947,7 +958,7 @@ func (cp collaborativeProcess) GetCustomerStartEvent() (*events.StartEvent, *mod
 }
 
 // GetCustomerEndEvent ...
-func (cp collaborativeProcess) GetCustomerEndEvent() (*events.EndEvent, *models.Shape) {
+func (cp collaborativeProcess) GetCustomerEndEvent() (*elements.EndEvent, *canvas.Shape) {
 	end := cp.GetCustomerProcess().GetEndEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeCustomerEndEvent(plane)
@@ -955,7 +966,7 @@ func (cp collaborativeProcess) GetCustomerEndEvent() (*events.EndEvent, *models.
 }
 
 // GetNoticeOfDefect ...
-func (cp collaborativeProcess) GetNoticeOfDefect() (*activities.Task, *models.Shape) {
+func (cp collaborativeProcess) GetNoticeOfDefect() (*tasks.Task, *canvas.Shape) {
 	task := cp.GetCustomerProcess().GetTask(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeNoticeOfDefect(plane)
@@ -963,7 +974,7 @@ func (cp collaborativeProcess) GetNoticeOfDefect() (*activities.Task, *models.Sh
 }
 
 // GetWaitingForAnswer ...
-func (cp collaborativeProcess) GetWaitingForAnswer() (*events.IntermediateCatchEvent, *models.Shape) {
+func (cp collaborativeProcess) GetWaitingForAnswer() (*elements.IntermediateCatchEvent, *canvas.Shape) {
 	timer := cp.GetCustomerProcess().GetIntermediateCatchEvent(0)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeWaitingForAnswer(plane)
@@ -971,13 +982,13 @@ func (cp collaborativeProcess) GetWaitingForAnswer() (*events.IntermediateCatchE
 }
 
 // GetWaitingForAnswerTimerEventDefinition ...
-func (cp collaborativeProcess) GetWaitingForAnswerTimerEventDefinition(e *events.IntermediateCatchEvent) *events.TimerEventDefinition {
+func (cp collaborativeProcess) GetWaitingForAnswerTimerEventDefinition(e *elements.IntermediateCatchEvent) *definitions.TimerEventDefinition {
 	e.SetTimerEventDefinition()
 	return e.GetTimerEventDefinition()
 }
 
 // GetReceiptWarrantyRefusal ...
-func (cp collaborativeProcess) GetReceiptWarrantyRefusal() (*activities.Task, *models.Shape) {
+func (cp collaborativeProcess) GetReceiptWarrantyRefusal() (*tasks.Task, *canvas.Shape) {
 	task := cp.GetCustomerProcess().GetTask(1)
 	plane := cp.GetPlane()
 	shape := cp.GetShapeReceiptWarrantyRefusal(plane)
@@ -985,7 +996,7 @@ func (cp collaborativeProcess) GetReceiptWarrantyRefusal() (*activities.Task, *m
 }
 
 // GetFromCustomerStartEvent ...
-func (cp collaborativeProcess) GetFromCustomerStartEvent() (*marker.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromCustomerStartEvent() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := cp.GetCustomerProcess().GetSequenceFlow(0)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromCustomerStartEvent(plane)
@@ -993,7 +1004,7 @@ func (cp collaborativeProcess) GetFromCustomerStartEvent() (*marker.SequenceFlow
 }
 
 // GetFromNoticeOfDefect ...
-func (cp collaborativeProcess) GetFromNoticeOfDefect() (*marker.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromNoticeOfDefect() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := cp.GetCustomerProcess().GetSequenceFlow(1)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromNoticeOfDefect(plane)
@@ -1001,7 +1012,7 @@ func (cp collaborativeProcess) GetFromNoticeOfDefect() (*marker.SequenceFlow, *m
 }
 
 // GetFromWaitingForAnswer ...
-func (cp collaborativeProcess) GetFromWaitingForAnswer() (*marker.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromWaitingForAnswer() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := cp.GetCustomerProcess().GetSequenceFlow(2)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromWaitingForAnswer(plane)
@@ -1009,7 +1020,7 @@ func (cp collaborativeProcess) GetFromWaitingForAnswer() (*marker.SequenceFlow, 
 }
 
 // GetFromReceiptWarrantyRefusal ...
-func (cp collaborativeProcess) GetFromReceiptWarrantyRefusal() (*marker.SequenceFlow, *models.Edge) {
+func (cp collaborativeProcess) GetFromReceiptWarrantyRefusal() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := cp.GetCustomerProcess().GetSequenceFlow(3)
 	plane := cp.GetPlane()
 	edge := cp.GetEdgeFromReceiptWarrantyRefusal(plane)
@@ -1031,117 +1042,117 @@ func (cp collaborativeProcess) GetMessageRefusal() *marker.MessageFlow {
 /**** Diagram ****/
 
 // GetDiagram ...
-func (cp collaborativeProcess) GetDiagram() *models.Diagram {
+func (cp collaborativeProcess) GetDiagram() *canvas.Diagram {
 	return cp.def.GetDiagram(0)
 }
 
 /**** Plane ****/
 
 // GetPlane ...
-func (cp collaborativeProcess) GetPlane() *models.Plane {
+func (cp collaborativeProcess) GetPlane() *canvas.Plane {
 	return cp.GetDiagram().GetPlane()
 }
 
 /**** Shapes ****/
 
 // GetShapePoolCustomerSupport ...
-func (cp collaborativeProcess) GetShapePoolCustomerSupport(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapePoolCustomerSupport(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(0)
 }
 
 // GetShapePoolCustomer ...
-func (cp collaborativeProcess) GetShapePoolCustomer(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapePoolCustomer(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(1)
 }
 
 // GetShapeCustomerSupportStartEvent ...
-func (cp collaborativeProcess) GetShapeCustomerSupportStartEvent(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeCustomerSupportStartEvent(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(2)
 }
 
 // GetShapeCustomerSupportEndEvent ...
-func (cp collaborativeProcess) GetShapeCustomerSupportEndEvent(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeCustomerSupportEndEvent(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(3)
 }
 
 // GetShapeCheckIncomingClaim ...
-func (cp collaborativeProcess) GetShapeCheckIncomingClaim(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeCheckIncomingClaim(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(4)
 }
 
 // GetShapeDenyWarrantyClaim ...
-func (cp collaborativeProcess) GetShapeDenyWarrantyClaim(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeDenyWarrantyClaim(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(5)
 }
 
 // GetShapeCustomerStartEvent ...
-func (cp collaborativeProcess) GetShapeCustomerStartEvent(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeCustomerStartEvent(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(6)
 }
 
 // GetShapeCustomerEndEvent ...
-func (cp collaborativeProcess) GetShapeCustomerEndEvent(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeCustomerEndEvent(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(7)
 }
 
 // GetShapeNoticeOfDefect ...
-func (cp collaborativeProcess) GetShapeNoticeOfDefect(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeNoticeOfDefect(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(8)
 }
 
 // GetShapeWaitingForAnswer ...
-func (cp collaborativeProcess) GetShapeWaitingForAnswer(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeWaitingForAnswer(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(9)
 }
 
 // GetShapeReceiptWarrantyRefusal ...
-func (cp collaborativeProcess) GetShapeReceiptWarrantyRefusal(e *models.Plane) *models.Shape {
+func (cp collaborativeProcess) GetShapeReceiptWarrantyRefusal(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(10)
 }
 
 /**** Edges ****/
 
 // GetEdgeFromCustomerSupportStartEvent ...
-func (cp collaborativeProcess) GetEdgeFromCustomerSupportStartEvent(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeFromCustomerSupportStartEvent(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(0)
 }
 
 // GetEdgeFromCheckIncomingClaim ...
-func (cp collaborativeProcess) GetEdgeFromCheckIncomingClaim(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeFromCheckIncomingClaim(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(1)
 }
 
 // GetEdgeFromDenyWarrantyClaim ...
-func (cp collaborativeProcess) GetEdgeFromDenyWarrantyClaim(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeFromDenyWarrantyClaim(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(2)
 }
 
 // GetEdgeFromCustomerStartEvent ...
-func (cp collaborativeProcess) GetEdgeFromCustomerStartEvent(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeFromCustomerStartEvent(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(3)
 }
 
 // GetEdgeFromNoticeOfDefect ...
-func (cp collaborativeProcess) GetEdgeFromNoticeOfDefect(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeFromNoticeOfDefect(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(4)
 }
 
 // GetEdgeFromWaitingForAnswer ...
-func (cp collaborativeProcess) GetEdgeFromWaitingForAnswer(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeFromWaitingForAnswer(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(5)
 }
 
 // GetEdgeFromReceiptWarrantyRefusal ...
-func (cp collaborativeProcess) GetEdgeFromReceiptWarrantyRefusal(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeFromReceiptWarrantyRefusal(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(6)
 }
 
 // GetEdgeMessageClaim ...
-func (cp collaborativeProcess) GetEdgeMessageClaim(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeMessageClaim(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(7)
 }
 
 // GetEdgeMessageRefusal ...
-func (cp collaborativeProcess) GetEdgeMessageRefusal(e *models.Plane) *models.Edge {
+func (cp collaborativeProcess) GetEdgeMessageRefusal(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(8)
 }

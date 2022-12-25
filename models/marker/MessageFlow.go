@@ -5,46 +5,41 @@ import (
 	"log"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/camunda"
 )
 
 // MessageFlowRepository ...
 type MessageFlowRepository interface {
-	SetID(typ string, suffix interface{})
-	SetName(name string)
+	MarkerBase
+
 	SetSourceRef(typ string, sourceRef interface{})
 	SetTargetRef(typ string, targetRef interface{})
-
-	SetDocumentation()
-	SetExtensionElements()
-
-	GetID() *string
-	GetName() *string
 	GetSourceRef() *string
 	GetTargetRef() *string
 
+	SetDocumentation()
+	SetExtensionElements()
 	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *camunda.ExtensionElements
+	GetExtensionElements() *attributes.ExtensionElements
 }
 
 // MessageFlow ...
 type MessageFlow struct {
-	ID                string                      `xml:"id,attr" json:"id"`
-	Name              string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
-	SourceRef         string                      `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-	TargetRef         string                      `xml:"targetRef,attr" json:"targetRef,omitempty"`
-	Documentation     []attributes.Documentation  `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []camunda.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ID                string                         `xml:"id,attr" json:"id"`
+	Name              string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
+	SourceRef         string                         `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
+	TargetRef         string                         `xml:"targetRef,attr" json:"targetRef,omitempty"`
+	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 // TMessageFlow ...
 type TMessageFlow struct {
-	ID                string                      `xml:"id,attr" json:"id"`
-	Name              string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
-	SourceRef         string                      `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-	TargetRef         string                      `xml:"targetRef,attr" json:"targetRef,omitempty"`
-	Documentation     []attributes.Documentation  `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []camunda.ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ID                string                          `xml:"id,attr" json:"id"`
+	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
+	SourceRef         string                          `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
+	TargetRef         string                          `xml:"targetRef,attr" json:"targetRef,omitempty"`
+	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 func NewMessageFlow() MessageFlowRepository {
@@ -125,7 +120,7 @@ func (messageFlow *MessageFlow) SetDocumentation() {
 
 // SetExtensionElements ...
 func (messageFlow *MessageFlow) SetExtensionElements() {
-	messageFlow.ExtensionElements = make([]camunda.ExtensionElements, 1)
+	messageFlow.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 /**
@@ -137,12 +132,12 @@ func (messageFlow *MessageFlow) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (messageFlow MessageFlow) GetID() *string {
+func (messageFlow MessageFlow) GetID() STR_PTR {
 	return &messageFlow.ID
 }
 
 // GetName ...
-func (messageFlow MessageFlow) GetName() *string {
+func (messageFlow MessageFlow) GetName() STR_PTR {
 	return &messageFlow.Name
 }
 
@@ -166,6 +161,6 @@ func (messageFlow MessageFlow) GetDocumentation() *attributes.Documentation {
 }
 
 // GetExtensionElements ...
-func (messageFlow MessageFlow) GetExtensionElements() *camunda.ExtensionElements {
+func (messageFlow MessageFlow) GetExtensionElements() *attributes.ExtensionElements {
 	return &messageFlow.ExtensionElements[0]
 }

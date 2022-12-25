@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/deemount/gobpmn/models/events"
+	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/spec/process_instance"
 )
 
@@ -60,7 +60,7 @@ func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 
 	type queueElement struct {
 		inboundFlowId string
-		baseElement   events.TStartEvent
+		baseElement   elements.TStartEvent
 	}
 
 	queue := make([]queueElement, 0)

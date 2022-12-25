@@ -1,7 +1,8 @@
 package examples
 
 import (
-	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/canvas"
+	"github.com/deemount/gobpmn/models/core"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -25,7 +26,7 @@ type SimpleModel003Repository interface {
 
 // SimpleModel003 ...
 type SimpleModel003 struct {
-	def                 *models.Definitions
+	def                 *core.Definitions
 	isExecutable        bool
 	ProcessHash         string
 	StartEventCounter   int64
@@ -40,7 +41,7 @@ type SimpleModel003 struct {
 }
 
 // NewSimpleModel003 ...
-func NewSimpleModel003(def *models.Definitions) SimpleModel003 {
+func NewSimpleModel003(def *core.Definitions) SimpleModel003 {
 	return SimpleModel003{
 		def:                 def,
 		isExecutable:        true,
@@ -258,7 +259,7 @@ func (simpleModel003 *SimpleModel003) SetFromTaskStateSequenceFlow() {
 func (simpleModel003 *SimpleModel003) SetDiagram() {
 	// diagram attributes
 	var n int64 = 1
-	simpleModel003.def.Diagram[0].SetID(n)
+	simpleModel003.def.Diagram[0].SetID("diagram", n)
 	// plane attributes
 	p := simpleModel003.getPlane()
 	p.SetID("plane", n)
@@ -266,6 +267,6 @@ func (simpleModel003 *SimpleModel003) SetDiagram() {
 }
 
 // getPlane ...
-func (simpleModel003 SimpleModel003) getPlane() *models.Plane {
+func (simpleModel003 SimpleModel003) getPlane() *canvas.Plane {
 	return &simpleModel003.def.Diagram[0].Plane[0]
 }

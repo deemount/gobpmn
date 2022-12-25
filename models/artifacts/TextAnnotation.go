@@ -3,7 +3,7 @@ package artifacts
 // TextAnnotationRepository ...
 type TextAnnotationRepository interface {
 	SetText()
-	GetText() *Text
+	GetText() Text
 }
 
 // TextAnnotation ...
@@ -42,6 +42,6 @@ func (textannotation *TextAnnotation) SetText() {
 /** BPMN **/
 
 // GetText ...
-func (textannotation TextAnnotation) GetText() *Text {
-	return &textannotation.Text[0]
+func (textannotation TextAnnotation) GetText() Text {
+	return textannotation.Text[0]
 }

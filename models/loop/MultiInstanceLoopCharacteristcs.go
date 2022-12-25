@@ -2,7 +2,7 @@ package loop
 
 import (
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/camunda"
+	"github.com/deemount/gobpmn/models/conditional"
 )
 
 // MultiInstanceLoopCharacteristicsRepository ...
@@ -25,40 +25,40 @@ type MultiInstanceLoopCharacteristicsRepository interface {
 	GetCamundaCollection() *string
 	GetCamundaElementVariable() *string
 
-	GetExtensionElements() *camunda.ExtensionElements
+	GetExtensionElements() *attributes.ExtensionElements
 	GetLoopCardinality() *LoopCardinality
-	GetCompletionCondition() *attributes.CompletionCondition
+	GetCompletionCondition() *conditional.CompletionCondition
 }
 
 // MultiInstanceLoopCharacteristics ...
 type MultiInstanceLoopCharacteristics struct {
-	IsSequential           bool                             `xml:"isSequential,attr,omitempty" json:"isSequential,omitempty"`
-	CamundaAsyncBefore     bool                             `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter      bool                             `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaCollection      string                           `xml:"camunda:collection,attr,omitempty" json:"collection,omitempty"`
-	CamundaElementVariable string                           `xml:"camunda:elementVariable,attr,omitempty" json:"elementVariable,omitempty"`
-	ExtensionElements      []camunda.ExtensionElements      `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	LoopCardinality        []LoopCardinality                `xml:"bpmn:loopCardinality,omitempty" json:"loopCardinality,omitempty"`
-	CompletionCondition    []attributes.CompletionCondition `xml:"bpmn:completionCondition,omitempty" json:"completionCondition,omitempty"`
+	IsSequential           bool                              `xml:"isSequential,attr,omitempty" json:"isSequential,omitempty"`
+	CamundaAsyncBefore     bool                              `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	CamundaAsyncAfter      bool                              `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	CamundaCollection      string                            `xml:"camunda:collection,attr,omitempty" json:"collection,omitempty"`
+	CamundaElementVariable string                            `xml:"camunda:elementVariable,attr,omitempty" json:"elementVariable,omitempty"`
+	ExtensionElements      []attributes.ExtensionElements    `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	LoopCardinality        []LoopCardinality                 `xml:"bpmn:loopCardinality,omitempty" json:"loopCardinality,omitempty"`
+	CompletionCondition    []conditional.CompletionCondition `xml:"bpmn:completionCondition,omitempty" json:"completionCondition,omitempty"`
 }
 
 // TMultiInstanceLoopCharacteristics ...
 type TMultiInstanceLoopCharacteristics struct {
-	IsSequential        bool                             `xml:"isSequential,attr,omitempty" json:"isSequential,omitempty"`
-	AsyncBefore         bool                             `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	AsyncAfter          bool                             `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	Collection          string                           `xml:"collection,attr,omitempty" json:"collection,omitempty"`
-	ElementVariable     string                           `xml:"elementVariable,attr,omitempty" json:"elementVariable,omitempty"`
-	ExtensionElements   []camunda.ExtensionElements      `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	LoopCardinality     []LoopCardinality                `xml:"loopCardinality,omitempty" json:"loopCardinality,omitempty"`
-	CompletionCondition []attributes.CompletionCondition `xml:"completionCondition,omitempty" json:"completionCondition,omitempty"`
+	IsSequential        bool                              `xml:"isSequential,attr,omitempty" json:"isSequential,omitempty"`
+	AsyncBefore         bool                              `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
+	AsyncAfter          bool                              `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
+	Collection          string                            `xml:"collection,attr,omitempty" json:"collection,omitempty"`
+	ElementVariable     string                            `xml:"elementVariable,attr,omitempty" json:"elementVariable,omitempty"`
+	ExtensionElements   []attributes.TExtensionElements   `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	LoopCardinality     []LoopCardinality                 `xml:"loopCardinality,omitempty" json:"loopCardinality,omitempty"`
+	CompletionCondition []conditional.CompletionCondition `xml:"completionCondition,omitempty" json:"completionCondition,omitempty"`
 }
 
 func NewMultiInstanceLoopCharacteristics() MultiInstanceLoopCharacteristicsRepository {
 	return &MultiInstanceLoopCharacteristics{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -99,7 +99,7 @@ func (milc *MultiInstanceLoopCharacteristics) SetCamundaElementVariable(element 
 
 // SetExtensionElements ...
 func (milc *MultiInstanceLoopCharacteristics) SetExtensionElements() {
-	milc.ExtensionElements = make([]camunda.ExtensionElements, 1)
+	milc.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 // SetLoopCardinality ...
@@ -109,10 +109,10 @@ func (milc *MultiInstanceLoopCharacteristics) SetLoopCardinality() {
 
 // SetCompletionCondition ...
 func (milc *MultiInstanceLoopCharacteristics) SetCompletionCondition() {
-	milc.CompletionCondition = make([]attributes.CompletionCondition, 1)
+	milc.CompletionCondition = make([]conditional.CompletionCondition, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -147,12 +147,12 @@ func (milc MultiInstanceLoopCharacteristics) GetCamundaElementVariable() *string
 	return &milc.CamundaElementVariable
 }
 
-/*** Make Elements ***/
+/* Elements */
 
 /** BPMN **/
 
 // GetExtensionElements ...
-func (milc MultiInstanceLoopCharacteristics) GetExtensionElements() *camunda.ExtensionElements {
+func (milc MultiInstanceLoopCharacteristics) GetExtensionElements() *attributes.ExtensionElements {
 	return &milc.ExtensionElements[0]
 }
 
@@ -162,6 +162,6 @@ func (milc MultiInstanceLoopCharacteristics) GetLoopCardinality() *LoopCardinali
 }
 
 // GetCompletionCondition ...
-func (milc MultiInstanceLoopCharacteristics) GetCompletionCondition() *attributes.CompletionCondition {
+func (milc MultiInstanceLoopCharacteristics) GetCompletionCondition() *conditional.CompletionCondition {
 	return &milc.CompletionCondition[0]
 }

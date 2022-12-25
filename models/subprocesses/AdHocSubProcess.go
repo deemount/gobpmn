@@ -3,28 +3,23 @@ package subprocesses
 import (
 	"fmt"
 
-	"github.com/deemount/gobpmn/models/activities"
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/camunda"
-	"github.com/deemount/gobpmn/models/events"
+	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/gateways"
 	"github.com/deemount/gobpmn/models/loop"
 	"github.com/deemount/gobpmn/models/marker"
+	"github.com/deemount/gobpmn/models/tasks"
 )
 
 // AdHocSubProcessRepository ...
 type AdHocSubProcessRepository interface {
-	SetID(typ string, suffix interface{})
-	SetName(name string)
+	SubprocessesBase
+	SubprocessesFlow
+
 	SetTriggeredByEvent(triggered bool)
 
-	SetCamundaAsyncBefore(asyncBefore bool)
-	SetCamundaAsyncAfter(asyncAfter bool)
-	SetCamundaJobPriority(priority int)
-
-	SetDocumentation()
-	SetExtensionElements()
 	SetMultiInstanceLoopCharacteristics()
+	GetMultiInstanceLoopCharacteristics() *loop.MultiInstanceLoopCharacteristics
 
 	SetStartEvent(num int)
 	SetEndEvent(num int)
@@ -46,29 +41,17 @@ type AdHocSubProcessRepository interface {
 	SetComplexGateway(num int)
 	SetEventBasedGateway(num int)
 
-	SetSequenceFlow(num int)
-
-	GetID() *string
-	GetName() *string
 	GetTriggeredByEvent() *bool
 
-	GetCamundaAsyncBefore() *bool
-	GetCamundaAsyncAfter() *bool
-	GetCamundaJobPriority() *int
-
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *camunda.ExtensionElements
-	GetMultiInstanceLoopCharacteristics() *loop.MultiInstanceLoopCharacteristics
-
-	GetStartEvent(num int) *events.StartEvent
-	GetEndEvent(num int) *events.EndEvent
-	GetTask(num int) *activities.Task
-	GetUserTask(num int) *activities.UserTask
-	GetManualTask(num int) *activities.ManualTask
-	GetReceiveTask(num int) *activities.ReceiveTask
-	GetScriptTask(num int) *activities.ScriptTask
-	GetSendTask(num int) *activities.SendTask
-	GetServiceTask(num int) *activities.ServiceTask
+	GetStartEvent(num int) *elements.StartEvent
+	GetEndEvent(num int) *elements.EndEvent
+	GetTask(num int) *tasks.Task
+	GetUserTask(num int) *tasks.UserTask
+	GetManualTask(num int) *tasks.ManualTask
+	GetReceiveTask(num int) *tasks.ReceiveTask
+	GetScriptTask(num int) *tasks.ScriptTask
+	GetSendTask(num int) *tasks.SendTask
+	GetServiceTask(num int) *tasks.ServiceTask
 
 	GetSubProcess(num int) *SubProcess
 	GetAdHocSubProcess(num int) *AdHocSubProcess
@@ -78,8 +61,6 @@ type AdHocSubProcessRepository interface {
 	GetParallelGateway(num int) *gateways.ParallelGateway
 	GetComplexGateway(num int) *gateways.ComplexGateway
 	GetEventBasedGateway(num int) *gateways.EventBasedGateway
-
-	GetSequenceFlow(num int) *marker.SequenceFlow
 }
 
 // AdHocSubProcess ...
@@ -91,17 +72,19 @@ type AdHocSubProcess struct {
 	CamundaAsyncAfter                bool                                    `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
 	CamundaJobPriority               int                                     `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
 	Documentation                    []attributes.Documentation              `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements                []camunda.ExtensionElements             `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ExtensionElements                []attributes.ExtensionElements          `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming                         []marker.Incoming                       `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing                         []marker.Outgoing                       `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"bpmn:multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics"`
-	StartEvent                       []events.StartEvent                     `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty"`
-	EndEvent                         []events.EndEvent                       `xml:"bpmn:endEvent,omitempty" json:"endEvent,omitempty"`
-	Task                             []activities.Task                       `xml:"bpmn:task,omitempty" json:"task,omitempty"`
-	UserTask                         []activities.UserTask                   `xml:"bpmn:userTask,omitempty" json:"userTask,omitempty"`
-	ManualTask                       []activities.ManualTask                 `xml:"bpmn:manualTask,omitempty" json:"manualTask,omitempty"`
-	ReceiveTask                      []activities.ReceiveTask                `xml:"bpmn:receiveTask,omitempty" json:"receiveTask,omitempty"`
-	ScriptTask                       []activities.ScriptTask                 `xml:"bpmn:scriptTask,omitempty" json:"scriptTask,omitempty"`
-	SendTask                         []activities.SendTask                   `xml:"bpmn:sendTask,omitempty" json:"sendTask,omitempty"`
-	ServiceTask                      []activities.ServiceTask                `xml:"bpmn:serviceTask,omitempty" json:"serviceTask,omitempty"`
+	StartEvent                       []elements.StartEvent                   `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty"`
+	EndEvent                         []elements.EndEvent                     `xml:"bpmn:endEvent,omitempty" json:"endEvent,omitempty"`
+	Task                             []tasks.Task                            `xml:"bpmn:task,omitempty" json:"task,omitempty"`
+	UserTask                         []tasks.UserTask                        `xml:"bpmn:userTask,omitempty" json:"userTask,omitempty"`
+	ManualTask                       []tasks.ManualTask                      `xml:"bpmn:manualTask,omitempty" json:"manualTask,omitempty"`
+	ReceiveTask                      []tasks.ReceiveTask                     `xml:"bpmn:receiveTask,omitempty" json:"receiveTask,omitempty"`
+	ScriptTask                       []tasks.ScriptTask                      `xml:"bpmn:scriptTask,omitempty" json:"scriptTask,omitempty"`
+	SendTask                         []tasks.SendTask                        `xml:"bpmn:sendTask,omitempty" json:"sendTask,omitempty"`
+	ServiceTask                      []tasks.ServiceTask                     `xml:"bpmn:serviceTask,omitempty" json:"serviceTask,omitempty"`
 	SubProcess                       []SubProcess                            `xml:"bpmn:subProcess,omitempty" json:"subProcess,omitempty"`           // is that possible ?
 	AdHocSubProcess                  []AdHocSubProcess                       `xml:"bpmn:adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty"` // is that possible ?
 	ExclusiveGateway                 []gateways.ExclusiveGateway             `xml:"bpmn:exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty"`
@@ -121,17 +104,19 @@ type TAdHocSubProcess struct {
 	CamundaAsyncAfter                bool                                    `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
 	CamundaJobPriority               int                                     `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
 	Documentation                    []attributes.Documentation              `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements                []camunda.TExtensionElements            `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ExtensionElements                []attributes.TExtensionElements         `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming                         []marker.Incoming                       `xml:"incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing                         []marker.Outgoing                       `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
 	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics"`
-	StartEvent                       []events.TStartEvent                    `xml:"startEvent,omitemnpty" json:"startEvent,omitempty"`
-	EndEvent                         []events.TEndEvent                      `xml:"endEvent,omitempty" json:"endEvent,omitempty"`
-	Task                             []activities.TTask                      `xml:"task,omitempty" json:"task,omitempty"`
-	UserTask                         []activities.TUserTask                  `xml:"userTask,omitempty" json:"userTask,omitempty"`
-	ManualTask                       []activities.TManualTask                `xml:"manualTask,omitempty" json:"manualTask,omitempty"`
-	ReceiveTask                      []activities.ReceiveTask                `xml:"receiveTask,omitempty" json:"receiveTask,omitempty"`
-	ScriptTask                       []activities.ScriptTask                 `xml:"scriptTask,omitempty" json:"scriptTask,omitempty"`
-	SendTask                         []activities.SendTask                   `xml:"sendTask,omitempty" json:"sendTask,omitempty"`
-	ServiceTask                      []activities.ServiceTask                `xml:"serviceTask,omitempty" json:"serviceTask,omitempty"`
+	StartEvent                       []elements.TStartEvent                  `xml:"startEvent,omitemnpty" json:"startEvent,omitempty"`
+	EndEvent                         []elements.TEndEvent                    `xml:"endEvent,omitempty" json:"endEvent,omitempty"`
+	Task                             []tasks.TTask                           `xml:"task,omitempty" json:"task,omitempty"`
+	UserTask                         []tasks.TUserTask                       `xml:"userTask,omitempty" json:"userTask,omitempty"`
+	ManualTask                       []tasks.TManualTask                     `xml:"manualTask,omitempty" json:"manualTask,omitempty"`
+	ReceiveTask                      []tasks.ReceiveTask                     `xml:"receiveTask,omitempty" json:"receiveTask,omitempty"`
+	ScriptTask                       []tasks.ScriptTask                      `xml:"scriptTask,omitempty" json:"scriptTask,omitempty"`
+	SendTask                         []tasks.SendTask                        `xml:"sendTask,omitempty" json:"sendTask,omitempty"`
+	ServiceTask                      []tasks.ServiceTask                     `xml:"serviceTask,omitempty" json:"serviceTask,omitempty"`
 	SubProcess                       []SubProcess                            `xml:"subProcess,omitempty" json:"subProcess,omitempty"`           // is that possible ?
 	AdHocSubProcess                  []TAdHocSubProcess                      `xml:"adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty"` // is that possible ?
 	ExclusiveGateway                 []gateways.ExclusiveGateway             `xml:"exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty"`
@@ -200,7 +185,17 @@ func (adhoc *AdHocSubProcess) SetDocumentation() {
 
 // SetExtensionElements ...
 func (adhoc *AdHocSubProcess) SetExtensionElements() {
-	adhoc.ExtensionElements = make([]camunda.ExtensionElements, 1)
+	adhoc.ExtensionElements = make([]attributes.ExtensionElements, 1)
+}
+
+// SetIncoming ...
+func (adhoc *AdHocSubProcess) SetIncoming(num int) {
+	adhoc.Incoming = make([]marker.Incoming, num)
+}
+
+// SetOutgoing ...
+func (adhoc *AdHocSubProcess) SetOutgoing(num int) {
+	adhoc.Outgoing = make([]marker.Outgoing, num)
 }
 
 // SetMultiInstaceLoopCharacteristics ...
@@ -212,49 +207,49 @@ func (adhoc *AdHocSubProcess) SetMultiInstanceLoopCharacteristics() {
 
 // SetStartEvent ...
 func (adhoc *AdHocSubProcess) SetStartEvent(num int) {
-	adhoc.StartEvent = make([]events.StartEvent, num)
+	adhoc.StartEvent = make([]elements.StartEvent, num)
 }
 
 // SetEndEvent ...
 func (adhoc *AdHocSubProcess) SetEndEvent(num int) {
-	adhoc.EndEvent = make([]events.EndEvent, num)
+	adhoc.EndEvent = make([]elements.EndEvent, num)
 }
 
 /*** Task ***/
 
 // SetTask ...
 func (adhoc *AdHocSubProcess) SetTask(num int) {
-	adhoc.Task = make([]activities.Task, num)
+	adhoc.Task = make([]tasks.Task, num)
 }
 
 // SetUserTask ...
 func (adhoc *AdHocSubProcess) SetUserTask(num int) {
-	adhoc.UserTask = make([]activities.UserTask, num)
+	adhoc.UserTask = make([]tasks.UserTask, num)
 }
 
 // SetManualTask ...
 func (adhoc *AdHocSubProcess) SetManualTask(num int) {
-	adhoc.ManualTask = make([]activities.ManualTask, num)
+	adhoc.ManualTask = make([]tasks.ManualTask, num)
 }
 
 // SetReceiveTask ...
 func (adhoc *AdHocSubProcess) SetReceiveTask(num int) {
-	adhoc.ReceiveTask = make([]activities.ReceiveTask, num)
+	adhoc.ReceiveTask = make([]tasks.ReceiveTask, num)
 }
 
 // SetScriptTask ...
 func (adhoc *AdHocSubProcess) SetScriptTask(num int) {
-	adhoc.ScriptTask = make([]activities.ScriptTask, num)
+	adhoc.ScriptTask = make([]tasks.ScriptTask, num)
 }
 
 // SetSendTask ...
 func (adhoc *AdHocSubProcess) SetSendTask(num int) {
-	adhoc.SendTask = make([]activities.SendTask, num)
+	adhoc.SendTask = make([]tasks.SendTask, num)
 }
 
 // SetServiceTask ...
 func (adhoc *AdHocSubProcess) SetServiceTask(num int) {
-	adhoc.ServiceTask = make([]activities.ServiceTask, num)
+	adhoc.ServiceTask = make([]tasks.ServiceTask, num)
 }
 
 /*** Subprocess ***/
@@ -312,12 +307,12 @@ func (adhoc *AdHocSubProcess) SetSequenceFlow(num int) {
 /** BPMN **/
 
 // GetID ...
-func (adhoc *AdHocSubProcess) GetID() *string {
+func (adhoc *AdHocSubProcess) GetID() STR_PTR {
 	return &adhoc.ID
 }
 
 // GetName ...
-func (adhoc AdHocSubProcess) GetName() *string {
+func (adhoc AdHocSubProcess) GetName() STR_PTR {
 	return &adhoc.Name
 }
 
@@ -353,8 +348,18 @@ func (adhoc AdHocSubProcess) GetDocumentation() *attributes.Documentation {
 }
 
 // GetExtensionElements ...
-func (adhoc AdHocSubProcess) GetExtensionElements() *camunda.ExtensionElements {
+func (adhoc AdHocSubProcess) GetExtensionElements() *attributes.ExtensionElements {
 	return &adhoc.ExtensionElements[0]
+}
+
+// GetIncoming ...
+func (adhoc AdHocSubProcess) GetIncoming(num int) *marker.Incoming {
+	return &adhoc.Incoming[num]
+}
+
+// GetOutgoing ...
+func (adhoc AdHocSubProcess) GetOutgoing(num int) *marker.Outgoing {
+	return &adhoc.Outgoing[num]
 }
 
 // GetMultiInstaceLoopCharacteristics ...
@@ -365,49 +370,49 @@ func (adhoc AdHocSubProcess) GetMultiInstanceLoopCharacteristics() *loop.MultiIn
 /*** Event ***/
 
 // GetStartEvent ...
-func (adhoc AdHocSubProcess) GetStartEvent(num int) *events.StartEvent {
+func (adhoc AdHocSubProcess) GetStartEvent(num int) *elements.StartEvent {
 	return &adhoc.StartEvent[num]
 }
 
 // GetEndEvent ...
-func (adhoc AdHocSubProcess) GetEndEvent(num int) *events.EndEvent {
+func (adhoc AdHocSubProcess) GetEndEvent(num int) *elements.EndEvent {
 	return &adhoc.EndEvent[num]
 }
 
 /*** Task ***/
 
 // GetTask ...
-func (adhoc AdHocSubProcess) GetTask(num int) *activities.Task {
+func (adhoc AdHocSubProcess) GetTask(num int) *tasks.Task {
 	return &adhoc.Task[num]
 }
 
 // GetUserTask ...
-func (adhoc AdHocSubProcess) GetUserTask(num int) *activities.UserTask {
+func (adhoc AdHocSubProcess) GetUserTask(num int) *tasks.UserTask {
 	return &adhoc.UserTask[num]
 }
 
 // GetManualTask ...
-func (adhoc AdHocSubProcess) GetManualTask(num int) *activities.ManualTask {
+func (adhoc AdHocSubProcess) GetManualTask(num int) *tasks.ManualTask {
 	return &adhoc.ManualTask[num]
 }
 
 // GetReceiveTask ...
-func (adhoc AdHocSubProcess) GetReceiveTask(num int) *activities.ReceiveTask {
+func (adhoc AdHocSubProcess) GetReceiveTask(num int) *tasks.ReceiveTask {
 	return &adhoc.ReceiveTask[num]
 }
 
 // GetScriptTask ...
-func (adhoc AdHocSubProcess) GetScriptTask(num int) *activities.ScriptTask {
+func (adhoc AdHocSubProcess) GetScriptTask(num int) *tasks.ScriptTask {
 	return &adhoc.ScriptTask[num]
 }
 
 // GetSendTask ...
-func (adhoc AdHocSubProcess) GetSendTask(num int) *activities.SendTask {
+func (adhoc AdHocSubProcess) GetSendTask(num int) *tasks.SendTask {
 	return &adhoc.SendTask[num]
 }
 
 // GetServiceTask ...
-func (adhoc AdHocSubProcess) GetServiceTask(num int) *activities.ServiceTask {
+func (adhoc AdHocSubProcess) GetServiceTask(num int) *tasks.ServiceTask {
 	return &adhoc.ServiceTask[num]
 }
 

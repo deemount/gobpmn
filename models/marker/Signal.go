@@ -4,10 +4,7 @@ import "fmt"
 
 // SignalRepository ...
 type SignalRepository interface {
-	SetID(suffix string)
-	SetName(name string)
-	GetID() string
-	GetName() string
+	MarkerBase
 }
 
 // Signal ...
@@ -22,13 +19,28 @@ type TSignal struct {
 	Name string `xml:"name,attr,omitempty"`
 }
 
+func NewSignal() SignalRepository {
+	return &Signal{}
+}
+
+/*
+ * Default Setters
+ */
+
 /* Attributes */
 
 /** BPMN **/
 
 // SetID ...
-func (signal *Signal) SetID(suffix string) {
-	signal.ID = fmt.Sprintf("Signal_%s", suffix)
+func (signal *Signal) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "signal":
+		signal.ID = fmt.Sprintf("Signal_%v", suffix)
+		break
+	case "id":
+		signal.ID = fmt.Sprintf("%s", suffix)
+		break
+	}
 }
 
 // SetName ...
@@ -36,12 +48,20 @@ func (signal *Signal) SetName(suffix string) {
 	signal.Name = fmt.Sprintf("Signal_%s", suffix)
 }
 
-// SetID ...
-func (signal Signal) GetID() string {
-	return signal.ID
+/*
+ * Default Getters
+ */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetID ...
+func (signal Signal) GetID() STR_PTR {
+	return &signal.ID
 }
 
-// SetName ...
-func (signal Signal) GetName() string {
-	return signal.Name
+// GetName ...
+func (signal Signal) GetName() STR_PTR {
+	return &signal.Name
 }

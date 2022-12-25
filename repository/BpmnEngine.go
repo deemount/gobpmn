@@ -10,7 +10,7 @@ import (
 
 	"github.com/bwmarrin/snowflake"
 
-	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/core"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -68,7 +68,7 @@ func (engine *BpmnEngine) LoadFromBytes(xmlData []byte) (*ProcessInfo, error) {
 	// Notice:
 	// If you use the models.Definitions, the unmarshal panics with
 	// panic: expected element type <bpmn:definitions> but have <definitions>
-	var definitions models.TDefinitions
+	var definitions core.TDefinitions
 
 	// unmarshal xml data to parsed definitions
 	log.Println("engine: unmarshal file")

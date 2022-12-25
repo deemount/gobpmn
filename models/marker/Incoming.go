@@ -5,7 +5,6 @@ import "fmt"
 // IncomingRepository ...
 type IncomingRepository interface {
 	SetFlow(suffix string)
-
 	GetFlow() *string
 }
 
@@ -18,7 +17,7 @@ func NewIncoming() IncomingRepository {
 	return &Incoming{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -31,7 +30,7 @@ func (incoming *Incoming) SetFlow(suffix string) {
 	incoming.Flow = fmt.Sprintf("Flow_%s", suffix)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -40,6 +39,6 @@ func (incoming *Incoming) SetFlow(suffix string) {
 /** BPMN **/
 
 // GetFlow ...
-func (incoming *Incoming) GetFlow() *string {
+func (incoming Incoming) GetFlow() *string {
 	return &incoming.Flow
 }

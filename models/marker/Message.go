@@ -4,10 +4,7 @@ import "fmt"
 
 // MessageRepository ...
 type MessageRepository interface {
-	SetID(suffix string)
-	SetName(suffix string)
-	GetID() string
-	GetName() string
+	MarkerBase
 }
 
 // Message ...
@@ -22,15 +19,34 @@ type TMessage struct {
 	Name string `xml:"name,attr,omitempty"`
 }
 
+/*
+ * Default Setters
+ */
+
+/* Attributes */
+
 // SetID ...
-func (msg *Message) SetID(suffix string) {
-	msg.ID = fmt.Sprintf("Message_%s", suffix)
+func (msg *Message) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "message":
+		msg.ID = fmt.Sprintf("Message_%v", suffix)
+		break
+	case "id":
+		msg.ID = fmt.Sprintf("%s", suffix)
+		break
+	}
 }
 
 // SetName ...
 func (msg *Message) SetName(suffix string) {
 	msg.Name = fmt.Sprintf("Message_%s", suffix)
 }
+
+/*
+ * Default Getters
+ */
+
+/* Attributes */
 
 // GetID ...
 func (msg Message) GetID() *string {

@@ -3,49 +3,45 @@ package marker
 import (
 	"fmt"
 
-	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/conditional"
 )
 
 // SequenceFlowRepository ...
 type SequenceFlowRepository interface {
-	SetID(typ string, suffix interface{})
-	SetName(name string)
+	MarkerBase
+
 	SetSourceRef(typ string, sourceRef interface{})
 	SetTargetRef(typ string, targetRef interface{})
-
-	SetConditionExpression()
-
-	GetID() *string
-	GetName() *string
 	GetSourceRef() *string
 	GetTargetRef() *string
 
-	GetConditionExpression() *attributes.ConditionExpression
+	SetConditionExpression()
+	GetConditionExpression() *conditional.ConditionExpression
 }
 
 // SequenceFlow ...
 type SequenceFlow struct {
-	ID                  string                           `xml:"id,attr" json:"id"`
-	Name                string                           `xml:"name,attr,omitempty" json:"name,omitempty"`
-	SourceRef           string                           `xml:"sourceRef,attr" json:"sourceRef"`
-	TargetRef           string                           `xml:"targetRef,attr" json:"targetRef"`
-	ConditionExpression []attributes.ConditionExpression `xml:"bpmn:conditionExpression,omitempty" json:"conditionExpression,omitempty"`
+	ID                  string                            `xml:"id,attr" json:"id"`
+	Name                string                            `xml:"name,attr,omitempty" json:"name,omitempty"`
+	SourceRef           string                            `xml:"sourceRef,attr" json:"sourceRef"`
+	TargetRef           string                            `xml:"targetRef,attr" json:"targetRef"`
+	ConditionExpression []conditional.ConditionExpression `xml:"bpmn:conditionExpression,omitempty" json:"conditionExpression,omitempty"`
 }
 
 // TSequenceFlow ...
 type TSequenceFlow struct {
-	ID                  string                           `xml:"id,attr" json:"id"`
-	Name                string                           `xml:"name,attr,omitempty" json:"name,omitempty"`
-	SourceRef           string                           `xml:"sourceRef,attr" json:"sourceRef"`
-	TargetRef           string                           `xml:"targetRef,attr" json:"targetRef"`
-	ConditionExpression []attributes.ConditionExpression `xml:"conditionExpression,omitempty" json:"conditionExpression,omitempty"`
+	ID                  string                            `xml:"id,attr" json:"id"`
+	Name                string                            `xml:"name,attr,omitempty" json:"name,omitempty"`
+	SourceRef           string                            `xml:"sourceRef,attr" json:"sourceRef"`
+	TargetRef           string                            `xml:"targetRef,attr" json:"targetRef"`
+	ConditionExpression []conditional.ConditionExpression `xml:"conditionExpression,omitempty" json:"conditionExpression,omitempty"`
 }
 
 func NewSequenceFlow() SequenceFlowRepository {
 	return &SequenceFlow{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -113,10 +109,10 @@ func (sequenceFlow *SequenceFlow) SetTargetRef(typ string, targetRef interface{}
 
 // SetConditionExpression ...
 func (sequenceFlow *SequenceFlow) SetConditionExpression() {
-	sequenceFlow.ConditionExpression = make([]attributes.ConditionExpression, 1)
+	sequenceFlow.ConditionExpression = make([]conditional.ConditionExpression, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -125,12 +121,12 @@ func (sequenceFlow *SequenceFlow) SetConditionExpression() {
 /** BPMN **/
 
 // GetID ...
-func (sequenceFlow SequenceFlow) GetID() *string {
+func (sequenceFlow SequenceFlow) GetID() STR_PTR {
 	return &sequenceFlow.ID
 }
 
 // GetName ...
-func (sequenceFlow SequenceFlow) GetName() *string {
+func (sequenceFlow SequenceFlow) GetName() STR_PTR {
 	return &sequenceFlow.Name
 }
 
@@ -149,6 +145,6 @@ func (sequenceFlow SequenceFlow) GetTargetRef() *string {
 /** BPMN **/
 
 // GetConditionExpression ...
-func (sequenceFlow SequenceFlow) GetConditionExpression() *attributes.ConditionExpression {
+func (sequenceFlow SequenceFlow) GetConditionExpression() *conditional.ConditionExpression {
 	return &sequenceFlow.ConditionExpression[0]
 }

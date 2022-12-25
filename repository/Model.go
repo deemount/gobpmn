@@ -8,10 +8,13 @@ package repository
  **/
 
 import (
-	"github.com/deemount/gobpmn/models"
-	"github.com/deemount/gobpmn/models/activities"
-	"github.com/deemount/gobpmn/models/events"
+	"github.com/deemount/gobpmn/models/canvas"
+	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/marker"
+	"github.com/deemount/gobpmn/models/pool"
+	"github.com/deemount/gobpmn/models/process"
+	"github.com/deemount/gobpmn/models/tasks"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -36,7 +39,7 @@ type Model interface {
  * - model
  **/
 
-type pool struct {
+type Pool struct {
 	IsExecutable    bool
 	CollaborationID string
 	ParticipantID   string
@@ -58,8 +61,8 @@ type sequence struct {
 }
 
 type model struct {
-	def models.DefinitionsRepository
-	pool
+	def core.DefinitionsRepository `xml:"-" json:"-"`
+	Pool
 	event
 	task
 	sequence
@@ -72,12 +75,12 @@ type model struct {
  *
  **/
 
-func NewModel(def *models.Definitions) Model {
+func NewModel(def *core.Definitions) Model {
 	return &model{
 		// Definitions
-		def: new(models.Definitions),
+		def: core.NewCore(),
 		// Pool
-		pool: pool{
+		Pool: Pool{
 			IsExecutable:    true,
 			CollaborationID: "uniqueCollaborationId",
 			ParticipantID:   "uniqueParticipantId",
@@ -137,7 +140,7 @@ func (m model) Create() model {
 }
 
 // Def ...
-func (m model) Def() *models.DefinitionsRepository {
+func (m model) Def() *core.DefinitionsRepository {
 	return &m.def
 }
 
@@ -176,7 +179,8 @@ func (m *model) setInnerElements() {
 	process.SetEndEvent(1)
 	process.SetTask(1)
 	process.SetSequenceFlow(2)
-	m.GetDiagram().SetPlane()
+	d := m.GetDiagram()
+	d.SetPlane()
 	plane := m.GetPlane()
 	plane.SetShape(4)
 	plane.SetEdge(2)
@@ -220,7 +224,8 @@ func (m *model) setProcess() {
 func (m *model) setDiagram() {
 	// diagram attributes
 	var n int64 = 1
-	m.GetDiagram().SetID(n)
+	d := m.GetDiagram()
+	d.SetID("diagram", n)
 	// plane attributes
 	p := m.GetPlane()
 	p.SetID("plane", n)
@@ -337,23 +342,23 @@ func (m *model) fromTask() {
  * @GetProcess -> models.Process
  * @GetDiagram -> models.Diagram
 **/
-func (m model) GetCollaboration() *models.Collaboration {
+func (m model) GetCollaboration() *pool.Collaboration {
 	return m.def.GetCollaboration()
 }
 
-func (m model) GetParticipant(e *models.Collaboration) *models.Participant {
+func (m model) GetParticipant(e *pool.Collaboration) *pool.Participant {
 	return e.GetParticipant(0)
 }
 
-func (m model) GetProcess() *models.Process {
+func (m model) GetProcess() *process.Process {
 	return m.def.GetProcess(0)
 }
 
-func (m model) GetDiagram() *models.Diagram {
+func (m model) GetDiagram() *canvas.Diagram {
 	return m.def.GetDiagram(0)
 }
 
-func (m model) GetPlane() *models.Plane {
+func (m model) GetPlane() *canvas.Plane {
 	return m.GetDiagram().GetPlane()
 }
 
@@ -365,35 +370,35 @@ func (m model) GetPlane() *models.Plane {
  * @GetFromStartEvent -> models.SequenceFlow, models.Shape
  * @GetFromTask -> models.SequenceFlow
 **/
-func (m model) GetStartEvent() (*events.StartEvent, *models.Shape) {
+func (m model) GetStartEvent() (*elements.StartEvent, *canvas.Shape) {
 	start := m.GetProcess().GetStartEvent(0)
 	plane := m.GetPlane()
 	shape := m.GetShapeStartEvent(plane)
 	return start, shape
 }
 
-func (m model) GetEndEvent() (*events.EndEvent, *models.Shape) {
+func (m model) GetEndEvent() (*elements.EndEvent, *canvas.Shape) {
 	end := m.GetProcess().GetEndEvent(0)
 	plane := m.GetPlane()
 	shape := m.GetShapeEndEvent(plane)
 	return end, shape
 }
 
-func (m model) GetTask() (*activities.Task, *models.Shape) {
+func (m model) GetTask() (*tasks.Task, *canvas.Shape) {
 	task := m.GetProcess().GetTask(0)
 	plane := m.GetPlane()
 	shape := m.GetShapeTask(plane)
 	return task, shape
 }
 
-func (m model) GetFromStartEvent() (*marker.SequenceFlow, *models.Edge) {
+func (m model) GetFromStartEvent() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := m.GetProcess().GetSequenceFlow(0)
 	plane := m.GetPlane()
 	edge := m.GetEdgeFromStartEvent(plane)
 	return flow, edge
 }
 
-func (m model) GetFromTask() (*marker.SequenceFlow, *models.Edge) {
+func (m model) GetFromTask() (*marker.SequenceFlow, *canvas.Edge) {
 	flow := m.GetProcess().GetSequenceFlow(1)
 	plane := m.GetPlane()
 	edge := m.GetEdgeFromTask(plane)
@@ -411,26 +416,26 @@ func (m model) GetFromTask() (*marker.SequenceFlow, *models.Edge) {
  * @GetEdgeFromStartEvent -> models.Edge
  * @GetEdgeFromTask -> models.Edge
 **/
-func (m model) GetShapePool(e *models.Plane) *models.Shape {
+func (m model) GetShapePool(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(0)
 }
 
-func (m model) GetShapeStartEvent(e *models.Plane) *models.Shape {
+func (m model) GetShapeStartEvent(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(1)
 }
 
-func (m model) GetShapeEndEvent(e *models.Plane) *models.Shape {
+func (m model) GetShapeEndEvent(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(2)
 }
 
-func (m model) GetShapeTask(e *models.Plane) *models.Shape {
+func (m model) GetShapeTask(e *canvas.Plane) *canvas.Shape {
 	return e.GetShape(3)
 }
 
-func (m model) GetEdgeFromStartEvent(e *models.Plane) *models.Edge {
+func (m model) GetEdgeFromStartEvent(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(0)
 }
 
-func (m model) GetEdgeFromTask(e *models.Plane) *models.Edge {
+func (m model) GetEdgeFromTask(e *canvas.Plane) *canvas.Edge {
 	return e.GetEdge(1)
 }

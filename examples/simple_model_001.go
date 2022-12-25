@@ -1,7 +1,9 @@
 package examples
 
 import (
-	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/canvas"
+	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/process"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -14,7 +16,7 @@ type SimpleModel001Repository interface {
 
 // SimpleModel001 ...
 type SimpleModel001 struct {
-	def               *models.Definitions
+	def               *core.Definitions
 	isExecutable      bool
 	ProcessHash       string
 	StartEventCounter int64
@@ -25,7 +27,7 @@ type SimpleModel001 struct {
 }
 
 // NewSimpleModel001 ...
-func NewSimpleModel001(def *models.Definitions) SimpleModel001 {
+func NewSimpleModel001(def *core.Definitions) SimpleModel001 {
 	return SimpleModel001{
 		def:               def,
 		isExecutable:      true,
@@ -170,7 +172,7 @@ func (simpleModel001 *SimpleModel001) SetFromTaskSequenceFlow() {
 func (simpleModel001 *SimpleModel001) SetDiagram() {
 	// diagram attributes
 	var n int64 = 1
-	simpleModel001.def.Diagram[0].SetID(n)
+	simpleModel001.def.Diagram[0].SetID("diagram", n)
 	// plane attributes
 	p := simpleModel001.GetPlane()
 	p.SetID("plane", n)
@@ -184,16 +186,16 @@ func (simpleModel001 *SimpleModel001) SetDiagram() {
  **/
 
 // GetProcess ...
-func (simpleModel001 SimpleModel001) GetProcess() *models.Process {
+func (simpleModel001 SimpleModel001) GetProcess() *process.Process {
 	return &simpleModel001.def.Process[0]
 }
 
 // GetDiagram ...
-func (simpleModel001 SimpleModel001) GetDiagram() *models.Diagram {
+func (simpleModel001 SimpleModel001) GetDiagram() *canvas.Diagram {
 	return &simpleModel001.def.Diagram[0]
 }
 
 // GetPlane ...
-func (simpleModel001 SimpleModel001) GetPlane() *models.Plane {
+func (simpleModel001 SimpleModel001) GetPlane() *canvas.Plane {
 	return &simpleModel001.def.Diagram[0].Plane[0]
 }

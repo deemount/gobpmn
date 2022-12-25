@@ -1,7 +1,8 @@
 package examples
 
 import (
-	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/canvas"
+	"github.com/deemount/gobpmn/models/core"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -12,7 +13,7 @@ type SimpleModel004Repository interface {
 
 // SimpleModel004 ...
 type simpleModel004 struct {
-	def                 *models.Definitions
+	def                 *core.Definitions
 	isExecutable        bool
 	CollaborationHash   string
 	ParticipantHash     string
@@ -31,7 +32,7 @@ type simpleModel004 struct {
 // NewSimpleModel004 ...
 func NewSimpleModel004() SimpleModel004Repository {
 	return &simpleModel004{
-		def:                 new(models.Definitions),
+		def:                 new(core.Definitions),
 		isExecutable:        true,
 		CollaborationHash:   utils.GenerateHash(),
 		ParticipantHash:     utils.GenerateHash(),
@@ -68,7 +69,7 @@ func (simpleModel004 simpleModel004) Create() simpleModel004 {
 }
 
 // Def ...
-func (simpleModel004 *simpleModel004) Def() *models.Definitions {
+func (simpleModel004 *simpleModel004) Def() *core.Definitions {
 	return simpleModel004.def
 }
 
@@ -276,7 +277,7 @@ func (simpleModel004 *simpleModel004) setFromTaskStateSequenceFlow() {
 func (simpleModel004 *simpleModel004) setDiagram() {
 	// diagram attributes
 	var n int64 = 1
-	simpleModel004.def.Diagram[0].SetID(n)
+	simpleModel004.def.Diagram[0].SetID("diagram", n)
 	// plane attributes
 	p := simpleModel004.getPlane()
 	p.SetID("plane", n)
@@ -284,6 +285,6 @@ func (simpleModel004 *simpleModel004) setDiagram() {
 }
 
 // getPlane ...
-func (simpleModel004 simpleModel004) getPlane() *models.Plane {
+func (simpleModel004 simpleModel004) getPlane() *canvas.Plane {
 	return &simpleModel004.def.Diagram[0].Plane[0]
 }

@@ -5,7 +5,7 @@ import "fmt"
 // DocumentationRepository ...
 type DocumentationRepository interface {
 	SetData(data string)
-	GetData() *string
+	GetData() string
 }
 
 // Documentation ...
@@ -27,6 +27,6 @@ func (documentation *Documentation) SetData(data string) {
 /* Content */
 
 // GetData ...
-func (documentation Documentation) GetData() *string {
-	return &documentation.Data
+func (documentation Documentation) GetData() string {
+	return documentation.Data
 }

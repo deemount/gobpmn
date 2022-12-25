@@ -4,59 +4,41 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/camunda"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
 // InclusiveGatewayRepository ...
 type InclusiveGatewayRepository interface {
-	SetID(typ string, suffix interface{})
-	SetName(name string)
-
-	SetCamundaAsyncBefore(asyncBefore bool)
-	SetCamundaAsyncAfter(asyncAfter bool)
-	SetCamundaJobPriority(priority int)
+	GatewayBase
 
 	SetExtensionElements()
-	SetIncoming(num int)
-	SetOutgoing(num int)
-
-	GetID() *string
-	GetName() *string
-
-	GetCamundaAsyncBefore() *bool
-	GetCamundaAsyncAfter() *bool
-	GetCamundaJobPriority() *int
-
-	GetExtensionElements() *camunda.ExtensionElements
-	GetIncoming(num int) *marker.Incoming
-	GetOutgoing(num int) *marker.Outgoing
+	GetExtensionElements() *attributes.ExtensionElements
 }
 
 // InclusiveGateway ...
 type InclusiveGateway struct {
-	ID                 string                      `xml:"id,attr" json:"id"`
-	Name               string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                        `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
-	CamundaAsyncAfter  bool                        `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
-	CamundaJobPriority int                         `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation  `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []camunda.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming           `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing           `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	ID                 string                         `xml:"id,attr" json:"id"`
+	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
+	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
+	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 // TInclusiveGateway ...
 type TInclusiveGateway struct {
-	ID                string                       `xml:"id,attr" json:"id"`
-	Name              string                       `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore       bool                         `xml:"asyncBefore,attr,omitempty" json:"asyncBefore"`
-	AsyncAfter        bool                         `xml:"asyncAfter,attr,omitempty" json:"asyncAfter"`
-	JobPriority       int                          `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation     []attributes.Documentation   `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []camunda.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming            `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing            `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	ID                string                          `xml:"id,attr" json:"id"`
+	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
+	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore"`
+	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter"`
+	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 func NewInclusiveGateway() InclusiveGatewayRepository {
@@ -109,7 +91,7 @@ func (inclusiveGateway *InclusiveGateway) SetCamundaJobPriority(priority int) {
 
 // SetExtensionElements ...
 func (inclusiveGateway *InclusiveGateway) SetExtensionElements() {
-	inclusiveGateway.ExtensionElements = make([]camunda.ExtensionElements, 1)
+	inclusiveGateway.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 // SetIncoming ...
@@ -131,13 +113,13 @@ func (inclusiveGateway *InclusiveGateway) SetOutgoing(num int) {
 /** BPMN **/
 
 // SetID ...
-func (inclusiveGateway InclusiveGateway) GetID() *string {
+func (inclusiveGateway InclusiveGateway) GetID() STR_PTR {
 	return &inclusiveGateway.ID
 
 }
 
 // SetName ...
-func (inclusiveGateway InclusiveGateway) GetName() *string {
+func (inclusiveGateway InclusiveGateway) GetName() STR_PTR {
 	return &inclusiveGateway.Name
 }
 
@@ -161,7 +143,7 @@ func (inclusiveGateway InclusiveGateway) GetCamundaJobPriority() *int {
 /* Elements */
 
 // GetExtensionElements ...
-func (inclusiveGateway InclusiveGateway) GetExtensionElements() *camunda.ExtensionElements {
+func (inclusiveGateway InclusiveGateway) GetExtensionElements() *attributes.ExtensionElements {
 	return &inclusiveGateway.ExtensionElements[0]
 }
 

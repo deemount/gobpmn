@@ -4,59 +4,41 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/camunda"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
 // ParallelGatewayRepository ...
 type ParallelGatewayRepository interface {
-	SetID(typ string, suffix interface{})
-	SetName(name string)
-
-	SetCamundaAsyncBefore(asyncBefore bool)
-	SetCamundaAsyncAfter(asyncAfter bool)
-	SetCamundaJobPriority(priority int)
+	GatewayBase
 
 	SetExtensionElements()
-	SetIncoming(num int)
-	SetOutgoing(num int)
-
-	GetID() *string
-	GetName() *string
-
-	GetCamundaAsyncBefore() *bool
-	GetCamundaAsyncAfter() *bool
-	GetCamundaJobPriority() *int
-
-	GetExtensionElements() *camunda.ExtensionElements
-	GetIncoming(num int) *marker.Incoming
-	GetOutgoing(num int) *marker.Outgoing
+	GetExtensionElements() *attributes.ExtensionElements
 }
 
 // ParallelGateway ...
 type ParallelGateway struct {
-	ID                 string                      `xml:"id,attr" json:"id"`
-	Name               string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                        `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
-	CamundaAsyncAfter  bool                        `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
-	CamundaJobPriority int                         `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation  `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []camunda.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming           `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing           `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	ID                 string                         `xml:"id,attr" json:"id"`
+	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
+	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
+	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
+	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 // TParallelGateway ...
 type TParallelGateway struct {
-	ID                string                      `xml:"id,attr" json:"id"`
-	Name              string                      `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore       bool                        `xml:"asyncBefore,attr,omitempty" json:"asyncBefore"`
-	AsyncAfter        bool                        `xml:"asyncAfter,attr,omitempty" json:"asyncAfter"`
-	JobPriority       int                         `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation     []attributes.Documentation  `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []camunda.ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming           `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing           `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	ID                string                          `xml:"id,attr" json:"id"`
+	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
+	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore"`
+	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter"`
+	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
+	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
+	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 func NewParallelGateway() ParallelGatewayRepository {
@@ -109,7 +91,7 @@ func (parallelGateway *ParallelGateway) SetCamundaJobPriority(priority int) {
 
 // SetExtensionElements ...
 func (parallelGateway *ParallelGateway) SetExtensionElements() {
-	parallelGateway.ExtensionElements = make([]camunda.ExtensionElements, 1)
+	parallelGateway.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 // SetIncoming ...
@@ -131,12 +113,12 @@ func (parallelGateway *ParallelGateway) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (parallelGateway ParallelGateway) GetID() *string {
+func (parallelGateway ParallelGateway) GetID() STR_PTR {
 	return &parallelGateway.ID
 }
 
 // GetName ...
-func (parallelGateway ParallelGateway) GetName() *string {
+func (parallelGateway ParallelGateway) GetName() STR_PTR {
 	return &parallelGateway.Name
 }
 
@@ -160,7 +142,7 @@ func (parallelGateway ParallelGateway) GetCamundaJobPriority() *int {
 /* Elements */
 
 // GetExtensionElements ...
-func (parallelGateway ParallelGateway) GetExtensionElements() *camunda.ExtensionElements {
+func (parallelGateway ParallelGateway) GetExtensionElements() *attributes.ExtensionElements {
 	return &parallelGateway.ExtensionElements[0]
 }
 

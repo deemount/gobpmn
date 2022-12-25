@@ -3,7 +3,7 @@ package examples
 import (
 	"testing"
 
-	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/core"
 )
 
 type Processes struct {
@@ -16,7 +16,7 @@ func (p *Processes) AddModel(m model) {
 
 func TestNewModel(t *testing.T) {
 
-	def := new(models.Definitions)
+	def := new(core.Definitions)
 
 	m := NewModel(def)
 	t.Logf("NewModel(tDef)=%+v", &m)
@@ -25,7 +25,7 @@ func TestNewModel(t *testing.T) {
 
 func TestCreate(t *testing.T) {
 
-	def := new(models.Definitions)
+	def := new(core.Definitions)
 
 	m := NewModel(def)
 	c := m.Create()
@@ -37,7 +37,7 @@ func TestAddModel(t *testing.T) {
 
 	var p Processes
 
-	def := new(models.Definitions)
+	def := new(core.Definitions)
 
 	m := NewModel(def)
 	c := m.Create()

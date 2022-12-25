@@ -6,12 +6,12 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/deemount/gobpmn/models"
+	"github.com/deemount/gobpmn/models/dmn"
 )
 
 type DmnFactory struct {
 	DmnFactoryCounter int
-	Def               models.DefinitionsDMN
+	Def               dmn.DefinitionsDMN
 }
 
 // NewDmnFactory ...
