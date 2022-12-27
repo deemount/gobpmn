@@ -9,14 +9,10 @@ import (
 // CategoryRepository ...
 type CategoryRepository interface {
 	MarkerID
+	MarkerBaseCoreElements
 
 	SetCategoryValue()
 	GetCategoryValue() *CategoryValue
-
-	SetDocumentation()
-	SetExtensionElements()
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
 }
 
 // Category ...
@@ -31,8 +27,8 @@ type Category struct {
 type TCategory struct {
 	ID                string                          `xml:"id,attr,omitempty" json:"id"`
 	CategoryValue     []CategoryValue                 `xml:"categoryValue,omitempty" json:"categoryValue,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 func NewCategory() CategoryRepository {
@@ -97,11 +93,11 @@ func (category Category) GetCategoryValue() *CategoryValue {
 }
 
 // GetDocumentation ...
-func (category Category) GetDocumentation() *attributes.Documentation {
+func (category Category) GetDocumentation() DOCUMENTATION_PTR {
 	return &category.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (category Category) GetExtensionElements() *attributes.ExtensionElements {
+func (category Category) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &category.ExtensionElements[0]
 }

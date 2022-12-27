@@ -3,13 +3,16 @@ package pool
 import "fmt"
 
 // FlowNodeRefRepository ...
-type FlowNodeRefRepository interface{ PoolID }
+type FlowNodeRefRepository interface {
+	PoolID
+}
 
 // FlowNodeRef ...
 type FlowNodeRef struct {
 	ID string `xml:",innerxml,omitempty" json:"id"`
 }
 
+// NewFlowNodeRef ...
 func NewFlowNodeRef() FlowNodeRefRepository {
 	return &FlowNodeRef{}
 }

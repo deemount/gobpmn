@@ -60,14 +60,13 @@ type Type_Boundary_Event elements.BoundaryEventRepository
 type Type_Intermediate_Catch_Event elements.IntermediateCatchEventRepository
 type Type_Intermediate_Throw_Event elements.IntermediateThrowEventRepository
 
-type EventsElementsRepository interface {
+// EventsRepository ...
+type EventsRepository interface {
 	elements.StartEventRepository
 	elements.EndEventRepository
 	elements.BoundaryEventRepository
 	elements.IntermediateCatchEventRepository
 	elements.IntermediateThrowEventRepository
-}
-type EventsDefinitionsRepository interface {
 	definitions.CancelEventDefinitionRepository
 	definitions.CompensateEventDefinitionRepository
 	definitions.ConditionalEventDefinitionRepository
@@ -79,14 +78,12 @@ type EventsDefinitionsRepository interface {
 	definitions.TerminateEventDefinitionRepository
 }
 
-type EventsRepository interface {
-	//EventsElementsRepository
-	//EventsDefinitionsRepository
-}
-
 type Events struct {
+	EventsRepository
 }
 
 func NewEvents() EventsRepository {
 	return &Events{}
 }
+
+func (events *Events) SetID(typ string, suffix interface{}) {}

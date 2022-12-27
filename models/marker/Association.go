@@ -10,16 +10,9 @@ import (
 // AssociationRepository ...
 type AssociationRepository interface {
 	MarkerID
+	MarkerBaseCoreElements
 
-	SetSourceRef(typ string, sourceRef string)
-	SetTargetRef(typ string, targetRef string)
-	GetSourceRef() *string
-	GetTargetRef() *string
-
-	SetDocumentation()
-	SetExtensionElements()
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
+	MarkerBaseReferences
 }
 
 // Association ...
@@ -65,7 +58,7 @@ func (association *Association) SetID(typ string, suffix interface{}) {
 }
 
 // SetSourceRef ...
-func (association *Association) SetSourceRef(typ string, sourceRef string) {
+func (association *Association) SetSourceRef(typ string, sourceRef interface{}) {
 	switch typ {
 	case "activity":
 		association.SourceRef = fmt.Sprintf("Activity_%s", sourceRef)
@@ -86,7 +79,7 @@ func (association *Association) SetSourceRef(typ string, sourceRef string) {
 }
 
 // SetTargetRef ...
-func (association *Association) SetTargetRef(typ string, targetRef string) {
+func (association *Association) SetTargetRef(typ string, targetRef interface{}) {
 	switch typ {
 	case "activity":
 		association.TargetRef = fmt.Sprintf("Activity_%s", targetRef)
@@ -150,11 +143,11 @@ func (association Association) GetTargetRef() *string {
 /** BPMN **/
 
 // GetDocumentation ...
-func (association Association) GetDocumentation() *attributes.Documentation {
+func (association Association) GetDocumentation() DOCUMENTATION_PTR {
 	return &association.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (association Association) GetExtensionElements() *attributes.ExtensionElements {
+func (association Association) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &association.ExtensionElements[0]
 }

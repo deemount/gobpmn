@@ -17,3 +17,11 @@ type Tasks struct {
 func NewTasks() TasksRepository {
 	return &Tasks{}
 }
+
+func (tasks *Tasks) SetID(typ string, suffix interface{}) {
+	tasks.TasksRepository.SetID(typ, suffix)
+}
+
+func (tasks *Tasks) SetName(name string) {
+	tasks.TasksRepository.SetName(name)
+}

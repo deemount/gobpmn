@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -12,64 +13,51 @@ type UserTaskRepository interface {
 	TasksBase
 
 	SetCamundaFormKey(formKey string)
-	SetCamundaAssignee(assignee string)
-	SetCamundaCandidUsers(users string)
-	SetCamundaCandidGroups(groups string)
-	SetCamundaDueDate(due string)
-	SetCamundaFollowUpDate(followUp string)
-	SetCamundaPriority(priority int)
 	GetCamundaFormKey() *string
+	SetCamundaAssignee(assignee string)
 	GetCamundaAssignee() *string
-	GetCamundaCandidUsers() *string
-	GetCamundaCandidGroups() *string
+	SetCamundaCandidateUsers(users string)
+	GetCamundaCandidateUsers() *string
+	SetCamundaCandidateGroups(groups string)
+	GetCamundaCandidateGroups() *string
+	SetCamundaDueDate(due string)
 	GetCamundaDueDate() *string
+	SetCamundaFollowUpDate(followUp string)
 	GetCamundaFollowUpDate() *string
+	SetCamundaPriority(priority int)
 	GetCamundaPriority() *int
 
-	SetDocumentation()
-	SetExtensionElements()
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
+	String() string
 }
 
 // UserTask ...
 type UserTask struct {
-	ID                  string                         `xml:"id,attr" json:"id"`
-	Name                string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaFormKey      string                         `xml:"camunda:formKey,attr,omitempty" json:"formKey,omitempty"`
-	CamundaAsyncBef     bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAft     bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority  int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	CamundaAssignee     string                         `xml:"camunda:assignee,attr,omitempty" json:"assignee,omitempty"`
-	CamundaCandidUsers  string                         `xml:"camunda:candidateUsers,attr,omitempty" json:"candidateUsers,omitempty"`
-	CamundaCandidGroups string                         `xml:"camunda:candidateGroups,attr,omitempty" json:"candidateGroups,omitempty"`
-	CamundaDueDate      string                         `xml:"camunda:dueDate,attr,omitempty" json:"dueDate,omitempty"`
-	CamundaFollowUpDate string                         `xml:"camunda:followUpDate,attr,omitempty" json:"followUpDate,omitempty"`
-	CamundaPriority     int                            `xml:"camunda:priority,attr,omitempty" json:"priority,omitempty"`
-	Documentation       []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements   []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming            []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing            []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCoreElements
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
+	CamundaFormKey         string `xml:"camunda:formKey,attr,omitempty" json:"formKey,omitempty"`
+	CamundaAssignee        string `xml:"camunda:assignee,attr,omitempty" json:"assignee,omitempty"`
+	CamundaCandidateUsers  string `xml:"camunda:candidateUsers,attr,omitempty" json:"candidateUsers,omitempty"`
+	CamundaCandidateGroups string `xml:"camunda:candidateGroups,attr,omitempty" json:"candidateGroups,omitempty"`
+	CamundaDueDate         string `xml:"camunda:dueDate,attr,omitempty" json:"dueDate,omitempty"`
+	CamundaFollowUpDate    string `xml:"camunda:followUpDate,attr,omitempty" json:"followUpDate,omitempty"`
+	CamundaPriority        int    `xml:"camunda:priority,attr,omitempty" json:"priority,omitempty"`
 }
 
 // TUserTask ...
 type TUserTask struct {
-	ID                string                          `xml:"id,attr" json:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	FormKey           string                          `xml:"formKey,attr,omitempty" json:"formKey,omitempty"`
-	AsyncBef          bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	AsyncAft          bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Assignee          string                          `xml:"assignee,attr,omitempty" json:"assignee,omitempty"`
-	CandidUsers       string                          `xml:"candidateUsers,attr,omitempty" json:"candidateUsers,omitempty"`
-	CandidGroups      string                          `xml:"candidateGroups,attr,omitempty" json:"candidateGroups,omitempty"`
-	DueDate           string                          `xml:"dueDate,attr,omitempty" json:"dueDate,omitempty"`
-	FollowUpDate      string                          `xml:"followUpDate,attr,omitempty" json:"followUpDate,omitempty"`
-	Priority          int                             `xml:"priority,attr,omitempty" json:"priority,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCoreElements
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
+	FormKey         string `xml:"formKey,attr,omitempty" json:"formKey,omitempty"`
+	Assignee        string `xml:"assignee,attr,omitempty" json:"assignee,omitempty"`
+	CandidateUsers  string `xml:"candidateUsers,attr,omitempty" json:"candidateUsers,omitempty"`
+	CandidateGroups string `xml:"candidateGroups,attr,omitempty" json:"candidateGroups,omitempty"`
+	DueDate         string `xml:"dueDate,attr,omitempty" json:"dueDate,omitempty"`
+	FollowUpDate    string `xml:"followUpDate,attr,omitempty" json:"followUpDate,omitempty"`
+	Priority        int    `xml:"priority,attr,omitempty" json:"priority,omitempty"`
 }
 
 func NewUserTask() UserTaskRepository {
@@ -109,12 +97,12 @@ func (utask *UserTask) SetCamundaFormKey(formKey string) {
 
 // SetCamundaAsyncBefore ...
 func (utask *UserTask) SetCamundaAsyncBefore(asyncBefore bool) {
-	utask.CamundaAsyncBef = asyncBefore
+	utask.CamundaAsyncBefore = asyncBefore
 }
 
 // SetCamundaAsyncAfter ...
 func (utask *UserTask) SetCamundaAsyncAfter(asyncAfter bool) {
-	utask.CamundaAsyncBef = asyncAfter
+	utask.CamundaAsyncAfter = asyncAfter
 }
 
 // SetCamundaJobPriority ...
@@ -128,13 +116,13 @@ func (utask *UserTask) SetCamundaAssignee(assignee string) {
 }
 
 // SetCamundaCandidUsers ...
-func (ut *UserTask) SetCamundaCandidUsers(users string) {
-	ut.CamundaCandidUsers = users
+func (ut *UserTask) SetCamundaCandidateUsers(users string) {
+	ut.CamundaCandidateUsers = users
 }
 
 // SetCamundaCandidGroups ...
-func (ut *UserTask) SetCamundaCandidGroups(groups string) {
-	ut.CamundaCandidGroups = groups
+func (ut *UserTask) SetCamundaCandidateGroups(groups string) {
+	ut.CamundaCandidateGroups = groups
 }
 
 // SetCamundaDueDate ...
@@ -205,12 +193,12 @@ func (utask UserTask) GetCamundaFormKey() *string {
 
 // GetCamundaAsyncBefore ...
 func (utask UserTask) GetCamundaAsyncBefore() *bool {
-	return &utask.CamundaAsyncBef
+	return &utask.CamundaAsyncBefore
 }
 
 // GetCamundaAsyncAfter ...
 func (utask UserTask) GetCamundaAsyncAfter() *bool {
-	return &utask.CamundaAsyncBef
+	return &utask.CamundaAsyncAfter
 }
 
 // GetCamundaJobPriority ...
@@ -224,13 +212,13 @@ func (utask UserTask) GetCamundaAssignee() *string {
 }
 
 // GetCamundaCandidUsers ...
-func (ut UserTask) GetCamundaCandidUsers() *string {
-	return &ut.CamundaCandidUsers
+func (ut UserTask) GetCamundaCandidateUsers() *string {
+	return &ut.CamundaCandidateUsers
 }
 
 // GetCamundaCandidGroups ...
-func (ut UserTask) GetCamundaCandidGroups() *string {
-	return &ut.CamundaCandidGroups
+func (ut UserTask) GetCamundaCandidateGroups() *string {
+	return &ut.CamundaCandidateGroups
 }
 
 // GetCamundaDueDate ...
@@ -255,12 +243,12 @@ func (utask UserTask) GetCamundaPriority() *int {
 /** BPMN **/
 
 // GetDocumentation ...
-func (utask UserTask) GetDocumentation() *attributes.Documentation {
+func (utask UserTask) GetDocumentation() DOCUMENTATION_PTR {
 	return &utask.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (utask UserTask) GetExtensionElements() *attributes.ExtensionElements {
+func (utask UserTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &utask.ExtensionElements[0]
 }
 
@@ -272,4 +260,13 @@ func (utask UserTask) GetIncoming(num int) *marker.Incoming {
 // GetOutgoing ...
 func (utask UserTask) GetOutgoing(num int) *marker.Outgoing {
 	return &utask.Outgoing[num]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (utask UserTask) String() string {
+	return fmt.Sprintf("id=%v, name=%v", utask.ID, utask.Name)
 }

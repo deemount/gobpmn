@@ -10,16 +10,8 @@ import (
 // MessageFlowRepository ...
 type MessageFlowRepository interface {
 	MarkerBase
-
-	SetSourceRef(typ string, sourceRef interface{})
-	SetTargetRef(typ string, targetRef interface{})
-	GetSourceRef() *string
-	GetTargetRef() *string
-
-	SetDocumentation()
-	SetExtensionElements()
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
+	MarkerBaseCoreElements
+	MarkerBaseReferences
 }
 
 // MessageFlow ...
@@ -156,11 +148,11 @@ func (messageFlow MessageFlow) GetTargetRef() *string {
 /** BPMN **/
 
 // GetDocumentation ...
-func (messageFlow MessageFlow) GetDocumentation() *attributes.Documentation {
+func (messageFlow MessageFlow) GetDocumentation() DOCUMENTATION_PTR {
 	return &messageFlow.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (messageFlow MessageFlow) GetExtensionElements() *attributes.ExtensionElements {
+func (messageFlow MessageFlow) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &messageFlow.ExtensionElements[0]
 }

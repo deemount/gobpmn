@@ -8,26 +8,28 @@ import (
 // MultiInstanceLoopCharacteristicsRepository ...
 type MultiInstanceLoopCharacteristicsRepository interface {
 	SetIsSequential(is bool)
-
-	SetCamundaAsyncBefore(asyncBefore bool)
-	SetCamundaAsyncAfter(asyncAfter bool)
-	SetCamundaCollection(collection string)
-	SetCamundaElementVariable(element string)
-
-	SetExtensionElements()
-	SetLoopCardinality()
-	SetCompletionCondition()
-
 	GetIsSequential() *bool
 
+	SetCamundaAsyncBefore(asyncBefore bool)
 	GetCamundaAsyncBefore() *bool
+
+	SetCamundaAsyncAfter(asyncAfter bool)
 	GetCamundaAsyncAfter() *bool
+
+	SetCamundaCollection(collection string)
 	GetCamundaCollection() *string
+
+	SetCamundaElementVariable(element string)
 	GetCamundaElementVariable() *string
 
-	GetExtensionElements() *attributes.ExtensionElements
+	SetLoopCardinality()
 	GetLoopCardinality() *LoopCardinality
+
+	SetCompletionCondition()
 	GetCompletionCondition() *conditional.CompletionCondition
+
+	SetExtensionElements()
+	GetExtensionElements() *attributes.ExtensionElements
 }
 
 // MultiInstanceLoopCharacteristics ...

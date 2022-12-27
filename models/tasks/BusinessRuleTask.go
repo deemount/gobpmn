@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -14,38 +15,25 @@ type BusinessRuleTaskRepository interface {
 	SetCamundaClass(class string)
 	GetCamundaClass() *string
 
-	SetDocumentation()
-	SetExtensionElements()
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
+	String() string
 }
 
 // BusinessRuleTask ...
 type BusinessRuleTask struct {
-	ID                 string                         `xml:"id,attr" json:"id"`
-	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	CamundaClass       string                         `xml:"camunda:class,attr,omitempty" json:"class,omitempty"`
-	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCoreElements
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
+	CamundaClass string `xml:"camunda:class,attr,omitempty" json:"class,omitempty"`
 }
 
 // TBusinessRuleTask ...
 type TBusinessRuleTask struct {
-	ID                string                          `xml:"id,attr" json:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Class             string                          `xml:"class,attr,omitempty" json:"class,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCoreElements
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.TCompulsionCoreIncomingOutgoing
+	Class string `xml:"class,attr,omitempty" json:"class,omitempty"`
 }
 
 func NewBusinessRuleTask() BusinessRuleTaskRepository {
@@ -168,12 +156,12 @@ func (businessRuleTask BusinessRuleTask) GetCamundaClass() *string {
 /** BPMN **/
 
 // SetDocumentation ...
-func (businessRuleTask BusinessRuleTask) GetDocumentation() *attributes.Documentation {
+func (businessRuleTask BusinessRuleTask) GetDocumentation() DOCUMENTATION_PTR {
 	return &businessRuleTask.Documentation[0]
 }
 
 // SetExtensionElements ...
-func (businessRuleTask BusinessRuleTask) GetExtensionElements() *attributes.ExtensionElements {
+func (businessRuleTask BusinessRuleTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &businessRuleTask.ExtensionElements[0]
 }
 
@@ -185,4 +173,13 @@ func (businessRuleTask BusinessRuleTask) GetIncoming(num int) *marker.Incoming {
 // SetOutgoing ...
 func (businessRuleTask BusinessRuleTask) GetOutgoing(num int) *marker.Outgoing {
 	return &businessRuleTask.Outgoing[num]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (businessRuleTask BusinessRuleTask) String() string {
+	return fmt.Sprintf("id=%v, name=%v", businessRuleTask.ID, businessRuleTask.Name)
 }

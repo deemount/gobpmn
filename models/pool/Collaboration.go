@@ -10,15 +10,12 @@ import (
 // CollaborationRepository ...
 type CollaborationRepository interface {
 	PoolID
+	PoolBaseCoreElements
 
-	SetDocumentation()
-	SetExtensionElements()
 	SetParticipant(num int)
-	SetMessageFlow(num int)
-
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
 	GetParticipant(num int) *Participant
+
+	SetMessageFlow(num int)
 	GetMessageFlow(num int) *marker.MessageFlow
 }
 
@@ -40,11 +37,12 @@ type TCollaboration struct {
 	MessageFlow       []marker.TMessageFlow           `xml:"messageFlow,omitempty" json:"messageFlow,omitempty"`
 }
 
+// NewCollaboration ...
 func NewCollaboration() CollaborationRepository {
 	return &Collaboration{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -64,7 +62,7 @@ func (collaboration *Collaboration) SetID(typ string, suffix interface{}) {
 	}
 }
 
-/* Make Elements */
+/*** Make Elements ***/
 
 /** BPMN **/
 
@@ -88,7 +86,7 @@ func (collaboration *Collaboration) SetMessageFlow(num int) {
 	collaboration.MessageFlow = make([]marker.MessageFlow, num)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -106,12 +104,12 @@ func (collaboration Collaboration) GetID() STR_PTR {
 /** BPMN **/
 
 // GetDocumentation ...
-func (collaboration Collaboration) GetDocumentation() *attributes.Documentation {
+func (collaboration Collaboration) GetDocumentation() DOCUMENTATION_PTR {
 	return &collaboration.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (collaboration Collaboration) GetExtensionElements() *attributes.ExtensionElements {
+func (collaboration Collaboration) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &collaboration.ExtensionElements[0]
 }
 

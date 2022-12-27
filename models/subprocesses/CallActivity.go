@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/loop"
 	"github.com/deemount/gobpmn/models/marker"
 )
@@ -16,48 +17,40 @@ type CallActivityRepository interface {
 	GetCalledElement() *string
 
 	SetCamundaCalledElementTenantID(tenantID string)
-	SetCamundaVariableMappingClass(class string)
 	GetCamundaCalledElementTenantID() *string
+
+	SetCamundaVariableMappingClass(class string)
 	GetCamundaVariableMappingClass() *string
 
 	SetStandardLoopCharacteristics()
-	SetMultiInstanceLoopCharacteristics()
 	GetStandardLoopCharacteristics() *loop.StandardLoopCharacteristics
+
+	SetMultiInstanceLoopCharacteristics()
 	GetMultiInstanceLoopCharacteristics() *loop.MultiInstanceLoopCharacteristics
 }
 
 // CallActivity ...
 type CallActivity struct {
-	ID                               string                                  `xml:"id,attr" json:"id"`
-	Name                             string                                  `xml:"name,attr,omitempty" json:"name,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCoreElements
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
 	CalledElement                    string                                  `xml:"calledElement,attr,omitempty" json:"calledElement,omitempty"`
-	CamundaAsyncBefore               bool                                    `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter                bool                                    `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority               int                                     `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
 	CamundaCalledElementTenantID     string                                  `xml:"camunda:calledElementTenantId,attr,omitempty" json:"calledElementTenantId,omitempty"`
 	CamundaVariableMappingClass      string                                  `xml:"camunda:variableMappingClass,attr,omitempty" json:"variableMappingClass,omitempty"`
-	Documentation                    []attributes.Documentation              `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements                []attributes.ExtensionElements          `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming                         []marker.Incoming                       `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing                         []marker.Outgoing                       `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 	StandardLoopCharacteristics      []loop.StandardLoopCharacteristics      `xml:"bpmn:standardLoopCharacteristics,omitempty" json:"standardLoopCharacteristics,omitempty"`
 	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"bpmn:multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics,omitempty"`
 }
 
 // TCallActivity ...
 type TCallActivity struct {
-	ID                               string                                  `xml:"id,attr" json:"id"`
-	Name                             string                                  `xml:"name,attr,omitempty" json:"name,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCoreElements
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.TCompulsionCoreIncomingOutgoing
 	CalledElement                    string                                  `xml:"calledElement,attr,omitempty" json:"calledElement,omitempty"`
-	CamundaAsyncBefore               bool                                    `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter                bool                                    `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority               int                                     `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
 	CamundaCalledElementTenantID     string                                  `xml:"calledElementTenantId,attr,omitempty" json:"calledElementTenantId,omitempty"`
 	CamundaVariableMappingClass      string                                  `xml:"variableMappingClass,attr,omitempty" json:"variableMappingClass,omitempty"`
-	Documentation                    []attributes.Documentation              `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements                []attributes.TExtensionElements         `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming                         []marker.Incoming                       `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing                         []marker.Outgoing                       `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
 	StandardLoopCharacteristics      []loop.StandardLoopCharacteristics      `xml:"standardLoopCharacteristics,omitempty" json:"standardLoopCharacteristics,omitempty"`
 	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics,omitempty"`
 }
@@ -211,12 +204,12 @@ func (ca CallActivity) GetCamundaVariableMappingClass() *string {
 /** BPMN **/
 
 // GetDocumentation ...
-func (ca CallActivity) GetDocumentation() *attributes.Documentation {
+func (ca CallActivity) GetDocumentation() DOCUMENTATION_PTR {
 	return &ca.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (ca CallActivity) GetExtensionElements() *attributes.ExtensionElements {
+func (ca CallActivity) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &ca.ExtensionElements[0]
 }
 

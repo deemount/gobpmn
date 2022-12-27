@@ -4,13 +4,10 @@ import "fmt"
 
 // ConditionRepository ...
 type ConditionRepository interface {
+	ConditionalScriptFormat
+	ConditionalScript
 	SetConditionType()
-	SetScriptFormat(format string)
-	SetScript(script string)
-
 	GetConditionType() *string
-	GetScriptFormat() *string
-	GetScript() *string
 }
 
 // Condition ...
@@ -24,7 +21,7 @@ func NewCondition() ConditionRepository {
 	return &Condition{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -47,7 +44,7 @@ func (condition *Condition) SetScript(script string) {
 	condition.Script = script
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -61,11 +58,11 @@ func (condition Condition) GetConditionType() *string {
 }
 
 // GetScriptFormat ...
-func (condition Condition) GetScriptFormat() *string {
+func (condition Condition) GetScriptFormat() STR_PTR {
 	return &condition.ScriptFormat
 }
 
 // GetScript ...
-func (condition Condition) GetScript() *string {
+func (condition Condition) GetScript() STR_PTR {
 	return &condition.Script
 }

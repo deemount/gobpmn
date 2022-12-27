@@ -6,6 +6,8 @@ import (
 )
 
 type STR_PTR *string
+type DOCUMENTATION_PTR *attributes.Documentation
+type EXTENSION_ELEMENTS_PTR *attributes.ExtensionElements
 
 // subprocesses
 const SUB_PROCESS string = "subProcess"
@@ -21,13 +23,6 @@ type SubprocessesID interface {
 type SubprocessesName interface {
 	SetName(name string)
 	GetName() STR_PTR
-}
-
-type SubprocessesCore interface {
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
 }
 
 type SubprocessesMarker interface {
@@ -51,10 +46,17 @@ type SubprocessesCamundaBase interface {
 	GetCamundaJobPriority() *int
 }
 
+type SubprocessesBaseCoreElements interface {
+	SetDocumentation()
+	GetDocumentation() DOCUMENTATION_PTR
+	SetExtensionElements()
+	GetExtensionElements() EXTENSION_ELEMENTS_PTR
+}
+
 type SubprocessesBase interface {
 	SubprocessesID
 	SubprocessesName
-	SubprocessesCore
+	SubprocessesBaseCoreElements
 	SubprocessesMarker
 	SubprocessesCamundaBase
 }

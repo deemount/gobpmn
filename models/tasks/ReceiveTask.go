@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -14,36 +15,25 @@ type ReceiveTaskRepository interface {
 	SetMessageRef(suffix string)
 	GetMessageRef(suffix string) *string
 
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
+	String() string
 }
 
 // ReceiveTask ...
 type ReceiveTask struct {
-	ID                 string                         `xml:"id,attr" json:"id,omitempty"`
-	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	MessageRef         string                         `xml:"messageRef,attr,omitempty" json:"messageRef,omitempty"`
-	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,attr,omitempty"`
-	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,attr,omitempty"`
-	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,attr,omitempty"`
-	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCoreElements
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
+	MessageRef string `xml:"messageRef,attr,omitempty" json:"messageRef,omitempty"`
 }
 
 // TReceiveTask ...
 type TReceiveTask struct {
-	ID                string                          `xml:"id,attr" json:"id,omitempty"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	MessageRef        string                          `xml:"messageRef,attr,omitempty" json:"messageRef,omitempty"`
-	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,attr,omitempty"`
-	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,attr,omitempty"`
-	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,attr,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCoreElements
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.TCompulsionCoreIncomingOutgoing
+	MessageRef string `xml:"messageRef,attr,omitempty" json:"messageRef,omitempty"`
 }
 
 func NewReceiveTask() ReceiveTaskRepository {
@@ -162,12 +152,12 @@ func (receiveTask ReceiveTask) GetCamundaJobPriority() *int {
 /* Elements */
 
 // GetDocumentation ...
-func (receiveTask ReceiveTask) GetDocumentation() *attributes.Documentation {
+func (receiveTask ReceiveTask) GetDocumentation() DOCUMENTATION_PTR {
 	return &receiveTask.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (receiveTask ReceiveTask) GetExtensionElements() *attributes.ExtensionElements {
+func (receiveTask ReceiveTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &receiveTask.ExtensionElements[0]
 }
 
@@ -179,4 +169,13 @@ func (receiveTask ReceiveTask) GetIncoming(num int) *marker.Incoming {
 // GetOutgoing ...
 func (receiveTask ReceiveTask) GetOutgoing(num int) *marker.Outgoing {
 	return &receiveTask.Outgoing[num]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (receiveTask ReceiveTask) String() string {
+	return fmt.Sprintf("id=%v, name=%v", receiveTask.ID, receiveTask.Name)
 }

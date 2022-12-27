@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/data"
 	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/gateways"
 	"github.com/deemount/gobpmn/models/marker"
@@ -14,17 +15,11 @@ import (
 
 // ProcessRepository ...
 type ProcessRepository interface {
-
+	ProcessBase
 	/*
 	 * Base
 	 */
-	// Setter
-	SetID(typ string, suffix interface{})
-	SetName(name string)
 	SetIsExecutable(isExec bool)
-	// Getter
-	GetID() *string
-	GetName() *string
 	GetIsExecutable() *bool
 
 	/*
@@ -74,18 +69,14 @@ type ProcessRepository interface {
 	SetCamundaTaskPriority(priority int)
 	SetCamundaCandidateStarterGroups(groups string)
 	SetCamundaCandiddateStarterUsers(users string)
+	SetCamundaHistoryTimeToLive(tolive string)
 	// Getter
 	GetCamundaVersionTag() *string
 	GetCamundaJobPriority() *int
 	GetCamundaTaskPriority() *int
 	GetCamundaCandidateStarterGroups() *string
 	GetCamundaCandiddateStarterUsers() *string
-
-	/*
-	 *
-	 */
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
+	GetCamundaHistoryTimeToLive() *string
 
 	/*
 	 * Pool
@@ -126,6 +117,14 @@ type ProcessRepository interface {
 	GetSubProcess(num int) *subprocesses.SubProcess
 	GetTransaction(num int) *subprocesses.Transaction
 	GetAdHocSubProcess(num int) *subprocesses.AdHocSubProcess
+
+	/*
+	 * Data
+	 */
+	// Setter
+	SetDataObject(num int)
+	// Getter
+	GetDataObject(num int) *data.DataObject
 }
 
 // Process ...
@@ -140,8 +139,10 @@ type Process struct {
 	CamundaTaskPriority           int    `xml:"camunda:taskPriority,attr,omitempty" json:"taskPriority,omitempty" csv:"TASK_PRIORITY"`
 	CamundaCandidateStarterGroups string `xml:"camunda:candidateStarterGroups,attr,omitempty" json:"candidateStarterGroups,omitempty" csv:"CANDIDATE_STARTER_GROUPS"`
 	CamundaCandidateStarterUsers  string `xml:"camunda:candidateStarterUsers,attr,omitempty" json:"candidateStarterUsers,omitempty" csv:"CANDIDATE_STARTER_USERS"`
+	CamundaHistoryTimeToLive      string `xml:"camunda:historyTimeToLive,attr,omitempty" json:"historyTimeToLive,omitempty" csv:"HISTORY_TIME_TO_LIVE"`
 	//
-	Documentation []attributes.Documentation `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty" csv:"-"`
+	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty" csv:"-"`
+	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
 	// Pool
 	LaneSet []pool.LaneSet `xml:"bpmn:laneSet,omitempty" json:"laneSet,omitempty" csv:"-"`
 	// Events
@@ -172,6 +173,8 @@ type Process struct {
 	// Marker
 	Association  []marker.Association  `xml:"bpmn:association,omitempty" json:"association,omitempty"`
 	SequenceFlow []marker.SequenceFlow `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty" csv:"-"`
+	// Data
+	DataObject []data.DataObject `xml:"bpmn:dataObject,omitempty" json:"dataObject,omitempty"`
 }
 
 // TProcess ...
@@ -184,7 +187,9 @@ type TProcess struct {
 	TaskPriority           int                                `xml:"taskPriority,attr,omitempty" json:"taskPriority,omitempty"`
 	CandidateStarterGroups string                             `xml:"candidateStarterGroups,attr,omitempty" json:"candidateStarterGroups,omitempty"`
 	CandidateStarterUsers  string                             `xml:"candidateStarterUsers,attr,omitempty" json:"candidateStarterUsers,omitempty"`
+	HistoryTimeToLive      string                             `xml:"historyTimeToLive,attr,omitempty" json:"historyTimeToLive,omitempty"`
 	Documentation          []attributes.Documentation         `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements      []attributes.TExtensionElements    `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 	LaneSet                []pool.LaneSet                     `xml:"laneSet,omitempty" json:"laneSet,omitempty"`
 	StartEvent             []elements.TStartEvent             `xml:"startEvent,omitemnpty" json:"startEvent,omitempty"`
 	BoundaryEvent          []elements.TBoundaryEvent          `xml:"boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty"`
@@ -209,6 +214,7 @@ type TProcess struct {
 	EventBasedGateway      []gateways.TEventBasedGateway      `xml:"eventBasedGateway,omitempty" json:"eventBasedGateway,omitempty"`
 	Association            []marker.TAssociation              `xml:"association,omitempty" json:"association,omitempty"`
 	SequenceFlow           []marker.TSequenceFlow             `xml:"sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
+	DataObject             []data.DataObject                  `xml:"dataObject,omitempty" json:"dataObject,omitempty"`
 }
 
 func NewProcess() ProcessRepository {
@@ -271,6 +277,11 @@ func (process *Process) SetCamundaCandiddateStarterUsers(users string) {
 	process.CamundaCandidateStarterUsers = users
 }
 
+// SetCamundaHistoryTimeToLive ...
+func (process *Process) SetCamundaHistoryTimeToLive(tolive string) {
+	process.CamundaHistoryTimeToLive = tolive
+}
+
 /*** Make Elements ***/
 
 /** BPMN **/
@@ -280,6 +291,11 @@ func (process *Process) SetCamundaCandiddateStarterUsers(users string) {
 // SetDocumentation ...
 func (process *Process) SetDocumentation() {
 	process.Documentation = make([]attributes.Documentation, 1)
+}
+
+// SetExtensionElements ...
+func (process *Process) SetExtensionElements() {
+	process.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 /** LaneSet **/
@@ -316,7 +332,7 @@ func (process *Process) SetIntermediateThrowEvent(num int) {
 	process.IntermediateThrowEvent = make([]elements.IntermediateThrowEvent, num)
 }
 
-/*** Task ***/
+/*** Tasks ***/
 
 // SetTask ...
 func (process *Process) SetTask(num int) {
@@ -412,7 +428,14 @@ func (process *Process) SetSequenceFlow(num int) {
 	process.SequenceFlow = make([]marker.SequenceFlow, num)
 }
 
-/**
+/*** Data ***/
+
+// SetDataObject ...
+func (process *Process) SetDataObject(num int) {
+	process.DataObject = make([]data.DataObject, num)
+}
+
+/*
  * Default Getters
  */
 
@@ -421,12 +444,12 @@ func (process *Process) SetSequenceFlow(num int) {
 /** BPMN **/
 
 // GetID ...
-func (process Process) GetID() *string {
+func (process Process) GetID() STR_PTR {
 	return &process.ID
 }
 
 // GetName ...
-func (process Process) GetName() *string {
+func (process Process) GetName() STR_PTR {
 	return &process.Name
 }
 
@@ -462,6 +485,11 @@ func (process *Process) GetCamundaCandiddateStarterUsers() *string {
 	return &process.CamundaCandidateStarterUsers
 }
 
+// GetCamundaHistoryTimeToLive ...
+func (process *Process) GetCamundaHistoryTimeToLive() *string {
+	return &process.CamundaHistoryTimeToLive
+}
+
 /* Elements */
 
 /** BPMN **/
@@ -469,8 +497,13 @@ func (process *Process) GetCamundaCandiddateStarterUsers() *string {
 /** Documentation **/
 
 // GetDocumentation ...
-func (process Process) GetDocumentation() *attributes.Documentation {
+func (process Process) GetDocumentation() DOCUMENTATION_PTR {
 	return &process.Documentation[0]
+}
+
+// SetExtensionElements ...
+func (process *Process) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+	return &process.ExtensionElements[0]
 }
 
 /** LaneSet **/
@@ -507,7 +540,7 @@ func (process Process) GetIntermediateThrowEvent(num int) *elements.Intermediate
 	return &process.IntermediateThrowEvent[num]
 }
 
-/*** Task ***/
+/*** Tasks ***/
 
 // GetTask ...
 func (process Process) GetTask(num int) *tasks.Task {
@@ -601,4 +634,11 @@ func (process Process) GetAssociation(num int) *marker.Association {
 // GetSequenceFlow ...
 func (process Process) GetSequenceFlow(num int) *marker.SequenceFlow {
 	return &process.SequenceFlow[num]
+}
+
+/*** Data ***/
+
+// GetDataObject ...
+func (process Process) GetDataObject(num int) *data.DataObject {
+	return &process.DataObject[num]
 }

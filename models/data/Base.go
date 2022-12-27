@@ -1,4 +1,4 @@
-package pool
+package data
 
 import "github.com/deemount/gobpmn/models/attributes"
 
@@ -6,32 +6,35 @@ type STR_PTR *string
 type DOCUMENTATION_PTR *attributes.Documentation
 type EXTENSION_ELEMENTS_PTR *attributes.ExtensionElements
 
-type PoolID interface {
+// DataBaseID ...
+type DataBaseID interface {
 	SetID(typ string, suffix interface{})
 	GetID() STR_PTR
 }
 
-type PoolName interface {
+// DataBaseName ...
+type DataBaseName interface {
 	SetName(name string)
 	GetName() STR_PTR
 }
 
-type PoolBaseDocumentation interface {
+type DataBaseDocumentation interface {
 	SetDocumentation()
 	GetDocumentation() DOCUMENTATION_PTR
 }
 
-type PoolBaseExtensionElements interface {
+type DataBaseExtensionElements interface {
 	SetExtensionElements()
 	GetExtensionElements() EXTENSION_ELEMENTS_PTR
 }
 
-type PoolBaseCoreElements interface {
-	PoolBaseDocumentation
-	PoolBaseExtensionElements
+type DataBaseCoreElements interface {
+	DataBaseDocumentation
+	DataBaseExtensionElements
 }
 
-type PoolBase interface {
-	PoolID
-	PoolName
+// DataBaseAttributes ...
+type DataBaseAttributes interface {
+	DataBaseID
+	DataBaseName
 }

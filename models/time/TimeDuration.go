@@ -3,13 +3,7 @@ package time
 import "fmt"
 
 // TimeDurationRepository ...
-type TimeDurationRepository interface {
-	SetTimerDefinitionType()
-	SetTimerDefinition(timerDefinition string)
-
-	GetTimerDefinitionType() string
-	GetTimerDefinition() string
-}
+type TimeDurationRepository interface{ TimeBase }
 
 // TimeDuration ...
 type TimeDuration struct {
@@ -44,11 +38,11 @@ func (timeduration *TimeDuration) SetTimerDefinition(timerDefinition string) {
 /** BPMN **/
 
 // GetTimerDefinitionType ...
-func (timeduration TimeDuration) GetTimerDefinitionType() string {
-	return timeduration.TimerDefType
+func (timeduration TimeDuration) GetTimerDefinitionType() *string {
+	return &timeduration.TimerDefType
 }
 
 // GetTimerDefinition ...
-func (timeduration TimeDuration) GetTimerDefinition() string {
-	return timeduration.TimerDef
+func (timeduration TimeDuration) GetTimerDefinition() *string {
+	return &timeduration.TimerDef
 }

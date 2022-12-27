@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -15,30 +16,20 @@ type TransactionRepository interface {
 
 // Transaction ...
 type Transaction struct {
-	ID                 string                         `xml:"id,attr" json:"id"`
-	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
-	SequenceFlow       []marker.SequenceFlow          `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCoreElements
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
+	SequenceFlow []marker.SequenceFlow `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
 }
 
 // TTransaction ...
 type TTransaction struct {
-	ID                 string                          `xml:"id,attr" json:"id"`
-	Name               string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter  bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
-	SequenceFlow       []marker.SequenceFlow           `xml:"sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCoreElements
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.TCompulsionCoreIncomingOutgoing
+	SequenceFlow []marker.SequenceFlow `xml:"sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
 }
 
 func NewTransaction() TransactionRepository {
@@ -158,12 +149,12 @@ func (transaction Transaction) GetCamundaJobPriority() *int {
 /** BPMN **/
 
 // GetDocumentation ...
-func (transaction Transaction) GetDocumentation() *attributes.Documentation {
+func (transaction Transaction) GetDocumentation() DOCUMENTATION_PTR {
 	return &transaction.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (transaction Transaction) GetExtensionElements() *attributes.ExtensionElements {
+func (transaction Transaction) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &transaction.ExtensionElements[0]
 }
 

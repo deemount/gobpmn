@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
@@ -14,26 +15,18 @@ type EndEventRepository interface {
 	EventElementsBase
 	EventElementsCamundaBase
 	EventElementsMarkerIncoming
+	EventElementsCoreElements
 	eventsbase.EventsSetDefinitionsBase
 	eventsbase.EventsSetTerminateBase
 	definitions.DefinitionsGetElementsBase
 	definitions.DefinitionsGetTerminateBase
-
-	SetDocumentation()
-	SetExtensionElements()
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
 }
 
 // EndEvent ...
 type EndEvent struct {
-	ID                        string                                  `xml:"id,attr" json:"id"`
-	Name                      string                                  `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore        bool                                    `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter         bool                                    `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority        int                                     `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation             []attributes.Documentation              `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements         []attributes.ExtensionElements          `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreElements
 	Incoming                  []marker.Incoming                       `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
 	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
 	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
@@ -45,13 +38,9 @@ type EndEvent struct {
 
 // TEndEvent ...
 type TEndEvent struct {
-	ID                        string                                  `xml:"id,attr" json:"id"`
-	Name                      string                                  `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore               bool                                    `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	AsyncAfter                bool                                    `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	JobPriority               int                                     `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation             []attributes.Documentation              `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements         []attributes.TExtensionElements         `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.TCompulsionCoreElements
 	Incoming                  []marker.Incoming                       `xml:"incoming,omitempty" json:"incoming,omitempty"`
 	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
 	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
@@ -107,7 +96,7 @@ func (endEvent *EndEvent) SetCamundaJobPriority(priority int) {
 	endEvent.CamundaJobPriority = priority
 }
 
-/* Elements */
+/*** Make Elements ***/
 
 /** BPMN **/
 

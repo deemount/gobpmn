@@ -3,13 +3,7 @@ package time
 import "fmt"
 
 // TimeCycle ...
-type TimeCycleRepository interface {
-	SetTimerDefinitionType()
-	SetTimerDefinition(timerDefinition string)
-
-	GetTimerDefinitionType() string
-	GetTimerDefinition() string
-}
+type TimeCycleRepository interface{ TimeBase }
 
 // TimeCycle ...
 type TimeCycle struct {
@@ -17,7 +11,7 @@ type TimeCycle struct {
 	TimerDef     string `xml:",innerxml" json:"timerDef,omitempty"`
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -35,7 +29,7 @@ func (timecycle *TimeCycle) SetTimerDefinition(timerDefinition string) {
 	timecycle.TimerDef = timerDefinition
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -44,11 +38,11 @@ func (timecycle *TimeCycle) SetTimerDefinition(timerDefinition string) {
 /** BPMN **/
 
 // GetTimerDefinitionType ...
-func (timecycle TimeCycle) GetTimerDefinitionType() string {
-	return timecycle.TimerDefType
+func (timecycle TimeCycle) GetTimerDefinitionType() *string {
+	return &timecycle.TimerDefType
 }
 
 // GetTimerDefinition ...
-func (timecycle TimeCycle) GetTimerDefinition() string {
-	return timecycle.TimerDef
+func (timecycle TimeCycle) GetTimerDefinition() *string {
+	return &timecycle.TimerDef
 }

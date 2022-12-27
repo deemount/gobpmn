@@ -1,8 +1,13 @@
 package tasks
 
-import "github.com/deemount/gobpmn/models/marker"
+import (
+	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/marker"
+)
 
 type STR_PTR *string
+type DOCUMENTATION_PTR *attributes.Documentation
+type EXTENSION_ELEMENTS_PTR *attributes.ExtensionElements
 
 const TASK = "task"
 const TASK_SCRIPT = "scriptTask"
@@ -44,8 +49,16 @@ type TasksCamundaBase interface {
 	GetCamundaJobPriority() *int
 }
 
+type TasksBaseCoreElements interface {
+	SetDocumentation()
+	SetExtensionElements()
+	GetDocumentation() DOCUMENTATION_PTR
+	GetExtensionElements() EXTENSION_ELEMENTS_PTR
+}
+
 type TasksBase interface {
 	TasksBaseAttributes
 	TasksMarkers
 	TasksCamundaBase
+	TasksBaseCoreElements
 }

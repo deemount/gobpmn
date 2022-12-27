@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
+	"github.com/deemount/gobpmn/models/data"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -11,45 +13,38 @@ import (
 type TaskRepository interface {
 	TasksBase
 
-	String() string
+	SetDataInputAssociation(num int)
+	GetDataInputAssociation(num int) *data.DataInputAssociation
 
-	SetDocumentation()
-	SetExtensionElements()
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
+	String() string
 }
 
 // Task ...
 type Task struct {
-	ID                 string                         `xml:"id,attr,omitempty" json:"id" csv:"id"`
-	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty" csv:"name"`
-	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCoreElements
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
+	Property             []attributes.Property       `xml:"bpmn:property,omitempty" json:"property,omitempty"`
+	DataInputAssociation []data.DataInputAssociation `xml:"bpmn:dataInputAssociation,omitempty" json:"dataInputAssociation,omitempty"`
 }
 
 // TTask ...
 type TTask struct {
-	ID                string                          `xml:"id,attr,omitempty" json:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCoreElements
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.TCompulsionCoreIncomingOutgoing
+	Property             []attributes.Property       `xml:"property,omitempty" json:"property,omitempty"`
+	DataInputAssociation []data.DataInputAssociation `xml:"dataInputAssociation,omitempty" json:"dataInputAssociation,omitempty"`
 }
 
+// NewTask ...
 func NewTask() TaskRepository {
 	return &Task{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -59,7 +54,14 @@ func NewTask() TaskRepository {
 
 // SetID ...
 func (task *Task) SetID(typ string, suffix interface{}) {
-	task.ID = fmt.Sprintf("Activity_%s", suffix)
+	switch typ {
+	case "activity":
+		task.ID = fmt.Sprintf("Activity_%v", suffix)
+		break
+	case "id":
+		task.ID = fmt.Sprintf("%s", suffix)
+		break
+	}
 }
 
 // SetName ...
@@ -88,6 +90,11 @@ func (task *Task) SetCamundaJobPriority(priority int) {
 
 /** BPMN **/
 
+// SetProperty ...
+func (task *Task) SetProperty() {
+	task.Property = make([]attributes.Property, 1)
+}
+
 // SetDocumentation ...
 func (task *Task) SetDocumentation() {
 	task.Documentation = make([]attributes.Documentation, 1)
@@ -96,6 +103,11 @@ func (task *Task) SetDocumentation() {
 // SetExtensionElements ...
 func (task *Task) SetExtensionElements() {
 	task.ExtensionElements = make([]attributes.ExtensionElements, 1)
+}
+
+// SetDataInputAssociation ...
+func (task *Task) SetDataInputAssociation(num int) {
+	task.DataInputAssociation = make([]data.DataInputAssociation, num)
 }
 
 // SetIncoming ...
@@ -108,16 +120,7 @@ func (task *Task) SetOutgoing(num int) {
 	task.Outgoing = make([]marker.Outgoing, num)
 }
 
-/**
- * Default String
- */
-
-// String ...
-func (task Task) String() string {
-	return fmt.Sprintf("id=%v, name=%v", task.ID, task.Name)
-}
-
-/**
+/*
  * Default Getters
  */
 
@@ -156,14 +159,24 @@ func (task Task) GetCamundaJobPriority() *int {
 
 /** BPMN **/
 
+// GetProperty ...
+func (task Task) GetProperty() *attributes.Property {
+	return &task.Property[0]
+}
+
 // GetDocumentation ...
-func (task Task) GetDocumentation() *attributes.Documentation {
+func (task Task) GetDocumentation() DOCUMENTATION_PTR {
 	return &task.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (task Task) GetExtensionElements() *attributes.ExtensionElements {
+func (task Task) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &task.ExtensionElements[0]
+}
+
+// GetDataInputAssociation ...
+func (task Task) GetDataInputAssociation(num int) *data.DataInputAssociation {
+	return &task.DataInputAssociation[num]
 }
 
 // GetIncoming ...
@@ -174,4 +187,13 @@ func (task Task) GetIncoming(num int) *marker.Incoming {
 // GetOutgoing ...
 func (task Task) GetOutgoing(num int) *marker.Outgoing {
 	return &task.Outgoing[num]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (task Task) String() string {
+	return fmt.Sprintf("id=%v, name=%v", task.ID, task.Name)
 }

@@ -5,7 +5,7 @@ import "fmt"
 // TextRepository ...
 type TextRepository interface {
 	SetContent(text string)
-	GetContent() string
+	GetContent() *string
 }
 
 // Text ...
@@ -39,6 +39,6 @@ func (txt *Text) SetContent(text string) {
 /** BPMN **/
 
 // GetText ...
-func (txt Text) GetContent() string {
-	return txt.Text
+func (txt Text) GetContent() *string {
+	return &txt.Text
 }

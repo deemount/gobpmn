@@ -3,17 +3,15 @@ package marker
 import (
 	"fmt"
 
+	"github.com/deemount/gobpmn/models/attributes"
 	"github.com/deemount/gobpmn/models/conditional"
 )
 
 // SequenceFlowRepository ...
 type SequenceFlowRepository interface {
 	MarkerBase
-
-	SetSourceRef(typ string, sourceRef interface{})
-	SetTargetRef(typ string, targetRef interface{})
-	GetSourceRef() *string
-	GetTargetRef() *string
+	MarkerBaseReferences
+	MarkerBaseCoreElements
 
 	SetConditionExpression()
 	GetConditionExpression() *conditional.ConditionExpression
@@ -26,6 +24,8 @@ type SequenceFlow struct {
 	SourceRef           string                            `xml:"sourceRef,attr" json:"sourceRef"`
 	TargetRef           string                            `xml:"targetRef,attr" json:"targetRef"`
 	ConditionExpression []conditional.ConditionExpression `xml:"bpmn:conditionExpression,omitempty" json:"conditionExpression,omitempty"`
+	Documentation       []attributes.Documentation        `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements   []attributes.ExtensionElements    `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 // TSequenceFlow ...
@@ -35,6 +35,8 @@ type TSequenceFlow struct {
 	SourceRef           string                            `xml:"sourceRef,attr" json:"sourceRef"`
 	TargetRef           string                            `xml:"targetRef,attr" json:"targetRef"`
 	ConditionExpression []conditional.ConditionExpression `xml:"conditionExpression,omitempty" json:"conditionExpression,omitempty"`
+	Documentation       []attributes.Documentation        `xml:"documentation,omitempty" json:"documentation,omitempty"`
+	ExtensionElements   []attributes.TExtensionElements   `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
 }
 
 func NewSequenceFlow() SequenceFlowRepository {
@@ -112,6 +114,16 @@ func (sequenceFlow *SequenceFlow) SetConditionExpression() {
 	sequenceFlow.ConditionExpression = make([]conditional.ConditionExpression, 1)
 }
 
+// SetDocumentation ...
+func (sequenceFlow *SequenceFlow) SetDocumentation() {
+	sequenceFlow.Documentation = make([]attributes.Documentation, 1)
+}
+
+// SetExtensionElements ...
+func (sequenceFlow *SequenceFlow) SetExtensionElements() {
+	sequenceFlow.ExtensionElements = make([]attributes.ExtensionElements, 1)
+}
+
 /*
  * Default Getters
  */
@@ -147,4 +159,14 @@ func (sequenceFlow SequenceFlow) GetTargetRef() *string {
 // GetConditionExpression ...
 func (sequenceFlow SequenceFlow) GetConditionExpression() *conditional.ConditionExpression {
 	return &sequenceFlow.ConditionExpression[0]
+}
+
+// GetDocumentation ...
+func (sequenceFlow SequenceFlow) GetDocumentation() DOCUMENTATION_PTR {
+	return &sequenceFlow.Documentation[0]
+}
+
+// GetExtensionElements ...
+func (sequenceFlow SequenceFlow) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+	return &sequenceFlow.ExtensionElements[0]
 }

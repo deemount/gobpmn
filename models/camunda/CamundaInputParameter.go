@@ -1,5 +1,18 @@
 package camunda
 
+// CamundaInputParameterRepository ...
+type CamundaInputParameterRepository interface {
+	CamundaBaseScriptElements
+	SetLocalVariableName(variable string)
+	GetLocalVariableName() *string
+	SetVariableAssignmentValue(value string)
+	GetVariableAssignmentValue() *string
+	SetCamundaList()
+	GetCamundaList() *CamundaList
+	SetCamundaMap()
+	GetCamundaMap() *CamundaMap
+}
+
 // CamundaInputParameter ...
 type CamundaInputParameter struct {
 	LocalVariableName       string          `xml:"name,attr,omitempty" json:"localVariableName,omitempty"`
@@ -9,11 +22,29 @@ type CamundaInputParameter struct {
 	CamundaMap              []CamundaMap    `xml:"camunda:map,omitempty" json:"map,omitempty"`
 }
 
+// TCamundaInputParameter ...
+type TCamundaInputParameter struct {
+	LocalVariableName       string          `xml:"name,attr,omitempty" json:"localVariableName,omitempty"`
+	VariableAssignmentValue string          `xml:",innerxml,omitempty" json:"variableAssignmentValue,omitempty"`
+	Script                  []CamundaScript `xml:"script,omitempty" json:"script,omitempty"`
+	List                    []CamundaList   `xml:"list,omitempty" json:"list,omitempty"`
+	Map                     []CamundaMap    `xml:"map,omitempty" json:"map,omitempty"`
+}
+
+// NewCamundaInputParameter
+func NewCamundaInputParameter() CamundaInputParameterRepository {
+	return &CamundaInputParameter{}
+}
+
+/*
+ * Default Setters
+ */
+
 /* Attributes */
 
 /** BPMN **/
 
-// SetName ...
+// SetLocalVariableName ...
 func (inputParameter *CamundaInputParameter) SetLocalVariableName(variable string) {
 	inputParameter.LocalVariableName = variable
 }
@@ -40,4 +71,41 @@ func (inputParameter *CamundaInputParameter) SetCamundaList() {
 // SetCamundaMap ...
 func (inputParameter *CamundaInputParameter) SetCamundaMap() {
 	inputParameter.CamundaMap = make([]CamundaMap, 1)
+}
+
+/*
+ * Default Getters
+ */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetLocalVariableName ...
+func (inputParameter CamundaInputParameter) GetLocalVariableName() *string {
+	return &inputParameter.LocalVariableName
+}
+
+// GetVariableAssignmentValue ...
+func (inputParameter CamundaInputParameter) GetVariableAssignmentValue() *string {
+	return &inputParameter.VariableAssignmentValue
+}
+
+/* Elements */
+
+/** Camunda **/
+
+// GetCamundaScript ...
+func (inputParameter CamundaInputParameter) GetCamundaScript() *CamundaScript {
+	return &inputParameter.CamundaScript[0]
+}
+
+// GetCamundaList ...
+func (inputParameter CamundaInputParameter) GetCamundaList() *CamundaList {
+	return &inputParameter.CamundaList[0]
+}
+
+// GetCamundaMap ...
+func (inputParameter CamundaInputParameter) GetCamundaMap() *CamundaMap {
+	return &inputParameter.CamundaMap[0]
 }

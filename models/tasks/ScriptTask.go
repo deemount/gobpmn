@@ -4,43 +4,30 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
 // ScriptTaskRepository ...
 type ScriptTaskRepository interface {
 	TasksBase
-
-	SetDocumentation()
-	SetExtensionElements()
-	GetDocumentation() *attributes.Documentation
-	GetExtensionElements() *attributes.ExtensionElements
+	String() string
 }
 
 // ScriptTask ...
 type ScriptTask struct {
-	ID                 string                         `xml:"id,attr,omitempty" json:"id"`
-	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCoreElements
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
 }
 
 // TScriptTask ...
 type TScriptTask struct {
-	ID                string                          `xml:"id,attr,omitempty" json:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCoreElements
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreIncomingOutgoing
 }
 
 func NewScriptTask() ScriptTaskRepository {
@@ -149,12 +136,12 @@ func (scriptTask ScriptTask) GetCamundaJobPriority() *int {
 /* Elements */
 
 // GetDocumentation ...
-func (scriptTask ScriptTask) GetDocumentation() *attributes.Documentation {
+func (scriptTask ScriptTask) GetDocumentation() DOCUMENTATION_PTR {
 	return &scriptTask.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (scriptTask ScriptTask) GetExtensionElements() *attributes.ExtensionElements {
+func (scriptTask ScriptTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
 	return &scriptTask.ExtensionElements[0]
 }
 
@@ -166,4 +153,13 @@ func (scriptTask ScriptTask) GetIncoming(num int) *marker.Incoming {
 // GetOutgoing ...
 func (scriptTask ScriptTask) GetOutgoing(num int) *marker.Outgoing {
 	return &scriptTask.Outgoing[num]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (scriptTask ScriptTask) String() string {
+	return fmt.Sprintf("id=%v, name=%v", scriptTask.ID, scriptTask.Name)
 }

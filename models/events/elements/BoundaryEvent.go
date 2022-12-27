@@ -3,6 +3,7 @@ package elements
 import (
 	"fmt"
 
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
@@ -11,7 +12,7 @@ import (
 // BoundaryEventRepository ...
 type BoundaryEventRepository interface {
 	EventElementsBase
-	EventsElementsDefinitions
+	EventElementsDefinitions
 	EventElementsMarkerOutgoing
 
 	SetAttachedToRef(ref string)
@@ -26,8 +27,7 @@ type BoundaryEventRepository interface {
 
 // BoundaryEvent ...
 type BoundaryEvent struct {
-	ID                         string                                   `xml:"id,attr" json:"id"`
-	Name                       string                                   `xml:"name,attr,omitempty" json:"name,omitempty"`
+	compulsion.CompulsionCoreAttributes
 	AttachedToRef              string                                   `xml:"attachedToRef,attr,omitempty" json:"attachedToRef,omitempty"`
 	CancelActivity             bool                                     `xml:"cancelActivity,attr,omitempty" json:"cancelActivity,omitempty"` // maybe @deprecated in new modeler
 	CancelEventDefinition      []definitions.CancelEventDefinition      `xml:"bpmn:cancelEventDefinition,omitempty" json:"cancelEventDefinition,omitempty"`
@@ -43,8 +43,7 @@ type BoundaryEvent struct {
 
 // TBoundaryEvent ...
 type TBoundaryEvent struct {
-	ID                         string                                    `xml:"id,attr" json:"id"`
-	Name                       string                                    `xml:"name,attr,omitempty" json:"name,omitempty"`
+	compulsion.CompulsionCoreAttributes
 	AttachedToRef              string                                    `xml:"attachedToRef,attr,omitempty" json:"attachedToRef,omitempty"`
 	CancelActivity             bool                                      `xml:"cancelActivity,attr,omitempty" json:"cancelActivity,omitempty"` // maybe @deprecated in new modeler
 	CancelEventDefinition      []definitions.CancelEventDefinition       `xml:"cancelEventDefinition,omitempty" json:"cancelEventDefinition,omitempty"`
@@ -62,7 +61,7 @@ func NewBoundaryEvent() BoundaryEventRepository {
 	return &BoundaryEvent{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -150,7 +149,7 @@ func (be *BoundaryEvent) SetOutgoing(num int) {
 	be.Outgoing = make([]marker.Outgoing, num)
 }
 
-/**
+/*
  * Default Getters
  */
 

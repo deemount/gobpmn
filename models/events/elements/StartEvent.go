@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
@@ -14,79 +15,72 @@ type StartEventRepository interface {
 	EventElementsBase
 	EventElementsCamundaBase
 	EventElementsMarkerOutgoing
+	EventElementsCoreElements
 
 	SetIsInterrupting(isInterrupt bool)
 	GetIsInterrupting() *bool
 
 	SetCamundaFormKey(key string)
-	SetCamundaFormRef(ref string)
-	SetCamundaFormRefBinding(bind string)
-	SetCamundaFormRefVersion(version string)
 	GetCamundaFormKey() *string
+	SetCamundaFormRef(ref string)
 	GetCamundaFormRef() *string
+	SetCamundaFormRefBinding(bind string)
 	GetCamundaFormRefBinding() *string
+	SetCamundaFormRefVersion(version string)
 	GetCamundaFormRefVersion() *string
 	SetCamundaInitiator(initiator string)
 	GetCamundaInitiator() *string
 
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-
 	SetConditionalEventDefinition()
-	SetMsgEventDefinition()
-	SetTimerEventDefinition()
 	GetConditionalEventDefinition() *definitions.ConditionalEventDefinition
-	GetMsgEventDefinition() *definitions.MessageEventDefinition
+	SetTimerEventDefinition()
 	GetTimerEventDefinition() *definitions.TimerEventDefinition
+
+	SetMessageEventDefinition()
+	GetMessageEventDefinition() *definitions.MessageEventDefinition
 
 	String() string
 }
 
 // StartEvent ...
 type StartEvent struct {
-	ID                    string                                   `xml:"id,attr" json:"id"`
-	Name                  string                                   `xml:"name,attr,omitempty" json:"name,omitempty"`
-	IsInterrupting        bool                                     `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
-	CamundaFormKey        string                                   `xml:"camunda:formKey,attr,omitempty" json:"formKey,omitempty"`
-	CamundaFormRef        string                                   `xml:"camunda:formRef,attr,omitempty" json:"formRef,omitempty"`
-	CamundaFormRefBind    string                                   `xml:"camunda:formRefBinding,attr,omitempty" json:"formRefBind,omitempty"`
-	CamundaFormRefVersion string                                   `xml:"camunda:formRefVersion,attr,omitempty" json:"formRefVersion,omitempty"`
-	CamundaAsyncBefore    bool                                     `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter     bool                                     `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority    int                                      `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	CamundaInit           string                                   `xml:"camunda:initiator,attr,omitempty" json:"init,omitempty"`
-	ExtensionElements     []attributes.ExtensionElements           `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	ConditionalEventDef   []definitions.ConditionalEventDefinition `xml:"bpmn:conditionalEventDefintion,omitempty" json:"conditionalEventDefinition,omitempty"`
-	MsgEventDef           []definitions.MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	TimerEventDef         []definitions.TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
-	Outgoing              []marker.Outgoing                        `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCamundaCoreAttributes
+	compulsion.CompulsionCoreElements
+	IsInterrupting         bool                                     `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
+	CamundaFormKey         string                                   `xml:"camunda:formKey,attr,omitempty" json:"formKey,omitempty"`
+	CamundaFormRef         string                                   `xml:"camunda:formRef,attr,omitempty" json:"formRef,omitempty"`
+	CamundaFormRefBind     string                                   `xml:"camunda:formRefBinding,attr,omitempty" json:"formRefBind,omitempty"`
+	CamundaFormRefVersion  string                                   `xml:"camunda:formRefVersion,attr,omitempty" json:"formRefVersion,omitempty"`
+	CamundaInitiator       string                                   `xml:"camunda:initiator,attr,omitempty" json:"init,omitempty"`
+	ConditionalEventDef    []definitions.ConditionalEventDefinition `xml:"bpmn:conditionalEventDefintion,omitempty" json:"conditionalEventDefinition,omitempty"`
+	MessageEventDefinition []definitions.MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	TimerEventDef          []definitions.TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
+	Outgoing               []marker.Outgoing                        `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 // TStartEvent ...
 type TStartEvent struct {
-	ID                  string                                    `xml:"id,attr" json:"id"`
-	Name                string                                    `xml:"name,attr,omitempty" json:"name,omitempty"`
-	IsInterrupting      bool                                      `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
-	FormKey             string                                    `xml:"formKey,attr,omitempty" json:"formKey,omitempty"`
-	FormRef             string                                    `xml:"formRef,attr,omitempty" json:"formRef,omitempty"`
-	FormRefBind         string                                    `xml:"formRefBinding,attr,omitempty" json:"formRefBind,omitempty"`
-	FormRefVersion      string                                    `xml:"formRefVersion,attr,omitempty" json:"formRefVersion,omitempty"`
-	AsyncBefore         bool                                      `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	AsyncAfter          bool                                      `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	JobPriority         int                                       `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Init                string                                    `xml:"initiator,attr,omitempty" json:"init,omitempty"`
-	ExtensionElements   []attributes.TExtensionElements           `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	ConditionalEventDef []definitions.TConditionalEventDefinition `xml:"conditionalEventDefintion,omitempty" json:"conditionalEventDefinition,omitempty"`
-	MsgEventDef         []definitions.MessageEventDefinition      `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	TimerEventDef       []definitions.TTimerEventDefinition       `xml:"timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
-	Outgoing            []marker.Outgoing                         `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCamundaCoreAttributes
+	compulsion.TCompulsionCoreElements
+	IsInterrupting         bool                                      `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
+	FormKey                string                                    `xml:"formKey,attr,omitempty" json:"formKey,omitempty"`
+	FormRef                string                                    `xml:"formRef,attr,omitempty" json:"formRef,omitempty"`
+	FormRefBind            string                                    `xml:"formRefBinding,attr,omitempty" json:"formRefBind,omitempty"`
+	FormRefVersion         string                                    `xml:"formRefVersion,attr,omitempty" json:"formRefVersion,omitempty"`
+	Initiator              string                                    `xml:"initiator,attr,omitempty" json:"init,omitempty"`
+	ConditionalEventDef    []definitions.TConditionalEventDefinition `xml:"conditionalEventDefintion,omitempty" json:"conditionalEventDefinition,omitempty"`
+	MessageEventDefinition []definitions.MessageEventDefinition      `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	TimerEventDef          []definitions.TTimerEventDefinition       `xml:"timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
+	Outgoing               []marker.Outgoing                         `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
 }
 
 func NewStartEvent() StartEventRepository {
 	return &StartEvent{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -160,10 +154,15 @@ func (startEvent *StartEvent) SetCamundaJobPriority(priority int) {
 
 // SetCamundaInitiator ...
 func (startEvent *StartEvent) SetCamundaInitiator(initiator string) {
-	startEvent.CamundaInit = initiator
+	startEvent.CamundaInitiator = initiator
 }
 
 /*** Make Elements ***/
+
+// SetDocumentation ...
+func (startEvent *StartEvent) SetDocumentation() {
+	startEvent.Documentation = make([]attributes.Documentation, 1)
+}
 
 // SetExtensionElements ...
 func (startEvent *StartEvent) SetExtensionElements() {
@@ -175,9 +174,9 @@ func (startEvent *StartEvent) SetConditionalEventDefinition() {
 	startEvent.ConditionalEventDef = make([]definitions.ConditionalEventDefinition, 1)
 }
 
-// SetMsgEventDefinition ...
-func (startEvent *StartEvent) SetMsgEventDefinition() {
-	startEvent.MsgEventDef = make([]definitions.MessageEventDefinition, 1)
+// SetMessagEventDefinition ...
+func (startEvent *StartEvent) SetMessageEventDefinition() {
+	startEvent.MessageEventDefinition = make([]definitions.MessageEventDefinition, 1)
 }
 
 // SetTimerEventDefinition ...
@@ -190,16 +189,7 @@ func (startEvent *StartEvent) SetOutgoing(num int) {
 	startEvent.Outgoing = make([]marker.Outgoing, num)
 }
 
-/**
- * Default String
- */
-
-// String ...
-func (startEvent StartEvent) String() string {
-	return fmt.Sprintf("id=%v, name=%v", startEvent.ID, startEvent.Name)
-}
-
-/**
+/*
  * Default Getters
  */
 
@@ -261,32 +251,46 @@ func (startEvent StartEvent) GetCamundaJobPriority() *int {
 
 // GetCamundaInitiator ...
 func (startEvent StartEvent) GetCamundaInitiator() *string {
-	return &startEvent.CamundaInit
+	return &startEvent.CamundaInitiator
 }
 
 /* Elements */
 
-// SetExtensionElements ...
+// GetDocumentation ...
+func (startEvent StartEvent) GetDocumentation() *attributes.Documentation {
+	return &startEvent.Documentation[0]
+}
+
+// GetExtensionElements ...
 func (startEvent StartEvent) GetExtensionElements() *attributes.ExtensionElements {
 	return &startEvent.ExtensionElements[0]
 }
 
-// SetConditionalEventDefinition ...
+// GetConditionalEventDefinition ...
 func (startEvent StartEvent) GetConditionalEventDefinition() *definitions.ConditionalEventDefinition {
 	return &startEvent.ConditionalEventDef[0]
 }
 
-// SetMsgEventDefinition ...
-func (startEvent StartEvent) GetMsgEventDefinition() *definitions.MessageEventDefinition {
-	return &startEvent.MsgEventDef[0]
+// GetMessageEventDefinition ...
+func (startEvent StartEvent) GetMessageEventDefinition() *definitions.MessageEventDefinition {
+	return &startEvent.MessageEventDefinition[0]
 }
 
-// SetTimerEventDefinition ...
+// GetTimerEventDefinition ...
 func (startEvent StartEvent) GetTimerEventDefinition() *definitions.TimerEventDefinition {
 	return &startEvent.TimerEventDef[0]
 }
 
-// SetOutgoing ...
+// GetOutgoing ...
 func (startEvent StartEvent) GetOutgoing(num int) *marker.Outgoing {
 	return &startEvent.Outgoing[num]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (startEvent StartEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", startEvent.ID, startEvent.Name)
 }

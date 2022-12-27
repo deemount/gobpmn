@@ -1,10 +1,13 @@
 package conditional
 
+// ConditionExpressionRepository ...
 type ConditionExpressionRepository interface {
+	ConditionalScriptFormat
+	ConditionalScript
 	SetConditionType()
-	SetScriptFormat(language string)
-	SetScript(script string)
+	GetConditionType() *string
 	SetExpression(expression string)
+	GetExpression() *string
 }
 
 // ConditionExpression ...
@@ -43,4 +46,32 @@ func (conditionExpression *ConditionExpression) SetScript(script string) {
 // SetExpression ...
 func (conditionExpression *ConditionExpression) SetExpression(expression string) {
 	conditionExpression.Expression = expression
+}
+
+/*
+ * Default Getters
+ */
+
+/* Attributes */
+
+/** BPMN **/
+
+// GetConditionType ...
+func (conditionExpression ConditionExpression) GetConditionType() *string {
+	return &conditionExpression.ConditionType
+}
+
+// GetScriptFormat ...
+func (conditionExpression ConditionExpression) GetScriptFormat() STR_PTR {
+	return &conditionExpression.ScriptFormat
+}
+
+// GetScript ...
+func (conditionExpression ConditionExpression) GetScript() STR_PTR {
+	return &conditionExpression.Script
+}
+
+// GetExpression ...
+func (conditionExpression ConditionExpression) GetExpression() *string {
+	return &conditionExpression.Expression
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
@@ -12,54 +13,46 @@ import (
 // IntermediateThrowEventRepository ...
 type IntermediateThrowEventRepository interface {
 	EventElementsBase
+	EventElementsMarker
+	EventElementsCoreElements
+	EventElementsCoreThrowCatchElements
 
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-
-	SetIncoming(num int)
-	SetOutgoing(num int)
-	GetIncoming(num int) *marker.Incoming
-	GetOutgoing(num int) *marker.Outgoing
-
-	SetLinkEventDefinition()
+	SetCompensateEventDefinition()
+	GetCompensateEventDefinition() *definitions.CompensateEventDefinition
 	SetEscalationEventDefinition()
-	SetMessageEventDefinition()
-	GetLinkEventDefinition() *definitions.LinkEventDefinition
 	GetEscalationEventDefinition() *definitions.EscalationEventDefinition
-	GetMessageEventDefinition() *definitions.MessageEventDefinition
 }
 
 // IntermediateThrowEvent ...
 type IntermediateThrowEvent struct {
-	ID                        string                                  `xml:"id,attr,omitempty" json:"id"`
-	Name                      string                                  `xml:"name,attr,omitempty" json:"name,omitempty"`
-	ExtensionElements         []attributes.ExtensionElements          `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming                  []marker.Incoming                       `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing                  []marker.Outgoing                       `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
-	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
-	LinkEventDefinition       []definitions.LinkEventDefinition       `xml:"bpmn:linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
-	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.CompulsionCoreElements
+	compulsion.CompulsionCoreIncomingOutgoing
 	MessageEventDefinition    []definitions.MessageEventDefinition    `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	LinkEventDefinition       []definitions.LinkEventDefinition       `xml:"bpmn:linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
+	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
+	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	SignalEventDefinition     []definitions.SignalEventDefinition     `xml:"bpmn:signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
 }
 
 // TIntermediateThrowEvent ...
 type TIntermediateThrowEvent struct {
-	ID                        string                                  `xml:"id,attr,omitempty" json:"id"`
-	Name                      string                                  `xml:"name,attr,omitempty" json:"name,omitempty"`
-	ExtensionElements         []attributes.TExtensionElements         `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming                  []marker.Incoming                       `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing                  []marker.Outgoing                       `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
-	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
-	LinkEventDefinition       []definitions.LinkEventDefinition       `xml:"linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
-	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	compulsion.CompulsionCoreAttributes
+	compulsion.TCompulsionCoreElements
+	compulsion.TCompulsionCoreIncomingOutgoing
 	MessageEventDefinition    []definitions.MessageEventDefinition    `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
+	LinkEventDefinition       []definitions.LinkEventDefinition       `xml:"linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
+	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
+	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
+	SignalEventDefinition     []definitions.SignalEventDefinition     `xml:"signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
 }
 
+// NewIntermediateThrowEvent ...
 func NewIntermediateThrowEvent() IntermediateThrowEventRepository {
 	return &IntermediateThrowEvent{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -88,6 +81,11 @@ func (intermediateThrowEvent *IntermediateThrowEvent) SetName(name string) {
 
 /** BPMN **/
 
+// SetDocumentation ...
+func (intermediateThrowEvent *IntermediateThrowEvent) SetDocumentation() {
+	intermediateThrowEvent.Documentation = make([]attributes.Documentation, 1)
+}
+
 // SetExtensionElements ...
 func (intermediateThrowEvent *IntermediateThrowEvent) SetExtensionElements() {
 	intermediateThrowEvent.ExtensionElements = make([]attributes.ExtensionElements, 1)
@@ -101,6 +99,11 @@ func (intermediateThrowEvent *IntermediateThrowEvent) SetIncoming(num int) {
 // SetOutgoing ...
 func (intermediateThrowEvent *IntermediateThrowEvent) SetOutgoing(num int) {
 	intermediateThrowEvent.Outgoing = make([]marker.Outgoing, num)
+}
+
+// SetCompensateEventDefinition ...
+func (intermediateThrowEvent *IntermediateThrowEvent) SetCompensateEventDefinition() {
+	intermediateThrowEvent.CompensateEventDefinition = make([]definitions.CompensateEventDefinition, 1)
 }
 
 // SetLinkEventDefinition ...
@@ -118,7 +121,12 @@ func (intermediateThrowEvent *IntermediateThrowEvent) SetMessageEventDefinition(
 	intermediateThrowEvent.MessageEventDefinition = make([]definitions.MessageEventDefinition, 1)
 }
 
-/**
+// SetSignalEventDefinition ...
+func (intermediateThrowEvent *IntermediateThrowEvent) SetSignalEventDefinition() {
+	intermediateThrowEvent.SignalEventDefinition = make([]definitions.SignalEventDefinition, 1)
+}
+
+/*
  * Default Getters
  */
 
@@ -140,32 +148,47 @@ func (intermediateThrowEvent IntermediateThrowEvent) GetName() eventsbase.STR_PT
 
 /** BPMN **/
 
-// SetExtensionElements ...
+// GetDocumentation ...
+func (intermediateThrowEvent IntermediateThrowEvent) GetDocumentation() *attributes.Documentation {
+	return &intermediateThrowEvent.Documentation[0]
+}
+
+// GetExtensionElements ...
 func (intermediateThrowEvent IntermediateThrowEvent) GetExtensionElements() *attributes.ExtensionElements {
 	return &intermediateThrowEvent.ExtensionElements[0]
 }
 
-// SetIncoming ...
+// GetIncoming ...
 func (intermediateThrowEvent IntermediateThrowEvent) GetIncoming(num int) *marker.Incoming {
 	return &intermediateThrowEvent.Incoming[num]
 }
 
-// SetOutgoing ...
+// GetOutgoing ...
 func (intermediateThrowEvent IntermediateThrowEvent) GetOutgoing(num int) *marker.Outgoing {
 	return &intermediateThrowEvent.Outgoing[num]
 }
 
-// SetLinkEventDefinition ...
+// GetCompensateEventDefinition ...
+func (intermediateThrowEvent IntermediateThrowEvent) GetCompensateEventDefinition() *definitions.CompensateEventDefinition {
+	return &intermediateThrowEvent.CompensateEventDefinition[0]
+}
+
+// GetLinkEventDefinition ...
 func (intermediateThrowEvent IntermediateThrowEvent) GetLinkEventDefinition() *definitions.LinkEventDefinition {
 	return &intermediateThrowEvent.LinkEventDefinition[0]
 }
 
-// SetEscalationEventDefinition ...
+// GetEscalationEventDefinition ...
 func (intermediateThrowEvent IntermediateThrowEvent) GetEscalationEventDefinition() *definitions.EscalationEventDefinition {
 	return &intermediateThrowEvent.EscalationEventDefinition[0]
 }
 
-// SetMessageEventDefinition ...
+// GetMessageEventDefinition ...
 func (intermediateThrowEvent IntermediateThrowEvent) GetMessageEventDefinition() *definitions.MessageEventDefinition {
 	return &intermediateThrowEvent.MessageEventDefinition[0]
+}
+
+// GetSignalEventDefinition ...
+func (intermediateThrowEvent IntermediateThrowEvent) GetSignalEventDefinition() *definitions.SignalEventDefinition {
+	return &intermediateThrowEvent.SignalEventDefinition[0]
 }
