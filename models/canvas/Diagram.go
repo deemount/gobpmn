@@ -4,31 +4,19 @@ import (
 	"fmt"
 )
 
-// Diagram ...
-type DiagramRepository interface {
-	CanvasID
-
-	SetPlane()
-	GetPlane() *Plane
-
-	GetDescription() string
-}
-
-// Diagram ...
-type Diagram struct {
-	ID          string  `xml:"id,attr"`
-	Description string  `xml:"-" json:"-"`
-	Plane       []Plane `xml:"bpmndi:BPMNPlane,omitempty"`
-}
-
+// NewDiagram ...
 func NewDiagram() DiagramRepository {
 	return &Diagram{}
 }
 
+/*
+ * Default Setters
+ */
+
 /* Attributes */
 
 // SetID ...
-// SetID(typ string, num int64)
+// Notice: old fashion style SetID(typ string, num int64); look also below
 func (diagram *Diagram) SetID(typ string, suffix interface{}) {
 	switch typ {
 	case "diagram":

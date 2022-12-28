@@ -7,45 +7,11 @@ import (
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-// ComplexGatewayRepository ...
-type ComplexGatewayRepository interface {
-	GatewayBase
-
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
-// ComplexGateway ...
-type ComplexGateway struct {
-	ID                 string                         `xml:"id,attr" json:"id"`
-	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
-// TComplexGateway ...
-type TComplexGateway struct {
-	ID                string                          `xml:"id,attr" json:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore,omitempty"`
-	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter,omitempty"`
-	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
 func NewComplexGateway() ComplexGatewayRepository {
 	return &ComplexGateway{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -88,10 +54,19 @@ func (complexgate *ComplexGateway) SetCamundaJobPriority(priority int) {
 
 /*** Make Elements ***/
 
+/*** Attributes ***/
+
+// SetDocumentation ...
+func (complexgate *ComplexGateway) SetDocumentation() {
+	complexgate.Documentation = make([]attributes.Documentation, 1)
+}
+
 // SetExtensionElements ...
 func (complexgate *ComplexGateway) SetExtensionElements() {
 	complexgate.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
+
+/*** Marker ***/
 
 // SetIncoming ...
 func (complexgate *ComplexGateway) SetIncoming(num int) {
@@ -103,7 +78,7 @@ func (complexgate *ComplexGateway) SetOutgoing(num int) {
 	complexgate.Outgoing = make([]marker.Outgoing, num)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -138,19 +113,28 @@ func (complexgate ComplexGateway) GetCamundaJobPriority() *int {
 	return &complexgate.CamundaJobPriority
 }
 
-/*** Make Elements ***/
+/* Elements */
 
-// SetExtensionElements ...
+/*** Attributes ***/
+
+// GetDocumentation ...
+func (complexgate ComplexGateway) GetDocumentation() *attributes.Documentation {
+	return &complexgate.Documentation[0]
+}
+
+// GetExtensionElements ...
 func (complexgate ComplexGateway) GetExtensionElements() *attributes.ExtensionElements {
 	return &complexgate.ExtensionElements[0]
 }
 
-// SetIncoming ...
+/*** Marker ***/
+
+// GetIncoming ...
 func (complexgate ComplexGateway) GetIncoming(num int) *marker.Incoming {
 	return &complexgate.Incoming[num]
 }
 
-// SetOutgoing ...
+// GetOutgoing ...
 func (complexgate ComplexGateway) GetOutgoing(num int) *marker.Outgoing {
 	return &complexgate.Outgoing[num]
 }

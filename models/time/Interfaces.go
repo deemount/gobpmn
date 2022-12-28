@@ -1,15 +1,13 @@
 package time
 
-type STR_PTR *string
-
 type TimeBaseDefintionType interface {
 	SetTimerDefinitionType()
-	GetTimerDefinitionType() *string
+	GetTimerDefinitionType() STR_PTR
 }
 
 type TimeBaseDefinition interface {
 	SetTimerDefinition(timerDefinition string)
-	GetTimerDefinition() *string
+	GetTimerDefinition() STR_PTR
 }
 
 type TimeBaseCoreElements interface {

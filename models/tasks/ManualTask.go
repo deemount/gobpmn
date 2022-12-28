@@ -4,31 +4,8 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// ManualTaskRepository ...
-type ManualTaskRepository interface {
-	TasksBase
-	String() string
-}
-
-// ManualTask ...
-type ManualTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-}
-
-// TManualTask ...
-type TManualTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreIncomingOutgoing
-}
 
 func NewManualTask() ManualTaskRepository {
 	return &ManualTask{}
@@ -136,12 +113,12 @@ func (manualTask ManualTask) GetCamundaJobPriority() *int {
 /* Elements */
 
 // GetDocumentation ...
-func (manualTask ManualTask) GetDocumentation() DOCUMENTATION_PTR {
+func (manualTask ManualTask) GetDocumentation() *attributes.Documentation {
 	return &manualTask.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (manualTask ManualTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (manualTask ManualTask) GetExtensionElements() *attributes.ExtensionElements {
 	return &manualTask.ExtensionElements[0]
 }
 

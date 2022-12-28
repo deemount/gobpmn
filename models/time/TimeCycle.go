@@ -11,6 +11,11 @@ type TimeCycle struct {
 	TimerDef     string `xml:",innerxml" json:"timerDef,omitempty"`
 }
 
+// NewTimeCycle ...
+func NewTimeCycle() TimeCycleRepository {
+	return &TimeCycle{}
+}
+
 /*
  * Default Setters
  */
@@ -38,11 +43,11 @@ func (timecycle *TimeCycle) SetTimerDefinition(timerDefinition string) {
 /** BPMN **/
 
 // GetTimerDefinitionType ...
-func (timecycle TimeCycle) GetTimerDefinitionType() *string {
+func (timecycle TimeCycle) GetTimerDefinitionType() STR_PTR {
 	return &timecycle.TimerDefType
 }
 
 // GetTimerDefinition ...
-func (timecycle TimeCycle) GetTimerDefinition() *string {
+func (timecycle TimeCycle) GetTimerDefinition() STR_PTR {
 	return &timecycle.TimerDef
 }

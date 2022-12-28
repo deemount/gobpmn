@@ -13,6 +13,7 @@ type Text struct {
 	Text string `xml:",innerxml,omitempty" json:"text,omitempty"`
 }
 
+// NewText ...
 func NewText() TextRepository {
 	return &Text{}
 }

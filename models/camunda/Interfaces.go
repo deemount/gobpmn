@@ -42,5 +42,23 @@ type CamundaBaseScriptElements interface {
 	GetCamundaScript() *CamundaScript
 }
 
-type CamundaBase interface {
+type CamundaBase interface{}
+
+type ExtensionElementsRepository interface {
+	SetCamundaProperties()
+	GetCamundaProperties() *CamundaProperties
+	SetCamundaFailedJobRetryCycle()
+	GetCamundaFailedJobRetryCycle() *CamundaFailedJobRetryCycle
+	SetCamundaFormData()
+	GetCamundaFormData() *CamundaFormData
+	SetCamundaInputOutput()
+	GetCamundaInputOutput() *CamundaInputOutput
+	SetCamundaTaskListener(num int)
+	GetCamundaTaskListener(num int) *CamundaTaskListener
+	SetCamundaExecutionListener(num int)
+	GetCamundaExecutionListener(num int) *CamundaExecutionListener
+	SetCamundaIn(num int)
+	GetCamundaIn(num int) *CamundaIn
+	SetCamundaOut(num int)
+	GetCamundaOut(num int) *CamundaOut
 }

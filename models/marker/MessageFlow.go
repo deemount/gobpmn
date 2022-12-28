@@ -7,38 +7,12 @@ import (
 	"github.com/deemount/gobpmn/models/attributes"
 )
 
-// MessageFlowRepository ...
-type MessageFlowRepository interface {
-	MarkerBase
-	MarkerBaseCoreElements
-	MarkerBaseReferences
-}
-
-// MessageFlow ...
-type MessageFlow struct {
-	ID                string                         `xml:"id,attr" json:"id"`
-	Name              string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	SourceRef         string                         `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-	TargetRef         string                         `xml:"targetRef,attr" json:"targetRef,omitempty"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
-// TMessageFlow ...
-type TMessageFlow struct {
-	ID                string                          `xml:"id,attr" json:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	SourceRef         string                          `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-	TargetRef         string                          `xml:"targetRef,attr" json:"targetRef,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
+// NewMessageFlow ...
 func NewMessageFlow() MessageFlowRepository {
 	return &MessageFlow{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -105,6 +79,8 @@ func (messageFlow *MessageFlow) SetTargetRef(typ string, targetRef interface{}) 
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // SetDocumentation ...
 func (messageFlow *MessageFlow) SetDocumentation() {
 	messageFlow.Documentation = make([]attributes.Documentation, 1)
@@ -115,7 +91,7 @@ func (messageFlow *MessageFlow) SetExtensionElements() {
 	messageFlow.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -147,12 +123,14 @@ func (messageFlow MessageFlow) GetTargetRef() *string {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // GetDocumentation ...
-func (messageFlow MessageFlow) GetDocumentation() DOCUMENTATION_PTR {
+func (messageFlow MessageFlow) GetDocumentation() *attributes.Documentation {
 	return &messageFlow.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (messageFlow MessageFlow) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (messageFlow MessageFlow) GetExtensionElements() *attributes.ExtensionElements {
 	return &messageFlow.ExtensionElements[0]
 }

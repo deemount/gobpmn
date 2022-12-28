@@ -2,19 +2,14 @@ package marker
 
 import "fmt"
 
-// CategoryValue ...
-type CategoryValueRepository interface {
-	MarkerID
-
-	SetValue(value string)
-	GetValue() *string
+// NewCategoryValue ...
+func NewCategoryValue() CategoryValueRepository {
+	return &CategoryValue{}
 }
 
-// CategoryValue ...
-type CategoryValue struct {
-	ID    string `xml:"id,attr,omitempty" json:"id"`
-	Value string `xml:"value,attr,omitempty" json:"value,omitempty"`
-}
+/*
+ * Default Setters
+ */
 
 /* Attributes */
 
@@ -37,12 +32,16 @@ func (categoryValue *CategoryValue) SetValue(value string) {
 	categoryValue.Value = value
 }
 
+/*
+ * Default Getters
+ */
+
 /* Attributes */
 
 /** BPMN **/
 
 // GetID
-func (categoryValue CategoryValue) GetID() *string {
+func (categoryValue CategoryValue) GetID() STR_PTR {
 	return &categoryValue.ID
 }
 

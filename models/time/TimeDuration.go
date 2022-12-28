@@ -11,7 +11,12 @@ type TimeDuration struct {
 	TimerDef     string `xml:",innerxml" json:"timerDef,omitempty"`
 }
 
-/**
+// NewTimeDuration ...
+func NewTimeDuration() TimeDurationRepository {
+	return &TimeDuration{}
+}
+
+/*
  * Default Setters
  */
 
@@ -29,7 +34,7 @@ func (timeduration *TimeDuration) SetTimerDefinition(timerDefinition string) {
 	timeduration.TimerDef = timerDefinition
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -38,11 +43,11 @@ func (timeduration *TimeDuration) SetTimerDefinition(timerDefinition string) {
 /** BPMN **/
 
 // GetTimerDefinitionType ...
-func (timeduration TimeDuration) GetTimerDefinitionType() *string {
+func (timeduration TimeDuration) GetTimerDefinitionType() STR_PTR {
 	return &timeduration.TimerDefType
 }
 
 // GetTimerDefinition ...
-func (timeduration TimeDuration) GetTimerDefinition() *string {
+func (timeduration TimeDuration) GetTimerDefinition() STR_PTR {
 	return &timeduration.TimerDef
 }

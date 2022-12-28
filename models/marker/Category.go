@@ -6,34 +6,13 @@ import (
 	"github.com/deemount/gobpmn/models/attributes"
 )
 
-// CategoryRepository ...
-type CategoryRepository interface {
-	MarkerID
-	MarkerBaseCoreElements
-
-	SetCategoryValue()
-	GetCategoryValue() *CategoryValue
-}
-
-// Category ...
-type Category struct {
-	ID                string                         `xml:"id,attr,omitempty" json:"id"`
-	CategoryValue     []CategoryValue                `xml:"bpmn:categoryValue,omitempty" json:"categoryValue,omitempty"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
-// Category ...
-type TCategory struct {
-	ID                string                          `xml:"id,attr,omitempty" json:"id"`
-	CategoryValue     []CategoryValue                 `xml:"categoryValue,omitempty" json:"categoryValue,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
 func NewCategory() CategoryRepository {
 	return &Category{}
 }
+
+/*
+ * Default Setters
+ */
 
 /* Attributes */
 
@@ -59,6 +38,8 @@ func (category *Category) SetID(typ string, suffix interface{}) {
 func (category *Category) SetCategoryValue() {
 	category.CategoryValue = make([]CategoryValue, 1)
 }
+
+/*** Attributes ***/
 
 // SetDocumentation ...
 func (category *Category) SetDocumentation() {
@@ -92,12 +73,14 @@ func (category Category) GetCategoryValue() *CategoryValue {
 	return &category.CategoryValue[0]
 }
 
+/*** Attributes ***/
+
 // GetDocumentation ...
-func (category Category) GetDocumentation() DOCUMENTATION_PTR {
+func (category Category) GetDocumentation() *attributes.Documentation {
 	return &category.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (category Category) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (category Category) GetExtensionElements() *attributes.ExtensionElements {
 	return &category.ExtensionElements[0]
 }

@@ -4,31 +4,8 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// ScriptTaskRepository ...
-type ScriptTaskRepository interface {
-	TasksBase
-	String() string
-}
-
-// ScriptTask ...
-type ScriptTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-}
-
-// TScriptTask ...
-type TScriptTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-}
 
 func NewScriptTask() ScriptTaskRepository {
 	return &ScriptTask{}
@@ -136,12 +113,12 @@ func (scriptTask ScriptTask) GetCamundaJobPriority() *int {
 /* Elements */
 
 // GetDocumentation ...
-func (scriptTask ScriptTask) GetDocumentation() DOCUMENTATION_PTR {
+func (scriptTask ScriptTask) GetDocumentation() *attributes.Documentation {
 	return &scriptTask.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (scriptTask ScriptTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (scriptTask ScriptTask) GetExtensionElements() *attributes.ExtensionElements {
 	return &scriptTask.ExtensionElements[0]
 }
 

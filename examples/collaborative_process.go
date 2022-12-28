@@ -427,15 +427,13 @@ func (cp *collaborativeProcess) setCollaboration() {
 
 // setCustomerSupportPool ...
 func (cp *collaborativeProcess) setPoolCustomerSupport() {
-	// assign
 	e := cp.GetShapePoolCustomerSupport(cp.GetPlane())
-	// element
 	e.SetID("id", cp.CustomerSupportID)
 	e.SetElement("id", cp.CustomerSupportID)
 	e.SetIsHorizontal(true)
 	e.SetBounds()
-	e.Bounds[0].SetCoordinates(150, 80)
-	e.Bounds[0].SetSize(800, 160)
+	e.GetBounds().SetCoordinates(150, 80)
+	e.GetBounds().SetSize(800, 160)
 }
 
 // setCustomerSupportProcess ...
@@ -453,38 +451,30 @@ func (cp *collaborativeProcess) setProcessCustomerSupport() {
 
 // setCustomerSupportStartEvent ...
 func (cp *collaborativeProcess) setCustomerSupportStartEvent() {
-	// assign
 	e, d := cp.GetCustomerSupportStartEvent()
-	// element
 	e.SetID("event", cp.CustomerSupportStartEventHash)
 	e.SetName("Begin of Customer Support Process")
-	// outgoing
 	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(cp.FromCustomerSupportStartEventHash)
-	// shape
+	e.GetOutgoing(0).SetFlow(cp.FromCustomerSupportStartEventHash)
 	d.SetID("event", cp.CustomerSupportStartEventHash)
 	d.SetElement("event", cp.CustomerSupportStartEventHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(225, 142)
-	d.Bounds[0].SetSize(36, 36)
+	d.GetBounds().SetCoordinates(225, 142)
+	d.GetBounds().SetSize(36, 36)
 }
 
 // setCustomerSupportEndEvent ...
 func (cp *collaborativeProcess) setCustomerSupportEndEvent() {
-	// assign
 	e, d := cp.GetCustomerSupportEndEvent()
-	// element
 	e.SetID("event", cp.CustomerSupportEndEventHash)
 	e.SetName("End of Customer Support Process")
-	// incoming
 	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(cp.FromDenyWarrantyClaimHash)
-	// shape
+	e.GetIncoming(0).SetFlow(cp.FromDenyWarrantyClaimHash)
 	d.SetID("event", cp.CustomerSupportEndEventHash)
 	d.SetElement("event", cp.CustomerSupportEndEventHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(822, 142)
-	d.Bounds[0].SetSize(36, 36)
+	d.GetBounds().SetCoordinates(822, 142)
+	d.GetBounds().SetSize(36, 36)
 }
 
 /**
@@ -496,44 +486,34 @@ func (cp *collaborativeProcess) setCustomerSupportEndEvent() {
 
 // setCheckIncomingClaim ...
 func (cp *collaborativeProcess) setCheckIncomingClaim() {
-	// assign
 	e, d := cp.GetCheckIncomingClaim()
-	// element
 	e.SetID("activity", cp.CheckIncomingClaimHash)
 	e.SetName("Check incoming claim")
-	// incoming
 	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(cp.FromCustomerSupportStartEventHash)
-	// outgoing
+	e.GetIncoming(0).SetFlow(cp.FromCustomerSupportStartEventHash)
 	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(cp.FromCheckIncomingClaimHash)
-	// shape
+	e.GetOutgoing(0).SetFlow(cp.FromCheckIncomingClaimHash)
 	d.SetID("activity", cp.CheckIncomingClaimHash)
 	d.SetElement("activity", cp.CheckIncomingClaimHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(320, 120)
-	d.Bounds[0].SetSize(100, 80)
+	d.GetBounds().SetCoordinates(320, 120)
+	d.GetBounds().SetSize(100, 80)
 }
 
 // setDenyWarrantyClaim ...
 func (cp *collaborativeProcess) setDenyWarrantyClaim() {
-	// assign
 	e, d := cp.GetDenyWarrantyClaim()
-	// element
 	e.SetID("activity", cp.DenyWarrantyClaimHash)
 	e.SetName("Deny warranty claim")
-	// incoming
 	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(cp.FromCheckIncomingClaimHash)
-	// outgoing
+	e.GetIncoming(0).SetFlow(cp.FromCheckIncomingClaimHash)
 	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(cp.FromDenyWarrantyClaimHash)
-	// shape
+	e.GetOutgoing(0).SetFlow(cp.FromDenyWarrantyClaimHash)
 	d.SetID("activity", cp.DenyWarrantyClaimHash)
 	d.SetElement("activity", cp.DenyWarrantyClaimHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(580, 120)
-	d.Bounds[0].SetSize(100, 80)
+	d.GetBounds().SetCoordinates(580, 120)
+	d.GetBounds().SetSize(100, 80)
 }
 
 /**
@@ -548,53 +528,45 @@ func (cp *collaborativeProcess) setDenyWarrantyClaim() {
 func (cp *collaborativeProcess) fromCustomerSupportStartEvent() {
 	// assign
 	e, d := cp.GetFromCustomerSupportStartEvent()
-	// element
 	e.SetID("flow", cp.FromCustomerSupportStartEventHash)
 	e.SetSourceRef("event", cp.CustomerSupportStartEventHash)
 	e.SetTargetRef("activity", cp.CheckIncomingClaimHash)
-	// edge
 	d.SetID("flow", cp.FromCustomerSupportStartEventHash)
 	d.SetElement("flow", cp.FromCustomerSupportStartEventHash)
 	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(261, 160)
-	d.Waypoint[1].SetCoordinates(320, 160)
+	d.GetWaypoint(0).SetCoordinates(261, 160)
+	d.GetWaypoint(1).SetCoordinates(320, 160)
 }
 
 // fromCheckIncomingClaim ...
 func (cp *collaborativeProcess) fromCheckIncomingClaim() {
-	// assign
 	e, d := cp.GetFromCheckIncomingClaim()
-	// element
 	e.SetID("flow", cp.FromCheckIncomingClaimHash)
 	e.SetName("decide")
 	e.SetSourceRef("activity", cp.CheckIncomingClaimHash)
 	e.SetTargetRef("activity", cp.DenyWarrantyClaimHash)
-	// edge
 	d.SetID("flow", cp.FromCheckIncomingClaimHash)
 	d.SetElement("flow", cp.FromCheckIncomingClaimHash)
 	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(420, 160)
-	d.Waypoint[1].SetCoordinates(580, 160)
+	d.GetWaypoint(0).SetCoordinates(420, 160)
+	d.GetWaypoint(1).SetCoordinates(580, 160)
 	d.SetLabel()
-	d.Label[0].SetBounds()
-	d.Label[0].Bounds[0].SetCoordinates(485, 142)
-	d.Label[0].Bounds[0].SetSize(33, 14)
+	d.GetLabel().SetBounds()
+	d.GetLabel().GetBounds().SetCoordinates(485, 142)
+	d.GetLabel().GetBounds().SetSize(33, 14)
 }
 
 // fromDenyWarrantyClaim ...
 func (cp *collaborativeProcess) fromDenyWarrantyClaim() {
-	// assign
 	e, d := cp.GetFromDenyWarrantyClaim()
-	// element
 	e.SetID("flow", cp.FromDenyWarrantyClaimHash)
 	e.SetSourceRef("activity", cp.DenyWarrantyClaimHash)
 	e.SetTargetRef("event", cp.CustomerSupportEndEventHash)
-	// edge
 	d.SetID("flow", cp.FromDenyWarrantyClaimHash)
 	d.SetElement("flow", cp.FromDenyWarrantyClaimHash)
 	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(680, 160)
-	d.Waypoint[1].SetCoordinates(822, 160)
+	d.GetWaypoint(0).SetCoordinates(680, 160)
+	d.GetWaypoint(1).SetCoordinates(822, 160)
 }
 
 /**
@@ -610,12 +582,12 @@ func (cp *collaborativeProcess) setEdgeMessageClaim() {
 	e.SetID("flow", cp.CustomerToCustomerSupportMessageHash)
 	e.SetElement("flow", cp.CustomerToCustomerSupportMessageHash)
 	e.SetWaypoint()
-	e.Waypoint[0].SetCoordinates(370, 400)
-	e.Waypoint[1].SetCoordinates(370, 200)
+	e.GetWaypoint(0).SetCoordinates(370, 400)
+	e.GetWaypoint(1).SetCoordinates(370, 200)
 	e.SetLabel()
-	e.Label[0].SetBounds()
-	e.Label[0].Bounds[0].SetCoordinates(387, 290)
-	e.Label[0].Bounds[0].SetSize(26, 14)
+	e.GetLabel().SetBounds()
+	e.GetLabel().GetBounds().SetCoordinates(387, 290)
+	e.GetLabel().GetBounds().SetSize(26, 14)
 }
 
 // setEdgeMessageRefusal ...
@@ -624,12 +596,12 @@ func (cp *collaborativeProcess) setEdgeMessageRefusal() {
 	e.SetID("flow", cp.CustomerSupportToCustomerMessageHash)
 	e.SetElement("flow", cp.CustomerSupportToCustomerMessageHash)
 	e.SetWaypoint()
-	e.Waypoint[0].SetCoordinates(630, 200)
-	e.Waypoint[1].SetCoordinates(630, 400)
+	e.GetWaypoint(0).SetCoordinates(630, 200)
+	e.GetWaypoint(1).SetCoordinates(630, 400)
 	e.SetLabel()
-	e.Label[0].SetBounds()
-	e.Label[0].Bounds[0].SetCoordinates(643, 290)
-	e.Label[0].Bounds[0].SetSize(34, 14)
+	e.GetLabel().SetBounds()
+	e.GetLabel().GetBounds().SetCoordinates(643, 290)
+	e.GetLabel().GetBounds().SetSize(34, 14)
 }
 
 /**** Customer Process ****/
@@ -648,8 +620,8 @@ func (cp *collaborativeProcess) setPoolCustomer() {
 	e.SetElement("id", cp.CustomerID)
 	e.SetIsHorizontal(true)
 	e.SetBounds()
-	e.Bounds[0].SetCoordinates(150, 360)
-	e.Bounds[0].SetSize(800, 160)
+	e.GetBounds().SetCoordinates(150, 360)
+	e.GetBounds().SetSize(800, 160)
 }
 
 // setProcessCustomer ...
@@ -667,38 +639,30 @@ func (cp *collaborativeProcess) setProcessCustomer() {
 
 // setCustomerStartEvent ...
 func (cp *collaborativeProcess) setCustomerStartEvent() {
-	// assign
 	e, d := cp.GetCustomerStartEvent()
-	// element
 	e.SetID("event", cp.CustomerStartEventHash)
 	e.SetName("Begin of Customer Process")
-	// outgoing
 	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(cp.FromCustomerStartEventHash)
-	// shape
+	e.GetOutgoing(0).SetFlow(cp.FromCustomerStartEventHash)
 	d.SetID("event", cp.CustomerStartEventHash)
 	d.SetElement("event", cp.CustomerStartEventHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(225, 422)
-	d.Bounds[0].SetSize(36, 36)
+	d.GetBounds().SetCoordinates(225, 422)
+	d.GetBounds().SetSize(36, 36)
 }
 
 // setCustomerEndEvent ...
 func (cp *collaborativeProcess) setCustomerEndEvent() {
-	// assign
 	e, d := cp.GetCustomerEndEvent()
-	// element
 	e.SetID("event", cp.CustomerEndEventHash)
 	e.SetName("End of Customer Process")
-	// incoming
 	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(cp.FromReceiptWarrantyRefusalHash)
-	// shape
+	e.GetIncoming(0).SetFlow(cp.FromReceiptWarrantyRefusalHash)
 	d.SetID("event", cp.CustomerEndEventHash)
 	d.SetElement("event", cp.CustomerEndEventHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(822, 422)
-	d.Bounds[0].SetSize(36, 36)
+	d.GetBounds().SetCoordinates(822, 422)
+	d.GetBounds().SetSize(36, 36)
 }
 
 /**
@@ -711,71 +675,55 @@ func (cp *collaborativeProcess) setCustomerEndEvent() {
 
 // setNoticeOfDefect ...
 func (cp *collaborativeProcess) setNoticeOfDefect() {
-	// assign
 	e, d := cp.GetNoticeOfDefect()
-	// element
 	e.SetID("activity", cp.NoticeOfDefectHash)
 	e.SetName("Notice of defect")
-	// incoming
 	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(cp.FromCustomerStartEventHash)
-	// outgoing
+	e.GetIncoming(0).SetFlow(cp.FromCustomerStartEventHash)
 	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(cp.FromNoticeOfDefectHash)
-	// shape
+	e.GetOutgoing(0).SetFlow(cp.FromNoticeOfDefectHash)
 	d.SetID("activity", cp.NoticeOfDefectHash)
 	d.SetElement("activity", cp.NoticeOfDefectHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(320, 400)
-	d.Bounds[0].SetSize(100, 80)
+	d.GetBounds().SetCoordinates(320, 400)
+	d.GetBounds().SetSize(100, 80)
 }
 
 // setWaitingForAnswer ...
 func (cp *collaborativeProcess) setWaitingForAnswer() {
-	// assign
 	e, d := cp.GetWaitingForAnswer()
-	// element
 	e.SetID("event", cp.WaitingForAnswerHash)
 	e.SetName("Waiting for answer")
-	// incoming
 	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(cp.FromNoticeOfDefectHash)
-	// outgoing
+	e.GetIncoming(0).SetFlow(cp.FromNoticeOfDefectHash)
 	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(cp.FromWaitingForAnswerHash)
-	// timer event definition
+	e.GetOutgoing(0).SetFlow(cp.FromWaitingForAnswerHash)
 	t := cp.GetWaitingForAnswerTimerEventDefinition(e)
 	t.SetID("ted", cp.TimerEventDefinitionWaitingForAnswerHash)
 	t.SetTimeDuration()
-	t.TimeDuration[0].SetTimerDefinitionType()
-	t.TimeDuration[0].SetTimerDefinition("PT1M")
-	// shape
+	t.GetTimeDuration().SetTimerDefinitionType()
+	t.GetTimeDuration().SetTimerDefinition("PT1M")
 	d.SetID("event", cp.WaitingForAnswerShapeIDHash)
 	d.SetElement("event", cp.WaitingForAnswerHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(482, 422)
-	d.Bounds[0].SetSize(36, 36)
+	d.GetBounds().SetCoordinates(482, 422)
+	d.GetBounds().SetSize(36, 36)
 }
 
 // setReceiptWarrantyRefusal ...
 func (cp *collaborativeProcess) setReceiptWarrantyRefusal() {
-	// assign
 	e, d := cp.GetReceiptWarrantyRefusal()
-	// element
 	e.SetID("activity", cp.ReceiptWarrantyRefusalHash)
 	e.SetName("Receipt warranty refusal")
-	// incoming
 	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(cp.FromWaitingForAnswerHash)
-	// outgoing
+	e.GetIncoming(0).SetFlow(cp.FromWaitingForAnswerHash)
 	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(cp.FromReceiptWarrantyRefusalHash)
-	// shape attributes
+	e.GetOutgoing(0).SetFlow(cp.FromReceiptWarrantyRefusalHash)
 	d.SetID("activity", cp.ReceiptWarrantyRefusalHash)
 	d.SetElement("activity", cp.ReceiptWarrantyRefusalHash)
 	d.SetBounds()
-	d.Bounds[0].SetCoordinates(580, 400)
-	d.Bounds[0].SetSize(100, 80)
+	d.GetBounds().SetCoordinates(580, 400)
+	d.GetBounds().SetSize(100, 80)
 }
 
 /**
@@ -789,66 +737,54 @@ func (cp *collaborativeProcess) setReceiptWarrantyRefusal() {
 
 // FromCustomerStartEvent ...
 func (cp *collaborativeProcess) fromCustomerStartEvent() {
-	// assign
 	e, d := cp.GetFromCustomerStartEvent()
-	// element
 	e.SetID("flow", cp.FromCustomerStartEventHash)
 	e.SetSourceRef("event", cp.CustomerStartEventHash)
 	e.SetTargetRef("activity", cp.NoticeOfDefectHash)
-	// edge
 	d.SetID("flow", cp.FromCustomerStartEventHash)
 	d.SetElement("flow", cp.FromCustomerStartEventHash)
 	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(261, 440)
-	d.Waypoint[1].SetCoordinates(320, 440)
+	d.GetWaypoint(0).SetCoordinates(261, 440)
+	d.GetWaypoint(1).SetCoordinates(320, 440)
 }
 
 // FromNoticeOfDefect ...
 func (cp *collaborativeProcess) fromNoticeOfDefect() {
-	// assign
 	e, d := cp.GetFromNoticeOfDefect()
-	// element
 	e.SetID("flow", cp.FromNoticeOfDefectHash)
 	e.SetSourceRef("activity", cp.NoticeOfDefectHash)
 	e.SetTargetRef("event", cp.WaitingForAnswerHash)
-	// edge
 	d.SetID("flow", cp.FromNoticeOfDefectHash)
 	d.SetElement("flow", cp.FromNoticeOfDefectHash)
 	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(420, 440)
-	d.Waypoint[1].SetCoordinates(482, 440)
+	d.GetWaypoint(0).SetCoordinates(420, 440)
+	d.GetWaypoint(1).SetCoordinates(482, 440)
 }
 
 // FromWaitingForAnswer ...
 func (cp *collaborativeProcess) fromWaitingForAnswer() {
-	// assign
 	e, d := cp.GetFromWaitingForAnswer()
-	// element
 	e.SetID("flow", cp.FromWaitingForAnswerHash)
 	e.SetSourceRef("event", cp.WaitingForAnswerHash)
 	e.SetTargetRef("activity", cp.ReceiptWarrantyRefusalHash)
-	// edge
 	d.SetID("flow", cp.FromWaitingForAnswerHash)
 	d.SetElement("flow", cp.FromWaitingForAnswerHash)
 	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(518, 440)
-	d.Waypoint[1].SetCoordinates(580, 440)
+	d.GetWaypoint(0).SetCoordinates(518, 440)
+	d.GetWaypoint(1).SetCoordinates(580, 440)
 }
 
 // FromReceiptWarrantyRefusal ...
 func (cp *collaborativeProcess) fromReceiptWarrantyRefusal() {
-	// assign
 	e, d := cp.GetFromReceiptWarrantyRefusal()
-	// element
 	e.SetID("flow", cp.FromReceiptWarrantyRefusalHash)
 	e.SetSourceRef("activity", cp.ReceiptWarrantyRefusalHash)
 	e.SetTargetRef("event", cp.CustomerEndEventHash)
-	// edge
 	d.SetID("flow", cp.FromReceiptWarrantyRefusalHash)
 	d.SetElement("flow", cp.FromReceiptWarrantyRefusalHash)
 	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(680, 440)
-	d.Waypoint[1].SetCoordinates(822, 440)
+	d.GetWaypoint(0).SetCoordinates(680, 440)
+	d.GetWaypoint(1).SetCoordinates(822, 440)
 }
 
 // setDiagram ...

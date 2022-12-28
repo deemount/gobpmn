@@ -4,67 +4,14 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// UserTaskRepository ...
-type UserTaskRepository interface {
-	TasksBase
-
-	SetCamundaFormKey(formKey string)
-	GetCamundaFormKey() *string
-	SetCamundaAssignee(assignee string)
-	GetCamundaAssignee() *string
-	SetCamundaCandidateUsers(users string)
-	GetCamundaCandidateUsers() *string
-	SetCamundaCandidateGroups(groups string)
-	GetCamundaCandidateGroups() *string
-	SetCamundaDueDate(due string)
-	GetCamundaDueDate() *string
-	SetCamundaFollowUpDate(followUp string)
-	GetCamundaFollowUpDate() *string
-	SetCamundaPriority(priority int)
-	GetCamundaPriority() *int
-
-	String() string
-}
-
-// UserTask ...
-type UserTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-	CamundaFormKey         string `xml:"camunda:formKey,attr,omitempty" json:"formKey,omitempty"`
-	CamundaAssignee        string `xml:"camunda:assignee,attr,omitempty" json:"assignee,omitempty"`
-	CamundaCandidateUsers  string `xml:"camunda:candidateUsers,attr,omitempty" json:"candidateUsers,omitempty"`
-	CamundaCandidateGroups string `xml:"camunda:candidateGroups,attr,omitempty" json:"candidateGroups,omitempty"`
-	CamundaDueDate         string `xml:"camunda:dueDate,attr,omitempty" json:"dueDate,omitempty"`
-	CamundaFollowUpDate    string `xml:"camunda:followUpDate,attr,omitempty" json:"followUpDate,omitempty"`
-	CamundaPriority        int    `xml:"camunda:priority,attr,omitempty" json:"priority,omitempty"`
-}
-
-// TUserTask ...
-type TUserTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-	FormKey         string `xml:"formKey,attr,omitempty" json:"formKey,omitempty"`
-	Assignee        string `xml:"assignee,attr,omitempty" json:"assignee,omitempty"`
-	CandidateUsers  string `xml:"candidateUsers,attr,omitempty" json:"candidateUsers,omitempty"`
-	CandidateGroups string `xml:"candidateGroups,attr,omitempty" json:"candidateGroups,omitempty"`
-	DueDate         string `xml:"dueDate,attr,omitempty" json:"dueDate,omitempty"`
-	FollowUpDate    string `xml:"followUpDate,attr,omitempty" json:"followUpDate,omitempty"`
-	Priority        int    `xml:"priority,attr,omitempty" json:"priority,omitempty"`
-}
 
 func NewUserTask() UserTaskRepository {
 	return &UserTask{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -146,6 +93,8 @@ func (utask *UserTask) SetCamundaPriority(priority int) {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // SetDocumentation ...
 func (utask *UserTask) SetDocumentation() {
 	utask.Documentation = make([]attributes.Documentation, 1)
@@ -155,6 +104,8 @@ func (utask *UserTask) SetDocumentation() {
 func (utask *UserTask) SetExtensionElements() {
 	utask.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
+
+/*** Marker ***/
 
 // SetIncoming ...
 func (utask *UserTask) SetIncoming(num int) {
@@ -166,7 +117,7 @@ func (utask *UserTask) SetOutgoing(num int) {
 	utask.Outgoing = make([]marker.Outgoing, num)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -242,15 +193,19 @@ func (utask UserTask) GetCamundaPriority() *int {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // GetDocumentation ...
-func (utask UserTask) GetDocumentation() DOCUMENTATION_PTR {
+func (utask UserTask) GetDocumentation() *attributes.Documentation {
 	return &utask.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (utask UserTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (utask UserTask) GetExtensionElements() *attributes.ExtensionElements {
 	return &utask.ExtensionElements[0]
 }
+
+/*** Marker ***/
 
 // GetIncoming ...
 func (utask UserTask) GetIncoming(num int) *marker.Incoming {

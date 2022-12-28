@@ -1,23 +1,11 @@
 package canvas
 
-// WaypointRepository ...
-type WaypointRepository interface {
-	SetX(x int)
-	SetY(y int)
-	SetCoordinates(x, y int)
-
-	GetX() *int
-	GetY() *int
-	GetCoordinates() (*int, *int)
+// NewWaypoint ...
+func NewWaypoint() WaypointRepository {
+	return &Waypoint{}
 }
 
-// Waypoint ...
-type Waypoint struct {
-	X int `xml:"x,attr" json:"-"`
-	Y int `xml:"y,attr" json:"-"`
-}
-
-/**
+/*
  * Default Setters
  */
 
@@ -39,7 +27,7 @@ func (wp *Waypoint) SetCoordinates(x, y int) {
 	wp.Y = y
 }
 
-/**
+/*
  * Default Getters
  */
 

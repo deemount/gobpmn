@@ -3,60 +3,11 @@ package elements
 import (
 	"fmt"
 
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-// BoundaryEventRepository ...
-type BoundaryEventRepository interface {
-	EventElementsBase
-	EventElementsDefinitions
-	EventElementsMarkerOutgoing
-
-	SetAttachedToRef(ref string)
-	GetAttachedToRef() *string
-
-	// maybe @deprecated @7.17 execution platform
-	// Notice: maybe token out of a older modeler version.
-	// Needs a checkout
-	SetCancelActivity(cancel bool)
-	GetCancelActivity() *bool
-}
-
-// BoundaryEvent ...
-type BoundaryEvent struct {
-	compulsion.CompulsionCoreAttributes
-	AttachedToRef              string                                   `xml:"attachedToRef,attr,omitempty" json:"attachedToRef,omitempty"`
-	CancelActivity             bool                                     `xml:"cancelActivity,attr,omitempty" json:"cancelActivity,omitempty"` // maybe @deprecated in new modeler
-	CancelEventDefinition      []definitions.CancelEventDefinition      `xml:"bpmn:cancelEventDefinition,omitempty" json:"cancelEventDefinition,omitempty"`
-	MessageEventDefinition     []definitions.MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	TimerEventDefinition       []definitions.TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
-	EscalationEventDefinition  []definitions.EscalationEventDefinition  `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
-	ConditionalEventDefinition []definitions.ConditionalEventDefinition `xml:"bpmn:conditionalEventDefinition,omitempty" json:"conditionalEventDefinition,omitempty"`
-	ErrorEventDefinition       []definitions.ErrorEventDefinition       `xml:"bpmn:errorEventDefinition,omitempty" json:"errorEventDefinition,omitempty"`
-	SignalEventDefinition      []definitions.SignalEventDefinition      `xml:"bpmn:signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
-	CompensateEventDefinition  []definitions.CompensateEventDefinition  `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
-	Outgoing                   []marker.Outgoing                        `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
-// TBoundaryEvent ...
-type TBoundaryEvent struct {
-	compulsion.CompulsionCoreAttributes
-	AttachedToRef              string                                    `xml:"attachedToRef,attr,omitempty" json:"attachedToRef,omitempty"`
-	CancelActivity             bool                                      `xml:"cancelActivity,attr,omitempty" json:"cancelActivity,omitempty"` // maybe @deprecated in new modeler
-	CancelEventDefinition      []definitions.CancelEventDefinition       `xml:"cancelEventDefinition,omitempty" json:"cancelEventDefinition,omitempty"`
-	MessageEventDefinition     []definitions.MessageEventDefinition      `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	TimerEventDefinition       []definitions.TTimerEventDefinition       `xml:"timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
-	EscalationEventDefinition  []definitions.EscalationEventDefinition   `xml:"escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
-	ConditionalEventDefinition []definitions.TConditionalEventDefinition `xml:"conditionalEventDefinition,omitempty" json:"conditionalEventDefinition,omitempty"`
-	ErrorEventDefinition       []definitions.ErrorEventDefinition        `xml:"errorEventDefinition,omitempty" json:"errorEventDefinition,omitempty"`
-	SignalEventDefinition      []definitions.SignalEventDefinition       `xml:"signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
-	CompensateEventDefinition  []definitions.CompensateEventDefinition   `xml:"compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
-	Outgoing                   []marker.Outgoing                         `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
+// NewBoundaryEvent ...
 func NewBoundaryEvent() BoundaryEventRepository {
 	return &BoundaryEvent{}
 }
@@ -158,12 +109,12 @@ func (be *BoundaryEvent) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (be BoundaryEvent) GetID() eventsbase.STR_PTR {
+func (be BoundaryEvent) GetID() STR_PTR {
 	return &be.ID
 }
 
 // GetName ...
-func (be BoundaryEvent) GetName() eventsbase.STR_PTR {
+func (be BoundaryEvent) GetName() STR_PTR {
 	return &be.Name
 }
 

@@ -6,26 +6,6 @@ import (
 	"github.com/deemount/gobpmn/models/attributes"
 )
 
-// DataInputAssociationRepository ...
-type DataInputAssociationRepository interface {
-	DataBaseID
-	DataBaseCoreElements
-}
-
-// DataInputAssociation ...
-type DataInputAssociation struct {
-	ID                string                         `xml:"id,attr,omitempty" json:"id,omitempty"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
-// TDataInputAssociation ...
-type TDataInputAssociation struct {
-	ID                string                          `xml:"id,attr,omitempty" json:"id,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
 // NewDataInputAssociation ...
 func NewDataInputAssociation() DataInputAssociationRepository {
 	return &DataInputAssociation{}
@@ -79,11 +59,11 @@ func (dia DataInputAssociation) GetID() STR_PTR {
 /** BPMN **/
 
 // GetDocumentation ...
-func (dia DataInputAssociation) GetDocumentation() DOCUMENTATION_PTR {
+func (dia DataInputAssociation) GetDocumentation() *attributes.Documentation {
 	return &dia.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (dia DataInputAssociation) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (dia DataInputAssociation) GetExtensionElements() *attributes.ExtensionElements {
 	return &dia.ExtensionElements[0]
 }

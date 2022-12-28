@@ -4,48 +4,9 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// IntermediateThrowEventRepository ...
-type IntermediateThrowEventRepository interface {
-	EventElementsBase
-	EventElementsMarker
-	EventElementsCoreElements
-	EventElementsCoreThrowCatchElements
-
-	SetCompensateEventDefinition()
-	GetCompensateEventDefinition() *definitions.CompensateEventDefinition
-	SetEscalationEventDefinition()
-	GetEscalationEventDefinition() *definitions.EscalationEventDefinition
-}
-
-// IntermediateThrowEvent ...
-type IntermediateThrowEvent struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCoreIncomingOutgoing
-	MessageEventDefinition    []definitions.MessageEventDefinition    `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	LinkEventDefinition       []definitions.LinkEventDefinition       `xml:"bpmn:linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
-	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
-	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
-	SignalEventDefinition     []definitions.SignalEventDefinition     `xml:"bpmn:signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
-}
-
-// TIntermediateThrowEvent ...
-type TIntermediateThrowEvent struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCoreIncomingOutgoing
-	MessageEventDefinition    []definitions.MessageEventDefinition    `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	LinkEventDefinition       []definitions.LinkEventDefinition       `xml:"linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
-	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
-	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
-	SignalEventDefinition     []definitions.SignalEventDefinition     `xml:"signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
-}
 
 // NewIntermediateThrowEvent ...
 func NewIntermediateThrowEvent() IntermediateThrowEventRepository {
@@ -135,12 +96,12 @@ func (intermediateThrowEvent *IntermediateThrowEvent) SetSignalEventDefinition()
 /** BPMN **/
 
 // GetID ...
-func (intermediateThrowEvent IntermediateThrowEvent) GetID() eventsbase.STR_PTR {
+func (intermediateThrowEvent IntermediateThrowEvent) GetID() STR_PTR {
 	return &intermediateThrowEvent.ID
 }
 
 // GetName ...
-func (intermediateThrowEvent IntermediateThrowEvent) GetName() eventsbase.STR_PTR {
+func (intermediateThrowEvent IntermediateThrowEvent) GetName() STR_PTR {
 	return &intermediateThrowEvent.Name
 }
 

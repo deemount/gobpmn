@@ -2,10 +2,6 @@ package data
 
 import "github.com/deemount/gobpmn/models/attributes"
 
-type STR_PTR *string
-type DOCUMENTATION_PTR *attributes.Documentation
-type EXTENSION_ELEMENTS_PTR *attributes.ExtensionElements
-
 // DataBaseID ...
 type DataBaseID interface {
 	SetID(typ string, suffix interface{})
@@ -20,12 +16,12 @@ type DataBaseName interface {
 
 type DataBaseDocumentation interface {
 	SetDocumentation()
-	GetDocumentation() DOCUMENTATION_PTR
+	GetDocumentation() *attributes.Documentation
 }
 
 type DataBaseExtensionElements interface {
 	SetExtensionElements()
-	GetExtensionElements() EXTENSION_ELEMENTS_PTR
+	GetExtensionElements() *attributes.ExtensionElements
 }
 
 type DataBaseCoreElements interface {
@@ -37,4 +33,24 @@ type DataBaseCoreElements interface {
 type DataBaseAttributes interface {
 	DataBaseID
 	DataBaseName
+}
+
+// DataInputAssociationRepository ...
+type DataInputAssociationRepository interface {
+	DataBaseID
+	DataBaseCoreElements
+}
+
+// DataObjectRepository ...
+type DataObjectRepository interface {
+	DataBaseID
+}
+
+// DataObjectReferenceRepository ...
+type DataObjectReferenceRepository interface{}
+
+// DataStoreRepository ...
+type DataStoreReferenceRepository interface {
+	DataBaseAttributes
+	DataBaseCoreElements
 }

@@ -1,19 +1,19 @@
 package attributes
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // PropertyRepository ...
 type PropertyRepository interface {
-	SetID(typ string, suffix interface{})
-	GetID() *string
-	SetName(name string)
-	GetName() *string
+	AttributesBase
 }
 
 // Property ...
 type Property struct {
-	ID   string `xml:"id,attr,omitempty" json:"id"`
-	Name string `xml:"name,attr,omitempty" json:"name,omitempty"`
+	compulsion.BaseAttributes
 }
 
 // NewProperty ...
@@ -52,12 +52,12 @@ func (prop *Property) SetName(name string) {
 /* Attributes */
 
 // GetID ...
-func (prop Property) GetID() *string {
+func (prop Property) GetID() STR_PTR {
 	return &prop.ID
 
 }
 
 // GetName ...
-func (prop Property) GetName() *string {
+func (prop Property) GetName() STR_PTR {
 	return &prop.Name
 }

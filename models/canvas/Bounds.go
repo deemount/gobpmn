@@ -1,35 +1,11 @@
 package canvas
 
-// BoundsRepository ...
-type BoundsRepository interface {
-	SetCoordinates(x, y int)
-	SetX(x int)
-	SetY(y int)
-	SetSize(width, height int)
-	SetWidth(width int)
-	SetHeight(height int)
-
-	GetCoordinates() (*int, *int)
-	GetX() *int
-	GetY() *int
-	GetSize() (*int, *int)
-	GetWidth() *int
-	GetHeight() *int
-}
-
-// Bounds ...
-type Bounds struct {
-	X      int `xml:"x,attr,omitempty"`
-	Y      int `xml:"y,attr,omitempty"`
-	Width  int `xml:"width,attr,omitempty"`
-	Height int `xml:"height,attr,omitempty"`
-}
-
+// NewBounds ...
 func NewBounds() BoundsRepository {
 	return &Bounds{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -65,7 +41,7 @@ func (bnds *Bounds) SetHeight(height int) {
 	bnds.Height = height
 }
 
-/**
+/*
  * Default Getters
  */
 

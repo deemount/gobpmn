@@ -4,35 +4,14 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/conditional"
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 )
 
-// ConditionalEventDefinitionRepository ...
-type ConditionalEventDefinitionRepository interface {
-	DefinitionsID
-
-	SetCamundaVariableName(variableName string)
-	GetCamundaVariableName() *string
-
-	SetCondition()
-	GetCondition() *conditional.Condition
+// NewConditionalEventDefinition ...
+func NewConditionalEventDefinition() ConditionalEventDefinitionRepository {
+	return &ConditionalEventDefinition{}
 }
 
-// ConditionalEventDefinition ...
-type ConditionalEventDefinition struct {
-	ID                  string                  `xml:"id,attr" json:"id"`
-	CamundaVariableName string                  `xml:"camunda:variableName" json:"variableName,omitempty"`
-	Condition           []conditional.Condition `xml:"bpmn:condition,omitempty" json:"condition,omitempty"`
-}
-
-// TConditionalEventDefinition ...
-type TConditionalEventDefinition struct {
-	ID                  string                  `xml:"id,attr" json:"id"`
-	CamundaVariableName string                  `xml:"variableName" json:"variableName,omitempty"`
-	Condition           []conditional.Condition `xml:"condition,omitempty" json:"condition,omitempty"`
-}
-
-/**
+/*
  * Default Setters
  */
 
@@ -66,7 +45,7 @@ func (conditionalEventDefinition *ConditionalEventDefinition) SetCondition() {
 	conditionalEventDefinition.Condition = make([]conditional.Condition, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -75,7 +54,7 @@ func (conditionalEventDefinition *ConditionalEventDefinition) SetCondition() {
 /** BPMN **/
 
 // GetID ...
-func (conditionalEventDefinition ConditionalEventDefinition) GetID() eventsbase.STR_PTR {
+func (conditionalEventDefinition ConditionalEventDefinition) GetID() STR_PTR {
 	return &conditionalEventDefinition.ID
 }
 

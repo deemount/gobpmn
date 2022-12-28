@@ -2,20 +2,7 @@ package pool
 
 import "fmt"
 
-// LaneRepository ...
-type LaneRepository interface {
-	PoolID
-
-	SetFlowNodeRef(num int)
-	GetFlowNodeRef(num int) *FlowNodeRef
-}
-
-// Lane ...
-type Lane struct {
-	ID          string        `xml:"id,attr" json:"id"`
-	FlowNodeRef []FlowNodeRef `xml:"bpmn:flowNodeRef,omitempty" json:"flowNodeRef,omitempty"`
-}
-
+// NewLane ...
 func NewLane() LaneRepository {
 	return &Lane{}
 }

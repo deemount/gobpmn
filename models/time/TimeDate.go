@@ -42,11 +42,11 @@ func (timedate *TimeDate) SetTimerDefinition(timerDefinition string) {
 /** BPMN **/
 
 // GetTimerDefinitionType ...
-func (timedate TimeDate) GetTimerDefinitionType() *string {
+func (timedate TimeDate) GetTimerDefinitionType() STR_PTR {
 	return &timedate.TimerDefType
 }
 
 // GetTimerDefinition ...
-func (timedate TimeDate) GetTimerDefinition() *string {
+func (timedate TimeDate) GetTimerDefinition() STR_PTR {
 	return &timedate.TimerDef
 }

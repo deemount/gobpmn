@@ -7,36 +7,6 @@ import (
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-// CollaborationRepository ...
-type CollaborationRepository interface {
-	PoolID
-	PoolBaseCoreElements
-
-	SetParticipant(num int)
-	GetParticipant(num int) *Participant
-
-	SetMessageFlow(num int)
-	GetMessageFlow(num int) *marker.MessageFlow
-}
-
-// Collaboration ...
-type Collaboration struct {
-	ID                string                         `xml:"id,attr" json:"id"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Participant       []Participant                  `xml:"bpmn:participant" json:"participant,omitempty"`
-	MessageFlow       []marker.MessageFlow           `xml:"bpmn:messageFlow,omitempty" json:"messageFlow,omitempty"`
-}
-
-// TCollaboration ...
-type TCollaboration struct {
-	ID                string                          `xml:"id,attr" json:"id"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Participant       []TParticipant                  `xml:"participant" json:"participant,omitempty"`
-	MessageFlow       []marker.TMessageFlow           `xml:"messageFlow,omitempty" json:"messageFlow,omitempty"`
-}
-
 // NewCollaboration ...
 func NewCollaboration() CollaborationRepository {
 	return &Collaboration{}
@@ -104,12 +74,12 @@ func (collaboration Collaboration) GetID() STR_PTR {
 /** BPMN **/
 
 // GetDocumentation ...
-func (collaboration Collaboration) GetDocumentation() DOCUMENTATION_PTR {
+func (collaboration Collaboration) GetDocumentation() *attributes.Documentation {
 	return &collaboration.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (collaboration Collaboration) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (collaboration Collaboration) GetExtensionElements() *attributes.ExtensionElements {
 	return &collaboration.ExtensionElements[0]
 }
 

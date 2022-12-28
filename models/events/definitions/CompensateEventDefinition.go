@@ -1,19 +1,11 @@
 package definitions
 
-// CompensateEventDefinitionRepository ...
-type CompensateEventDefinitionRepository interface{}
-
-// CompensateEventDefinition ...
-type CompensateEventDefinition struct{}
-
-// TCompensateEventDefinition ...
-type TCompensateEventDefinition struct{}
-
+// NewCompensateEventDefinition ...
 func NewCompensateEventDefinition() CompensateEventDefinitionRepository {
 	return &CompensateEventDefinition{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -23,7 +15,7 @@ func NewCompensateEventDefinition() CompensateEventDefinitionRepository {
 
 /*** Make Elements ***/
 
-/**
+/*
  * Default Getters
  */
 

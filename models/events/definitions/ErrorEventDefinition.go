@@ -2,20 +2,9 @@ package definitions
 
 import (
 	"fmt"
-
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 )
 
-// ErrorEventDefinitionRepository ...
-type ErrorEventDefinitionRepository interface {
-	DefinitionsID
-}
-
-// ErrorEventDefinition ...
-type ErrorEventDefinition struct {
-	ID string `xml:"id,attr,omitempty" json:"id"`
-}
-
+// NewErrorEventDefinition ...
 func NewErrorEventDefinition() ErrorEventDefinitionRepository {
 	return &ErrorEventDefinition{}
 }
@@ -49,6 +38,6 @@ func (eed *ErrorEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (eed ErrorEventDefinition) GetID() eventsbase.STR_PTR {
+func (eed ErrorEventDefinition) GetID() STR_PTR {
 	return &eed.ID
 }

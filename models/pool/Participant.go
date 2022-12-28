@@ -7,43 +7,12 @@ import (
 	"github.com/deemount/gobpmn/models/loop"
 )
 
-// ParticipantRepository ...
-type ParticipantRepository interface {
-	PoolBase
-
-	SetProcessRef(typ string, suffix string)
-	GetProcessRef() *string
-
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-
-	SetParticipantMultiplicity()
-	GetParticipantMultiplicity() *loop.ParticipantMultiplicity
-}
-
-// Participant ...
-type Participant struct {
-	ID                      string                         `xml:"id,attr" json:"id" csv:"ID"`
-	Name                    string                         `xml:"name,attr,omitempty" json:"name,omitempty" csv:"NAME"`
-	ProcessRef              string                         `xml:"processRef,attr,omitempty" json:"processRef,omitempty" csv:"PROCESS_REF"`
-	Documentation           []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty" csv:"DOCUMENTATION"`
-	ParticipantMultiplicity []loop.ParticipantMultiplicity `xml:"bpmn:participantMultiplicity,omitempty" json:"participantMultiplicity,omitempty" csv:"PARTICIPANT_MULTIPLICITY"`
-}
-
-// TParticipant ...
-type TParticipant struct {
-	ID                      string                         `xml:"id,attr" json:"id"`
-	Name                    string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	ProcessRef              string                         `xml:"processRef,attr" json:"processRef,omitempty"`
-	Documentation           []attributes.Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ParticipantMultiplicity []loop.ParticipantMultiplicity `xml:"participantMultiplicity,omitempty" json:"participantMultiplicity,omitempty"`
-}
-
+// NewParticipant ...
 func NewParticipant() ParticipantRepository {
 	return &Participant{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -96,7 +65,7 @@ func (participant *Participant) SetParticipantMultiplicity() {
 	participant.ParticipantMultiplicity = make([]loop.ParticipantMultiplicity, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 

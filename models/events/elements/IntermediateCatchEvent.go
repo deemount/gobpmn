@@ -4,49 +4,9 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// IntermediateCatchEventRepository ...
-type IntermediateCatchEventRepository interface {
-	EventElementsBase
-	EventElementsCamundaBase
-	EventElementsCoreElements
-	EventElementsMarker
-	EventElementsCoreThrowCatchElements
-
-	SetConditionalEventDefinition()
-	GetConditionalEventDefinition() *definitions.ConditionalEventDefinition
-	SetTimerEventDefinition()
-	GetTimerEventDefinition() *definitions.TimerEventDefinition
-}
-
-// IntermediateCatchEvent ...
-type IntermediateCatchEvent struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCoreIncomingOutgoing
-	MessageEventDefinition     []definitions.MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	LinkEventDefinition        []definitions.LinkEventDefinition        `xml:"bpmn:linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
-	ConditionalEventDefinition []definitions.ConditionalEventDefinition `xml:"bpmn:conditionalEventDefinition,omitempty" json:"conditionalEventDefinition,omitempty"`
-	TimerEventDefinition       []definitions.TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
-}
-
-// TIntermediateCatchEvent ...
-type TIntermediateCatchEvent struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCoreIncomingOutgoing
-	ConditionalEventDefinition []definitions.TConditionalEventDefinition `xml:"conditionalEventDefinition,omitempty" json:"conditionalEventDefinition,omitempty"`
-	LinkEventDefinition        []definitions.LinkEventDefinition         `xml:"linkEventDefinition,omitempty" json:"linkEventDefinition,omitempty"`
-	TimerEventDefinition       []definitions.TTimerEventDefinition       `xml:"timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
-	MessageEventDefinition     []definitions.MessageEventDefinition      `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-}
 
 // NewIntermediateCatchEvent ...
 func NewIntermediateCatchEvent() IntermediateCatchEventRepository {
@@ -98,6 +58,8 @@ func (ice *IntermediateCatchEvent) SetCamundaJobPriority(priority int) {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // SetDocumentation ...
 func (ice *IntermediateCatchEvent) SetDocumentation() {
 	ice.Documentation = make([]attributes.Documentation, 1)
@@ -108,6 +70,8 @@ func (ice *IntermediateCatchEvent) SetExtensionElements() {
 	ice.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
+/*** Marker ***/
+
 // SetIncoming ...
 func (ice *IntermediateCatchEvent) SetIncoming(num int) {
 	ice.Incoming = make([]marker.Incoming, num)
@@ -117,6 +81,8 @@ func (ice *IntermediateCatchEvent) SetIncoming(num int) {
 func (ice *IntermediateCatchEvent) SetOutgoing(num int) {
 	ice.Outgoing = make([]marker.Outgoing, num)
 }
+
+/*** Event Definitions ***/
 
 // SetConditionalEventDefinition ...
 func (ice *IntermediateCatchEvent) SetConditionalEventDefinition() {
@@ -147,12 +113,12 @@ func (ice *IntermediateCatchEvent) SetMessageEventDefinition() {
 /** BPMN **/
 
 // GetID ...
-func (ice IntermediateCatchEvent) GetID() eventsbase.STR_PTR {
+func (ice IntermediateCatchEvent) GetID() STR_PTR {
 	return &ice.ID
 }
 
 // GetName ...
-func (ice IntermediateCatchEvent) GetName() eventsbase.STR_PTR {
+func (ice IntermediateCatchEvent) GetName() STR_PTR {
 	return &ice.Name
 }
 

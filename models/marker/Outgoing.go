@@ -2,17 +2,7 @@ package marker
 
 import "fmt"
 
-// OutgoingRepository ...
-type OutgoingRepository interface {
-	SetFlow(suffix string)
-	GetFlow() *string
-}
-
-// Outgoing ...
-type Outgoing struct {
-	Flow string `xml:",innerxml" json:"flow"`
-}
-
+// NewOutgoing ...
 func NewOutgoing() OutgoingRepository {
 	return &Outgoing{}
 }

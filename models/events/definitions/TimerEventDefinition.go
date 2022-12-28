@@ -3,39 +3,15 @@ package definitions
 import (
 	"fmt"
 
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/time"
 )
 
-// TimerEventDefinitionRepository ...
-type TimerEventDefinitionRepository interface {
-	DefinitionsID
-
-	SetTimeDate()
-	GetTimeDate() *time.TimeDate
-	SetTimeDuration()
-	GetTimeDuration() *time.TimeDuration
-}
-
-// TimerEventDefinition ...
-type TimerEventDefinition struct {
-	ID           string              `xml:"id,attr,omitempty" json:"id"`
-	TimeDate     []time.TimeDate     `xml:"bpmn:timeDate,omitempty" json:"timeDate,omitempty"`
-	TimeDuration []time.TimeDuration `xml:"bpmn:timeDuration,omitempty" json:"timeDuration,omitempty"`
-}
-
-// TTimerEventDefinition ...
-type TTimerEventDefinition struct {
-	ID           string              `xml:"id,attr,omitempty" json:"id"`
-	TimeDate     []time.TimeDate     `xml:"timeDate,omitempty" json:"timeDate,omitempty"`
-	TimeDuration []time.TimeDuration `xml:"timeDuration,omitempty" json:"timeDuration,omitempty"`
-}
-
+// NewTimerEventDefinition ...
 func NewTimerEventDefinition() TimerEventDefinitionRepository {
 	return &TimerEventDefinition{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -78,7 +54,7 @@ func (ted *TimerEventDefinition) SetTimeDuration() {
 /** BPMN **/
 
 // GetID ...
-func (ted TimerEventDefinition) GetID() eventsbase.STR_PTR {
+func (ted TimerEventDefinition) GetID() STR_PTR {
 	return &ted.ID
 }
 

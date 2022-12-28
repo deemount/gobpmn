@@ -2,21 +2,9 @@ package marker
 
 import "fmt"
 
-// MessageRepository ...
-type MessageRepository interface {
-	MarkerBase
-}
-
-// Message ...
-type Message struct {
-	ID   string `xml:"id,attr,omitempty" json:"id"`
-	Name string `xml:"name,attr,omitempty" json:"name,omitempty"`
-}
-
-// TMessage ...
-type TMessage struct {
-	ID   string `xml:"id,attr,omitempty"`
-	Name string `xml:"name,attr,omitempty"`
+// NewMessage ...
+func NewMessage() MessageRepository {
+	return &Message{}
 }
 
 /*
@@ -49,11 +37,11 @@ func (msg *Message) SetName(suffix string) {
 /* Attributes */
 
 // GetID ...
-func (msg Message) GetID() *string {
+func (msg Message) GetID() STR_PTR {
 	return &msg.ID
 }
 
 // GetName ...
-func (msg Message) GetName() *string {
+func (msg Message) GetName() STR_PTR {
 	return &msg.Name
 }

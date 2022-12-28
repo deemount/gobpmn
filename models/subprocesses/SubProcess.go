@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/gateways"
 	"github.com/deemount/gobpmn/models/loop"
@@ -12,112 +11,7 @@ import (
 	"github.com/deemount/gobpmn/models/tasks"
 )
 
-// SubProcessRepository ...
-type SubProcessRepository interface {
-	SubprocessesBase
-	SubprocessesFlow
-
-	SetTriggeredByEvent(triggered bool)
-	GetTriggeredByEvent() *bool
-
-	SetMultiInstanceLoopCharacteristics()
-	GetMultiInstanceLoopCharacteristics() *loop.MultiInstanceLoopCharacteristics
-
-	SetStartEvent(num int)
-	SetEndEvent(num int)
-
-	SetTask(num int)
-	SetUserTask(num int)
-	SetManualTask(num int)
-	SetReceiveTask(num int)
-	SetScriptTask(num int)
-	SetSendTask(num int)
-	SetServiceTask(num int)
-
-	SetSubProcess(num int)
-	SetAdHocSubProcess(num int)
-
-	SetExclusiveGateway(num int)
-	SetInclusiveGateway(num int)
-	SetParallelGateway(num int)
-	SetComplexGateway(num int)
-	SetEventBasedGateway(num int)
-
-	GetStartEvent(num int) *elements.StartEvent
-	GetEndEvent(num int) *elements.EndEvent
-	GetTask(num int) *tasks.Task
-	GetUserTask(num int) *tasks.UserTask
-	GetManualTask(num int) *tasks.ManualTask
-	GetReceiveTask(num int) *tasks.ReceiveTask
-	GetScriptTask(num int) *tasks.ScriptTask
-	GetSendTask(num int) *tasks.SendTask
-	GetServiceTask(num int) *tasks.ServiceTask
-
-	GetSubProcess(num int) *SubProcess
-	GetAdHocSubProcess(num int) *AdHocSubProcess
-
-	GetExclusiveGateway(num int) *gateways.ExclusiveGateway
-	GetInclusiveGateway(num int) *gateways.InclusiveGateway
-	GetParallelGateway(num int) *gateways.ParallelGateway
-	GetComplexGateway(num int) *gateways.ComplexGateway
-	GetEventBasedGateway(num int) *gateways.EventBasedGateway
-}
-
-// SubProcess ...
-type SubProcess struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-	TriggeredByEvent                 bool                                    `xml:"triggeredByEvent,attr,omitempty" json:"triggeredByEvent,omitempty"`
-	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"bpmn:multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics"`
-	StartEvent                       []elements.StartEvent                   `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty"`
-	EndEvent                         []elements.EndEvent                     `xml:"bpmn:endEvent,omitempty" json:"endEvent,omitempty"`
-	Task                             []tasks.Task                            `xml:"bpmn:task,omitempty" json:"task,omitempty"`
-	UserTask                         []tasks.UserTask                        `xml:"bpmn:userTask,omitempty" json:"userTask,omitempty"`
-	ManualTask                       []tasks.ManualTask                      `xml:"bpmn:manualTask,omitempty" json:"manualTask,omitempty"`
-	ReceiveTask                      []tasks.ReceiveTask                     `xml:"bpmn:receiveTask,omitempty" json:"receiveTask,omitempty"`
-	ScriptTask                       []tasks.ScriptTask                      `xml:"bpmn:scriptTask,omitempty" json:"scriptTask,omitempty"`
-	SendTask                         []tasks.SendTask                        `xml:"bpmn:sendTask,omitempty" json:"sendTask,omitempty"`
-	ServiceTask                      []tasks.ServiceTask                     `xml:"bpmn:serviceTask,omitempty" json:"serviceTask,omitempty"`
-	SubProcess                       []SubProcess                            `xml:"bpmn:subProcess,omitempty" json:"subProcess,omitempty"`           // is that possible ?
-	AdHocSubProcess                  []AdHocSubProcess                       `xml:"bpmn:adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty"` // is that possible ?
-	ExclusiveGateway                 []gateways.ExclusiveGateway             `xml:"bpmn:exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty"`
-	InclusiveGateway                 []gateways.InclusiveGateway             `xml:"bpmn:inclusiveGateway,omitempty" json:"inclusiveGateway,omitempty"`
-	ParallelGateway                  []gateways.ParallelGateway              `xml:"bpmn:parallelGateway,omitempty" json:"parallelGateway,omitempty"`
-	ComplexGateway                   []gateways.ComplexGateway               `xml:"bpmn:complexGateway,omitempty" json:"complexGateway,omitempty"`
-	EventBasedGateway                []gateways.EventBasedGateway            `xml:"bpmn:eventBasedGateway,omitempty" json:"eventBasedGateway,omitempty"`
-	SequenceFlow                     []marker.SequenceFlow                   `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
-}
-
-// TSubProcess ...
-type TSubProcess struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreIncomingOutgoing
-	TriggeredByEvent                 bool                                    `xml:"triggeredByEvent,attr,omitempty" json:"triggeredByEvent,omitempty"`
-	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics"`
-	StartEvent                       []elements.TStartEvent                  `xml:"startEvent,omitemnpty" json:"startEvent,omitempty"`
-	EndEvent                         []elements.TEndEvent                    `xml:"endEvent,omitempty" json:"endEvent,omitempty"`
-	Task                             []tasks.TTask                           `xml:"task,omitempty" json:"task,omitempty"`
-	UserTask                         []tasks.TUserTask                       `xml:"userTask,omitempty" json:"userTask,omitempty"`
-	ManualTask                       []tasks.TManualTask                     `xml:"manualTask,omitempty" json:"manualTask,omitempty"`
-	ReceiveTask                      []tasks.ReceiveTask                     `xml:"receiveTask,omitempty" json:"receiveTask,omitempty"`
-	ScriptTask                       []tasks.ScriptTask                      `xml:"scriptTask,omitempty" json:"scriptTask,omitempty"`
-	SendTask                         []tasks.SendTask                        `xml:"sendTask,omitempty" json:"sendTask,omitempty"`
-	ServiceTask                      []tasks.ServiceTask                     `xml:"serviceTask,omitempty" json:"serviceTask,omitempty"`
-	SubProcess                       []TSubProcess                           `xml:"subProcess,omitempty" json:"subProcess,omitempty"`           // is that possible ?
-	AdHocSubProcess                  []TAdHocSubProcess                      `xml:"adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty"` // is that possible ?
-	ExclusiveGateway                 []gateways.ExclusiveGateway             `xml:"exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty"`
-	InclusiveGateway                 []gateways.InclusiveGateway             `xml:"inclusiveGateway,omitempty" json:"inclusiveGateway,omitempty"`
-	ParallelGateway                  []gateways.ParallelGateway              `xml:"parallelGateway,omitempty" json:"parallelGateway,omitempty"`
-	ComplexGateway                   []gateways.ComplexGateway               `xml:"complexGateway,omitempty" json:"complexGateway,omitempty"`
-	EventBasedGateway                []gateways.EventBasedGateway            `xml:"eventBasedGateway,omitempty" json:"eventBasedGateway,omitempty"`
-	SequenceFlow                     []marker.SequenceFlow                   `xml:"sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
-}
-
-/**
+/*
  * Default Setters
  */
 
@@ -168,6 +62,8 @@ func (subprocess *SubProcess) SetCamundaJobPriority(priority int) {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // SetDocumentation ...
 func (subprocess *SubProcess) SetDocumentation() {
 	subprocess.Documentation = make([]attributes.Documentation, 1)
@@ -178,22 +74,14 @@ func (subprocess *SubProcess) SetExtensionElements() {
 	subprocess.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
-// SetIncoming ...
-func (subprocess *SubProcess) SetIncoming(num int) {
-	subprocess.Incoming = make([]marker.Incoming, num)
-}
-
-// SetOutgoing ...
-func (subprocess *SubProcess) SetOutgoing(num int) {
-	subprocess.Outgoing = make([]marker.Outgoing, num)
-}
+/*** Loop ***/
 
 // SetMultiInstaceLoopCharacteristics ...
 func (subprocess *SubProcess) SetMultiInstanceLoopCharacteristics() {
 	subprocess.MultiInstanceLoopCharacteristics = make([]loop.MultiInstanceLoopCharacteristics, 1)
 }
 
-/*** Event ***/
+/*** Events ***/
 
 // SetStartEvent ...
 func (subprocess *SubProcess) SetStartEvent(num int) {
@@ -205,7 +93,7 @@ func (subprocess *SubProcess) SetEndEvent(num int) {
 	subprocess.EndEvent = make([]elements.EndEvent, num)
 }
 
-/*** Task ***/
+/*** Tasks ***/
 
 // SetTask ...
 func (subprocess *SubProcess) SetTask(num int) {
@@ -254,7 +142,7 @@ func (subprocess *SubProcess) SetAdHocSubProcess(num int) {
 	subprocess.AdHocSubProcess = make([]AdHocSubProcess, num)
 }
 
-/*** Gateway ***/
+/*** Gateways ***/
 
 // SetExclusiveGateway
 func (subprocess *SubProcess) SetExclusiveGateway(num int) {
@@ -283,12 +171,22 @@ func (subprocess *SubProcess) SetEventBasedGateway(num int) {
 
 /*** Marker ***/
 
+// SetIncoming ...
+func (subprocess *SubProcess) SetIncoming(num int) {
+	subprocess.Incoming = make([]marker.Incoming, num)
+}
+
+// SetOutgoing ...
+func (subprocess *SubProcess) SetOutgoing(num int) {
+	subprocess.Outgoing = make([]marker.Outgoing, num)
+}
+
 // SetSequenceFlow ...
 func (subprocess *SubProcess) SetSequenceFlow(num int) {
 	subprocess.SequenceFlow = make([]marker.SequenceFlow, num)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -332,6 +230,8 @@ func (subprocess SubProcess) GetCamundaJobPriority() *int {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // GetDocumentation ...
 func (subprocess SubProcess) GetDocumentation() *attributes.Documentation {
 	return &subprocess.Documentation[0]
@@ -342,15 +242,7 @@ func (subprocess SubProcess) GetExtensionElements() *attributes.ExtensionElement
 	return &subprocess.ExtensionElements[0]
 }
 
-// GetIncoming ...
-func (subprocess SubProcess) GetIncoming(num int) *marker.Incoming {
-	return &subprocess.Incoming[num]
-}
-
-// GetOutgoing ...
-func (subprocess SubProcess) GetOutgoing(num int) *marker.Outgoing {
-	return &subprocess.Outgoing[num]
-}
+/*** Loop ***/
 
 // GetMultiInstaceLoopCharacteristics ...
 func (subprocess SubProcess) GetMultiInstanceLoopCharacteristics() *loop.MultiInstanceLoopCharacteristics {
@@ -369,7 +261,7 @@ func (subprocess SubProcess) GetEndEvent(num int) *elements.EndEvent {
 	return &subprocess.EndEvent[num]
 }
 
-/*** Task ***/
+/*** Tasks ***/
 
 // GetTask ...
 func (subprocess SubProcess) GetTask(num int) *tasks.Task {
@@ -406,7 +298,7 @@ func (subprocess SubProcess) GetServiceTask(num int) *tasks.ServiceTask {
 	return &subprocess.ServiceTask[num]
 }
 
-/*** Subprocess ***/
+/*** Subprocesses ***/
 
 // GetSubProcess ...
 func (subprocess SubProcess) GetSubProcess(num int) *SubProcess {
@@ -418,7 +310,7 @@ func (subprocess SubProcess) GetAdHocSubProcess(num int) *AdHocSubProcess {
 	return &subprocess.AdHocSubProcess[num]
 }
 
-/*** Gateway ***/
+/*** Gateways ***/
 
 // GetExclusiveGateway
 func (subprocess SubProcess) GetExclusiveGateway(num int) *gateways.ExclusiveGateway {
@@ -446,6 +338,16 @@ func (subprocess SubProcess) GetEventBasedGateway(num int) *gateways.EventBasedG
 }
 
 /*** Marker ***/
+
+// GetIncoming ...
+func (subprocess SubProcess) GetIncoming(num int) *marker.Incoming {
+	return &subprocess.Incoming[num]
+}
+
+// GetOutgoing ...
+func (subprocess SubProcess) GetOutgoing(num int) *marker.Outgoing {
+	return &subprocess.Outgoing[num]
+}
 
 // GetSequenceFlow ...
 func (subprocess SubProcess) GetSequenceFlow(num int) *marker.SequenceFlow {

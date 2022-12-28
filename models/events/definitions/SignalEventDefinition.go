@@ -2,29 +2,14 @@ package definitions
 
 import (
 	"fmt"
-
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 )
 
-// SignalEventDefinitionRepository ...
-type SignalEventDefinitionRepository interface {
-	DefinitionsID
-
-	SetSignalRef(suffix string)
-	GetSignalRef() *string
-}
-
-// SignalEventDefinition ...
-type SignalEventDefinition struct {
-	ID        string `xml:"id,attr,omitempty" json:"id"`
-	SignalRef string `xml:"signalRef,attr,omitempty" json:"signalRef,omitempty"`
-}
-
+// NewSignalEventDefinition ...
 func NewSignalEventDefinition() SignalEventDefinitionRepository {
 	return &SignalEventDefinition{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -49,7 +34,7 @@ func (sed *SignalEventDefinition) SetSignalRef(suffix string) {
 	sed.SignalRef = fmt.Sprintf("Signal_%s", suffix)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -58,7 +43,7 @@ func (sed *SignalEventDefinition) SetSignalRef(suffix string) {
 /** BPMN **/
 
 // GetID ...
-func (sed SignalEventDefinition) GetID() eventsbase.STR_PTR {
+func (sed SignalEventDefinition) GetID() STR_PTR {
 	return &sed.ID
 }
 

@@ -7,40 +7,6 @@ import (
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-// InclusiveGatewayRepository ...
-type InclusiveGatewayRepository interface {
-	GatewayBase
-
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
-// InclusiveGateway ...
-type InclusiveGateway struct {
-	ID                 string                         `xml:"id,attr" json:"id"`
-	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
-	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
-	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
-// TInclusiveGateway ...
-type TInclusiveGateway struct {
-	ID                string                          `xml:"id,attr" json:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore"`
-	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter"`
-	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
 func NewInclusiveGateway() InclusiveGatewayRepository {
 	return &InclusiveGateway{}
 }
@@ -89,10 +55,19 @@ func (inclusiveGateway *InclusiveGateway) SetCamundaJobPriority(priority int) {
 
 /*** Make Elements ***/
 
+/*** Attributes ***/
+
+// SetDocumentation ...
+func (inclusiveGateway *InclusiveGateway) SetDocumentation() {
+	inclusiveGateway.Documentation = make([]attributes.Documentation, 1)
+}
+
 // SetExtensionElements ...
 func (inclusiveGateway *InclusiveGateway) SetExtensionElements() {
 	inclusiveGateway.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
+
+/*** Marker ***/
 
 // SetIncoming ...
 func (inclusiveGateway *InclusiveGateway) SetIncoming(num int) {
@@ -141,6 +116,13 @@ func (inclusiveGateway InclusiveGateway) GetCamundaJobPriority() *int {
 }
 
 /* Elements */
+
+/*** Attributes ***/
+
+// GetDocumentation ...
+func (inclusiveGateway InclusiveGateway) GetDocumentation() *attributes.Documentation {
+	return &inclusiveGateway.Documentation[0]
+}
 
 // GetExtensionElements ...
 func (inclusiveGateway InclusiveGateway) GetExtensionElements() *attributes.ExtensionElements {

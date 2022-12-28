@@ -4,78 +4,11 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-// StartEventRepository ...
-type StartEventRepository interface {
-	EventElementsBase
-	EventElementsCamundaBase
-	EventElementsMarkerOutgoing
-	EventElementsCoreElements
-
-	SetIsInterrupting(isInterrupt bool)
-	GetIsInterrupting() *bool
-
-	SetCamundaFormKey(key string)
-	GetCamundaFormKey() *string
-	SetCamundaFormRef(ref string)
-	GetCamundaFormRef() *string
-	SetCamundaFormRefBinding(bind string)
-	GetCamundaFormRefBinding() *string
-	SetCamundaFormRefVersion(version string)
-	GetCamundaFormRefVersion() *string
-	SetCamundaInitiator(initiator string)
-	GetCamundaInitiator() *string
-
-	SetConditionalEventDefinition()
-	GetConditionalEventDefinition() *definitions.ConditionalEventDefinition
-	SetTimerEventDefinition()
-	GetTimerEventDefinition() *definitions.TimerEventDefinition
-
-	SetMessageEventDefinition()
-	GetMessageEventDefinition() *definitions.MessageEventDefinition
-
-	String() string
-}
-
-// StartEvent ...
-type StartEvent struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreElements
-	IsInterrupting         bool                                     `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
-	CamundaFormKey         string                                   `xml:"camunda:formKey,attr,omitempty" json:"formKey,omitempty"`
-	CamundaFormRef         string                                   `xml:"camunda:formRef,attr,omitempty" json:"formRef,omitempty"`
-	CamundaFormRefBind     string                                   `xml:"camunda:formRefBinding,attr,omitempty" json:"formRefBind,omitempty"`
-	CamundaFormRefVersion  string                                   `xml:"camunda:formRefVersion,attr,omitempty" json:"formRefVersion,omitempty"`
-	CamundaInitiator       string                                   `xml:"camunda:initiator,attr,omitempty" json:"init,omitempty"`
-	ConditionalEventDef    []definitions.ConditionalEventDefinition `xml:"bpmn:conditionalEventDefintion,omitempty" json:"conditionalEventDefinition,omitempty"`
-	MessageEventDefinition []definitions.MessageEventDefinition     `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	TimerEventDef          []definitions.TimerEventDefinition       `xml:"bpmn:timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
-	Outgoing               []marker.Outgoing                        `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
-// TStartEvent ...
-type TStartEvent struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreElements
-	IsInterrupting         bool                                      `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
-	FormKey                string                                    `xml:"formKey,attr,omitempty" json:"formKey,omitempty"`
-	FormRef                string                                    `xml:"formRef,attr,omitempty" json:"formRef,omitempty"`
-	FormRefBind            string                                    `xml:"formRefBinding,attr,omitempty" json:"formRefBind,omitempty"`
-	FormRefVersion         string                                    `xml:"formRefVersion,attr,omitempty" json:"formRefVersion,omitempty"`
-	Initiator              string                                    `xml:"initiator,attr,omitempty" json:"init,omitempty"`
-	ConditionalEventDef    []definitions.TConditionalEventDefinition `xml:"conditionalEventDefintion,omitempty" json:"conditionalEventDefinition,omitempty"`
-	MessageEventDefinition []definitions.MessageEventDefinition      `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	TimerEventDef          []definitions.TTimerEventDefinition       `xml:"timerEventDefinition,omitempty" json:"timerEventDefinition,omitempty"`
-	Outgoing               []marker.Outgoing                         `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
+// NewStartEvent ...
 func NewStartEvent() StartEventRepository {
 	return &StartEvent{}
 }
@@ -198,12 +131,12 @@ func (startEvent *StartEvent) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (startEvent StartEvent) GetID() eventsbase.STR_PTR {
+func (startEvent StartEvent) GetID() STR_PTR {
 	return &startEvent.ID
 }
 
 // GetName ...
-func (startEvent StartEvent) GetName() eventsbase.STR_PTR {
+func (startEvent StartEvent) GetName() STR_PTR {
 	return &startEvent.Name
 }
 

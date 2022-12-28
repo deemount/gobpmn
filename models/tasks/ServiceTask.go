@@ -4,31 +4,8 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// ServiceTaskRepository ...
-type ServiceTaskRepository interface {
-	TasksBase
-	String() string
-}
-
-// ServiceTask ...
-type ServiceTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-}
-
-// TServiceTask ...
-type TServiceTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreIncomingOutgoing
-}
 
 func NewServiceTask() ServiceTaskRepository {
 	return &ServiceTask{}
@@ -136,12 +113,12 @@ func (serviceTask ServiceTask) GetCamundaJobPriority() *int {
 /* Elements */
 
 // GetDocumentation ...
-func (serviceTask ServiceTask) GetDocumentation() DOCUMENTATION_PTR {
+func (serviceTask ServiceTask) GetDocumentation() *attributes.Documentation {
 	return &serviceTask.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (serviceTask ServiceTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (serviceTask ServiceTask) GetExtensionElements() *attributes.ExtensionElements {
 	return &serviceTask.ExtensionElements[0]
 }
 

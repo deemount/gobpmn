@@ -4,37 +4,8 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// ReceiveTaskRepository ...
-type ReceiveTaskRepository interface {
-	TasksBase
-
-	SetMessageRef(suffix string)
-	GetMessageRef(suffix string) *string
-
-	String() string
-}
-
-// ReceiveTask ...
-type ReceiveTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-	MessageRef string `xml:"messageRef,attr,omitempty" json:"messageRef,omitempty"`
-}
-
-// TReceiveTask ...
-type TReceiveTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreIncomingOutgoing
-	MessageRef string `xml:"messageRef,attr,omitempty" json:"messageRef,omitempty"`
-}
 
 func NewReceiveTask() ReceiveTaskRepository {
 	return &ReceiveTask{}
@@ -152,12 +123,12 @@ func (receiveTask ReceiveTask) GetCamundaJobPriority() *int {
 /* Elements */
 
 // GetDocumentation ...
-func (receiveTask ReceiveTask) GetDocumentation() DOCUMENTATION_PTR {
+func (receiveTask ReceiveTask) GetDocumentation() *attributes.Documentation {
 	return &receiveTask.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (receiveTask ReceiveTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (receiveTask ReceiveTask) GetExtensionElements() *attributes.ExtensionElements {
 	return &receiveTask.ExtensionElements[0]
 }
 

@@ -1,21 +1,11 @@
 package canvas
 
-// Label ...
-type LabelRepository interface {
-	SetBounds()
-	GetBounds() *Bounds
-}
-
-// Label ...
-type Label struct {
-	Bounds []Bounds `xml:"dc:Bounds,omitempty" json:"-"`
-}
-
+// NewLabel ...
 func NewLabel() LabelRepository {
 	return &Label{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -28,7 +18,7 @@ func (label *Label) SetBounds() {
 	label.Bounds = make([]Bounds, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 

@@ -4,37 +4,8 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// BusinessRuleTaskRepository ...
-type BusinessRuleTaskRepository interface {
-	TasksBase
-
-	SetCamundaClass(class string)
-	GetCamundaClass() *string
-
-	String() string
-}
-
-// BusinessRuleTask ...
-type BusinessRuleTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-	CamundaClass string `xml:"camunda:class,attr,omitempty" json:"class,omitempty"`
-}
-
-// TBusinessRuleTask ...
-type TBusinessRuleTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreIncomingOutgoing
-	Class string `xml:"class,attr,omitempty" json:"class,omitempty"`
-}
 
 func NewBusinessRuleTask() BusinessRuleTaskRepository {
 	return &BusinessRuleTask{}
@@ -156,12 +127,12 @@ func (businessRuleTask BusinessRuleTask) GetCamundaClass() *string {
 /** BPMN **/
 
 // SetDocumentation ...
-func (businessRuleTask BusinessRuleTask) GetDocumentation() DOCUMENTATION_PTR {
+func (businessRuleTask BusinessRuleTask) GetDocumentation() *attributes.Documentation {
 	return &businessRuleTask.Documentation[0]
 }
 
 // SetExtensionElements ...
-func (businessRuleTask BusinessRuleTask) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (businessRuleTask BusinessRuleTask) GetExtensionElements() *attributes.ExtensionElements {
 	return &businessRuleTask.ExtensionElements[0]
 }
 

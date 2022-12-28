@@ -4,35 +4,12 @@ import (
 	"fmt"
 )
 
-// PlaneRepository ...
-type PlaneRepository interface {
-	CanvasBase
-
-	SetAttrProcessElement(suffix string)
-	SetAttrCollaborationElement(suffix string)
-
-	SetShape(num int)
-	GetShape(num int) *Shape
-	SetEdge(num int)
-	GetEdge(num int) *Edge
-
-	GetDescription() string
-}
-
-// Plane ...
-type Plane struct {
-	ID          string  `xml:"id,attr" json:"-"`
-	Element     string  `xml:"bpmnElement,attr" json:"-"`
-	Description string  `xml:"-" json:"-"`
-	Shape       []Shape `xml:"bpmndi:BPMNShape" json:"-"`
-	Edge        []Edge  `xml:"bpmndi:BPMNEdge" json:"-"`
-}
-
+// NewPlane ...
 func NewPlane() PlaneRepository {
 	return &Plane{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -93,7 +70,7 @@ func (plane *Plane) SetEdge(num int) {
 	plane.Edge = make([]Edge, num)
 }
 
-/**
+/*
  * Default Getters
  */
 

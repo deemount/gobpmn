@@ -4,57 +4,16 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-// EndEventRepository ...
-type EndEventRepository interface {
-	EventElementsBase
-	EventElementsCamundaBase
-	EventElementsMarkerIncoming
-	EventElementsCoreElements
-	eventsbase.EventsSetDefinitionsBase
-	eventsbase.EventsSetTerminateBase
-	definitions.DefinitionsGetElementsBase
-	definitions.DefinitionsGetTerminateBase
-}
-
-// EndEvent ...
-type EndEvent struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreElements
-	Incoming                  []marker.Incoming                       `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"bpmn:compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
-	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"bpmn:escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
-	MessageEventDefinition    []definitions.MessageEventDefinition    `xml:"bpmn:messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	ErrorEventDefinition      []definitions.ErrorEventDefinition      `xml:"bpmn:errorEventDefinition,omitempty" json:"errorEventDefinition,omitempty"`
-	SignalEventDefinition     []definitions.SignalEventDefinition     `xml:"bpmn:signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
-	TerminateEventDefinition  []definitions.TerminateEventDefinition  `xml:"bpmn:terminateEventDefinition,omitempty" json:"terminateEventDefinition,omitempty"`
-}
-
-// TEndEvent ...
-type TEndEvent struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreElements
-	Incoming                  []marker.Incoming                       `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	CompensateEventDefinition []definitions.CompensateEventDefinition `xml:"compensateEventDefinition,omitempty" json:"compensateEventDefinition,omitempty"`
-	EscalationEventDefinition []definitions.EscalationEventDefinition `xml:"escalationEventDefinition,omitempty" json:"escalationEventDefinition,omitempty"`
-	MessageEventDefinition    []definitions.MessageEventDefinition    `xml:"messageEventDefinition,omitempty" json:"messageEventDefinition,omitempty"`
-	ErrorEventDefinition      []definitions.ErrorEventDefinition      `xml:"errorEventDefinition,omitempty" json:"errorEventDefinition,omitempty"`
-	SignalEventDefinition     []definitions.SignalEventDefinition     `xml:"signalEventDefinition,omitempty" json:"signalEventDefinition,omitempty"`
-	TerminateEventDefinition  []definitions.TerminateEventDefinition  `xml:"terminateEventDefinition,omitempty" json:"terminateEventDefinition,omitempty"`
-}
-
+// NewEndEvent ...
 func NewEndEvent() EndEventRepository {
 	return &EndEvent{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -147,7 +106,7 @@ func (endEvent *EndEvent) SetTerminateEventDefinition() {
 	endEvent.TerminateEventDefinition = make([]definitions.TerminateEventDefinition, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -156,12 +115,12 @@ func (endEvent *EndEvent) SetTerminateEventDefinition() {
 /** BPMN **/
 
 // GetID ...
-func (endEvent EndEvent) GetID() eventsbase.STR_PTR {
+func (endEvent EndEvent) GetID() STR_PTR {
 	return &endEvent.ID
 }
 
 // GetName ...
-func (endEvent EndEvent) GetName() eventsbase.STR_PTR {
+func (endEvent EndEvent) GetName() STR_PTR {
 	return &endEvent.Name
 }
 

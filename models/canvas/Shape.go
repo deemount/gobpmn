@@ -2,43 +2,12 @@ package canvas
 
 import "fmt"
 
-// ShapeRepository ...
-type ShapeRepository interface {
-	CanvasBase
-
-	SetIsHorizontal(isHorizontal bool)
-	GetIsHorizontal() *bool
-
-	SetBounds()
-	GetBounds() *Bounds
-
-	SetLabel()
-	GetLabel() *Label
-}
-
-// Shape ...
-type Shape struct {
-	ID           string   `xml:"id,attr" json:"-"`
-	Element      string   `xml:"bpmnElement,attr" json:"-"`
-	IsHorizontal bool     `xml:"isHorizontal,attr,omitempty" json:"-"`
-	Bounds       []Bounds `xml:"dc:Bounds" json:"-"`
-	Label        []Label  `xml:"bpmndi:BPMNLabel" json:"-"`
-}
-
-// TShape ...
-type TShape struct {
-	ID           string   `xml:"id,attr" json:"-"`
-	Element      string   `xml:"bpmnElement,attr" json:"-"`
-	IsHorizontal bool     `xml:"isHorizontal,attr,omitempty" json:"-"`
-	Bounds       []Bounds `xml:"Bounds" json:"-"`
-	Label        []Label  `xml:"BPMNLabel" json:"-"`
-}
-
+// NewShape ...
 func NewShape() ShapeRepository {
 	return &Shape{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -115,7 +84,7 @@ func (shape *Shape) SetLabel() {
 	shape.Label = make([]Label, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 

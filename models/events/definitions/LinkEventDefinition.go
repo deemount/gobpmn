@@ -2,25 +2,14 @@ package definitions
 
 import (
 	"fmt"
-
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 )
 
-// LinkEventDefinitionRepository ...
-type LinkEventDefinitionRepository interface {
-	DefinitionsID
-}
-
-// LinkEventDefinition ...
-type LinkEventDefinition struct {
-	ID string `xml:"id,attr,omitempty" json:"id"`
-}
-
+// NewLinkEventDefinition ...
 func NewLinkEventDefinition() LinkEventDefinitionRepository {
 	return &LinkEventDefinition{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -40,7 +29,7 @@ func (led *LinkEventDefinition) SetID(typ string, suffix interface{}) {
 	}
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -49,6 +38,6 @@ func (led *LinkEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (led LinkEventDefinition) GetID() eventsbase.STR_PTR {
+func (led LinkEventDefinition) GetID() STR_PTR {
 	return &led.ID
 }

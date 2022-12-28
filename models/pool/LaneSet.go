@@ -2,16 +2,9 @@ package pool
 
 import "fmt"
 
-type LaneSetRepository interface {
-	PoolID
-	SetLane(num int)
-	GetLane() *Lane
-}
-
-// LaneSet ...
-type LaneSet struct {
-	ID   string `xml:"id,attr" json:"id"`
-	Lane []Lane `xml:"bpmn:lane,omitempty" json:"lane,omitempty"`
+// NewLaneSet ...
+func NewLaneSet() LaneSetRepository {
+	return &LaneSet{}
 }
 
 /*

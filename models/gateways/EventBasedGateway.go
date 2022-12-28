@@ -7,38 +7,8 @@ import (
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-// EventBasedGatewayRepository ...
-type EventBasedGatewayRepository interface {
-	GatewayBase
-
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
-// EventBasedGateway ...
-type EventBasedGateway struct {
-	ID                 string                         `xml:"id,attr" json:"id"`
-	Name               string                         `xml:"name,attr,omitempty" json:"name,omitempty"`
-	CamundaAsyncBefore bool                           `xml:"camunda:asyncBefore,attr,omitempty" json:"asyncBefore"`
-	CamundaAsyncAfter  bool                           `xml:"camunda:asyncAfter,attr,omitempty" json:"asyncAfter"`
-	CamundaJobPriority int                            `xml:"camunda:jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation      []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements  []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming           []marker.Incoming              `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing           []marker.Outgoing              `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
-}
-
-// TEventBasedGateway ...
-type TEventBasedGateway struct {
-	ID                string                          `xml:"id,attr" json:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty"`
-	AsyncBefore       bool                            `xml:"asyncBefore,attr,omitempty" json:"asyncBefore"`
-	AsyncAfter        bool                            `xml:"asyncAfter,attr,omitempty" json:"asyncAfter"`
-	JobPriority       int                             `xml:"jobPriority,attr,omitempty" json:"jobPriority,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-	Incoming          []marker.Incoming               `xml:"incoming,omitempty" json:"incoming,omitempty"`
-	Outgoing          []marker.Outgoing               `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+func NewEventBasedGateway() EventBasedGatewayRepository {
+	return &InclusiveGateway{}
 }
 
 /*
@@ -85,10 +55,19 @@ func (eventBasedGateway *EventBasedGateway) SetCamundaJobPriority(priority int) 
 
 /*** Make Elements ***/
 
+/*** Attributes ***/
+
+// SetDocumentation ...
+func (eventBasedGateway *EventBasedGateway) SetDocumentation() {
+	eventBasedGateway.Documentation = make([]attributes.Documentation, 1)
+}
+
 // SetExtensionElements ...
 func (eventBasedGateway *EventBasedGateway) SetExtensionElements() {
 	eventBasedGateway.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
+
+/*** Marker ***/
 
 // SetIncoming ...
 func (eventBasedGateway *EventBasedGateway) SetIncoming(num int) {
@@ -137,10 +116,19 @@ func (eventBasedGateway EventBasedGateway) GetCamundaJobPriority() *int {
 
 /* Elements */
 
+/*** Attributes ***/
+
+// GetDocumentation ...
+func (eventBasedGateway *EventBasedGateway) GetDocumentation() *attributes.Documentation {
+	return &eventBasedGateway.Documentation[0]
+}
+
 // GetExtensionElements ...
 func (eventBasedGateway EventBasedGateway) GetExtensionElements() *attributes.ExtensionElements {
 	return &eventBasedGateway.ExtensionElements[0]
 }
+
+/*** Marker ***/
 
 // GetIncoming ...
 func (eventBasedGateway EventBasedGateway) GetIncoming(num int) *marker.Incoming {

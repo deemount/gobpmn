@@ -2,25 +2,7 @@ package canvas
 
 import "fmt"
 
-// Edge ...
-type EdgeRepository interface {
-	CanvasBase
-
-	SetWaypoint()
-	GetWaypoint() (*Waypoint, *Waypoint)
-
-	SetLabel()
-	GetLabel() *Label
-}
-
-// Edge ...
-type Edge struct {
-	ID       string     `xml:"id,attr" json:"-"`
-	Element  string     `xml:"bpmnElement,attr" json:"-"`
-	Waypoint []Waypoint `xml:"di:waypoint" json:"-"`
-	Label    []Label    `xml:"bpmndi:BPMNLabel,omitempty" json:"-"`
-}
-
+// NewEdge ...
 func NewEdge() EdgeRepository {
 	return &Edge{}
 }
@@ -86,8 +68,8 @@ func (edge Edge) GetElement() STR_PTR {
 /** BPMNDI **/
 
 // GetWaypoint ...
-func (edge Edge) GetWaypoint() (*Waypoint, *Waypoint) {
-	return &edge.Waypoint[0], &edge.Waypoint[1]
+func (edge Edge) GetWaypoint(num int) *Waypoint {
+	return &edge.Waypoint[num]
 }
 
 // GetLabel ...

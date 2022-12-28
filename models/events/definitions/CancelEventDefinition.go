@@ -2,25 +2,14 @@ package definitions
 
 import (
 	"fmt"
-
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 )
 
-// CancelEventDefinitionRepository ...
-type CancelEventDefinitionRepository interface {
-	DefinitionsID
-}
-
-// CancelEventDefinition ...
-type CancelEventDefinition struct {
-	ID string `xml:"id,attr,omitempty" json:"id"`
-}
-
+// NewCancelEventDefinition ...
 func NewCancelEventDefinition() CancelEventDefinitionRepository {
 	return &CancelEventDefinition{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -40,7 +29,7 @@ func (ced *CancelEventDefinition) SetID(typ string, suffix interface{}) {
 	}
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -49,6 +38,6 @@ func (ced *CancelEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (ced CancelEventDefinition) GetID() eventsbase.STR_PTR {
+func (ced CancelEventDefinition) GetID() STR_PTR {
 	return &ced.ID
 }

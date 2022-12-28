@@ -4,33 +4,8 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// TransactionRepository ...
-type TransactionRepository interface {
-	SubprocessesBase
-	SubprocessesFlow
-}
-
-// Transaction ...
-type Transaction struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-	SequenceFlow []marker.SequenceFlow `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
-}
-
-// TTransaction ...
-type TTransaction struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreIncomingOutgoing
-	SequenceFlow []marker.SequenceFlow `xml:"sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
-}
 
 func NewTransaction() TransactionRepository {
 	return &Transaction{}
@@ -82,6 +57,8 @@ func (transaction *Transaction) SetCamundaJobPriority(priority int) {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // SetDocumentation ...
 func (transaction *Transaction) SetDocumentation() {
 	transaction.Documentation = make([]attributes.Documentation, 1)
@@ -92,6 +69,8 @@ func (transaction *Transaction) SetExtensionElements() {
 	transaction.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
+/*** Marker ***/
+
 // SetIncoming ...
 func (transaction *Transaction) SetIncoming(num int) {
 	transaction.Incoming = make([]marker.Incoming, num)
@@ -101,8 +80,6 @@ func (transaction *Transaction) SetIncoming(num int) {
 func (transaction *Transaction) SetOutgoing(num int) {
 	transaction.Outgoing = make([]marker.Outgoing, num)
 }
-
-/*** Marker ***/
 
 // SetSequenceFlow ...
 func (transaction *Transaction) SetSequenceFlow(num int) {
@@ -148,15 +125,19 @@ func (transaction Transaction) GetCamundaJobPriority() *int {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // GetDocumentation ...
-func (transaction Transaction) GetDocumentation() DOCUMENTATION_PTR {
+func (transaction Transaction) GetDocumentation() *attributes.Documentation {
 	return &transaction.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (transaction Transaction) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (transaction Transaction) GetExtensionElements() *attributes.ExtensionElements {
 	return &transaction.ExtensionElements[0]
 }
+
+/*** Marker ***/
 
 // GetIncoming ...
 func (transaction Transaction) GetIncoming(num int) *marker.Incoming {
@@ -167,8 +148,6 @@ func (transaction Transaction) GetIncoming(num int) *marker.Incoming {
 func (transaction Transaction) GetOutgoing(num int) *marker.Outgoing {
 	return &transaction.Outgoing[num]
 }
-
-/*** Marker ***/
 
 // GetSequenceFlow ...
 func (transaction Transaction) GetSequenceFlow(num int) *marker.SequenceFlow {

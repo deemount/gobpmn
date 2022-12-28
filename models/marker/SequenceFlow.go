@@ -7,38 +7,7 @@ import (
 	"github.com/deemount/gobpmn/models/conditional"
 )
 
-// SequenceFlowRepository ...
-type SequenceFlowRepository interface {
-	MarkerBase
-	MarkerBaseReferences
-	MarkerBaseCoreElements
-
-	SetConditionExpression()
-	GetConditionExpression() *conditional.ConditionExpression
-}
-
-// SequenceFlow ...
-type SequenceFlow struct {
-	ID                  string                            `xml:"id,attr" json:"id"`
-	Name                string                            `xml:"name,attr,omitempty" json:"name,omitempty"`
-	SourceRef           string                            `xml:"sourceRef,attr" json:"sourceRef"`
-	TargetRef           string                            `xml:"targetRef,attr" json:"targetRef"`
-	ConditionExpression []conditional.ConditionExpression `xml:"bpmn:conditionExpression,omitempty" json:"conditionExpression,omitempty"`
-	Documentation       []attributes.Documentation        `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements   []attributes.ExtensionElements    `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
-// TSequenceFlow ...
-type TSequenceFlow struct {
-	ID                  string                            `xml:"id,attr" json:"id"`
-	Name                string                            `xml:"name,attr,omitempty" json:"name,omitempty"`
-	SourceRef           string                            `xml:"sourceRef,attr" json:"sourceRef"`
-	TargetRef           string                            `xml:"targetRef,attr" json:"targetRef"`
-	ConditionExpression []conditional.ConditionExpression `xml:"conditionExpression,omitempty" json:"conditionExpression,omitempty"`
-	Documentation       []attributes.Documentation        `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements   []attributes.TExtensionElements   `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
+// NewSequenceFlow ...
 func NewSequenceFlow() SequenceFlowRepository {
 	return &SequenceFlow{}
 }
@@ -162,11 +131,11 @@ func (sequenceFlow SequenceFlow) GetConditionExpression() *conditional.Condition
 }
 
 // GetDocumentation ...
-func (sequenceFlow SequenceFlow) GetDocumentation() DOCUMENTATION_PTR {
+func (sequenceFlow SequenceFlow) GetDocumentation() *attributes.Documentation {
 	return &sequenceFlow.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (sequenceFlow SequenceFlow) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (sequenceFlow SequenceFlow) GetExtensionElements() *attributes.ExtensionElements {
 	return &sequenceFlow.ExtensionElements[0]
 }

@@ -2,16 +2,6 @@ package data
 
 import "fmt"
 
-// DataObjectRepository ...
-type DataObjectRepository interface {
-	DataBaseID
-}
-
-// DataObject ...
-type DataObject struct {
-	ID string `xml:"id,attr,omitempty" json:"id,omitempty"`
-}
-
 // NewDataObject ...
 func NewDataObject() DataObjectRepository {
 	return &DataObject{}

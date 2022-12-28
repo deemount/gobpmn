@@ -2,20 +2,9 @@ package definitions
 
 import (
 	"fmt"
-
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 )
 
-// EscalationEventDefinitionRepository ...
-type EscalationEventDefinitionRepository interface {
-	DefinitionsID
-}
-
-// EscalationEventDefinition ...
-type EscalationEventDefinition struct {
-	ID string `xml:"id,attr,omitempty" json:"id"`
-}
-
+// NewEscalationEventDefinition
 func NewEscalationEventDefinition() EscalationEventDefinitionRepository {
 	return &EscalationEventDefinition{}
 }
@@ -49,6 +38,6 @@ func (esced *EscalationEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (esced EscalationEventDefinition) GetID() eventsbase.STR_PTR {
+func (esced EscalationEventDefinition) GetID() STR_PTR {
 	return &esced.ID
 }

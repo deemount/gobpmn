@@ -2,24 +2,9 @@ package definitions
 
 import (
 	"fmt"
-
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 )
 
-// MessageEventDefinitionRepository ...
-type MessageEventDefinitionRepository interface {
-	DefinitionsID
-
-	SetMsgRef(suffix string)
-	GetMsgRef() *string
-}
-
-// MessageEventDefinition ...
-type MessageEventDefinition struct {
-	ID     string `xml:"id,attr,omitempty" json:"id"`
-	MsgRef string `xml:"messageRef,attr,omitempty" json:"messageRef,omitempty"`
-}
-
+// NewMessageEventDefinition ...
 func NewMessageEventDefinition() MessageEventDefinitionRepository {
 	return &MessageEventDefinition{}
 }
@@ -58,7 +43,7 @@ func (med *MessageEventDefinition) SetMsgRef(suffix string) {
 /** BPMN **/
 
 // GetID ...
-func (med MessageEventDefinition) GetID() eventsbase.STR_PTR {
+func (med MessageEventDefinition) GetID() STR_PTR {
 	return &med.ID
 }
 

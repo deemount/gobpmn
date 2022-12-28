@@ -1,11 +1,6 @@
 package loop
 
-// LoopCardinalityRepository ...
-type LoopCardinalityRepository interface{}
-
-// LoopCardinality ...
-type LoopCardinality struct{}
-
+// NewLoopCardinality ...
 func NewLoopCardinality() LoopCardinalityRepository {
 	return &LoopCardinality{}
 }

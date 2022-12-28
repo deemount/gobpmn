@@ -6,34 +6,7 @@ import (
 	"github.com/deemount/gobpmn/models/attributes"
 )
 
-type GroupRepository interface {
-	MarkerID
-
-	SetCategoryValueRef(suffix string)
-	GetCategoryValueRef() *string
-
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
-// Group ...
-type Group struct {
-	ID                string                         `xml:"id,attr,omitempty" json:"id"`
-	CategoryValueRef  string                         `xml:"categoryValueRef,attr,omitempty" json:"categoryValueRef,omitempty"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
-// TGroup ...
-type TGroup struct {
-	ID                string                         `xml:"id,attr,omitempty" json:"id"`
-	CategoryValueRef  string                         `xml:"categoryValueRef,attr,omitempty" json:"categoryValueRef,omitempty"`
-	Documentation     []attributes.Documentation     `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
+// NewGroup ...
 func NewGroup() GroupRepository {
 	return &Group{}
 }

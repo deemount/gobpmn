@@ -2,23 +2,7 @@ package marker
 
 import "fmt"
 
-// SignalRepository ...
-type SignalRepository interface {
-	MarkerBase
-}
-
-// Signal ...
-type Signal struct {
-	ID   string `xml:"id,attr,omitempty" json:"id"`
-	Name string `xml:"name,attr,omitempty" json:"name,omitempty"`
-}
-
-// TSignal ...
-type TSignal struct {
-	ID   string `xml:"id,attr,omitempty"`
-	Name string `xml:"name,attr,omitempty"`
-}
-
+// NewSignal ...
 func NewSignal() SignalRepository {
 	return &Signal{}
 }

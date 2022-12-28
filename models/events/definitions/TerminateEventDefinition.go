@@ -2,20 +2,9 @@ package definitions
 
 import (
 	"fmt"
-
-	"github.com/deemount/gobpmn/models/events/eventsbase"
 )
 
-// TerminateEventDefinitionRepository ...
-type TerminateEventDefinitionRepository interface {
-	DefinitionsID
-}
-
-// TerminateEventDefinition ...
-type TerminateEventDefinition struct {
-	ID string `xml:"id,attr,omitempty" json:"id"`
-}
-
+// NewTerminateEventDefinition ...
 func NewTerminateEventDefinition() TerminateEventDefinitionRepository {
 	return &TerminateEventDefinition{}
 }
@@ -49,6 +38,6 @@ func (ted *TerminateEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (ted TerminateEventDefinition) GetID() eventsbase.STR_PTR {
+func (ted TerminateEventDefinition) GetID() STR_PTR {
 	return &ted.ID
 }

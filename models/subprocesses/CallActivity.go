@@ -4,56 +4,9 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/loop"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// CallActivityRepository ...
-type CallActivityRepository interface {
-	SubprocessesBase
-
-	SetCalledElement(element string)
-	GetCalledElement() *string
-
-	SetCamundaCalledElementTenantID(tenantID string)
-	GetCamundaCalledElementTenantID() *string
-
-	SetCamundaVariableMappingClass(class string)
-	GetCamundaVariableMappingClass() *string
-
-	SetStandardLoopCharacteristics()
-	GetStandardLoopCharacteristics() *loop.StandardLoopCharacteristics
-
-	SetMultiInstanceLoopCharacteristics()
-	GetMultiInstanceLoopCharacteristics() *loop.MultiInstanceLoopCharacteristics
-}
-
-// CallActivity ...
-type CallActivity struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-	CalledElement                    string                                  `xml:"calledElement,attr,omitempty" json:"calledElement,omitempty"`
-	CamundaCalledElementTenantID     string                                  `xml:"camunda:calledElementTenantId,attr,omitempty" json:"calledElementTenantId,omitempty"`
-	CamundaVariableMappingClass      string                                  `xml:"camunda:variableMappingClass,attr,omitempty" json:"variableMappingClass,omitempty"`
-	StandardLoopCharacteristics      []loop.StandardLoopCharacteristics      `xml:"bpmn:standardLoopCharacteristics,omitempty" json:"standardLoopCharacteristics,omitempty"`
-	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"bpmn:multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics,omitempty"`
-}
-
-// TCallActivity ...
-type TCallActivity struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreIncomingOutgoing
-	CalledElement                    string                                  `xml:"calledElement,attr,omitempty" json:"calledElement,omitempty"`
-	CamundaCalledElementTenantID     string                                  `xml:"calledElementTenantId,attr,omitempty" json:"calledElementTenantId,omitempty"`
-	CamundaVariableMappingClass      string                                  `xml:"variableMappingClass,attr,omitempty" json:"variableMappingClass,omitempty"`
-	StandardLoopCharacteristics      []loop.StandardLoopCharacteristics      `xml:"standardLoopCharacteristics,omitempty" json:"standardLoopCharacteristics,omitempty"`
-	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics,omitempty"`
-}
 
 func NewCallActivity() CallActivityRepository {
 	return &CallActivity{}
@@ -129,6 +82,8 @@ func (ca *CallActivity) SetExtensionElements() {
 	ca.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
+/*** Marker ***/
+
 // SetIncoming ...
 func (ca *CallActivity) SetIncoming(num int) {
 	ca.Incoming = make([]marker.Incoming, num)
@@ -138,6 +93,8 @@ func (ca *CallActivity) SetIncoming(num int) {
 func (ca *CallActivity) SetOutgoing(num int) {
 	ca.Outgoing = make([]marker.Outgoing, num)
 }
+
+/*** Loop ***/
 
 // SetStandardLoopCharacteristics ...
 func (ca *CallActivity) SetStandardLoopCharacteristics() {
@@ -149,7 +106,7 @@ func (ca *CallActivity) SetMultiInstanceLoopCharacteristics() {
 	ca.MultiInstanceLoopCharacteristics = make([]loop.MultiInstanceLoopCharacteristics, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -203,15 +160,19 @@ func (ca CallActivity) GetCamundaVariableMappingClass() *string {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // GetDocumentation ...
-func (ca CallActivity) GetDocumentation() DOCUMENTATION_PTR {
+func (ca CallActivity) GetDocumentation() *attributes.Documentation {
 	return &ca.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (ca CallActivity) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (ca CallActivity) GetExtensionElements() *attributes.ExtensionElements {
 	return &ca.ExtensionElements[0]
 }
+
+/*** Marker ***/
 
 // GetIncoming ...
 func (ca CallActivity) GetIncoming(num int) *marker.Incoming {
@@ -222,6 +183,8 @@ func (ca CallActivity) GetIncoming(num int) *marker.Incoming {
 func (ca CallActivity) GetOutgoing(num int) *marker.Outgoing {
 	return &ca.Outgoing[num]
 }
+
+/*** Loop ***/
 
 // GetStandardLoopCharacteristics ...
 func (ca CallActivity) GetStandardLoopCharacteristics() *loop.StandardLoopCharacteristics {

@@ -6,28 +6,6 @@ import (
 	"github.com/deemount/gobpmn/models/attributes"
 )
 
-// DataStoreRepository ...
-type DataStoreReferenceRepository interface {
-	DataBaseAttributes
-	DataBaseCoreElements
-}
-
-// DataStoreReference ...
-type DataStoreReference struct {
-	ID                string                         `xml:"id,attr,omitempty" json:"id" csv:"id"`
-	Name              string                         `xml:"name,attr,omitempty" json:"name,omitempty" csv:"name"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
-// TDataStoreReference ...
-type TDataStoreReference struct {
-	ID                string                          `xml:"id,attr,omitempty" json:"id" csv:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty" csv:"name"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
 // NewDataStore ...
 func NewDataStoreReference() DataStoreReferenceRepository {
 	return &DataStoreReference{}
@@ -73,7 +51,7 @@ func (dsr *DataStoreReference) SetExtensionElements() {
 }
 
 /*
- * Default Setters
+ * Default Getters
  */
 
 /* Attributes */
@@ -94,12 +72,14 @@ func (dsr DataStoreReference) GetName() STR_PTR {
 
 /** BPMN **/
 
+/*** Attributes ***/
+
 // GetDocumentation ...
-func (dsr DataStoreReference) GetDocumentation() DOCUMENTATION_PTR {
+func (dsr DataStoreReference) GetDocumentation() *attributes.Documentation {
 	return &dsr.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (dsr DataStoreReference) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (dsr DataStoreReference) GetExtensionElements() *attributes.ExtensionElements {
 	return &dsr.ExtensionElements[0]
 }

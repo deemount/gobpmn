@@ -4,40 +4,9 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
-	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/data"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-// TaskRepository ...
-type TaskRepository interface {
-	TasksBase
-
-	SetDataInputAssociation(num int)
-	GetDataInputAssociation(num int) *data.DataInputAssociation
-
-	String() string
-}
-
-// Task ...
-type Task struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.CompulsionCoreElements
-	compulsion.CompulsionCamundaCoreAttributes
-	compulsion.CompulsionCoreIncomingOutgoing
-	Property             []attributes.Property       `xml:"bpmn:property,omitempty" json:"property,omitempty"`
-	DataInputAssociation []data.DataInputAssociation `xml:"bpmn:dataInputAssociation,omitempty" json:"dataInputAssociation,omitempty"`
-}
-
-// TTask ...
-type TTask struct {
-	compulsion.CompulsionCoreAttributes
-	compulsion.TCompulsionCoreElements
-	compulsion.TCompulsionCamundaCoreAttributes
-	compulsion.TCompulsionCoreIncomingOutgoing
-	Property             []attributes.Property       `xml:"property,omitempty" json:"property,omitempty"`
-	DataInputAssociation []data.DataInputAssociation `xml:"dataInputAssociation,omitempty" json:"dataInputAssociation,omitempty"`
-}
 
 // NewTask ...
 func NewTask() TaskRepository {
@@ -165,12 +134,12 @@ func (task Task) GetProperty() *attributes.Property {
 }
 
 // GetDocumentation ...
-func (task Task) GetDocumentation() DOCUMENTATION_PTR {
+func (task Task) GetDocumentation() *attributes.Documentation {
 	return &task.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (task Task) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (task Task) GetExtensionElements() *attributes.ExtensionElements {
 	return &task.ExtensionElements[0]
 }
 

@@ -7,32 +7,7 @@ import (
 	"github.com/deemount/gobpmn/models/attributes"
 )
 
-// AssociationRepository ...
-type AssociationRepository interface {
-	MarkerID
-	MarkerBaseCoreElements
-
-	MarkerBaseReferences
-}
-
-// Association ...
-type Association struct {
-	ID                string                         `xml:"id,attr"`
-	SourceRef         string                         `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-	TargetRef         string                         `xml:"targetRef,attr" json:"targetRef,omitempty"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
-// TAssociation ...
-type TAssociation struct {
-	ID                string                          `xml:"id,attr"`
-	SourceRef         string                          `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-	TargetRef         string                          `xml:"targetRef,attr" json:"targetRef,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
-}
-
+// NewAssociation ...
 func NewAssociation() AssociationRepository {
 	return &Association{}
 }
@@ -143,11 +118,11 @@ func (association Association) GetTargetRef() *string {
 /** BPMN **/
 
 // GetDocumentation ...
-func (association Association) GetDocumentation() DOCUMENTATION_PTR {
+func (association Association) GetDocumentation() *attributes.Documentation {
 	return &association.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (association Association) GetExtensionElements() EXTENSION_ELEMENTS_PTR {
+func (association Association) GetExtensionElements() *attributes.ExtensionElements {
 	return &association.ExtensionElements[0]
 }
