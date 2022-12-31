@@ -1,59 +1,65 @@
 package main
 
 import (
-	"io/ioutil"
+	"context"
+	_ "embed"
+	"log"
 
 	"github.com/deemount/gobpmn/repository"
-	"github.com/deemount/gobpmn/utils"
 )
 
+var messageBroker repository.MessageBroker
+var bpmnFactory repository.BpmnFactory
+var bpmnEngine repository.BpmnEngine
+var processInfo *repository.ProcessInfo
+var instance repository.ProcessInstance
+
+// init ...
+func init() {
+	log.Println("main: init factory")
+	bpmnFactory = repository.NewBpmnFactory()
+	log.Println("main: init engine")
+	bpmnEngine = repository.NewBpmnEngine("goBPMN")
+	log.Println("main: init process instance")
+	instance = repository.NewProcessInstance(bpmnEngine)
+}
+
+// main ...
 func main() {
 
-	files, _ := ioutil.ReadDir("files/")
-	var n int64 = 1
-	var c int64 = int64(len(files))
-
-	var dh string = utils.GenerateHash()
-	var ph string = utils.GenerateHash()
-	var fh string = utils.GenerateHash()
-	var eh string = utils.GenerateHash()
-
-	var cvt string = ""
-	var name string = ""
-
-	// start event option
-	var hasStartEvent = true
-	var hasFirstState = true
-	var fk string = "create"
-
-	// collaboration option
-	var hasCollab = true
-	var ch string = utils.GenerateHash()
-	var pp string = utils.GenerateHash()
-
-	var fpn string = "Person 1"
-
-	bpmnf := repository.NewBPMNF(
-		utils.N(n),
-		utils.Counter(c),
-		utils.DefHash(dh),
-		utils.ProcHash(ph),
-		utils.FlowHash(fh),
-		utils.EventHash(eh),
-		utils.CVersionTag(cvt),
-		utils.Name(name),
-		utils.FormKey(fk),
-		utils.CollaboHash(ch),
-		utils.PartHash(pp),
-		utils.HasCollab(hasCollab),
-		utils.HasStartEvent(hasStartEvent),
-		utils.HasFirstState(hasFirstState),
-		utils.FirstParticipantName(fpn))
-
-	bpmnf.Set()
-	err := bpmnf.Create()
+	log.Println("main: bpmnFactory.Create")
+	file, err := bpmnFactory.Create()
 	if err != nil {
 		panic(err)
 	}
 
+	log.Println("main: instance.GetProcessInfo")
+	processInfo, err = instance.GetProcessInfo(context.Background(), file)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println("main: instance.Create")
+	instanceInfo, err := instance.Create(processInfo.ProcessKey, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println("main: instance.Run")
+	if err = instance.Run(instanceInfo); err != nil {
+		panic(err)
+	} else {
+		log.Println("main: do your stuff here")
+		// Do your stuff here
+	}
+
+	// TESTING MESSAGE BROKER
+	/*
+		messageBroker.Dial()
+		defer messageBroker.Connection.Close()
+		messageBroker.OpenChannel()
+		defer messageBroker.Channel.Close()
+		messageBroker.DeclareQueue()
+		messageBroker.Publish()
+	*/
 }
