@@ -2,17 +2,6 @@ package artifacts
 
 import "fmt"
 
-// TextRepository ...
-type TextRepository interface {
-	SetContent(text string)
-	GetContent() *string
-}
-
-// Text ...
-type Text struct {
-	Text string `xml:",innerxml,omitempty" json:"text,omitempty"`
-}
-
 // NewText ...
 func NewText() TextRepository {
 	return &Text{}

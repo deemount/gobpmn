@@ -1,21 +1,5 @@
 package camunda
 
-// CamundaListRepository ...
-type CamundaListRepository interface {
-	SetCamundaValue(num int)
-	GetCamundaValue(num int) *CamundaValue
-}
-
-// CamundaList ...
-type CamundaList struct {
-	CamundaValue []CamundaValue `xml:"camunda:value,omitempty" json:"value,omitempty"`
-}
-
-// TCamundaList ...
-type TCamundaList struct {
-	Value []CamundaValue `xml:"value,omitempty" json:"value,omitempty"`
-}
-
 // NewCamundaList ...
 func NewCamundaList() CamundaListRepository {
 	return &CamundaList{}

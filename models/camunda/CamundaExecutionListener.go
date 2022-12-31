@@ -1,33 +1,6 @@
 package camunda
 
-// CamundaExecutionListener ...
-type CamundaExecutionListenerRepository interface {
-	CamundaBaseEvent
-	CamundaBaseClass
-	CamundaBaseScriptElements
-	SetDelegateExpression(expr string)
-	GetDelegateExpression() *string
-	SetCamundaField(num int)
-	GetCamundaField(num int) *CamundaField
-}
-
-// CamundaExecutionListener ...
-type CamundaExecutionListener struct {
-	Class         string          `xml:"class,attr,omitempty" json:"class,omitempty"`
-	Event         string          `xml:"event,attr,omitempty" json:"event,omitempty"`
-	DelegateExpr  string          `xml:"delegateExpression,attr,omitempty" json:"delegateExpression,omitempty"`
-	CamundaScript []CamundaScript `xml:"camunda:script,innerxml,omitempty" json:"script,omitempty"`
-	CamundaField  []CamundaField  `xml:"camunda:field,omitempty" json:"field,omitempty"`
-}
-
-// TCamundaExecutionListener ...
-type TCamundaExecutionListener struct {
-	Class        string          `xml:"class,attr,omitempty" json:"class,omitempty"`
-	Event        string          `xml:"event,attr,omitempty" json:"event,omitempty"`
-	DelegateExpr string          `xml:"delegateExpression,attr,omitempty" json:"delegateExpression,omitempty"`
-	Script       []CamundaScript `xml:"script,innerxml,omitempty" json:"script,omitempty"`
-	Field        []CamundaField  `xml:"field,omitempty" json:"field,omitempty"`
-}
+import "github.com/deemount/gobpmn/models/compulsion"
 
 // NewCamundaExecutionListener ...
 func NewCamundaExecutionListener() CamundaExecutionListenerRepository {
@@ -74,12 +47,12 @@ func (executionListener *CamundaExecutionListener) SetCamundaField(num int) {
 /* Attributes */
 
 // GetClass ..
-func (executionListener CamundaExecutionListener) GetClass() STR_PTR {
+func (executionListener CamundaExecutionListener) GetClass() compulsion.STR_PTR {
 	return &executionListener.Class
 }
 
 // GetEvent ...
-func (executionListener CamundaExecutionListener) GetEvent() STR_PTR {
+func (executionListener CamundaExecutionListener) GetEvent() compulsion.STR_PTR {
 	return &executionListener.Event
 }
 

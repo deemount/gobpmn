@@ -1,11 +1,11 @@
 package core
 
 import (
-	"encoding/xml"
 	"fmt"
 	"log"
 
 	"github.com/deemount/gobpmn/models/canvas"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 	"github.com/deemount/gobpmn/models/pool"
 	"github.com/deemount/gobpmn/models/process"
@@ -14,8 +14,8 @@ import (
 
 var (
 	schemaBpmnModel           = "http://www.omg.org/spec/BPMN/20100524/MODEL"
-	schemaBpmn20_1            = "http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
-	schemaBpmn20_2            = "https://www.omg.org/spec/BPMN/20100501/BPMN20.xsd"
+	schemaBpmn20              = "http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
+	schemaBpmn20_HTTPS        = "https://www.omg.org/spec/BPMN/20100501/BPMN20.xsd"
 	schemaBpmnDI              = "http://www.omg.org/spec/BPMN/20100524/DI"
 	schemaOMGDI               = "http://www.omg.org/spec/DD/20100524/DI"
 	schemaOMGDC               = "http://www.omg.org/spec/DD/20100524/DC"
@@ -24,92 +24,12 @@ var (
 	schemaW3XmlSchemaInstance = "http://www.w3.org/2001/XMLSchema-instance"
 )
 
-// DefinitionsRepository ...
-type DefinitionsRepository interface {
-	CoreBase
-
-	SetBpmn()
-	SetBpmnDI()
-	SetOmgDI()
-	SetDC()
-	SetOmgDC()
-	SetBioc()
-	SetXSD()
-	SetXSI()
-	SetXsiSchemaLocation1()
-	SetXsiSchemaLocation2()
-
-	SetTargetNamespace()
-	SetCamundaSchema()
-	SetZeebeSchema()
-	SetModelerSchema()
-	SetModelerExecutionPlatform()
-	SetModelerExecutionPlatformVersion(version string)
-	SetExporter()
-	SetExporterVersion(version string)
-
-	SetCollaboration()
-	SetProcess(num int)
-	SetCategory(num int)
-	SetMessage(num int)
-	SetSignal(num int)
-	SetDiagram(num int)
-
-	SetDefaultAttributes()
-
-	GetCollaboration() *pool.Collaboration
-	GetProcess(num int) *process.Process
-	GetCategory(num int) *marker.Category
-	GetMessage(num int) *marker.Message
-	GetSignal(num int) *marker.Signal
-	GetDiagram(num int) *canvas.Diagram
-}
-
-// Definitions represents the root element
-type Definitions struct {
-	XMLName                         xml.Name             `xml:"bpmn:definitions" json:"-"`
-	Bpmn                            string               `xml:"xmlns:bpmn,attr" json:"-"`
-	Xsd                             string               `xml:"xmlns:xsd,attr,omitempty" json:"-"`
-	Xsi                             string               `xml:"xmlns:xsi,omitempty" json:"-"`
-	XsiSchemaLocation               string               `xml:"xsi:schemaLocation,attr,omitempty" json:"-"`
-	BpmnDI                          string               `xml:"xmlns:bpmndi,attr" json:"-"`
-	OmgDI                           string               `xml:"xmlns:omgdi,attr,omitempty" json:"-"`
-	DC                              string               `xml:"xmlns:dc,attr,omitempty" json:"-"`
-	OmgDC                           string               `xml:"xmlns:omgdc,attr,omitempty" json:"-"`
-	Bioc                            string               `xml:"xmlns:bioc,attr,omitempty" json:"-"`
-	CamundaSchema                   string               `xml:"xmlns:camunda,attr,omitempty" json:"-"`
-	Zeebe                           string               `xml:"xmlns:zeebe,omitempty" json:"-"`
-	Modeler                         string               `xml:"xmlns:modeler,omitempty" json:"-"`
-	ModelerExecutionPlatform        string               `xml:"modeler:executionPlatform,omitempty" json:"-"`
-	ModelerExecutionPlatformVersion string               `xml:"modeler:executionPlatformVersion,omitempty" json:"-"`
-	ID                              string               `xml:"id,attr" json:"id"`
-	TargetNamespace                 string               `xml:"targetNamespace,attr" json:"-"`
-	Exporter                        string               `xml:"exporter,attr,omitempty" json:"-"`
-	ExporterVersion                 string               `xml:"exporterVersion,attr,omitempty" json:"-"`
-	Collaboration                   []pool.Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration"`
-	Process                         []process.Process    `xml:"bpmn:process,omitempty" json:"process"`
-	Category                        []marker.Category    `xml:"bpmn:category,omitempty" json:"category,omitempty"`
-	Msg                             []marker.Message     `xml:"bpmn:message,omitempty" json:"message,omitempty"`
-	Signal                          []marker.Signal      `xml:"bpmn:signal,omitempty" json:"signal,omitempty"`
-	Diagram                         []canvas.Diagram     `xml:"bpmndi:BPMNDiagram,omitempty" json:"-"`
-}
-
-// TDefinitions ...
-type TDefinitions struct {
-	XMLName       xml.Name              `xml:"definitions" json:"-"`
-	ID            string                `xml:"id,attr" json:"id"`
-	Collaboration []pool.TCollaboration `xml:"collaboration,omitempty" json:"collaboration"`
-	Process       []process.TProcess    `xml:"process,omitempty" json:"process"`
-	Category      []marker.TCategory    `xml:"category,omitempty" json:"category,omitempty"`
-	Msg           []marker.TMessage     `xml:"message,omitempty" json:"message,omitempty"`
-	Signal        []marker.TSignal      `xml:"signal,omitempty" json:"signal,omitempty"`
-}
-
+// NewDefinitions ...
 func NewDefinitions() DefinitionsRepository {
 	return &Definitions{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -158,13 +78,13 @@ func (definitions *Definitions) SetXSI() {
 }
 
 // SetXsiSchemaLocation ...
-func (definitions *Definitions) SetXsiSchemaLocation1() {
-	definitions.XsiSchemaLocation = fmt.Sprintf("%s %s", schemaBpmnModel, schemaBpmn20_1)
+func (definitions *Definitions) SetXsiSchemaLocation() {
+	definitions.XsiSchemaLocation = fmt.Sprintf("%s %s", schemaBpmnModel, schemaBpmn20)
 }
 
 // SetXsiSchemaLocation ...
-func (definitions *Definitions) SetXsiSchemaLocation2() {
-	definitions.XsiSchemaLocation = fmt.Sprintf("%s %s", schemaBpmnModel, schemaBpmn20_2)
+func (definitions *Definitions) SetXsiSchemaLocationHTTPS() {
+	definitions.XsiSchemaLocation = fmt.Sprintf("%s %s", schemaBpmnModel, schemaBpmn20_HTTPS)
 }
 
 // SetID ...
@@ -272,6 +192,13 @@ func (definitions *Definitions) SetDefaultAttributes() {
 	definitions.SetTargetNamespace()
 }
 
+// SetMainElements ...
+func (definitions *Definitions) SetMainElements(num int) {
+	definitions.SetCollaboration()
+	definitions.SetProcess(num)
+	definitions.SetDiagram(1)
+}
+
 /*
  * Default Getters
  */
@@ -281,7 +208,7 @@ func (definitions *Definitions) SetDefaultAttributes() {
 /** BPMN **/
 
 // GetID ...
-func (definitions Definitions) GetID() STR_PTR {
+func (definitions Definitions) GetID() compulsion.STR_PTR {
 	return &definitions.ID
 }
 

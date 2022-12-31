@@ -19,30 +19,30 @@ func NewMultiInstanceLoopCharacteristics() MultiInstanceLoopCharacteristicsRepos
 /** BPMN **/
 
 // SetIsSequential ...
-func (milc *MultiInstanceLoopCharacteristics) SetIsSequential(is bool) {
-	milc.IsSequential = is
+func (multiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics) SetIsSequential(is bool) {
+	multiInstanceLoopCharacteristics.IsSequential = is
 }
 
 /** Camunda **/
 
 // SetCamundaAsyncBefore ...
-func (milc *MultiInstanceLoopCharacteristics) SetCamundaAsyncBefore(asyncBefore bool) {
-	milc.CamundaAsyncBefore = asyncBefore
+func (multiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics) SetCamundaAsyncBefore(asyncBefore bool) {
+	multiInstanceLoopCharacteristics.CamundaAsyncBefore = asyncBefore
 }
 
 // SetCamundaAsyncAfter ...
-func (milc *MultiInstanceLoopCharacteristics) SetCamundaAsyncAfter(asyncAfter bool) {
-	milc.CamundaAsyncAfter = asyncAfter
+func (multiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics) SetCamundaAsyncAfter(asyncAfter bool) {
+	multiInstanceLoopCharacteristics.CamundaAsyncAfter = asyncAfter
 }
 
 // SetCamundaCollection ...
-func (milc *MultiInstanceLoopCharacteristics) SetCamundaCollection(collection string) {
-	milc.CamundaCollection = collection
+func (multiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics) SetCamundaCollection(collection string) {
+	multiInstanceLoopCharacteristics.CamundaCollection = collection
 }
 
 // SetCamundaElementVariable ...
-func (milc *MultiInstanceLoopCharacteristics) SetCamundaElementVariable(element string) {
-	milc.CamundaElementVariable = element
+func (multiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics) SetCamundaElementVariable(element string) {
+	multiInstanceLoopCharacteristics.CamundaElementVariable = element
 }
 
 /*** Make Elements ***/
@@ -50,18 +50,18 @@ func (milc *MultiInstanceLoopCharacteristics) SetCamundaElementVariable(element 
 /** BPMN **/
 
 // SetExtensionElements ...
-func (milc *MultiInstanceLoopCharacteristics) SetExtensionElements() {
-	milc.ExtensionElements = make([]attributes.ExtensionElements, 1)
+func (multiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics) SetExtensionElements() {
+	multiInstanceLoopCharacteristics.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 // SetLoopCardinality ...
-func (milc *MultiInstanceLoopCharacteristics) SetLoopCardinality() {
-	milc.LoopCardinality = make([]LoopCardinality, 1)
+func (multiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics) SetLoopCardinality() {
+	multiInstanceLoopCharacteristics.LoopCardinality = make([]LoopCardinality, 1)
 }
 
 // SetCompletionCondition ...
-func (milc *MultiInstanceLoopCharacteristics) SetCompletionCondition() {
-	milc.CompletionCondition = make([]conditional.CompletionCondition, 1)
+func (multiInstanceLoopCharacteristics *MultiInstanceLoopCharacteristics) SetCompletionCondition() {
+	multiInstanceLoopCharacteristics.CompletionCondition = make([]conditional.CompletionCondition, 1)
 }
 
 /*
@@ -73,30 +73,30 @@ func (milc *MultiInstanceLoopCharacteristics) SetCompletionCondition() {
 /** BPMN **/
 
 // GetIsSequential ...
-func (milc MultiInstanceLoopCharacteristics) GetIsSequential() *bool {
-	return &milc.IsSequential
+func (multiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics) GetIsSequential() *bool {
+	return &multiInstanceLoopCharacteristics.IsSequential
 }
 
 /** Camunda **/
 
 // GetCamundaAsyncBefore ...
-func (milc MultiInstanceLoopCharacteristics) GetCamundaAsyncBefore() *bool {
-	return &milc.CamundaAsyncBefore
+func (multiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics) GetCamundaAsyncBefore() *bool {
+	return &multiInstanceLoopCharacteristics.CamundaAsyncBefore
 }
 
 // GetCamundaAsyncAfter ...
-func (milc MultiInstanceLoopCharacteristics) GetCamundaAsyncAfter() *bool {
-	return &milc.CamundaAsyncAfter
+func (multiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics) GetCamundaAsyncAfter() *bool {
+	return &multiInstanceLoopCharacteristics.CamundaAsyncAfter
 }
 
 // GetCamundaCollection ...
-func (milc MultiInstanceLoopCharacteristics) GetCamundaCollection() *string {
-	return &milc.CamundaCollection
+func (multiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics) GetCamundaCollection() *string {
+	return &multiInstanceLoopCharacteristics.CamundaCollection
 }
 
 // GetCamundaElementVariable ...
-func (milc MultiInstanceLoopCharacteristics) GetCamundaElementVariable() *string {
-	return &milc.CamundaElementVariable
+func (multiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics) GetCamundaElementVariable() *string {
+	return &multiInstanceLoopCharacteristics.CamundaElementVariable
 }
 
 /* Elements */
@@ -104,16 +104,16 @@ func (milc MultiInstanceLoopCharacteristics) GetCamundaElementVariable() *string
 /** BPMN **/
 
 // GetExtensionElements ...
-func (milc MultiInstanceLoopCharacteristics) GetExtensionElements() *attributes.ExtensionElements {
-	return &milc.ExtensionElements[0]
+func (multiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics) GetExtensionElements() *attributes.ExtensionElements {
+	return &multiInstanceLoopCharacteristics.ExtensionElements[0]
 }
 
 // GetLoopCardinality ...
-func (milc MultiInstanceLoopCharacteristics) GetLoopCardinality() *LoopCardinality {
-	return &milc.LoopCardinality[0]
+func (multiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics) GetLoopCardinality() *LoopCardinality {
+	return &multiInstanceLoopCharacteristics.LoopCardinality[0]
 }
 
 // GetCompletionCondition ...
-func (milc MultiInstanceLoopCharacteristics) GetCompletionCondition() *conditional.CompletionCondition {
-	return &milc.CompletionCondition[0]
+func (multiInstanceLoopCharacteristics MultiInstanceLoopCharacteristics) GetCompletionCondition() *conditional.CompletionCondition {
+	return &multiInstanceLoopCharacteristics.CompletionCondition[0]
 }

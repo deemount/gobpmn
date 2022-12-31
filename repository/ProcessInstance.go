@@ -5,8 +5,10 @@ import (
 	"log"
 	"time"
 
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/spec/process_instance"
+	"github.com/deemount/gobpmn/workflows"
 )
 
 type ProcessInstance struct {
@@ -58,12 +60,7 @@ func (processInstance *ProcessInstance) Create(processKey int64, variableContext
 // Run ...
 func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 
-	type queueElement struct {
-		inboundFlowId string
-		baseElement   elements.TStartEvent
-	}
-
-	queue := make([]queueElement, 0)
+	queue := make([]workflows.EventQueue, 0)
 	processInfo := inst.processInfo
 
 	switch inst.state {
@@ -72,9 +69,9 @@ func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 		// use start events to start the instance
 		for _, proc := range processInfo.Def.Process {
 			for _, event := range proc.StartEvent {
-				queue = append(queue, queueElement{
-					inboundFlowId: "",
-					baseElement:   event,
+				queue = append(queue, workflows.EventQueue{
+					InboundFlowId: "",
+					Element:       event,
 				})
 			}
 		}
@@ -83,14 +80,6 @@ func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 
 	case process_instance.ACTIVE:
 
-		/*intermediateCatchEvents := state.findIntermediateCatchEventsForContinuation(process, instance)
-		for _, ice := range intermediateCatchEvents {
-			queue = append(queue, queueElement{
-				inboundFlowId: "",
-				baseElement:   ice,
-			})
-		}*/
-
 	case process_instance.COMPLETED:
 		return nil
 
@@ -98,45 +87,32 @@ func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 		panic("Unknown process instance state")
 	}
 
+	// get the id of startevent: queue[0].baseElement.BaseAttributes.ID
 	log.Printf("processinstance -> queue: %+v", queue)
 
-	/*for len(queue) > 0 {
+	dispatcher := workflows.NewDispatcher()
+	dispatcher.Register(queue[0].Element)
 
-		element := queue[0].baseElement
+	log.Printf("processinstance -> dispatcher: %+v ", dispatcher)
+
+	go func() {
+		err := dispatcher.Dispatch(context.Background(), elements.TStartEvent{
+			BaseAttributes: compulsion.BaseAttributes{
+				ID: "111",
+			},
+		})
+		if err != nil {
+			log.Println(err)
+		}
+	}()
+
+	select {}
+
+	/*for len(queue) > 0 {
+		element := queue[0].element
 		inboundFlowId := queue[0].inboundFlowId
 		queue = queue[1:]
-
-		continueNextElement := state.handleElement(process, instance, element)
-
-		if continueNextElement {
-			if inboundFlowId != "" {
-				state.scheduledFlows = remove(state.scheduledFlows, inboundFlowId)
-			}
-			nextFlows := BPMN20.FindSequenceFlows(&process.definitions.Process.SequenceFlows, element.GetOutgoingAssociation())
-			if element.GetType() == BPMN20.ExclusiveGateway {
-				nextFlows = exclusivelyFilterByConditionExpression(nextFlows, instance.variableContext)
-			}
-			for _, flow := range nextFlows {
-				// TODO: create test for that
-				//if len(flows) < 1 {
-				//	panic(fmt.Sprintf("Can't find 'sequenceFlow' element with ID=%s. "+
-				//		"This is likely because your BPMN is invalid.", flows[0]))
-				//}
-				state.scheduledFlows = append(state.scheduledFlows, flow.Id)
-				baseElements := BPMN20.FindBaseElementsById(process.definitions, flow.TargetRef)
-				// TODO: create test for that
-				//if len(baseElements) < 1 {
-				//	panic(fmt.Sprintf("Can't find flow element with ID=%s. "+
-				//		"This is likely because there are elements in the definition, "+
-				//		"which this engine does not support (yet).", flow.Id))
-				//}
-				targetBaseElement := baseElements[0]
-				queue = append(queue, queueElement{
-					inboundFlowId: flow.Id,
-					baseElement:   targetBaseElement,
-				})
-			}
-		}
 	}*/
+
 	return nil
 }

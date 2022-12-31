@@ -2,6 +2,8 @@ package canvas
 
 import (
 	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewDiagram ...
@@ -45,7 +47,7 @@ func (diagram *Diagram) SetPlane() {
 /* Attributes */
 
 // GetID ...
-func (diagram Diagram) GetID() STR_PTR {
+func (diagram Diagram) GetID() compulsion.STR_PTR {
 	return &diagram.ID
 }
 

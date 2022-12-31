@@ -20,36 +20,36 @@ func NewComplexGateway() ComplexGatewayRepository {
 /** BPMN **/
 
 // SetID ...
-func (complexgate *ComplexGateway) SetID(typ string, suffix interface{}) {
+func (complexGateway *ComplexGateway) SetID(typ string, suffix interface{}) {
 	switch typ {
 	case "gateway":
-		complexgate.ID = fmt.Sprintf("Gateway_%v", suffix)
+		complexGateway.ID = fmt.Sprintf("Gateway_%v", suffix)
 		break
 	case "id":
-		complexgate.ID = fmt.Sprintf("%s", suffix)
+		complexGateway.ID = fmt.Sprintf("%s", suffix)
 	}
 }
 
 // SetName ...
-func (complexgate *ComplexGateway) SetName(name string) {
-	complexgate.Name = name
+func (complexGateway *ComplexGateway) SetName(name string) {
+	complexGateway.Name = name
 }
 
 /** Camunda **/
 
 // SetCamundaAsyncBefore ...
-func (complexgate *ComplexGateway) SetCamundaAsyncBefore(asyncBefore bool) {
-	complexgate.CamundaAsyncBefore = asyncBefore
+func (complexGateway *ComplexGateway) SetCamundaAsyncBefore(asyncBefore bool) {
+	complexGateway.CamundaAsyncBefore = asyncBefore
 }
 
 // SetCamundaAsyncAfter ...
-func (complexgate *ComplexGateway) SetCamundaAsyncAfter(asyncAfter bool) {
-	complexgate.CamundaAsyncAfter = asyncAfter
+func (complexGateway *ComplexGateway) SetCamundaAsyncAfter(asyncAfter bool) {
+	complexGateway.CamundaAsyncAfter = asyncAfter
 }
 
 // SetCamundaJobPriority ...
-func (complexgate *ComplexGateway) SetCamundaJobPriority(priority int) {
-	complexgate.CamundaJobPriority = priority
+func (complexGateway *ComplexGateway) SetCamundaJobPriority(priority int) {
+	complexGateway.CamundaJobPriority = priority
 }
 
 /*** Make Elements ***/
@@ -57,25 +57,25 @@ func (complexgate *ComplexGateway) SetCamundaJobPriority(priority int) {
 /*** Attributes ***/
 
 // SetDocumentation ...
-func (complexgate *ComplexGateway) SetDocumentation() {
-	complexgate.Documentation = make([]attributes.Documentation, 1)
+func (complexGateway *ComplexGateway) SetDocumentation() {
+	complexGateway.Documentation = make([]attributes.Documentation, 1)
 }
 
 // SetExtensionElements ...
-func (complexgate *ComplexGateway) SetExtensionElements() {
-	complexgate.ExtensionElements = make([]attributes.ExtensionElements, 1)
+func (complexGateway *ComplexGateway) SetExtensionElements() {
+	complexGateway.ExtensionElements = make([]attributes.ExtensionElements, 1)
 }
 
 /*** Marker ***/
 
 // SetIncoming ...
-func (complexgate *ComplexGateway) SetIncoming(num int) {
-	complexgate.Incoming = make([]marker.Incoming, num)
+func (complexGateway *ComplexGateway) SetIncoming(num int) {
+	complexGateway.Incoming = make([]marker.Incoming, num)
 }
 
 // SetOutgoing ...
-func (complexgate *ComplexGateway) SetOutgoing(num int) {
-	complexgate.Outgoing = make([]marker.Outgoing, num)
+func (complexGateway *ComplexGateway) SetOutgoing(num int) {
+	complexGateway.Outgoing = make([]marker.Outgoing, num)
 }
 
 /*
@@ -87,30 +87,30 @@ func (complexgate *ComplexGateway) SetOutgoing(num int) {
 /** BPMN **/
 
 // SetID ...
-func (complexgate ComplexGateway) GetID() STR_PTR {
-	return &complexgate.ID
+func (complexGateway ComplexGateway) GetID() STR_PTR {
+	return &complexGateway.ID
 }
 
 // SetName ...
-func (complexgate ComplexGateway) GetName() STR_PTR {
-	return &complexgate.Name
+func (complexGateway ComplexGateway) GetName() STR_PTR {
+	return &complexGateway.Name
 }
 
 /** Camunda **/
 
 // SetCamundaAsyncBefore ...
-func (complexgate ComplexGateway) GetCamundaAsyncBefore() *bool {
-	return &complexgate.CamundaAsyncBefore
+func (complexGateway ComplexGateway) GetCamundaAsyncBefore() *bool {
+	return &complexGateway.CamundaAsyncBefore
 }
 
 // SetCamundaAsyncAfter ...
-func (complexgate ComplexGateway) GetCamundaAsyncAfter() *bool {
-	return &complexgate.CamundaAsyncAfter
+func (complexGateway ComplexGateway) GetCamundaAsyncAfter() *bool {
+	return &complexGateway.CamundaAsyncAfter
 }
 
 // SetCamundaJobPriority ...
-func (complexgate ComplexGateway) GetCamundaJobPriority() *int {
-	return &complexgate.CamundaJobPriority
+func (complexGateway ComplexGateway) GetCamundaJobPriority() *int {
+	return &complexGateway.CamundaJobPriority
 }
 
 /* Elements */
@@ -118,23 +118,32 @@ func (complexgate ComplexGateway) GetCamundaJobPriority() *int {
 /*** Attributes ***/
 
 // GetDocumentation ...
-func (complexgate ComplexGateway) GetDocumentation() *attributes.Documentation {
-	return &complexgate.Documentation[0]
+func (complexGateway ComplexGateway) GetDocumentation() *attributes.Documentation {
+	return &complexGateway.Documentation[0]
 }
 
 // GetExtensionElements ...
-func (complexgate ComplexGateway) GetExtensionElements() *attributes.ExtensionElements {
-	return &complexgate.ExtensionElements[0]
+func (complexGateway ComplexGateway) GetExtensionElements() *attributes.ExtensionElements {
+	return &complexGateway.ExtensionElements[0]
 }
 
 /*** Marker ***/
 
 // GetIncoming ...
-func (complexgate ComplexGateway) GetIncoming(num int) *marker.Incoming {
-	return &complexgate.Incoming[num]
+func (complexGateway ComplexGateway) GetIncoming(num int) *marker.Incoming {
+	return &complexGateway.Incoming[num]
 }
 
 // GetOutgoing ...
-func (complexgate ComplexGateway) GetOutgoing(num int) *marker.Outgoing {
-	return &complexgate.Outgoing[num]
+func (complexGateway ComplexGateway) GetOutgoing(num int) *marker.Outgoing {
+	return &complexGateway.Outgoing[num]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (complexGateway ComplexGateway) String() string {
+	return fmt.Sprintf("id=%v, name=%v", complexGateway.ID, complexGateway.Name)
 }

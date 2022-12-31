@@ -1,7 +1,5 @@
 package pool
 
-type STR_PTR *string
-
 type PARTICIPANT_SLC []Participant
 type TPARTICIPANT_SLC []TParticipant
 

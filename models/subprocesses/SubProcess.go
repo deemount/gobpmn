@@ -4,12 +4,18 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/gateways"
 	"github.com/deemount/gobpmn/models/loop"
 	"github.com/deemount/gobpmn/models/marker"
 	"github.com/deemount/gobpmn/models/tasks"
 )
+
+// NewSubProcess ...
+func NewSubProcess() SubProcessRepository {
+	return &SubProcess{}
+}
 
 /*
  * Default Setters
@@ -93,7 +99,27 @@ func (subprocess *SubProcess) SetEndEvent(num int) {
 	subprocess.EndEvent = make([]elements.EndEvent, num)
 }
 
+// SetBoundaryEvent ...
+func (subprocess *SubProcess) SetBoundaryEvent(num int) {
+	subprocess.BoundaryEvent = make([]elements.BoundaryEvent, num)
+}
+
+// SetIntermediateCatchEvent ...
+func (subprocess *SubProcess) SetIntermediateCatchEvent(num int) {
+	subprocess.IntermediateCatchEvent = make([]elements.IntermediateCatchEvent, num)
+}
+
+// SetIntermediateThrowEvent ...
+func (subprocess *SubProcess) SetIntermediateThrowEvent(num int) {
+	subprocess.IntermediateThrowEvent = make([]elements.IntermediateThrowEvent, num)
+}
+
 /*** Tasks ***/
+
+// SetBusinessRuleTask ...
+func (subprocess *SubProcess) SetBusinessRuleTask(num int) {
+	subprocess.BusinessRuleTask = make([]tasks.BusinessRuleTask, num)
+}
 
 // SetTask ...
 func (subprocess *SubProcess) SetTask(num int) {
@@ -132,6 +158,11 @@ func (subprocess *SubProcess) SetServiceTask(num int) {
 
 /*** Subprocess ***/
 
+// SetCallActivity ...
+func (subprocess *SubProcess) SetCallActivity(num int) {
+	subprocess.CallActivity = make([]CallActivity, num)
+}
+
 // SetSubProcess ...
 func (subprocess *SubProcess) SetSubProcess(num int) {
 	subprocess.SubProcess = make([]SubProcess, num)
@@ -140,6 +171,11 @@ func (subprocess *SubProcess) SetSubProcess(num int) {
 // SetAdHocSubProcess ...
 func (subprocess *SubProcess) SetAdHocSubProcess(num int) {
 	subprocess.AdHocSubProcess = make([]AdHocSubProcess, num)
+}
+
+// SetTransaction ...
+func (subprocess *SubProcess) SetTransaction(num int) {
+	subprocess.Transaction = make([]Transaction, num)
 }
 
 /*** Gateways ***/
@@ -195,12 +231,12 @@ func (subprocess *SubProcess) SetSequenceFlow(num int) {
 /** BPMN **/
 
 // GetID ...
-func (subprocess SubProcess) GetID() STR_PTR {
+func (subprocess SubProcess) GetID() compulsion.STR_PTR {
 	return &subprocess.ID
 }
 
 // GetName ...
-func (subprocess SubProcess) GetName() STR_PTR {
+func (subprocess SubProcess) GetName() compulsion.STR_PTR {
 	return &subprocess.Name
 }
 
@@ -261,7 +297,27 @@ func (subprocess SubProcess) GetEndEvent(num int) *elements.EndEvent {
 	return &subprocess.EndEvent[num]
 }
 
+// GetBoundaryEvent ...
+func (subprocess SubProcess) GetBoundaryEvent(num int) *elements.BoundaryEvent {
+	return &subprocess.BoundaryEvent[num]
+}
+
+// GetIntermediateCatchEvent ...
+func (subprocess SubProcess) GetIntermediateCatchEvent(num int) *elements.IntermediateCatchEvent {
+	return &subprocess.IntermediateCatchEvent[num]
+}
+
+// GetIntermediateThrowEvent ...
+func (subprocess SubProcess) GetIntermediateThrowEvent(num int) *elements.IntermediateThrowEvent {
+	return &subprocess.IntermediateThrowEvent[num]
+}
+
 /*** Tasks ***/
+
+// SetBusinessRuleTask ...
+func (subprocess SubProcess) GetBusinessRuleTask(num int) *tasks.BusinessRuleTask {
+	return &subprocess.BusinessRuleTask[num]
+}
 
 // GetTask ...
 func (subprocess SubProcess) GetTask(num int) *tasks.Task {
@@ -300,6 +356,11 @@ func (subprocess SubProcess) GetServiceTask(num int) *tasks.ServiceTask {
 
 /*** Subprocesses ***/
 
+// GetCallActivity ...
+func (subprocess SubProcess) GetCallActivity(num int) *CallActivity {
+	return &subprocess.CallActivity[num]
+}
+
 // GetSubProcess ...
 func (subprocess SubProcess) GetSubProcess(num int) *SubProcess {
 	return &subprocess.SubProcess[num]
@@ -308,6 +369,11 @@ func (subprocess SubProcess) GetSubProcess(num int) *SubProcess {
 // GetAdHocSubProcess ...
 func (subprocess SubProcess) GetAdHocSubProcess(num int) *AdHocSubProcess {
 	return &subprocess.AdHocSubProcess[num]
+}
+
+// GetTransaction ...
+func (subprocess SubProcess) GetTransaction(num int) *Transaction {
+	return &subprocess.Transaction[num]
 }
 
 /*** Gateways ***/

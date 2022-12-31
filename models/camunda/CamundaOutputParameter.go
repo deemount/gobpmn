@@ -1,36 +1,5 @@
 package camunda
 
-// CamundaOutputParameter ...
-type CamundaOutputParameterRepository interface {
-	CamundaBaseScriptElements
-	SetLocalVariableName(variable string)
-	GetLocalVariableName() *string
-	SetVariableAssignmentValue(value string)
-	GetVariableAssignmentValue() *string
-	SetCamundaList()
-	GetCamundaList() *CamundaList
-	SetCamundaMap()
-	GetCamundaMap() *CamundaMap
-}
-
-// CamundaOutputParameter ...
-type CamundaOutputParameter struct {
-	LocalVariableName       string          `xml:"name,attr,omitempty" json:"localVariableName,omitempty"`
-	VariableAssignmentValue string          `xml:",innerxml,omitempty" json:"variableAssignmentValue,omitempty"`
-	CamundaScript           []CamundaScript `xml:"camunda:script,omitempty" json:"script,omitempty"`
-	CamundaList             []CamundaList   `xml:"camunda:list,omitempty" json:"list,omitempty"`
-	CamundaMap              []CamundaMap    `xml:"camunda:map,omitempty" json:"map,omitempty"`
-}
-
-// TCamundaOutputParameter ...
-type TCamundaOutputParameter struct {
-	LocalVariableName       string          `xml:"name,attr,omitempty" json:"localVariableName,omitempty"`
-	VariableAssignmentValue string          `xml:",innerxml,omitempty" json:"variableAssignmentValue,omitempty"`
-	Script                  []CamundaScript `xml:"script,omitempty" json:"script,omitempty"`
-	List                    []CamundaList   `xml:"list,omitempty" json:"list,omitempty"`
-	Map                     []CamundaMap    `xml:"map,omitempty" json:"map,omitempty"`
-}
-
 // NewCamundaOutputParameter ...
 func NewCamundaOutputParameter() CamundaOutputParameterRepository {
 	return &CamundaOutputParameter{}

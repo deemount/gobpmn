@@ -1,26 +1,11 @@
 package artifacts
 
-// TextAnnotationRepository ...
-type TextAnnotationRepository interface {
-	SetText()
-	GetText() Text
-}
-
-// TextAnnotation ...
-type TextAnnotation struct {
-	Text []Text `xml:"bpmn:text,omitempty" json:"text,omitempty"`
-}
-
-// TTextAnnotation ...
-type TTextAnnotation struct {
-	Text []Text `xml:"text,omitempty" json:"text,omitempty"`
-}
-
+// NewTextAnnotation ...
 func NewTextAnnotation() TextAnnotationRepository {
 	return &TextAnnotation{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -33,7 +18,7 @@ func (textannotation *TextAnnotation) SetText() {
 	textannotation.Text = make([]Text, 1)
 }
 
-/**
+/*
  * Default Getters
  */
 

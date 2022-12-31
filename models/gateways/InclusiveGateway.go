@@ -138,3 +138,12 @@ func (inclusiveGateway InclusiveGateway) GetIncoming(num int) *marker.Incoming {
 func (inclusiveGateway InclusiveGateway) GetOutgoing(num int) *marker.Outgoing {
 	return &inclusiveGateway.Outgoing[num]
 }
+
+/*
+ * Default String
+ */
+
+// String ...
+func (inclusiveGateway InclusiveGateway) String() string {
+	return fmt.Sprintf("id=%v, name=%v", inclusiveGateway.ID, inclusiveGateway.Name)
+}

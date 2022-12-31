@@ -1,17 +1,6 @@
 package camunda
 
-// CamundaConstraintRepository ...
-type CamundaConstraintRepository interface {
-	CamundaBaseName
-	SetConfig(config string)
-	GetConfig() *string
-}
-
-// CamundaConstraint ...
-type CamundaConstraint struct {
-	Name   string `xml:"name,attr,omitempty" json:"name"`
-	Config string `xml:"config,attr,omitempty" json:"config,omitempty"`
-}
+import "github.com/deemount/gobpmn/models/compulsion"
 
 // NewCamundaConstraint ...
 func NewCamunadConstraint() CamundaConstraintRepository {
@@ -41,7 +30,7 @@ func (cconstraint *CamundaConstraint) SetConfig(config string) {
 /* Attributes */
 
 // GetName ...
-func (cconstraint CamundaConstraint) GetName() STR_PTR {
+func (cconstraint CamundaConstraint) GetName() compulsion.STR_PTR {
 	return &cconstraint.Name
 }
 

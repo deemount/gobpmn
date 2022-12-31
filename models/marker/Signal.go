@@ -1,6 +1,10 @@
 package marker
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewSignal ...
 func NewSignal() SignalRepository {
@@ -41,11 +45,11 @@ func (signal *Signal) SetName(suffix string) {
 /** BPMN **/
 
 // GetID ...
-func (signal Signal) GetID() STR_PTR {
+func (signal Signal) GetID() compulsion.STR_PTR {
 	return &signal.ID
 }
 
 // GetName ...
-func (signal Signal) GetName() STR_PTR {
+func (signal Signal) GetName() compulsion.STR_PTR {
 	return &signal.Name
 }

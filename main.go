@@ -27,16 +27,6 @@ func init() {
 // main ...
 func main() {
 
-	/*
-		log.Println("test: models")
-		d := models.NewModels()
-		d.SetDefaultAttributes()
-		_, err := fmt.Printf("d.Definitions(): %v\n", d.GetID())
-		if err != nil {
-			log.Print(err)
-		}
-	*/
-
 	log.Println("main: bpmnFactory.Create")
 	file, err := bpmnFactory.Create()
 	if err != nil {

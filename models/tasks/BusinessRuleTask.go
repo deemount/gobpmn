@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -91,12 +92,12 @@ func (businessRuleTask *BusinessRuleTask) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (businessRuleTask BusinessRuleTask) GetID() STR_PTR {
+func (businessRuleTask BusinessRuleTask) GetID() compulsion.STR_PTR {
 	return &businessRuleTask.ID
 }
 
 // GetName ...
-func (businessRuleTask BusinessRuleTask) GetName() STR_PTR {
+func (businessRuleTask BusinessRuleTask) GetName() compulsion.STR_PTR {
 	return &businessRuleTask.Name
 }
 

@@ -1,49 +1,19 @@
 package data
 
-import "github.com/deemount/gobpmn/models/attributes"
-
-// DataBaseID ...
-type DataBaseID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
-}
-
-// DataBaseName ...
-type DataBaseName interface {
-	SetName(name string)
-	GetName() STR_PTR
-}
-
-type DataBaseDocumentation interface {
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-}
-
-type DataBaseExtensionElements interface {
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
-type DataBaseCoreElements interface {
-	DataBaseDocumentation
-	DataBaseExtensionElements
-}
-
-// DataBaseAttributes ...
-type DataBaseAttributes interface {
-	DataBaseID
-	DataBaseName
-}
+import (
+	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // DataInputAssociationRepository ...
 type DataInputAssociationRepository interface {
-	DataBaseID
-	DataBaseCoreElements
+	compulsion.IFBaseID
+	attributes.AttributesBaseElements
 }
 
 // DataObjectRepository ...
 type DataObjectRepository interface {
-	DataBaseID
+	compulsion.IFBaseID
 }
 
 // DataObjectReferenceRepository ...
@@ -51,6 +21,7 @@ type DataObjectReferenceRepository interface{}
 
 // DataStoreRepository ...
 type DataStoreReferenceRepository interface {
-	DataBaseAttributes
-	DataBaseCoreElements
+	compulsion.IFBaseID
+	compulsion.IFBaseName
+	attributes.AttributesBaseElements
 }

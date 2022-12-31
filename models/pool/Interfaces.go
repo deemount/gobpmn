@@ -2,44 +2,15 @@ package pool
 
 import (
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/loop"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-type PoolID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
-}
-
-type PoolName interface {
-	SetName(name string)
-	GetName() STR_PTR
-}
-
-type PoolBaseDocumentation interface {
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-}
-
-type PoolBaseExtensionElements interface {
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
-type PoolBaseCoreElements interface {
-	PoolBaseDocumentation
-	PoolBaseExtensionElements
-}
-
-type PoolBase interface {
-	PoolID
-	PoolName
-}
-
 // CollaborationRepository ...
 type CollaborationRepository interface {
-	PoolID
-	PoolBaseCoreElements
+	compulsion.IFBaseID
+	attributes.AttributesBaseElements
 
 	SetParticipant(num int)
 	GetParticipant(num int) *Participant
@@ -50,12 +21,12 @@ type CollaborationRepository interface {
 
 // FlowNodeRefRepository ...
 type FlowNodeRefRepository interface {
-	PoolID
+	compulsion.IFBaseID
 }
 
 // LaneRepository ...
 type LaneRepository interface {
-	PoolID
+	compulsion.IFBaseID
 
 	SetFlowNodeRef(num int)
 	GetFlowNodeRef(num int) *FlowNodeRef
@@ -63,14 +34,15 @@ type LaneRepository interface {
 
 // LaneSetRepository ...
 type LaneSetRepository interface {
-	PoolID
+	compulsion.IFBaseID
 	SetLane(num int)
 	GetLane(num int) *Lane
 }
 
 // ParticipantRepository ...
 type ParticipantRepository interface {
-	PoolBase
+	compulsion.IFBaseID
+	compulsion.IFBaseName
 
 	SetProcessRef(typ string, suffix string)
 	GetProcessRef() *string

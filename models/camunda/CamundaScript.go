@@ -2,12 +2,6 @@ package camunda
 
 import "fmt"
 
-// CamundaScriptRepository ...
-type CamundaScriptRepository interface {
-	SetScriptFormat(format string)
-	GetScriptFormat() *string
-}
-
 // CamundaScript ...
 type CamundaScript struct {
 	ScriptFormat string `xml:"scriptFormat,attr,omitempty"`

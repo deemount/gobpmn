@@ -1,13 +1,6 @@
 package camunda
 
-// CamundaField ...
-type CamundaFieldRepository interface {
-	CamundaBaseName
-	SetCamundaExpression()
-	GetCamundaExpression() *CamundaExpression
-	SetCamundaString()
-	GetCamundaString() *CamundaString
-}
+import "github.com/deemount/gobpmn/models/compulsion"
 
 // CamundaField ...
 type CamundaField struct {
@@ -60,7 +53,7 @@ func (cf *CamundaField) SetCamundaString() {
 /* Attributes */
 
 // GetName ...
-func (cf CamundaField) GetName() STR_PTR {
+func (cf CamundaField) GetName() compulsion.STR_PTR {
 	return &cf.Name
 }
 

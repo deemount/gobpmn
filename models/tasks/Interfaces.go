@@ -2,23 +2,14 @@ package tasks
 
 import (
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/data"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
-type TasksID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
-}
-
-type TasksName interface {
-	SetName(name string)
-	GetName() STR_PTR
-}
-
 type TasksBaseAttributes interface {
-	TasksID
-	TasksName
+	compulsion.IFBaseID
+	compulsion.IFBaseName
 }
 
 type TasksMarkers interface {

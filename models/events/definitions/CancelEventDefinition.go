@@ -1,7 +1,7 @@
 package definitions
 
 import (
-	"fmt"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewCancelEventDefinition ...
@@ -19,14 +19,7 @@ func NewCancelEventDefinition() CancelEventDefinitionRepository {
 
 // SetID ...
 func (ced *CancelEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "ced":
-		ced.ID = fmt.Sprintf("CancelEventDefinition_%v", suffix)
-		break
-	case "id":
-		ced.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	ced.ID = SetID(typ, suffix)
 }
 
 /*
@@ -38,6 +31,6 @@ func (ced *CancelEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (ced CancelEventDefinition) GetID() STR_PTR {
+func (ced CancelEventDefinition) GetID() compulsion.STR_PTR {
 	return &ced.ID
 }

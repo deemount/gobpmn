@@ -1,39 +1,10 @@
 package camunda
 
-import "fmt"
+import (
+	"fmt"
 
-// CamundaFormField ...
-type CamundaFormFieldRepository interface {
-	CamundaBaseID
-	CamundaBaseLabel
-	CamundaBaseType
-	SetDefaultValue(defaultValue string)
-	GetDefaultValue() *string
-	SetCamundaProperties()
-	GetCamundaProperties() *CamundaProperties
-	SetCamundaValidation()
-	GetCamundaValidation() *CamundaValidation
-}
-
-// CamundaFormField ...
-type CamundaFormField struct {
-	ID                string              `xml:"id,attr,omitempty" json:"id"`
-	Label             string              `xml:"label,attr,omitempty" json:"label,omitempty"`
-	Typ               string              `xml:"type,attr,omitempty" json:"type,omitempty"`
-	DefaultValue      string              `xml:"defaultValue,attr,omitempty" json:"defaultValue,omitempty"`
-	CamundaProperties []CamundaProperties `xml:"camunda:properties,omitempty" json:"properties,omitempty"`
-	CamundaValidation []CamundaValidation `xml:"camunda:validation,omitempty" json:"validation,omitempty"`
-}
-
-// TCamundaFormField ...
-type TCamundaFormField struct {
-	ID           string              `xml:"id,attr,omitempty" json:"id"`
-	Label        string              `xml:"label,attr,omitempty" json:"label,omitempty"`
-	Typ          string              `xml:"type,attr,omitempty" json:"type,omitempty"`
-	DefaultValue string              `xml:"defaultValue,attr,omitempty" json:"defaultValue,omitempty"`
-	Properties   []CamundaProperties `xml:"properties,omitempty" json:"properties,omitempty"`
-	Validation   []CamundaValidation `xml:"validation,omitempty" json:"validation,omitempty"`
-}
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewCamundaFormField ...
 func NewCamundaFormField() CamundaFormFieldRepository {
@@ -47,10 +18,10 @@ func NewCamundaFormField() CamundaFormFieldRepository {
 /* Attributes */
 
 // SetID ...
-func (formfield *CamundaFormField) SetID(typ string, suffix string) {
+func (formfield *CamundaFormField) SetID(typ string, suffix interface{}) {
 	switch typ {
 	case "formfield":
-		formfield.ID = fmt.Sprintf("FormField_%s", suffix)
+		formfield.ID = fmt.Sprintf("FormField_%v", suffix)
 		break
 	case "id":
 		formfield.ID = fmt.Sprintf("%s", suffix)
@@ -95,7 +66,7 @@ func (formfield *CamundaFormField) SetCamundaValidation() {
 /* Attributes */
 
 // GetID ...
-func (formfield CamundaFormField) GetID() STR_PTR {
+func (formfield CamundaFormField) GetID() compulsion.STR_PTR {
 	return &formfield.ID
 }
 

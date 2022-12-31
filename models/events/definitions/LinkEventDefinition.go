@@ -1,7 +1,7 @@
 package definitions
 
 import (
-	"fmt"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewLinkEventDefinition ...
@@ -19,14 +19,7 @@ func NewLinkEventDefinition() LinkEventDefinitionRepository {
 
 // SetID ...
 func (led *LinkEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "led":
-		led.ID = fmt.Sprintf("LinkEventDefinition_%v", suffix)
-		break
-	case "id":
-		led.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	led.ID = SetID(typ, suffix)
 }
 
 /*
@@ -38,6 +31,6 @@ func (led *LinkEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (led LinkEventDefinition) GetID() STR_PTR {
+func (led LinkEventDefinition) GetID() compulsion.STR_PTR {
 	return &led.ID
 }

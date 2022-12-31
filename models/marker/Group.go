@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewGroup ...
@@ -59,7 +60,7 @@ func (group *Group) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (group Group) GetID() STR_PTR {
+func (group Group) GetID() compulsion.STR_PTR {
 	return &group.ID
 
 }

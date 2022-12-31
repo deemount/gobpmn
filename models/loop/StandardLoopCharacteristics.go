@@ -1,5 +1,6 @@
 package loop
 
+// NewStandardLoopCharacteristics ...
 func NewStandardLoopCharacteristics() StandardLoopCharacteristicsRepository {
 	return &StandardLoopCharacteristics{}
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewDataInputAssociation ...
@@ -50,7 +51,7 @@ func (dia *DataInputAssociation) SetExtensionElements() {
 /* Attributes */
 
 // GetID ...
-func (dia DataInputAssociation) GetID() STR_PTR {
+func (dia DataInputAssociation) GetID() compulsion.STR_PTR {
 	return &dia.ID
 }
 

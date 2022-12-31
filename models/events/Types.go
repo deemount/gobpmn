@@ -2,6 +2,8 @@ package events
 
 import "github.com/deemount/gobpmn/models/events/elements"
 
+type EVENTS_SLC []Events
+
 type START_EVENT_SLC []elements.StartEvent
 type BOUNDARY_EVENT_SLC []elements.BoundaryEvent
 type END_EVENT_SLC []elements.EndEvent

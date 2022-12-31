@@ -1,7 +1,7 @@
 package definitions
 
 import (
-	"fmt"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewErrorEventDefinition ...
@@ -19,14 +19,7 @@ func NewErrorEventDefinition() ErrorEventDefinitionRepository {
 
 // SetID ...
 func (eed *ErrorEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "eed":
-		eed.ID = fmt.Sprintf("ErrorEventDefinition_%v", suffix)
-		break
-	case "id":
-		eed.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	eed.ID = SetID(typ, suffix)
 }
 
 /*
@@ -38,6 +31,6 @@ func (eed *ErrorEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (eed ErrorEventDefinition) GetID() STR_PTR {
+func (eed ErrorEventDefinition) GetID() compulsion.STR_PTR {
 	return &eed.ID
 }

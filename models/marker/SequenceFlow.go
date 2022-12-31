@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/conditional"
 )
 
@@ -102,12 +103,12 @@ func (sequenceFlow *SequenceFlow) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (sequenceFlow SequenceFlow) GetID() STR_PTR {
+func (sequenceFlow SequenceFlow) GetID() compulsion.STR_PTR {
 	return &sequenceFlow.ID
 }
 
 // GetName ...
-func (sequenceFlow SequenceFlow) GetName() STR_PTR {
+func (sequenceFlow SequenceFlow) GetName() compulsion.STR_PTR {
 	return &sequenceFlow.Name
 }
 

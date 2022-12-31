@@ -1,8 +1,7 @@
 package definitions
 
 import (
-	"fmt"
-
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/conditional"
 )
 
@@ -21,14 +20,7 @@ func NewConditionalEventDefinition() ConditionalEventDefinitionRepository {
 
 // SetID ...
 func (conditionalEventDefinition *ConditionalEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "ced":
-		conditionalEventDefinition.ID = fmt.Sprintf("ConditionalEventDefinition_%v", suffix)
-		break
-	case "id":
-		conditionalEventDefinition.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	conditionalEventDefinition.ID = SetID(typ, suffix)
 }
 
 /** Camunda **/
@@ -54,7 +46,7 @@ func (conditionalEventDefinition *ConditionalEventDefinition) SetCondition() {
 /** BPMN **/
 
 // GetID ...
-func (conditionalEventDefinition ConditionalEventDefinition) GetID() STR_PTR {
+func (conditionalEventDefinition ConditionalEventDefinition) GetID() compulsion.STR_PTR {
 	return &conditionalEventDefinition.ID
 }
 

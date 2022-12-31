@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/data"
 	"github.com/deemount/gobpmn/models/marker"
 )
@@ -98,12 +99,12 @@ func (task *Task) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (task Task) GetID() STR_PTR {
+func (task Task) GetID() compulsion.STR_PTR {
 	return &task.ID
 }
 
 // GetName ...
-func (task Task) GetName() STR_PTR {
+func (task Task) GetName() compulsion.STR_PTR {
 	return &task.Name
 }
 

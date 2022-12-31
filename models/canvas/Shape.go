@@ -1,6 +1,10 @@
 package canvas
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewShape ...
 func NewShape() ShapeRepository {
@@ -93,12 +97,12 @@ func (shape *Shape) SetLabel() {
 /** BPMN **/
 
 // GetID ...
-func (shape Shape) GetID() STR_PTR {
+func (shape Shape) GetID() compulsion.STR_PTR {
 	return &shape.ID
 }
 
 // GetElement ...
-func (shape Shape) GetElement() STR_PTR {
+func (shape Shape) GetElement() compulsion.STR_PTR {
 	return &shape.Element
 }
 

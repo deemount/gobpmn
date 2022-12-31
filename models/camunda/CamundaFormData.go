@@ -1,21 +1,5 @@
 package camunda
 
-// CamundaFormDataRepository ...
-type CamundaFormDataRepository interface {
-	SetCamundaFormField(num int)
-	GetCamundaFormField(num int) *CamundaFormField
-}
-
-// CamundaFormData ...
-type CamundaFormData struct {
-	CamundaFormField []CamundaFormField `xml:"camunda:formField,omitempty" json:"formData,omitempty"`
-}
-
-// TCamundaFormData ...
-type TCamundaFormData struct {
-	FormField []CamundaFormField `xml:"formField,omitempty" json:"formData,omitempty"`
-}
-
 // NewCamundaFormData ...
 func NewCamundaFormData() CamundaFormDataRepository {
 	return &CamundaFormData{}

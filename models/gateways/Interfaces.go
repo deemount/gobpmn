@@ -2,6 +2,7 @@ package gateways
 
 import (
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/camunda"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -15,35 +16,12 @@ type GatewayName interface {
 	GetName() STR_PTR
 }
 
-type GatewayMarker interface {
-	SetIncoming(num int)
-	GetIncoming(num int) *marker.Incoming
-	SetOutgoing(num int)
-	GetOutgoing(num int) *marker.Outgoing
-}
-
-type GatewayCamundaBase interface {
-	SetCamundaAsyncBefore(asyncBefore bool)
-	GetCamundaAsyncBefore() *bool
-	SetCamundaAsyncAfter(asyncAfter bool)
-	GetCamundaAsyncAfter() *bool
-	SetCamundaJobPriority(priority int)
-	GetCamundaJobPriority() *int
-}
-
-type GatewayBaseCoreElements interface {
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
 type GatewayBase interface {
 	GatewayID
 	GatewayName
-	GatewayMarker
-	GatewayCamundaBase
-	GatewayBaseCoreElements
+	marker.MarkerIncomingOutgoing
+	camunda.CamundaDefaultAttributes
+	attributes.AttributesBaseElements
 }
 
 type GatewaysElementsRepository interface {

@@ -1,5 +1,6 @@
 package loop
 
+// NewParticipantMultiplicity ...
 func NewParticipantMultiplicity() ParticipantMultiplicityRepository {
 	return &ParticipantMultiplicity{}
 }

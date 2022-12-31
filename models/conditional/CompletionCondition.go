@@ -1,11 +1,6 @@
 package conditional
 
-// CompletionConditionRepository ...
-type CompletionConditionRepository interface{}
-
-// CompletionCondition ...
-type CompletionCondition struct{}
-
+// NewCompletionCondition ...
 func NewCompletionCondition() CompletionConditionRepository {
 	return &CompletionCondition{}
 }

@@ -6,16 +6,6 @@ import (
 	"github.com/deemount/gobpmn/models/compulsion"
 )
 
-// PropertyRepository ...
-type PropertyRepository interface {
-	AttributesBase
-}
-
-// Property ...
-type Property struct {
-	compulsion.BaseAttributes
-}
-
 // NewProperty ...
 func NewProperty() PropertyRepository {
 	return &Property{}
@@ -52,12 +42,12 @@ func (prop *Property) SetName(name string) {
 /* Attributes */
 
 // GetID ...
-func (prop Property) GetID() STR_PTR {
+func (prop Property) GetID() compulsion.STR_PTR {
 	return &prop.ID
 
 }
 
 // GetName ...
-func (prop Property) GetName() STR_PTR {
+func (prop Property) GetName() compulsion.STR_PTR {
 	return &prop.Name
 }

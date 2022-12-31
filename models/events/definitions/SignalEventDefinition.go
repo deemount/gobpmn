@@ -2,6 +2,8 @@ package definitions
 
 import (
 	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewSignalEventDefinition ...
@@ -19,14 +21,7 @@ func NewSignalEventDefinition() SignalEventDefinitionRepository {
 
 // SetID ...
 func (sed *SignalEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "sed":
-		sed.ID = fmt.Sprintf("SignalEventDefinition_%v", suffix)
-		break
-	case "id":
-		sed.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	sed.ID = SetID(typ, suffix)
 }
 
 // SetSignalRef ...
@@ -43,7 +38,7 @@ func (sed *SignalEventDefinition) SetSignalRef(suffix string) {
 /** BPMN **/
 
 // GetID ...
-func (sed SignalEventDefinition) GetID() STR_PTR {
+func (sed SignalEventDefinition) GetID() compulsion.STR_PTR {
 	return &sed.ID
 }
 

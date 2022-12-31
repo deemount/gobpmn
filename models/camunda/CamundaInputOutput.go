@@ -1,25 +1,5 @@
 package camunda
 
-// CamundaInputOutputRepository ...
-type CamundaInputOutputRepository interface {
-	SetCamundaInputParameter(num int)
-	GetCamundaInputParameter(num int) *CamundaInputParameter
-	SetCamundaOutputParameter(num int)
-	GetCamundaOutputParameter(num int) *CamundaOutputParameter
-}
-
-// CamundaInputOutput ...
-type CamundaInputOutput struct {
-	CamundaInputParameter  []CamundaInputParameter  `xml:"camunda:inputParameter,omitempty" json:"inputParameter,omitempty"`
-	CamundaOutputParameter []CamundaOutputParameter `xml:"camunda:outputParameter,omitempty" json:"outputParameter,omitempty"`
-}
-
-// TCamundaInputOutput ...
-type TCamundaInputOutput struct {
-	InputParameter  []CamundaInputParameter  `xml:"inputParameter,omitempty" json:"inputParameter,omitempty"`
-	OutputParameter []CamundaOutputParameter `xml:"outputParameter,omitempty" json:"outputParameter,omitempty"`
-}
-
 // NewCamundaInputOutput ...
 func NewCamundaInputOutput() CamundaInputOutputRepository {
 	return &CamundaInputOutput{}

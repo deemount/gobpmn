@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/gateways"
 	"github.com/deemount/gobpmn/models/loop"
@@ -204,12 +205,12 @@ func (adhoc *AdHocSubProcess) SetSequenceFlow(num int) {
 /** BPMN **/
 
 // GetID ...
-func (adhoc *AdHocSubProcess) GetID() STR_PTR {
+func (adhoc *AdHocSubProcess) GetID() compulsion.STR_PTR {
 	return &adhoc.ID
 }
 
 // GetName ...
-func (adhoc AdHocSubProcess) GetName() STR_PTR {
+func (adhoc AdHocSubProcess) GetName() compulsion.STR_PTR {
 	return &adhoc.Name
 }
 

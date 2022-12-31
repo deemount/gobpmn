@@ -1,16 +1,30 @@
 package attributes
 
-type AttributesBaseID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
+import (
+	"github.com/deemount/gobpmn/models/camunda"
+	"github.com/deemount/gobpmn/models/compulsion"
+)
+
+type AttributesBaseElements interface {
+	SetDocumentation()
+	GetDocumentation() *Documentation
+	SetExtensionElements()
+	GetExtensionElements() *ExtensionElements
 }
 
-type AttributesBaseName interface {
-	SetName(name string)
-	GetName() STR_PTR
+// DocumentationRepository ...
+type DocumentationRepository interface {
+	SetData(data string)
+	GetData() *string
 }
 
-type AttributesBase interface {
-	AttributesBaseID
-	AttributesBaseName
+// ExtensionElementsRepository ...
+type ExtensionElementsRepository interface {
+	camunda.ExtensionElementsRepository
+}
+
+// PropertyRepository ...
+type PropertyRepository interface {
+	compulsion.IFBaseID
+	compulsion.IFBaseName
 }

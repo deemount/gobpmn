@@ -1,9 +1,12 @@
 package elements
 
 import (
+	"context"
 	"fmt"
+	"log"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/marker"
 )
@@ -11,6 +14,11 @@ import (
 // NewIntermediateCatchEvent ...
 func NewIntermediateCatchEvent() IntermediateCatchEventRepository {
 	return &IntermediateCatchEvent{}
+}
+
+func (ice TIntermediateCatchEvent) Handle(ctx context.Context) error {
+	log.Printf("after: %+v\n", ice)
+	return nil
 }
 
 /*
@@ -23,13 +31,7 @@ func NewIntermediateCatchEvent() IntermediateCatchEventRepository {
 
 // SetID ...
 func (ice *IntermediateCatchEvent) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "event":
-		ice.ID = fmt.Sprintf("Event_%v", suffix)
-		break
-	case "id":
-		ice.ID = fmt.Sprintf("%s", suffix)
-	}
+	ice.ID = SetID(typ, suffix)
 }
 
 // SetName ...
@@ -113,12 +115,12 @@ func (ice *IntermediateCatchEvent) SetMessageEventDefinition() {
 /** BPMN **/
 
 // GetID ...
-func (ice IntermediateCatchEvent) GetID() STR_PTR {
+func (ice IntermediateCatchEvent) GetID() compulsion.STR_PTR {
 	return &ice.ID
 }
 
 // GetName ...
-func (ice IntermediateCatchEvent) GetName() STR_PTR {
+func (ice IntermediateCatchEvent) GetName() compulsion.STR_PTR {
 	return &ice.Name
 }
 
@@ -181,4 +183,13 @@ func (ice IntermediateCatchEvent) GetTimerEventDefinition() *definitions.TimerEv
 // GetMessageEventDefinition ...
 func (ice IntermediateCatchEvent) GetMessageEventDefinition() *definitions.MessageEventDefinition {
 	return &ice.MessageEventDefinition[0]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (ice IntermediateCatchEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", ice.ID, ice.Name)
 }

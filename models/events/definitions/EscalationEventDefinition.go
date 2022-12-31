@@ -1,7 +1,7 @@
 package definitions
 
 import (
-	"fmt"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewEscalationEventDefinition
@@ -19,14 +19,7 @@ func NewEscalationEventDefinition() EscalationEventDefinitionRepository {
 
 // SetID ...
 func (esced *EscalationEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "eed":
-		esced.ID = fmt.Sprintf("EscalationEventDefinition_%v", suffix)
-		break
-	case "id":
-		esced.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	esced.ID = SetID(typ, suffix)
 }
 
 /*
@@ -38,6 +31,6 @@ func (esced *EscalationEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (esced EscalationEventDefinition) GetID() STR_PTR {
+func (esced EscalationEventDefinition) GetID() compulsion.STR_PTR {
 	return &esced.ID
 }

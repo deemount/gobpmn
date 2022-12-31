@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewAssociation ...
@@ -99,7 +100,7 @@ func (association *Association) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (association Association) GetID() STR_PTR {
+func (association Association) GetID() compulsion.STR_PTR {
 	return &association.ID
 }
 

@@ -1,26 +1,15 @@
 package conditional
 
-// ConditionExpressionRepository ...
-type ConditionExpressionRepository interface {
-	ConditionalScriptFormat
-	ConditionalScript
-	SetConditionType()
-	GetConditionType() *string
-	SetExpression(expression string)
-	GetExpression() *string
-}
+import "github.com/deemount/gobpmn/models/compulsion"
 
-// ConditionExpression ...
-type ConditionExpression struct {
-	ConditionType string `xml:"xsi:type,attr,omitempty" json:"conditionType,omitempty"`
-	ScriptFormat  string `xml:"language,attr,omitempty" json:"language,omitempty"`
-	Script        string `xml:",innerxml,omitempty" json:"script,omitempty"`
-	Expression    string `xml:",innerxml,omitempty" json:"expression,omitempty"`
-}
-
+// NewConditionExpression ...
 func NewConditionExpression() ConditionExpressionRepository {
 	return &ConditionExpression{}
 }
+
+/*
+ * Default Setters
+ */
 
 /* Attributes */
 
@@ -57,21 +46,21 @@ func (conditionExpression *ConditionExpression) SetExpression(expression string)
 /** BPMN **/
 
 // GetConditionType ...
-func (conditionExpression ConditionExpression) GetConditionType() *string {
+func (conditionExpression ConditionExpression) GetConditionType() compulsion.STR_PTR {
 	return &conditionExpression.ConditionType
 }
 
 // GetScriptFormat ...
-func (conditionExpression ConditionExpression) GetScriptFormat() STR_PTR {
+func (conditionExpression ConditionExpression) GetScriptFormat() compulsion.STR_PTR {
 	return &conditionExpression.ScriptFormat
 }
 
 // GetScript ...
-func (conditionExpression ConditionExpression) GetScript() STR_PTR {
+func (conditionExpression ConditionExpression) GetScript() compulsion.STR_PTR {
 	return &conditionExpression.Script
 }
 
 // GetExpression ...
-func (conditionExpression ConditionExpression) GetExpression() *string {
+func (conditionExpression ConditionExpression) GetExpression() compulsion.STR_PTR {
 	return &conditionExpression.Expression
 }

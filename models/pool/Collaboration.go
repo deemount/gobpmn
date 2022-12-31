@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -65,7 +66,7 @@ func (collaboration *Collaboration) SetMessageFlow(num int) {
 /** BPMN **/
 
 // GetID ...
-func (collaboration Collaboration) GetID() STR_PTR {
+func (collaboration Collaboration) GetID() compulsion.STR_PTR {
 	return &collaboration.ID
 }
 

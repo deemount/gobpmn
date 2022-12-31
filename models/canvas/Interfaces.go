@@ -1,28 +1,20 @@
 package canvas
 
-type CanvasID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
+import "github.com/deemount/gobpmn/models/compulsion"
+
+type CanvasBoundsElements interface {
+	SetBounds()
+	GetBounds() *Bounds
 }
 
-type CanvasElement interface {
-	SetElement(typ string, suffix interface{})
-	GetElement() STR_PTR
-}
-
-type CanvasBase interface {
-	CanvasID
-	CanvasElement
+type CanvasLabelElements interface {
+	SetLabel()
+	GetLabel() *Label
 }
 
 // BoundsRepository ...
 type BoundsRepository interface {
-	SetX(x int)
-	GetX() *int
-	SetY(y int)
-	GetY() *int
-	SetCoordinates(x, y int)
-	GetCoordinates() (*int, *int)
+	compulsion.IFBaseCoordinates
 
 	SetSize(width, height int)
 	GetSize() (*int, *int)
@@ -34,17 +26,12 @@ type BoundsRepository interface {
 
 // WaypointRepository ...
 type WaypointRepository interface {
-	SetX(x int)
-	GetX() *int
-	SetY(y int)
-	GetY() *int
-	SetCoordinates(x, y int)
-	GetCoordinates() (*int, *int)
+	compulsion.IFBaseCoordinates
 }
 
 // Diagram ...
 type DiagramRepository interface {
-	CanvasID
+	compulsion.IFBaseID
 
 	SetPlane()
 	GetPlane() *Plane
@@ -54,30 +41,30 @@ type DiagramRepository interface {
 
 // Edge ...
 type EdgeRepository interface {
-	CanvasBase
+	compulsion.IFBaseID
+	compulsion.IFBaseElement
+	CanvasLabelElements
 
 	SetWaypoint()
 	GetWaypoint(num int) *Waypoint
-
-	SetLabel()
-	GetLabel() *Label
 }
 
 // Label ...
 type LabelRepository interface {
-	SetBounds()
-	GetBounds() *Bounds
+	CanvasBoundsElements
 }
 
 // PlaneRepository ...
 type PlaneRepository interface {
-	CanvasBase
+	compulsion.IFBaseID
+	compulsion.IFBaseElement
 
 	SetAttrProcessElement(suffix string)
 	SetAttrCollaborationElement(suffix string)
 
 	SetShape(num int)
 	GetShape(num int) *Shape
+
 	SetEdge(num int)
 	GetEdge(num int) *Edge
 
@@ -86,14 +73,11 @@ type PlaneRepository interface {
 
 // ShapeRepository ...
 type ShapeRepository interface {
-	CanvasBase
+	compulsion.IFBaseID
+	compulsion.IFBaseElement
+	CanvasBoundsElements
+	CanvasLabelElements
 
 	SetIsHorizontal(isHorizontal bool)
 	GetIsHorizontal() *bool
-
-	SetBounds()
-	GetBounds() *Bounds
-
-	SetLabel()
-	GetLabel() *Label
 }

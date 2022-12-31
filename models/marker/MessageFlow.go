@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewMessageFlow ...
@@ -100,12 +101,12 @@ func (messageFlow *MessageFlow) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (messageFlow MessageFlow) GetID() STR_PTR {
+func (messageFlow MessageFlow) GetID() compulsion.STR_PTR {
 	return &messageFlow.ID
 }
 
 // GetName ...
-func (messageFlow MessageFlow) GetName() STR_PTR {
+func (messageFlow MessageFlow) GetName() compulsion.STR_PTR {
 	return &messageFlow.Name
 }
 

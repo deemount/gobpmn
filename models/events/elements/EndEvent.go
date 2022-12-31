@@ -1,9 +1,12 @@
 package elements
 
 import (
+	"context"
 	"fmt"
+	"log"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/marker"
 )
@@ -11,6 +14,11 @@ import (
 // NewEndEvent ...
 func NewEndEvent() EndEventRepository {
 	return &EndEvent{}
+}
+
+func (endEvent TEndEvent) Handle(ctx context.Context) error {
+	log.Printf("after: %+v\n", endEvent)
+	return nil
 }
 
 /*
@@ -23,14 +31,7 @@ func NewEndEvent() EndEventRepository {
 
 // SetID ...
 func (endEvent *EndEvent) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "event":
-		endEvent.ID = fmt.Sprintf("Event_%v", suffix)
-		break
-	case "id":
-		endEvent.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	endEvent.ID = SetID(typ, suffix)
 }
 
 // SetName ...
@@ -115,12 +116,12 @@ func (endEvent *EndEvent) SetTerminateEventDefinition() {
 /** BPMN **/
 
 // GetID ...
-func (endEvent EndEvent) GetID() STR_PTR {
+func (endEvent EndEvent) GetID() compulsion.STR_PTR {
 	return &endEvent.ID
 }
 
 // GetName ...
-func (endEvent EndEvent) GetName() STR_PTR {
+func (endEvent EndEvent) GetName() compulsion.STR_PTR {
 	return &endEvent.Name
 }
 
@@ -190,4 +191,13 @@ func (endEvent EndEvent) GetSignalEventDefinition() *definitions.SignalEventDefi
 // GetTerminateEventDefinition ...
 func (endEvent EndEvent) GetTerminateEventDefinition() *definitions.TerminateEventDefinition {
 	return &endEvent.TerminateEventDefinition[0]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (endEvent EndEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", endEvent.ID, endEvent.Name)
 }

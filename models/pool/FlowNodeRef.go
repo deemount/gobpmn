@@ -1,6 +1,10 @@
 package pool
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewFlowNodeRef ...
 func NewFlowNodeRef() FlowNodeRefRepository {
@@ -29,6 +33,6 @@ func (fnr *FlowNodeRef) SetID(typ string, suffix interface{}) {
 /* Content */
 
 // GetID ...
-func (fnr FlowNodeRef) GetID() STR_PTR {
+func (fnr FlowNodeRef) GetID() compulsion.STR_PTR {
 	return &fnr.ID
 }

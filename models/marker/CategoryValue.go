@@ -1,6 +1,10 @@
 package marker
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewCategoryValue ...
 func NewCategoryValue() CategoryValueRepository {
@@ -41,7 +45,7 @@ func (categoryValue *CategoryValue) SetValue(value string) {
 /** BPMN **/
 
 // GetID
-func (categoryValue CategoryValue) GetID() STR_PTR {
+func (categoryValue CategoryValue) GetID() compulsion.STR_PTR {
 	return &categoryValue.ID
 }
 

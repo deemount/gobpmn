@@ -135,3 +135,12 @@ func (exclusiveGateway ExclusiveGateway) GetIncoming(num int) *marker.Incoming {
 func (exclusiveGateway ExclusiveGateway) GetOutgoing(num int) *marker.Outgoing {
 	return &exclusiveGateway.Outgoing[num]
 }
+
+/*
+ * Default String
+ */
+
+// String ...
+func (exclusiveGateway ExclusiveGateway) String() string {
+	return fmt.Sprintf("id=%v, name=%v", exclusiveGateway.ID, exclusiveGateway.Name)
+}

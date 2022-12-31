@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 func NewCategory() CategoryRepository {
@@ -60,7 +61,7 @@ func (category *Category) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (category Category) GetID() STR_PTR {
+func (category Category) GetID() compulsion.STR_PTR {
 	return &category.ID
 }
 

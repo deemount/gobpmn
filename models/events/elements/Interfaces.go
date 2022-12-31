@@ -1,34 +1,13 @@
 package elements
 
 import (
+	"context"
+
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/marker"
 )
-
-type EventElementsID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
-}
-type EventElementsName interface {
-	SetName(name string)
-	GetName() STR_PTR
-}
-
-type EventElementsMarkerIncoming interface {
-	SetIncoming(num int)
-	GetIncoming(num int) *marker.Incoming
-}
-
-type EventElementsMarkerOutgoing interface {
-	SetOutgoing(num int)
-	GetOutgoing(num int) *marker.Outgoing
-}
-
-type EventElementsMarker interface {
-	EventElementsMarkerIncoming
-	EventElementsMarkerOutgoing
-}
 
 // Notice: belongs to definitions package
 type EventsSetTerminateBase interface {
@@ -74,23 +53,12 @@ type EventElementsCoreThrowCatchElements interface {
 	GetMessageEventDefinition() *definitions.MessageEventDefinition
 }
 
-type EventElementsCoreElements interface {
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
-type EventElementsBase interface {
-	EventElementsID
-	EventElementsName
-}
-
 // BoundaryEventRepository ...
 type BoundaryEventRepository interface {
-	EventElementsBase
+	compulsion.IFBaseID
+	compulsion.IFBaseName
 	EventElementsDefinitions
-	EventElementsMarkerOutgoing
+	marker.MarkerOutgoing
 
 	SetAttachedToRef(ref string)
 	GetAttachedToRef() *string
@@ -100,53 +68,89 @@ type BoundaryEventRepository interface {
 	// Needs a checkout
 	SetCancelActivity(cancel bool)
 	GetCancelActivity() *bool
+
+	String() string
+}
+
+// TBoundaryEventRepository ...
+type TBoundaryEventRepository interface {
+	String() string
+	Handle(ctx context.Context) error
 }
 
 // EndEventRepository ...
 type EndEventRepository interface {
-	EventElementsBase
+	compulsion.IFBaseID
+	compulsion.IFBaseName
 	EventElementsCamundaBase
-	EventElementsMarkerIncoming
-	EventElementsCoreElements
+	marker.MarkerIncoming
+	attributes.AttributesBaseElements
 	EventsSetDefinitionsBase
 	EventsSetTerminateBase
 	definitions.DefinitionsGetElementsBase
 	definitions.DefinitionsGetTerminateBase
+
+	String() string
+}
+
+// TEndEventRepository ...
+type TEndEventRepository interface {
+	String() string
+	Handle(ctx context.Context) error
 }
 
 // IntermediateCatchEventRepository ...
 type IntermediateCatchEventRepository interface {
-	EventElementsBase
+	compulsion.IFBaseID
+	compulsion.IFBaseName
 	EventElementsCamundaBase
-	EventElementsCoreElements
-	EventElementsMarker
+	attributes.AttributesBaseElements
+	marker.MarkerIncomingOutgoing
 	EventElementsCoreThrowCatchElements
 
 	SetConditionalEventDefinition()
 	GetConditionalEventDefinition() *definitions.ConditionalEventDefinition
 	SetTimerEventDefinition()
 	GetTimerEventDefinition() *definitions.TimerEventDefinition
+
+	String() string
+}
+
+// TIntermediateCatchEventRepository ...
+type TIntermediateCatchEventRepository interface {
+	String() string
+	Handle(ctx context.Context) error
 }
 
 // IntermediateThrowEventRepository ...
 type IntermediateThrowEventRepository interface {
-	EventElementsBase
-	EventElementsMarker
-	EventElementsCoreElements
+	compulsion.IFBaseID
+	compulsion.IFBaseName
+	marker.MarkerIncomingOutgoing
+	attributes.AttributesBaseElements
 	EventElementsCoreThrowCatchElements
 
 	SetCompensateEventDefinition()
 	GetCompensateEventDefinition() *definitions.CompensateEventDefinition
 	SetEscalationEventDefinition()
 	GetEscalationEventDefinition() *definitions.EscalationEventDefinition
+
+	String() string
+}
+
+// TIntermediateThrowEventRepository ...
+type TIntermediateThrowEventRepository interface {
+	String() string
+	Handle(ctx context.Context) error
 }
 
 // StartEventRepository ...
 type StartEventRepository interface {
-	EventElementsBase
+	compulsion.IFBaseID
+	compulsion.IFBaseName
 	EventElementsCamundaBase
-	EventElementsMarkerOutgoing
-	EventElementsCoreElements
+	marker.MarkerOutgoing
+	attributes.AttributesBaseElements
 
 	SetIsInterrupting(isInterrupt bool)
 	GetIsInterrupting() *bool
@@ -171,4 +175,10 @@ type StartEventRepository interface {
 	GetMessageEventDefinition() *definitions.MessageEventDefinition
 
 	String() string
+}
+
+// TStartEventRepository ...
+type TStartEventRepository interface {
+	String() string
+	Handle(ctx context.Context) error
 }

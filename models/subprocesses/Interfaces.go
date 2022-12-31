@@ -2,6 +2,9 @@ package subprocesses
 
 import (
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/camunda"
+	"github.com/deemount/gobpmn/models/compulsion"
+	"github.com/deemount/gobpmn/models/events"
 	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/gateways"
 	"github.com/deemount/gobpmn/models/loop"
@@ -9,50 +12,12 @@ import (
 	"github.com/deemount/gobpmn/models/tasks"
 )
 
-type SubprocessesID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
-}
-
-type SubprocessesName interface {
-	SetName(name string)
-	GetName() STR_PTR
-}
-
-type SubprocessesMarker interface {
-	SetIncoming(num int)
-	GetIncoming(num int) *marker.Incoming
-	SetOutgoing(num int)
-	GetOutgoing(num int) *marker.Outgoing
-}
-
-type SubprocessesFlow interface {
-	SetSequenceFlow(num int)
-	GetSequenceFlow(num int) *marker.SequenceFlow
-}
-
-type SubprocessesCamundaBase interface {
-	SetCamundaAsyncBefore(asyncBefore bool)
-	GetCamundaAsyncBefore() *bool
-	SetCamundaAsyncAfter(asyncAfter bool)
-	GetCamundaAsyncAfter() *bool
-	SetCamundaJobPriority(priority int)
-	GetCamundaJobPriority() *int
-}
-
-type SubprocessesBaseCoreElements interface {
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
 type SubprocessesBase interface {
-	SubprocessesID
-	SubprocessesName
-	SubprocessesBaseCoreElements
-	SubprocessesMarker
-	SubprocessesCamundaBase
+	compulsion.IFBaseID
+	compulsion.IFBaseName
+	attributes.AttributesBaseElements
+	marker.MarkerIncomingOutgoing
+	camunda.CamundaDefaultAttributes
 }
 
 // SubprocessesElementsRepository ...
@@ -63,14 +28,14 @@ type SubprocessesElementsRepository interface {
 	GetSubProcess(num int) *SubProcess
 	SetTransaction(num int)
 	GetTransaction(num int) *Transaction
-	SetAdHocSubprocess(num int)
+	SetAdHocSubProcess(num int)
 	GetAdHocSubProcess(num int) *AdHocSubProcess
 }
 
 // AdHocSubProcessRepository ...
 type AdHocSubProcessRepository interface {
 	SubprocessesBase
-	SubprocessesFlow
+	marker.MarkerSequenceFlow
 	gateways.GatewaysElementsRepository
 	tasks.TasksElementsRepository
 
@@ -114,29 +79,21 @@ type CallActivityRepository interface {
 // SubProcessRepository ...
 type SubProcessRepository interface {
 	SubprocessesBase
-	SubprocessesFlow
+	marker.MarkerSequenceFlow
 	tasks.TasksElementsRepository
 	gateways.GatewaysElementsRepository
+	events.EventsElementsRepository
+	SubprocessesElementsRepository
 
 	SetTriggeredByEvent(triggered bool)
 	GetTriggeredByEvent() *bool
 
 	SetMultiInstanceLoopCharacteristics()
 	GetMultiInstanceLoopCharacteristics() *loop.MultiInstanceLoopCharacteristics
-
-	SetStartEvent(num int)
-	GetStartEvent(num int) *elements.StartEvent
-	SetEndEvent(num int)
-	GetEndEvent(num int) *elements.EndEvent
-
-	SetSubProcess(num int)
-	SetAdHocSubProcess(num int)
-	GetSubProcess(num int) *SubProcess
-	GetAdHocSubProcess(num int) *AdHocSubProcess
 }
 
 // TransactionRepository ...
 type TransactionRepository interface {
 	SubprocessesBase
-	SubprocessesFlow
+	marker.MarkerSequenceFlow
 }

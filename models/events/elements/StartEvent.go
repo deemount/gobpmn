@@ -1,9 +1,12 @@
 package elements
 
 import (
+	"context"
 	"fmt"
+	"log"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/marker"
 )
@@ -11,6 +14,11 @@ import (
 // NewStartEvent ...
 func NewStartEvent() StartEventRepository {
 	return &StartEvent{}
+}
+
+func (startEvent TStartEvent) Handle(ctx context.Context) error {
+	log.Printf("handle startevent: %+v\n", startEvent)
+	return nil
 }
 
 /*
@@ -23,17 +31,7 @@ func NewStartEvent() StartEventRepository {
 
 // SetID ...
 func (startEvent *StartEvent) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "counter":
-		startEvent.ID = fmt.Sprintf("StartEvent_%d", suffix)
-		break
-	case "event":
-		startEvent.ID = fmt.Sprintf("Event_%s", suffix)
-		break
-	case "id":
-		startEvent.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	startEvent.ID = SetID(typ, suffix)
 }
 
 // SetName ...
@@ -131,12 +129,12 @@ func (startEvent *StartEvent) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (startEvent StartEvent) GetID() STR_PTR {
+func (startEvent StartEvent) GetID() compulsion.STR_PTR {
 	return &startEvent.ID
 }
 
 // GetName ...
-func (startEvent StartEvent) GetName() STR_PTR {
+func (startEvent StartEvent) GetName() compulsion.STR_PTR {
 	return &startEvent.Name
 }
 

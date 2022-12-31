@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
-// NewDataStore ...
+// NewDataStoreReference ...
 func NewDataStoreReference() DataStoreReferenceRepository {
 	return &DataStoreReference{}
 }
@@ -59,12 +60,12 @@ func (dsr *DataStoreReference) SetExtensionElements() {
 /** BPMN **/
 
 // GetID ...
-func (dsr DataStoreReference) GetID() STR_PTR {
+func (dsr DataStoreReference) GetID() compulsion.STR_PTR {
 	return &dsr.ID
 }
 
 // GetName ...
-func (dsr DataStoreReference) GetName() STR_PTR {
+func (dsr DataStoreReference) GetName() compulsion.STR_PTR {
 	return &dsr.Name
 }
 

@@ -1,30 +1,6 @@
 package camunda
 
-// CamundaTaskListener ...
-type CamundaTaskListenerRepository interface {
-	CamundaBaseEvent
-	CamundaBaseClass
-	SetListenerID(listenerID string)
-	GetListenerID() *string
-	SetCamundaField(num int)
-	GetCamundaField(num int) *CamundaField
-}
-
-// CamundaTaskListener ...
-type CamundaTaskListener struct {
-	Class        string         `xml:"class,attr,omitempty" json:"class,omitempty"`
-	Event        string         `xml:"event,attr,omitempty" json:"event,omitempty"`
-	ListenerID   string         `xml:"id,attr,omitempty" json:"listenerId,omitempty"`
-	CamundaField []CamundaField `xml:"camunda:field,omitempty" json:"field,omitempty"`
-}
-
-// TCamundaTaskListener ...
-type TCamundaTaskListener struct {
-	Class      string         `xml:"class,attr,omitempty" json:"class,omitempty"`
-	Event      string         `xml:"event,attr,omitempty" json:"event,omitempty"`
-	ListenerID string         `xml:"id,attr,omitempty" json:"listenerId,omitempty"`
-	Field      []CamundaField `xml:"field,omitempty" json:"field,omitempty"`
-}
+import "github.com/deemount/gobpmn/models/compulsion"
 
 // NewCamundaTaskListener ...
 func NewCamundaTaskListener() CamundaTaskListenerRepository {
@@ -69,13 +45,13 @@ func (taskListener *CamundaTaskListener) SetCamundaField(num int) {
 /* Attributes */
 
 // GetClass ...
-func (taskListener CamundaTaskListener) GetClass() STR_PTR {
+func (taskListener CamundaTaskListener) GetClass() compulsion.STR_PTR {
 	return &taskListener.Class
 }
 
 // GetEvent ...
 // can be: assignment, create, complete, delete, update, timeout
-func (taskListener CamundaTaskListener) GetEvent() STR_PTR {
+func (taskListener CamundaTaskListener) GetEvent() compulsion.STR_PTR {
 	return &taskListener.Event
 }
 

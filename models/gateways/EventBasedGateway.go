@@ -139,3 +139,12 @@ func (eventBasedGateway EventBasedGateway) GetIncoming(num int) *marker.Incoming
 func (eventBasedGateway EventBasedGateway) GetOutgoing(num int) *marker.Outgoing {
 	return &eventBasedGateway.Outgoing[num]
 }
+
+/*
+ * Default String
+ */
+
+// String ...
+func (eventBasedGateway EventBasedGateway) String() string {
+	return fmt.Sprintf("id=%v, name=%v", eventBasedGateway.ID, eventBasedGateway.Name)
+}

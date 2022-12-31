@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/marker"
 )
 
@@ -95,12 +96,12 @@ func (transaction *Transaction) SetSequenceFlow(num int) {
 /** BPMN **/
 
 // GetID ...
-func (transaction Transaction) GetID() STR_PTR {
+func (transaction Transaction) GetID() compulsion.STR_PTR {
 	return &transaction.ID
 }
 
 // GetName ...
-func (transaction Transaction) GetName() STR_PTR {
+func (transaction Transaction) GetName() compulsion.STR_PTR {
 	return &transaction.Name
 }
 

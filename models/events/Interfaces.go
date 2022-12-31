@@ -1,6 +1,8 @@
 package events
 
-import "github.com/deemount/gobpmn/models/events/elements"
+import (
+	"github.com/deemount/gobpmn/models/events/elements"
+)
 
 type EventsElementsRepository interface {
 	SetStartEvent(num int)

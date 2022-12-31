@@ -2,17 +2,6 @@ package attributes
 
 import "fmt"
 
-// DocumentationRepository ...
-type DocumentationRepository interface {
-	SetData(data string)
-	GetData() *string
-}
-
-// Documentation ...
-type Documentation struct {
-	Data string `xml:",innerxml,omitempty" json:"documentation,omitempty"`
-}
-
 // NewDocumenation ...
 func NewDocumentation() DocumentationRepository {
 	return &Documentation{}

@@ -1,6 +1,10 @@
 package marker
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewMessage ...
 func NewMessage() MessageRepository {
@@ -37,11 +41,11 @@ func (msg *Message) SetName(suffix string) {
 /* Attributes */
 
 // GetID ...
-func (msg Message) GetID() STR_PTR {
+func (msg Message) GetID() compulsion.STR_PTR {
 	return &msg.ID
 }
 
 // GetName ...
-func (msg Message) GetName() STR_PTR {
+func (msg Message) GetName() compulsion.STR_PTR {
 	return &msg.Name
 }

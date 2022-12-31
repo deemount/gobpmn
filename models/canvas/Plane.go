@@ -2,6 +2,8 @@ package canvas
 
 import (
 	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewPlane ...
@@ -79,12 +81,12 @@ func (plane *Plane) SetEdge(num int) {
 /** BPMN **/
 
 // GetID ...
-func (plane Plane) GetID() STR_PTR {
+func (plane Plane) GetID() compulsion.STR_PTR {
 	return &plane.ID
 }
 
 // GetElement ...
-func (plane Plane) GetElement() STR_PTR {
+func (plane Plane) GetElement() compulsion.STR_PTR {
 	return &plane.Element
 }
 

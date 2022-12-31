@@ -1,14 +1,6 @@
 package camunda
 
-// CamundaValueRepository ...
-type CamundaValueRepository interface {
-	CamundaBaseValue
-}
-
-// CamundaValue ...
-type CamundaValue struct {
-	Value string `xml:",innerxml,omitempty" json:"value,omitempty"`
-}
+import "github.com/deemount/gobpmn/models/compulsion"
 
 // NewCamundaValue ...
 func NewCamundaValue() CamundaValueRepository {
@@ -33,6 +25,6 @@ func (value *CamundaValue) SetValue(val string) {
 /* Content */
 
 // GetValue ...
-func (value CamundaValue) GetValue() STR_PTR {
+func (value CamundaValue) GetValue() compulsion.STR_PTR {
 	return &value.Value
 }

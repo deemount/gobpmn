@@ -1,17 +1,6 @@
 package camunda
 
-// CamundaEntryRepository ...
-type CamundaEntryRepository interface {
-	CamundaBaseValue
-	SetKey(key string)
-	GetKey() *string
-}
-
-// CamundaEntry ...
-type CamundaEntry struct {
-	Key   string `xml:"key,attr,omitempty" json:"key"`
-	Value string `xml:",innerxml,omitempty" json:"value,omitempty"`
-}
+import "github.com/deemount/gobpmn/models/compulsion"
 
 // NewCamundaEntry ...
 func NewCamundaEntry() CamundaEntryRepository {
@@ -50,6 +39,6 @@ func (centry CamundaEntry) GetKey() *string {
 /* Content */
 
 // GetValue ...
-func (centry CamundaEntry) GetValue() STR_PTR {
+func (centry CamundaEntry) GetValue() compulsion.STR_PTR {
 	return &centry.Value
 }

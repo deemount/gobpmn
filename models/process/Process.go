@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/data"
 	"github.com/deemount/gobpmn/models/events/elements"
 	"github.com/deemount/gobpmn/models/gateways"
@@ -189,8 +190,8 @@ func (process *Process) SetTransaction(num int) {
 }
 
 // SetAdHocSubProcess ...
-func (process *Process) SetAdHocSubprocess(num int) {
-	process.AdHocSubprocess = make([]subprocesses.AdHocSubProcess, num)
+func (process *Process) SetAdHocSubProcess(num int) {
+	process.AdHocSubProcess = make([]subprocesses.AdHocSubProcess, num)
 }
 
 /*** Gateways ***/
@@ -250,12 +251,12 @@ func (process *Process) SetDataObject(num int) {
 /*** Attributes ***/
 
 // GetID ...
-func (process Process) GetID() STR_PTR {
+func (process Process) GetID() compulsion.STR_PTR {
 	return &process.ID
 }
 
 // GetName ...
-func (process Process) GetName() STR_PTR {
+func (process Process) GetName() compulsion.STR_PTR {
 	return &process.Name
 }
 
@@ -405,7 +406,7 @@ func (process Process) GetTransaction(num int) *subprocesses.Transaction {
 
 // GetAdHocSubProcess ...
 func (process Process) GetAdHocSubProcess(num int) *subprocesses.AdHocSubProcess {
-	return &process.AdHocSubprocess[num]
+	return &process.AdHocSubProcess[num]
 }
 
 /*** Gateways ***/

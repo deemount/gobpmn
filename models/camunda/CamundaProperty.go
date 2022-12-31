@@ -1,16 +1,6 @@
 package camunda
 
-// CamundaPropertyRepository ...
-type CamundaPropertyRepository interface {
-	CamundaBaseName
-	CamundaBaseValue
-}
-
-// CamundaProperty ...
-type CamundaProperty struct {
-	Name  string `xml:"name,attr,omitempty" json:"name"`
-	Value string `xml:"value,attr,omitempty" json:"value,omitempty"`
-}
+import "github.com/deemount/gobpmn/models/compulsion"
 
 // NewCamundaProperty ...
 func NewCamundaProperty() CamundaPropertyRepository {
@@ -40,11 +30,11 @@ func (property *CamundaProperty) SetValue(value string) {
 /* Attributes */
 
 // GetName ...
-func (property CamundaProperty) GetName() STR_PTR {
+func (property CamundaProperty) GetName() compulsion.STR_PTR {
 	return &property.Name
 }
 
 // GetValue ...
-func (property CamundaProperty) GetValue() STR_PTR {
+func (property CamundaProperty) GetValue() compulsion.STR_PTR {
 	return &property.Value
 }

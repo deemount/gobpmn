@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/loop"
 )
 
@@ -74,12 +75,12 @@ func (participant *Participant) SetParticipantMultiplicity() {
 /** BPMN **/
 
 // GetID ...
-func (participant Participant) GetID() STR_PTR {
+func (participant Participant) GetID() compulsion.STR_PTR {
 	return &participant.ID
 }
 
 // GetName ...
-func (participant Participant) GetName() STR_PTR {
+func (participant Participant) GetName() compulsion.STR_PTR {
 	return &participant.Name
 }
 

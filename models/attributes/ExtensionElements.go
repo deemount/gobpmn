@@ -2,26 +2,12 @@ package attributes
 
 import "github.com/deemount/gobpmn/models/camunda"
 
-// ExtensionElementsRepository ...
-type ExtensionElementsRepository interface {
-	camunda.ExtensionElementsRepository
-}
-
-// ExtensionElements ...
-type ExtensionElements struct {
-	camunda.ExtensionElements
-}
-
-// TExtensionElements ...
-type TExtensionElements struct {
-	camunda.ExtensionElements
-}
-
+// NewExtensionElements ...
 func NewExtensionElements() ExtensionElementsRepository {
 	return &ExtensionElements{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -69,7 +55,7 @@ func (extel *ExtensionElements) SetCamundaOut(num int) {
 	extel.CamundaOut = make([]camunda.CamundaOut, num)
 }
 
-/**
+/*
  * Default Getters
  */
 

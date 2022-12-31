@@ -1,7 +1,7 @@
 package definitions
 
 import (
-	"fmt"
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewTerminateEventDefinition ...
@@ -19,14 +19,7 @@ func NewTerminateEventDefinition() TerminateEventDefinitionRepository {
 
 // SetID ...
 func (ted *TerminateEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "ted":
-		ted.ID = fmt.Sprintf("TerminateEventDefinition_%v", suffix)
-		break
-	case "id":
-		ted.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	ted.ID = SetID(typ, suffix)
 }
 
 /*
@@ -38,6 +31,6 @@ func (ted *TerminateEventDefinition) SetID(typ string, suffix interface{}) {
 /** BPMN **/
 
 // GetID ...
-func (ted TerminateEventDefinition) GetID() STR_PTR {
+func (ted TerminateEventDefinition) GetID() compulsion.STR_PTR {
 	return &ted.ID
 }

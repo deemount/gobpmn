@@ -1,22 +1,12 @@
 package conditional
 
-import "fmt"
+import (
+	"fmt"
 
-// ConditionRepository ...
-type ConditionRepository interface {
-	ConditionalScriptFormat
-	ConditionalScript
-	SetConditionType()
-	GetConditionType() *string
-}
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
-// Condition ...
-type Condition struct {
-	ConditionType string `xml:"xsi:type,attr,omitempty" json:"conditionType,omitempty"`
-	ScriptFormat  string `xml:"language,attr,omitempty" json:"language,omitempty"`
-	Script        string `xml:",innerxml,omitempty" json:"script,omitempty"`
-}
-
+// NewCondition ...
 func NewCondition() ConditionRepository {
 	return &Condition{}
 }
@@ -53,16 +43,16 @@ func (condition *Condition) SetScript(script string) {
 /** BPMN **/
 
 // GetConditionType ...
-func (condition Condition) GetConditionType() *string {
+func (condition Condition) GetConditionType() compulsion.STR_PTR {
 	return &condition.ConditionType
 }
 
 // GetScriptFormat ...
-func (condition Condition) GetScriptFormat() STR_PTR {
+func (condition Condition) GetScriptFormat() compulsion.STR_PTR {
 	return &condition.ScriptFormat
 }
 
 // GetScript ...
-func (condition Condition) GetScript() STR_PTR {
+func (condition Condition) GetScript() compulsion.STR_PTR {
 	return &condition.Script
 }

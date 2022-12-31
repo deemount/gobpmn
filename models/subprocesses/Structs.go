@@ -17,7 +17,7 @@ type Subprocesses struct {
 	CallActivity    CALL_ACTIVITY_SLC    `xml:"bpmn:callActivity,omitempty" json:"callActivity,omitempty" csv:"-"`
 	SubProcess      SUBPROCESS_SLC       `xml:"bpmn:subProcess,omitempty" json:"subProcess,omitempty" csv:"-"`
 	Transaction     TRANSACTION_SLC      `xml:"bpmn:transaction,omitempty" json:"transaction,omitempty" csv:"-"`
-	AdHocSubprocess ADHOC_SUBPROCESS_SLC `xml:"bpmn:adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty" csv:"-"`
+	AdHocSubProcess ADHOC_SUBPROCESS_SLC `xml:"bpmn:adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty" csv:"-"`
 }
 
 // TSubprocesses ...
@@ -25,7 +25,7 @@ type TSubprocesses struct {
 	CallActivity    TCALL_ACTIVITY_SLC    `xml:"callActivity,omitempty" json:"callActivity,omitempty"`
 	SubProcess      TSUBPROCESS_SLC       `xml:"subProcess,omitempty" json:"subProcess,omitempty"`
 	Transaction     TTRANSACTION_SLC      `xml:"transaction,omitempty" json:"transaction,omitempty"`
-	AdHocSubprocess TADHOC_SUBPROCESS_SLC `xml:"adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty" csv:"-"`
+	AdHocSubProcess TADHOC_SUBPROCESS_SLC `xml:"adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty" csv:"-"`
 }
 
 // AdHocSubProcess ...
@@ -97,10 +97,9 @@ type SubProcess struct {
 	events.Events
 	tasks.Tasks
 	gateways.Gateways
+	Subprocesses
 	TriggeredByEvent                 bool                                    `xml:"triggeredByEvent,attr,omitempty" json:"triggeredByEvent,omitempty"`
 	MultiInstanceLoopCharacteristics []loop.MultiInstanceLoopCharacteristics `xml:"bpmn:multiInstanceLoopCharacteristics,omitempty" json:"multiInstanceLoopCharacteristics"`
-	SubProcess                       SUBPROCESS_SLC                          `xml:"bpmn:subProcess,omitempty" json:"subProcess,omitempty"`           // is that possible ?
-	AdHocSubProcess                  ADHOC_SUBPROCESS_SLC                    `xml:"bpmn:adhocSubprocess,omitempty" json:"adhocSubprocess,omitempty"` // is that possible ?
 	SequenceFlow                     []marker.SequenceFlow                   `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
 }
 

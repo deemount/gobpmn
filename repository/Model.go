@@ -78,7 +78,7 @@ type model struct {
 func NewModel(def *core.Definitions) Model {
 	return &model{
 		// Definitions
-		def: core.NewCore(),
+		def: core.NewDefinitions(),
 		// Pool
 		Pool: Pool{
 			IsExecutable:    true,

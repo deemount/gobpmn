@@ -1,8 +1,7 @@
 package definitions
 
 import (
-	"fmt"
-
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/time"
 )
 
@@ -21,14 +20,7 @@ func NewTimerEventDefinition() TimerEventDefinitionRepository {
 
 // SetID ...
 func (ted *TimerEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "ted":
-		ted.ID = fmt.Sprintf("TimerEventDefinition_%v", suffix)
-		break
-	case "id":
-		ted.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	ted.ID = SetID(typ, suffix)
 }
 
 /*** Make Elements ***/
@@ -54,7 +46,7 @@ func (ted *TimerEventDefinition) SetTimeDuration() {
 /** BPMN **/
 
 // GetID ...
-func (ted TimerEventDefinition) GetID() STR_PTR {
+func (ted TimerEventDefinition) GetID() compulsion.STR_PTR {
 	return &ted.ID
 }
 

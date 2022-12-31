@@ -1,6 +1,10 @@
 package pool
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewLaneSet ...
 func NewLaneSet() LaneSetRepository {
@@ -45,7 +49,7 @@ func (ls *LaneSet) SetLane(num int) {
 /** BPMN **/
 
 // GetID ...
-func (ls LaneSet) GetID() STR_PTR {
+func (ls LaneSet) GetID() compulsion.STR_PTR {
 	return &ls.ID
 }
 

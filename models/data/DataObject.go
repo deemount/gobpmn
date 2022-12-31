@@ -1,6 +1,10 @@
 package data
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewDataObject ...
 func NewDataObject() DataObjectRepository {
@@ -32,6 +36,6 @@ func (do *DataObject) SetID(typ string, suffix interface{}) {
 /* Attributes */
 
 // GetID ...
-func (do DataObject) GetID() STR_PTR {
+func (do DataObject) GetID() compulsion.STR_PTR {
 	return &do.ID
 }

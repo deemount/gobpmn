@@ -1,21 +1,5 @@
 package camunda
 
-// CamundaMapRepository ...
-type CamundaMapRepository interface {
-	SetCamundaEntry(num int)
-	GetCamundaEntry(num int) *CamundaEntry
-}
-
-// CamundaMap ...
-type CamundaMap struct {
-	CamundaEntry []CamundaEntry `xml:"camunda:entry,omitempty" json:"entry,omitempty"`
-}
-
-// TCamundaMap ...
-type TCamundaMap struct {
-	Entry []CamundaEntry `xml:"entry,omitempty" json:"entry,omitempty"`
-}
-
 // NewCamundaMap ...
 func NewCamundaMap() CamundaMapRepository {
 	return &CamundaMap{}

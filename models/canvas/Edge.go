@@ -1,6 +1,10 @@
 package canvas
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // NewEdge ...
 func NewEdge() EdgeRepository {
@@ -54,12 +58,12 @@ func (edge *Edge) SetLabel() {
 /* Attributes */
 
 // GetID ...
-func (edge Edge) GetID() STR_PTR {
+func (edge Edge) GetID() compulsion.STR_PTR {
 	return &edge.ID
 }
 
 // GetElement ...
-func (edge Edge) GetElement() STR_PTR {
+func (edge Edge) GetElement() compulsion.STR_PTR {
 	return &edge.Element
 }
 

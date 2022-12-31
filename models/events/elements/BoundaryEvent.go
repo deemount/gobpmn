@@ -1,8 +1,11 @@
 package elements
 
 import (
+	"context"
 	"fmt"
+	"log"
 
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/marker"
 )
@@ -10,6 +13,11 @@ import (
 // NewBoundaryEvent ...
 func NewBoundaryEvent() BoundaryEventRepository {
 	return &BoundaryEvent{}
+}
+
+func (be TBoundaryEvent) Handle(ctx context.Context) error {
+	log.Printf("after: %+v\n", be)
+	return nil
 }
 
 /*
@@ -22,14 +30,7 @@ func NewBoundaryEvent() BoundaryEventRepository {
 
 // SetID ...
 func (be *BoundaryEvent) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "event":
-		be.ID = fmt.Sprintf("Event_%v", suffix)
-		break
-	case "id":
-		be.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	be.ID = SetID(typ, suffix)
 }
 
 // SetName ...
@@ -109,12 +110,12 @@ func (be *BoundaryEvent) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (be BoundaryEvent) GetID() STR_PTR {
+func (be BoundaryEvent) GetID() compulsion.STR_PTR {
 	return &be.ID
 }
 
 // GetName ...
-func (be BoundaryEvent) GetName() STR_PTR {
+func (be BoundaryEvent) GetName() compulsion.STR_PTR {
 	return &be.Name
 }
 
@@ -179,4 +180,13 @@ func (be BoundaryEvent) GetConditionalEventDefinition() *definitions.Conditional
 // SetOutgoing ...
 func (be BoundaryEvent) GetOutgoing(num int) *marker.Outgoing {
 	return &be.Outgoing[num]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (be BoundaryEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", be.ID, be.Name)
 }

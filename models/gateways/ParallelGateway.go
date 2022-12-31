@@ -139,3 +139,12 @@ func (parallelGateway ParallelGateway) GetIncoming(num int) *marker.Incoming {
 func (parallelGateway ParallelGateway) GetOutgoing(num int) *marker.Outgoing {
 	return &parallelGateway.Outgoing[num]
 }
+
+/*
+ * Default String
+ */
+
+// String ...
+func (parallelGateway ParallelGateway) String() string {
+	return fmt.Sprintf("id=%v, name=%v", parallelGateway.ID, parallelGateway.Name)
+}

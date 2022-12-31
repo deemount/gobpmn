@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/loop"
 	"github.com/deemount/gobpmn/models/marker"
 )
@@ -115,12 +116,12 @@ func (ca *CallActivity) SetMultiInstanceLoopCharacteristics() {
 /** BPMN **/
 
 // GetID ...
-func (ca CallActivity) GetID() STR_PTR {
+func (ca CallActivity) GetID() compulsion.STR_PTR {
 	return &ca.ID
 }
 
 // GetName ...
-func (ca CallActivity) GetName() STR_PTR {
+func (ca CallActivity) GetName() compulsion.STR_PTR {
 	return &ca.Name
 }
 

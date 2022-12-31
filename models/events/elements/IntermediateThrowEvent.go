@@ -1,9 +1,12 @@
 package elements
 
 import (
+	"context"
 	"fmt"
+	"log"
 
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/events/definitions"
 	"github.com/deemount/gobpmn/models/marker"
 )
@@ -11,6 +14,11 @@ import (
 // NewIntermediateThrowEvent ...
 func NewIntermediateThrowEvent() IntermediateThrowEventRepository {
 	return &IntermediateThrowEvent{}
+}
+
+func (intermediateThrowEvent TIntermediateThrowEvent) Handle(ctx context.Context) error {
+	log.Printf("after: %+v\n", intermediateThrowEvent)
+	return nil
 }
 
 /*
@@ -23,14 +31,7 @@ func NewIntermediateThrowEvent() IntermediateThrowEventRepository {
 
 // SetID ...
 func (intermediateThrowEvent *IntermediateThrowEvent) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "event":
-		intermediateThrowEvent.ID = fmt.Sprintf("Event_%v", suffix)
-		break
-	case "id":
-		intermediateThrowEvent.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	intermediateThrowEvent.ID = SetID(typ, suffix)
 }
 
 // SetName ...
@@ -96,12 +97,12 @@ func (intermediateThrowEvent *IntermediateThrowEvent) SetSignalEventDefinition()
 /** BPMN **/
 
 // GetID ...
-func (intermediateThrowEvent IntermediateThrowEvent) GetID() STR_PTR {
+func (intermediateThrowEvent IntermediateThrowEvent) GetID() compulsion.STR_PTR {
 	return &intermediateThrowEvent.ID
 }
 
 // GetName ...
-func (intermediateThrowEvent IntermediateThrowEvent) GetName() STR_PTR {
+func (intermediateThrowEvent IntermediateThrowEvent) GetName() compulsion.STR_PTR {
 	return &intermediateThrowEvent.Name
 }
 
@@ -152,4 +153,13 @@ func (intermediateThrowEvent IntermediateThrowEvent) GetMessageEventDefinition()
 // GetSignalEventDefinition ...
 func (intermediateThrowEvent IntermediateThrowEvent) GetSignalEventDefinition() *definitions.SignalEventDefinition {
 	return &intermediateThrowEvent.SignalEventDefinition[0]
+}
+
+/*
+ * Default String
+ */
+
+// String ...
+func (intermediateThrowEvent IntermediateThrowEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", intermediateThrowEvent.ID, intermediateThrowEvent.Name)
 }

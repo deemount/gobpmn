@@ -2,19 +2,15 @@ package marker
 
 import (
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/conditional"
 )
 
-type MarkerID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
-}
+/*
+ * Base
+ */
 
-type MarkerName interface {
-	SetName(suffix string)
-	GetName() STR_PTR
-}
-
+// MarkerBaseReference ...
 type MarkerBaseReferences interface {
 	SetSourceRef(typ string, sourceRef interface{})
 	GetSourceRef() *string
@@ -22,30 +18,58 @@ type MarkerBaseReferences interface {
 	GetTargetRef() *string
 }
 
-type MarkerBaseCoreElements interface {
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
+// MarkerFlow ...
+type MarkerFlow interface {
+	SetFlow(suffix string)
+	GetFlow() *string
 }
 
-type MarkerBase interface {
-	MarkerID
-	MarkerName
+// MarkerSequenceFlow ...
+type MarkerSequenceFlow interface {
+	SetSequenceFlow(num int)
+	GetSequenceFlow(num int) *SequenceFlow
 }
+
+// MarkerIncoming ...
+type MarkerIncoming interface {
+	SetIncoming(num int)
+	GetIncoming(num int) *Incoming
+}
+
+// MarkerOutgoing ...
+type MarkerOutgoing interface {
+	SetOutgoing(num int)
+	GetOutgoing(num int) *Outgoing
+}
+
+// MarkerIncomingOutgoing
+type MarkerIncomingOutgoing interface {
+	MarkerIncoming
+	MarkerOutgoing
+}
+
+// MarkerBase ...
+type MarkerBase interface {
+	compulsion.IFBaseID
+	compulsion.IFBaseName
+}
+
+/*
+ * Repositories
+ */
 
 // AssociationRepository ...
 type AssociationRepository interface {
-	MarkerID
-	MarkerBaseCoreElements
+	compulsion.IFBaseID
+	attributes.AttributesBaseElements
 
 	MarkerBaseReferences
 }
 
 // CategoryRepository ...
 type CategoryRepository interface {
-	MarkerID
-	MarkerBaseCoreElements
+	compulsion.IFBaseID
+	attributes.AttributesBaseElements
 
 	SetCategoryValue()
 	GetCategoryValue() *CategoryValue
@@ -53,35 +77,26 @@ type CategoryRepository interface {
 
 // CategoryValueRepository ...
 type CategoryValueRepository interface {
-	MarkerID
+	compulsion.IFBaseID
 
 	SetValue(value string)
 	GetValue() *string
 }
 
 // IncomingRepository ...
-type IncomingRepository interface {
-	SetFlow(suffix string)
-	GetFlow() *string
-}
+type IncomingRepository interface{ MarkerFlow }
 
 // OutgoingRepository ...
-type OutgoingRepository interface {
-	SetFlow(suffix string)
-	GetFlow() *string
-}
+type OutgoingRepository interface{ MarkerFlow }
 
 // GroupRepository ...
 type GroupRepository interface {
-	MarkerID
+	compulsion.IFBaseID
 
 	SetCategoryValueRef(suffix string)
 	GetCategoryValueRef() *string
 
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
+	attributes.AttributesBaseElements
 }
 
 // MessageRepository ...
@@ -92,7 +107,7 @@ type MessageRepository interface {
 // MessageFlowRepository ...
 type MessageFlowRepository interface {
 	MarkerBase
-	MarkerBaseCoreElements
+	attributes.AttributesBaseElements
 	MarkerBaseReferences
 }
 
@@ -100,7 +115,7 @@ type MessageFlowRepository interface {
 type SequenceFlowRepository interface {
 	MarkerBase
 	MarkerBaseReferences
-	MarkerBaseCoreElements
+	attributes.AttributesBaseElements
 
 	SetConditionExpression()
 	GetConditionExpression() *conditional.ConditionExpression

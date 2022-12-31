@@ -2,6 +2,8 @@ package definitions
 
 import (
 	"fmt"
+
+	"github.com/deemount/gobpmn/models/compulsion"
 )
 
 // NewMessageEventDefinition ...
@@ -19,14 +21,7 @@ func NewMessageEventDefinition() MessageEventDefinitionRepository {
 
 // SetID ...
 func (med *MessageEventDefinition) SetID(typ string, suffix interface{}) {
-	switch typ {
-	case "med":
-		med.ID = fmt.Sprintf("MessageEventDefinition_%v", suffix)
-		break
-	case "id":
-		med.ID = fmt.Sprintf("%s", suffix)
-		break
-	}
+	med.ID = SetID(typ, suffix)
 }
 
 // SetMsgRef ...
@@ -43,7 +38,7 @@ func (med *MessageEventDefinition) SetMsgRef(suffix string) {
 /** BPMN **/
 
 // GetID ...
-func (med MessageEventDefinition) GetID() STR_PTR {
+func (med MessageEventDefinition) GetID() compulsion.STR_PTR {
 	return &med.ID
 }
 

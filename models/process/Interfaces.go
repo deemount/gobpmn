@@ -2,6 +2,8 @@ package process
 
 import (
 	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/camunda"
+	"github.com/deemount/gobpmn/models/compulsion"
 	"github.com/deemount/gobpmn/models/data"
 	"github.com/deemount/gobpmn/models/events"
 	"github.com/deemount/gobpmn/models/gateways"
@@ -11,63 +13,20 @@ import (
 	"github.com/deemount/gobpmn/models/tasks"
 )
 
-type ProcessBaseID interface {
-	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
-}
-
-type ProcessBaseName interface {
-	SetName(name string)
-	GetName() STR_PTR
-}
-
-type ProcessBaseDocumentation interface {
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-}
-
-type ProcessBaseExtensionElements interface {
-	SetExtensionElements()
-	GetExtensionElements() *attributes.ExtensionElements
-}
-
-type ProcessBaseCoreElements interface {
-	ProcessBaseDocumentation
-	ProcessBaseExtensionElements
-}
-
-type ProcessBase interface {
-	ProcessBaseID
-	ProcessBaseName
-	ProcessBaseCoreElements
-}
-
 // ProcessRepository ...
 type ProcessRepository interface {
-	ProcessBase
+	compulsion.IFBaseID
+	compulsion.IFBaseName
+	attributes.AttributesBaseElements
 	events.EventsElementsRepository
 	tasks.TasksElementsRepository
 	gateways.GatewaysElementsRepository
 	subprocesses.SubprocessesElementsRepository
+	camunda.CamundaProcessAttributes
+	marker.MarkerSequenceFlow
 
 	SetIsExecutable(isExec bool)
 	GetIsExecutable() *bool
-
-	SetSequenceFlow(num int)
-	GetSequenceFlow(num int) *marker.SequenceFlow
-
-	SetCamundaVersionTag(tag string)
-	GetCamundaVersionTag() *string
-	SetCamundaJobPriority(priority int)
-	GetCamundaJobPriority() *int
-	SetCamundaTaskPriority(priority int)
-	GetCamundaTaskPriority() *int
-	SetCamundaCandidateStarterGroups(groups string)
-	GetCamundaCandidateStarterGroups() *string
-	SetCamundaCandiddateStarterUsers(users string)
-	GetCamundaCandiddateStarterUsers() *string
-	SetCamundaHistoryTimeToLive(tolive string)
-	GetCamundaHistoryTimeToLive() *string
 
 	SetLaneSet()
 	GetLaneSet() *pool.LaneSet
