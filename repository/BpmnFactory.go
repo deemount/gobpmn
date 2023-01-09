@@ -61,19 +61,19 @@ func (factory *bpmnFactory) set() {
 	log.Println("factory: set model")
 
 	// e.g. use interface pointer (no argument)
-	//repositoryModel := examples.NewCollaborativeProcess()
+	repositoryModel := examples.NewCollaborativeProcess()
 	//repositoryModel := examples.NewBlackBoxModel()
 
 	// e.g. use struct pointer (with argument)
 	//def := new(models.Definitions)
 	//repositoryModel := examples.NewModel(def)
-	//d := repositoryModel.Create()
-	//factory.Repo = d.Def()
+	d := repositoryModel.Create()
+	factory.Repo = d.Def()
 
 	// e.g. use struct pointer (no argument)
-	structModel := examples.NewSimpleModel004()
-	d2 := structModel.Create()
-	factory.Repo = d2.Def()
+	//structModel := examples.NewSimpleModel004()
+	//d := structModel.Create()
+	//factory.Repo = d.Def()
 
 }
 

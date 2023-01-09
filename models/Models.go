@@ -16,7 +16,7 @@ type Models struct {
 
 func NewModels() IFModels {
 	return &Models{
-		core.NewCore()}
+		core.NewDefinitions()}
 }
 
 func (m *Models) Test() {

@@ -193,3 +193,8 @@ func (ice IntermediateCatchEvent) GetMessageEventDefinition() *definitions.Messa
 func (ice IntermediateCatchEvent) String() string {
 	return fmt.Sprintf("id=%v, name=%v", ice.ID, ice.Name)
 }
+
+// String ...
+func (ice TIntermediateCatchEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", ice.ID, ice.Name)
+}

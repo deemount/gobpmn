@@ -225,3 +225,8 @@ func (startEvent StartEvent) GetOutgoing(num int) *marker.Outgoing {
 func (startEvent StartEvent) String() string {
 	return fmt.Sprintf("id=%v, name=%v", startEvent.ID, startEvent.Name)
 }
+
+// String ...
+func (startEvent TStartEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", startEvent.ID, startEvent.Name)
+}

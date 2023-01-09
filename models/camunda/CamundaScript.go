@@ -2,11 +2,6 @@ package camunda
 
 import "fmt"
 
-// CamundaScript ...
-type CamundaScript struct {
-	ScriptFormat string `xml:"scriptFormat,attr,omitempty"`
-}
-
 // NewCamundaScript ...
 func NewCamundaScript() CamundaScriptRepository {
 	return &CamundaScript{}

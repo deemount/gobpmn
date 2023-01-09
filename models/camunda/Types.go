@@ -1,5 +1,7 @@
 package camunda
 
+type CAMUNDA_CONNECTOR_SLC []CamundaConnector
+type CAMUNDA_CONNECTOR_ID_SLC []CamundaConnectorID
 type CAMUNDA_PROPERTIES_SLC []CamundaProperties
 type CAMUNDA_FAILED_JOB_RETRY_CYCLE_SLC []CamundaFailedJobRetryCycle
 type CAMUNDA_FORM_DATA_SLC []CamundaFormData
@@ -9,6 +11,8 @@ type CAMUNDA_EXECUTION_LISTENER_SLC []CamundaExecutionListener
 type CAMUNDA_IN_SLC []CamundaIn
 type CAMUNDA_OUT_SLC []CamundaOut
 
+type TCAMUNDA_CONNECTOR_SLC []TCamundaConnector
+type TCAMUNDA_CONNECTOR_ID_SLC []TCamundaConnectorID
 type TCAMUNDA_PROPERTIES_SLC []TCamundaProperties
 type TCAMUNDA_FAILED_JOB_RETRY_CYCLE_SLC []CamundaFailedJobRetryCycle
 type TCAMUNDA_FORM_DATA_SLC []TCamundaFormData

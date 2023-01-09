@@ -163,3 +163,8 @@ func (intermediateThrowEvent IntermediateThrowEvent) GetSignalEventDefinition() 
 func (intermediateThrowEvent IntermediateThrowEvent) String() string {
 	return fmt.Sprintf("id=%v, name=%v", intermediateThrowEvent.ID, intermediateThrowEvent.Name)
 }
+
+// String ...
+func (intermediateThrowEvent TIntermediateThrowEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", intermediateThrowEvent.ID, intermediateThrowEvent.Name)
+}

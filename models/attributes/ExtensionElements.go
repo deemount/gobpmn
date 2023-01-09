@@ -15,6 +15,11 @@ func NewExtensionElements() ExtensionElementsRepository {
 
 /** Camunda **/
 
+// SetCamundaConnector ...
+func (extel *ExtensionElements) SetCamundaConnector() {
+	extel.CamundaConnector = make([]camunda.CamundaConnector, 1)
+}
+
 // SetCamundaProperties ...
 func (extel *ExtensionElements) SetCamundaProperties() {
 	extel.CamundaProperties = make([]camunda.CamundaProperties, 1)
@@ -62,6 +67,11 @@ func (extel *ExtensionElements) SetCamundaOut(num int) {
 /* Elements */
 
 /** Camunda **/
+
+// GetCamundaConnector ...
+func (extel *ExtensionElements) GetCamundaConnector() *camunda.CamundaConnector {
+	return &extel.CamundaConnector[0]
+}
 
 // GetCamundaProperties ...
 func (extel ExtensionElements) GetCamundaProperties() *camunda.CamundaProperties {

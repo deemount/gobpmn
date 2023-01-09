@@ -1,19 +1,20 @@
 package data
 
-import "github.com/deemount/gobpmn/models/attributes"
+import (
+	"github.com/deemount/gobpmn/models/attributes"
+	"github.com/deemount/gobpmn/models/compulsion"
+)
 
 // DataInputAssociation ...
 type DataInputAssociation struct {
-	ID                string                         `xml:"id,attr,omitempty" json:"id,omitempty"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ID string `xml:"id,attr,omitempty" json:"id,omitempty"`
+	attributes.Attributes
 }
 
 // TDataInputAssociation ...
 type TDataInputAssociation struct {
-	ID                string                          `xml:"id,attr,omitempty" json:"id,omitempty"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	ID string `xml:"id,attr,omitempty" json:"id,omitempty"`
+	attributes.TAttributes
 }
 
 // DataObject ...
@@ -22,20 +23,27 @@ type DataObject struct {
 }
 
 // DataObjectReference ...
-type DataObjectReference struct{}
+type DataObjectReference struct {
+	compulsion.BaseAttributes
+	attributes.Attributes
+	DataObjectRef string `xml:"dataObjectRef,attr,omitempty" json:"dataObjectRef"`
+}
+
+// TDataObjectReference ...
+type TDataObjectReference struct {
+	compulsion.BaseAttributes
+	attributes.TAttributes
+	DataObjectRef string `xml:"dataObjectRef,attr,omitempty" json:"dataObjectRef"`
+}
 
 // DataStoreReference ...
 type DataStoreReference struct {
-	ID                string                         `xml:"id,attr,omitempty" json:"id" csv:"id"`
-	Name              string                         `xml:"name,attr,omitempty" json:"name,omitempty" csv:"name"`
-	Documentation     []attributes.Documentation     `xml:"bpmn:documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.ExtensionElements `xml:"bpmn:extensionElements,omitempty" json:"extensionElements,omitempty"`
+	compulsion.BaseAttributes
+	attributes.Attributes
 }
 
 // TDataStoreReference ...
 type TDataStoreReference struct {
-	ID                string                          `xml:"id,attr,omitempty" json:"id" csv:"id"`
-	Name              string                          `xml:"name,attr,omitempty" json:"name,omitempty" csv:"name"`
-	Documentation     []attributes.Documentation      `xml:"documentation,omitempty" json:"documentation,omitempty"`
-	ExtensionElements []attributes.TExtensionElements `xml:"extensionElements,omitempty" json:"extensionElements,omitempty"`
+	compulsion.BaseAttributes
+	attributes.TAttributes
 }

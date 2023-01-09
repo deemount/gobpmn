@@ -10,6 +10,7 @@ type DelegateParameter struct {
 	E *Edge
 	T string
 	H string
+	I bool
 	W []Waypoint
 	B Bounds
 }
@@ -49,7 +50,7 @@ type TDiagram struct {
 // Edge ...
 type Edge struct {
 	ID       string     `xml:"id,attr" json:"-"`
-	Element  string     `xml:"bpmnElement,attr" json:"element,omitempty"`
+	Element  string     `xml:"bpmnElement,attr" json:"bpmnElement,omitempty"`
 	Waypoint []Waypoint `xml:"di:waypoint" json:"waypoint,omitempty"`
 	Label    []Label    `xml:"bpmndi:BPMNLabel,omitempty" json:"label,omitempty"`
 }
@@ -57,7 +58,7 @@ type Edge struct {
 // TEdge ...
 type TEdge struct {
 	ID       string     `xml:"id,attr" json:"-"`
-	Element  string     `xml:"bpmnElement,attr" json:"element,omitempty"`
+	Element  string     `xml:"bpmnElement,attr" json:"bpmnElement,omitempty"`
 	Waypoint []Waypoint `xml:"waypoint" json:"waypoint,omitempty"`
 	Label    []TLabel   `xml:"BPMNLabel,omitempty" json:"label,omitempty"`
 }
@@ -75,7 +76,7 @@ type TLabel struct {
 // Plane ...
 type Plane struct {
 	ID          string  `xml:"id,attr" json:"id,omitempty"`
-	Element     string  `xml:"bpmnElement,attr" json:"element,omitempty"`
+	Element     string  `xml:"bpmnElement,attr" json:"bpmnElement,omitempty"`
 	Description string  `xml:"-" json:"-"`
 	Shape       []Shape `xml:"bpmndi:BPMNShape" json:"shape,omitempty"`
 	Edge        []Edge  `xml:"bpmndi:BPMNEdge" json:"edge,omitempty"`
@@ -84,7 +85,7 @@ type Plane struct {
 // TPlane ...
 type TPlane struct {
 	ID          string   `xml:"id,attr" json:"id,omitempty"`
-	Element     string   `xml:"bpmnElement,attr" json:"element,omitempty"`
+	Element     string   `xml:"bpmnElement,attr" json:"bpmnElement,omitempty"`
 	Description string   `xml:"-" json:"-"`
 	Shape       []TShape `xml:"BPMNShape" json:"shape,omitempty"`
 	Edge        []TEdge  `xml:"BPMNEdge" json:"edge,omitempty"`
@@ -92,18 +93,20 @@ type TPlane struct {
 
 // Shape ...
 type Shape struct {
-	ID           string   `xml:"id,attr" json:"id,omitempty"`
-	Element      string   `xml:"bpmnElement,attr" json:"element,omitempty"`
-	IsHorizontal bool     `xml:"isHorizontal,attr,omitempty" json:"isHorizontal,omitempty"`
-	Bounds       []Bounds `xml:"dc:Bounds" json:"bounds,omitempty"`
-	Label        []Label  `xml:"bpmndi:BPMNLabel" json:"label,omitempty"`
+	ID              string   `xml:"id,attr" json:"id,omitempty"`
+	Element         string   `xml:"bpmnElement,attr" json:"bpmnElement,omitempty"`
+	IsHorizontal    bool     `xml:"isHorizontal,attr,omitempty" json:"isHorizontal,omitempty"`
+	IsMarkerVisible bool     `xml:"isMarkerVisible,attr,omitempty" json:"isMarkerVisible,omitempty"`
+	Bounds          []Bounds `xml:"dc:Bounds" json:"bounds,omitempty"`
+	Label           []Label  `xml:"bpmndi:BPMNLabel" json:"label,omitempty"`
 }
 
 // TShape ...
 type TShape struct {
-	ID           string   `xml:"id,attr" json:"id,omitempty"`
-	Element      string   `xml:"bpmnElement,attr" json:"-"`
-	IsHorizontal bool     `xml:"isHorizontal,attr,omitempty" json:"isHorizontal,omitemptyy"`
-	Bounds       []Bounds `xml:"Bounds" json:"bounds,omitempty"`
-	Label        []TLabel `xml:"BPMNLabel" json:"label,omitempty"`
+	ID              string   `xml:"id,attr" json:"id,omitempty"`
+	Element         string   `xml:"bpmnElement,attr" json:"bpmnElement,omitempty"`
+	IsHorizontal    bool     `xml:"isHorizontal,attr,omitempty" json:"isHorizontal,omitemptyy"`
+	IsMarkerVisible bool     `xml:"isMarkerVisible,attr,omitempty" json:"isMarkerVisible,omitempty"`
+	Bounds          []Bounds `xml:"Bounds" json:"bounds,omitempty"`
+	Label           []TLabel `xml:"BPMNLabel" json:"label,omitempty"`
 }

@@ -72,6 +72,11 @@ func (shape *Shape) SetIsHorizontal(isHorizontal bool) {
 	shape.IsHorizontal = isHorizontal
 }
 
+// SetIsMarkerVisible ...
+func (shape *Shape) SetIsMarkerVisible(isMarkerVisible bool) {
+	shape.IsMarkerVisible = isMarkerVisible
+}
+
 /*** Make Elements ***/
 
 /** DC **/
@@ -109,6 +114,11 @@ func (shape Shape) GetElement() compulsion.STR_PTR {
 // GetIsHorizontal ...
 func (shape Shape) GetIsHorizontal() *bool {
 	return &shape.IsHorizontal
+}
+
+// GetIsMarkerVisible ...
+func (shape Shape) GetIsMarkerVisible() *bool {
+	return &shape.IsMarkerVisible
 }
 
 /* Elements */

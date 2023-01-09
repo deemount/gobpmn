@@ -2,6 +2,7 @@ package camunda
 
 // ExtensionElements ...
 type ExtensionElements struct {
+	CamundaConnector           CAMUNDA_CONNECTOR_SLC              `xml:"camunda:connector,omitempty" json:"connector,omitempty"`
 	CamundaProperties          CAMUNDA_PROPERTIES_SLC             `xml:"camunda:properties,omitempty" json:"properties,omitempty"`
 	CamundaFailedJobRetryCycle CAMUNDA_FAILED_JOB_RETRY_CYCLE_SLC `xml:"camunda:failedJobRetryCycle,omitempty" json:"failedJobRetryCycle,omitempty"`
 	CamundaFormData            CAMUNDA_FORM_DATA_SLC              `xml:"camunda:formData,omitempty" json:"formData,omitempty"`
@@ -14,6 +15,7 @@ type ExtensionElements struct {
 
 // TExtensionElements ...
 type TExtensionElements struct {
+	CamundaConnector    TCAMUNDA_CONNECTOR_SLC              `xml:"connector,omitempty" json:"connector,omitempty"`
 	Properties          TCAMUNDA_PROPERTIES_SLC             `xml:"properties,omitempty" json:"properties,omitempty"`
 	FailedJobRetryCycle TCAMUNDA_FAILED_JOB_RETRY_CYCLE_SLC `xml:"failedJobRetryCycle,omitempty" json:"failedJobRetryCycle,omitempty"`
 	FormData            TCAMUNDA_FORM_DATA_SLC              `xml:"formData,omitempty" json:"formData,omitempty"`
@@ -37,10 +39,26 @@ type TCoreAttributes struct {
 }
 
 // CamundaConnector ...
-type CamundaConnector struct{}
+type CamundaConnector struct {
+	CamundaInputOutput []CamundaInputOutput `xml:"camunda:inputOutput,omitempty" json:"inputOutput,omitempty"`
+	CamundaConnectorID []CamundaConnectorID `xml:"camunda:connectorId,omitempty" json:"connectorId,omitempty"`
+}
+
+// TCamundaConnector ...
+type TCamundaConnector struct {
+	InputOutput []TCamundaInputOutput `xml:"inputOutput,omitempty" json:"inputOutput,omitempty"`
+	ConnectorID []TCamundaConnectorID `xml:"connectorId,omitempty" json:"connectorId,omitempty"`
+}
 
 // CamundaConnectorID ...
-type CamundaConnectorID struct{}
+type CamundaConnectorID struct {
+	ID string `xml:",innerxml,omitempty" json:"id"`
+}
+
+// TCamundaConnectorID ...
+type TCamundaConnectorID struct {
+	ID string `xml:",innerxml,omitempty" json:"id"`
+}
 
 // CamundaConstraint ...
 type CamundaConstraint struct {
@@ -77,6 +95,20 @@ type CamundaExpression struct{}
 
 // CamundaFailedJobyRetryCycle ...
 type CamundaFailedJobRetryCycle struct{}
+
+// CamundaField ...
+type CamundaField struct {
+	Name              string              `xml:"name,attr,omitempty" json:"name"`
+	CamundaExpression []CamundaExpression `xml:"camunda:expression,omitempty" json:"expression,omitempty"`
+	CamundaString     []CamundaString     `xml:"camunda:string,omitempty" json:"string,omitempty"`
+}
+
+// TCamundaField ...
+type TCamundaField struct {
+	Name       string              `xml:"name,attr,omitempty" json:"name"`
+	Expression []CamundaExpression `xml:"expression,omitempty" json:"expression,omitempty"`
+	String     []CamundaString     `xml:"string,omitempty" json:"string,omitempty"`
+}
 
 // CamundaFormData ...
 type CamundaFormData struct {
@@ -196,6 +228,11 @@ type TCamundaProperties struct {
 type CamundaProperty struct {
 	Name  string `xml:"name,attr,omitempty" json:"name"`
 	Value string `xml:"value,attr,omitempty" json:"value,omitempty"`
+}
+
+// CamundaScript ...
+type CamundaScript struct {
+	ScriptFormat string `xml:"scriptFormat,attr,omitempty"`
 }
 
 // CamundaString ...

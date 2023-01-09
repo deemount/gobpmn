@@ -1,5 +1,6 @@
 package events
 
+// Events ...
 type Events struct {
 	StartEvent             START_EVENT_SLC              `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty" csv:"-"`
 	BoundaryEvent          BOUNDARY_EVENT_SLC           `xml:"bpmn:boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty" csv:"-"`
@@ -8,6 +9,7 @@ type Events struct {
 	IntermediateThrowEvent INTERMEDIATE_THROW_EVENT_SLC `xml:"bpmn:intermediateThrowEvent,omitempty" json:"intermediateThrowEvent,omitempty" csv:"-"`
 }
 
+// TEvents ...
 type TEvents struct {
 	StartEvent             TSTART_EVENT_SLC              `xml:"startEvent,omitemnpty" json:"startEvent,omitempty" csv:"-"`
 	BoundaryEvent          TBOUNDARY_EVENT_SLC           `xml:"boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty" csv:"-"`

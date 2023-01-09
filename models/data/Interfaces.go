@@ -17,7 +17,13 @@ type DataObjectRepository interface {
 }
 
 // DataObjectReferenceRepository ...
-type DataObjectReferenceRepository interface{}
+type DataObjectReferenceRepository interface {
+	compulsion.IFBaseID
+	compulsion.IFBaseName
+	attributes.AttributesBaseElements
+	SetDataObjectRef(suffix interface{})
+	GetDataObjectRef() *string
+}
 
 // DataStoreRepository ...
 type DataStoreReferenceRepository interface {

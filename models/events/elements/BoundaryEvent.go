@@ -190,3 +190,8 @@ func (be BoundaryEvent) GetOutgoing(num int) *marker.Outgoing {
 func (be BoundaryEvent) String() string {
 	return fmt.Sprintf("id=%v, name=%v", be.ID, be.Name)
 }
+
+// String ...
+func (be TBoundaryEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", be.ID, be.Name)
+}

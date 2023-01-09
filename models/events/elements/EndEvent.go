@@ -201,3 +201,8 @@ func (endEvent EndEvent) GetTerminateEventDefinition() *definitions.TerminateEve
 func (endEvent EndEvent) String() string {
 	return fmt.Sprintf("id=%v, name=%v", endEvent.ID, endEvent.Name)
 }
+
+// String ...
+func (endEvent TEndEvent) String() string {
+	return fmt.Sprintf("id=%v, name=%v", endEvent.ID, endEvent.Name)
+}

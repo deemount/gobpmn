@@ -32,17 +32,18 @@ func SetLabel(p DelegateParameter) {
 // SetPool ...
 // default coords and size are: x="129" y="52" width="600" height="250"
 // when start event is also default at x="179" y="159" width="36" height="36"
-func SetPool(e *Shape, typ string, isHorizontal bool, hash string, b Bounds) {
-	e.SetID(typ, hash)
-	e.SetElement(typ, hash)
-	e.SetIsHorizontal(isHorizontal)
-	e.SetBounds()
-	if &b.X == nil && &b.Y == nil && &b.Width == nil && &b.Height == nil {
+// e *Shape, typ string, isHorizontal bool, hash string, b Bounds
+func SetPool(p DelegateParameter) {
+	p.S.SetID(p.T, p.H)
+	p.S.SetElement(p.T, p.H)
+	p.S.SetIsHorizontal(p.I)
+	p.S.SetBounds()
+	if &p.B.X == nil && &p.B.Y == nil && &p.B.Width == nil && &p.B.Height == nil {
 		b := Bounds{X: 129, Y: 52, Width: 600, Height: 250}
-		e.GetBounds().SetCoordinates(b.X, b.Y)
-		e.GetBounds().SetSize(b.Width, b.Height)
+		p.S.GetBounds().SetCoordinates(b.X, b.Y)
+		p.S.GetBounds().SetSize(b.Width, b.Height)
 	} else {
-		e.GetBounds().SetCoordinates(b.X, b.Y)
-		e.GetBounds().SetSize(b.Width, b.Height)
+		p.S.GetBounds().SetCoordinates(p.B.X, p.B.Y)
+		p.S.GetBounds().SetSize(p.B.Width, p.B.Height)
 	}
 }
