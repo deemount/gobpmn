@@ -3,8 +3,8 @@ package repository
 import (
 	"time"
 
-	"github.com/deemount/gobpmn/models/core"
-	"github.com/deemount/gobpmn/spec/process_instance"
+	"github.com/deemount/gobpmn/engine/spec/process_instance"
+	"github.com/deemount/gobpmn/models/bpmn/core"
 )
 
 // ProcessInfo ...

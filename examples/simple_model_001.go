@@ -1,9 +1,9 @@
 package examples
 
 import (
-	"github.com/deemount/gobpmn/models/canvas"
-	"github.com/deemount/gobpmn/models/core"
-	"github.com/deemount/gobpmn/models/process"
+	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/core"
+	"github.com/deemount/gobpmn/models/bpmn/process"
 	"github.com/deemount/gobpmn/utils"
 )
 

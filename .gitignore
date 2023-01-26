@@ -1,2 +1,6 @@
 .DS_Store
 *.code-workspace
+formio
+/models/__temp
+/files/bpmn
+/files/json

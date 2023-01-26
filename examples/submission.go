@@ -8,13 +8,13 @@ package examples
  **/
 
 import (
-	"github.com/deemount/gobpmn/models/canvas"
-	"github.com/deemount/gobpmn/models/core"
-	"github.com/deemount/gobpmn/models/events/elements"
-	"github.com/deemount/gobpmn/models/marker"
-	"github.com/deemount/gobpmn/models/pool"
-	"github.com/deemount/gobpmn/models/process"
-	"github.com/deemount/gobpmn/models/tasks"
+	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/core"
+	"github.com/deemount/gobpmn/models/bpmn/events/elements"
+	"github.com/deemount/gobpmn/models/bpmn/flow"
+	"github.com/deemount/gobpmn/models/bpmn/pool"
+	"github.com/deemount/gobpmn/models/bpmn/process"
+	"github.com/deemount/gobpmn/models/bpmn/tasks"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -207,13 +207,14 @@ func (m *model) setCollaboration() {
  * @private setDiagram
 **/
 func (m *model) setPool() {
-	e := m.GetShapePool(m.GetPlane())
-	e.SetID("id", m.ParticipantID)
-	e.SetElement("id", m.ParticipantID)
-	e.SetIsHorizontal(true)
-	e.SetBounds()
-	e.Bounds[0].SetCoordinates(150, 80)
-	e.Bounds[0].SetSize(420, 160)
+	canvas.SetPool(
+		canvas.DelegateParameter{
+			S: m.GetShapePool(m.GetPlane()),
+			T: "id",
+			I: true,
+			H: m.ParticipantID,
+			B: canvas.Bounds{X: 150, Y: 80, Width: 420, Height: 160}})
+
 }
 
 func (m *model) setProcess() {
@@ -239,37 +240,33 @@ func (m *model) setDiagram() {
  * @private setEndEvent
 **/
 func (m *model) setStartEvent() {
-	// assign
 	e, d := m.GetStartEvent()
-	// element
-	e.SetID("event", m.StartEventHash)
-	e.SetName("Begin of Process")
-	// outgoing
-	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(m.FromStartEventHash)
-	// shape
-	d.SetID("event", m.StartEventHash)
-	d.SetElement("event", m.StartEventHash)
-	d.SetBounds()
-	d.Bounds[0].SetCoordinates(225, 142)
-	d.Bounds[0].SetSize(36, 36)
+	elements.SetStartEvent(
+		elements.DelegateParameter{
+			SE: e,
+			N:  "Begin of Process",
+			H:  []string{m.StartEventHash, m.FromStartEventHash}})
+	canvas.SetShape(
+		canvas.DelegateParameter{
+			S: d,
+			T: "event",
+			H: m.StartEventHash,
+			B: canvas.Bounds{X: 225, Y: 142, Width: 36, Height: 36}})
 }
 
 func (m *model) setEndEvent() {
-	// assign
 	e, d := m.GetEndEvent()
-	// element
-	e.SetID("event", m.EndEventHash)
-	e.SetName("End of Process")
-	// incoming
-	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(m.FromTaskHash)
-	// shape
-	d.SetID("event", m.EndEventHash)
-	d.SetElement("event", m.EndEventHash)
-	d.SetBounds()
-	d.Bounds[0].SetCoordinates(492, 142)
-	d.Bounds[0].SetSize(36, 36)
+	elements.SetEndEvent(
+		elements.DelegateParameter{
+			EE: e,
+			N:  "End of Process",
+			H:  []string{m.EndEventHash, m.FromTaskHash}})
+	canvas.SetShape(
+		canvas.DelegateParameter{
+			S: d,
+			T: "event",
+			H: m.EndEventHash,
+			B: canvas.Bounds{X: 492, Y: 142, Width: 36, Height: 36}})
 }
 
 /**
@@ -278,23 +275,19 @@ func (m *model) setEndEvent() {
  * @private setTask
 **/
 func (m *model) setTask() {
-	// assign
 	e, d := m.GetTask()
-	// element
-	e.SetID("activity", m.TaskHash)
-	e.SetName("Task")
-	// incoming
-	e.SetIncoming(1)
-	e.Incoming[0].SetFlow(m.FromStartEventHash)
-	// outgoing
-	e.SetOutgoing(1)
-	e.Outgoing[0].SetFlow(m.FromTaskHash)
-	// shape
-	d.SetID("activity", m.TaskHash)
-	d.SetElement("activity", m.TaskHash)
-	d.SetBounds()
-	d.Bounds[0].SetCoordinates(320, 120)
-	d.Bounds[0].SetSize(100, 80)
+	tasks.SetTask(
+		tasks.DelegateParameter{
+			TA: e,
+			T:  "activity",
+			N:  "Task",
+			H:  []string{m.TaskHash, m.FromStartEventHash, m.FromTaskHash}})
+	canvas.SetShape(
+		canvas.DelegateParameter{
+			S: d,
+			T: "activity",
+			H: m.TaskHash,
+			B: canvas.Bounds{X: 320, Y: 120, Width: 100, Height: 80}})
 }
 
 /**
@@ -304,33 +297,37 @@ func (m *model) setTask() {
  * @private fromTask
 **/
 func (m *model) fromStartEvent() {
-	// assign
 	e, d := m.GetFromStartEvent()
-	// element
-	e.SetID("flow", m.FromStartEventHash)
-	e.SetSourceRef("event", m.StartEventHash)
-	e.SetTargetRef("activity", m.TaskHash)
-	// edge
-	d.SetID("flow", m.FromStartEventHash)
-	d.SetElement("flow", m.FromStartEventHash)
-	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(261, 160)
-	d.Waypoint[1].SetCoordinates(320, 160)
+	flow.SetSequenceFlow(
+		flow.DelegateParameter{
+			SF: e,
+			T:  "flow",
+			ST: "event",
+			TT: "activity",
+			H:  []string{m.FromStartEventHash, m.StartEventHash, m.TaskHash}})
+	canvas.SetEdge(
+		canvas.DelegateParameter{
+			E: d,
+			T: "flow",
+			H: m.FromStartEventHash,
+			W: []canvas.Waypoint{{X: 261, Y: 160}, {X: 320, Y: 160}}})
 }
 
 func (m *model) fromTask() {
-	// assign
 	e, d := m.GetFromTask()
-	// element
-	e.SetID("flow", m.FromTaskHash)
-	e.SetSourceRef("activity", m.TaskHash)
-	e.SetTargetRef("event", m.EndEventHash)
-	// edge
-	d.SetID("flow", m.FromTaskHash)
-	d.SetElement("flow", m.FromTaskHash)
-	d.SetWaypoint()
-	d.Waypoint[0].SetCoordinates(420, 160)
-	d.Waypoint[1].SetCoordinates(492, 160)
+	flow.SetSequenceFlow(
+		flow.DelegateParameter{
+			SF: e,
+			T:  "flow",
+			ST: "activity",
+			TT: "event",
+			H:  []string{m.FromTaskHash, m.TaskHash, m.EndEventHash}})
+	canvas.SetEdge(
+		canvas.DelegateParameter{
+			E: d,
+			T: "flow",
+			H: m.FromTaskHash,
+			W: []canvas.Waypoint{{X: 420, Y: 160}, {X: 492, Y: 160}}})
 }
 
 /**************************************************************************************/
@@ -391,14 +388,14 @@ func (m model) GetTask() (*tasks.Task, *canvas.Shape) {
 	return task, shape
 }
 
-func (m model) GetFromStartEvent() (*marker.SequenceFlow, *canvas.Edge) {
+func (m model) GetFromStartEvent() (*flow.SequenceFlow, *canvas.Edge) {
 	flow := m.GetProcess().GetSequenceFlow(0)
 	plane := m.GetPlane()
 	edge := m.GetEdgeFromStartEvent(plane)
 	return flow, edge
 }
 
-func (m model) GetFromTask() (*marker.SequenceFlow, *canvas.Edge) {
+func (m model) GetFromTask() (*flow.SequenceFlow, *canvas.Edge) {
 	flow := m.GetProcess().GetSequenceFlow(1)
 	plane := m.GetPlane()
 	edge := m.GetEdgeFromTask(plane)

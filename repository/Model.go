@@ -8,13 +8,13 @@ package repository
  **/
 
 import (
-	"github.com/deemount/gobpmn/models/canvas"
-	"github.com/deemount/gobpmn/models/core"
-	"github.com/deemount/gobpmn/models/events/elements"
-	"github.com/deemount/gobpmn/models/marker"
-	"github.com/deemount/gobpmn/models/pool"
-	"github.com/deemount/gobpmn/models/process"
-	"github.com/deemount/gobpmn/models/tasks"
+	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/core"
+	"github.com/deemount/gobpmn/models/bpmn/events/elements"
+	"github.com/deemount/gobpmn/models/bpmn/flow"
+	"github.com/deemount/gobpmn/models/bpmn/pool"
+	"github.com/deemount/gobpmn/models/bpmn/process"
+	"github.com/deemount/gobpmn/models/bpmn/tasks"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -391,14 +391,14 @@ func (m model) GetTask() (*tasks.Task, *canvas.Shape) {
 	return task, shape
 }
 
-func (m model) GetFromStartEvent() (*marker.SequenceFlow, *canvas.Edge) {
+func (m model) GetFromStartEvent() (*flow.SequenceFlow, *canvas.Edge) {
 	flow := m.GetProcess().GetSequenceFlow(0)
 	plane := m.GetPlane()
 	edge := m.GetEdgeFromStartEvent(plane)
 	return flow, edge
 }
 
-func (m model) GetFromTask() (*marker.SequenceFlow, *canvas.Edge) {
+func (m model) GetFromTask() (*flow.SequenceFlow, *canvas.Edge) {
 	flow := m.GetProcess().GetSequenceFlow(1)
 	plane := m.GetPlane()
 	edge := m.GetEdgeFromTask(plane)

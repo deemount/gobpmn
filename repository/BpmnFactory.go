@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/deemount/gobpmn/examples"
-	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/bpmn/core"
 )
 
 // BpmnFactory ...
