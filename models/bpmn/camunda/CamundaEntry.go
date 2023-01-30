@@ -32,7 +32,7 @@ func (centry *CamundaEntry) SetValue(value string) {
 /* Attributes */
 
 // GetKey ...
-func (centry CamundaEntry) GetKey() *string {
+func (centry CamundaEntry) GetKey() impl.STR_PTR {
 	return &centry.Key
 }
 

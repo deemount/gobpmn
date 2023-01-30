@@ -97,17 +97,17 @@ func (serviceTask ServiceTask) GetName() impl.STR_PTR {
 /** Camunda **/
 
 // GetCamundaAsyncBefore ...
-func (serviceTask ServiceTask) GetCamundaAsyncBefore() *bool {
+func (serviceTask ServiceTask) GetCamundaAsyncBefore() impl.BOOL_PTR {
 	return &serviceTask.CamundaAsyncBefore
 }
 
 // GetCamundaAsyncAfter ...
-func (serviceTask ServiceTask) GetCamundaAsyncAfter() *bool {
+func (serviceTask ServiceTask) GetCamundaAsyncAfter() impl.BOOL_PTR {
 	return &serviceTask.CamundaAsyncAfter
 }
 
 // GetCamundaJobPriority ...
-func (serviceTask ServiceTask) GetCamundaJobPriority() *int {
+func (serviceTask ServiceTask) GetCamundaJobPriority() impl.INT_PTR {
 	return &serviceTask.CamundaJobPriority
 }
 

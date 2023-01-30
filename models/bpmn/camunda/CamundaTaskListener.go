@@ -56,7 +56,7 @@ func (taskListener CamundaTaskListener) GetEvent() impl.STR_PTR {
 }
 
 // GetID ...
-func (taskListener CamundaTaskListener) GetListenerID() *string {
+func (taskListener CamundaTaskListener) GetListenerID() impl.STR_PTR {
 	return &taskListener.ListenerID
 }
 

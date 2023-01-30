@@ -35,6 +35,6 @@ func (cconstraint CamundaConstraint) GetName() impl.STR_PTR {
 }
 
 // GetConfig ...
-func (cconstraint CamundaConstraint) GetConfig() *string {
+func (cconstraint CamundaConstraint) GetConfig() impl.STR_PTR {
 	return &cconstraint.Config
 }

@@ -100,24 +100,24 @@ func (receiveTask ReceiveTask) GetName() impl.STR_PTR {
 }
 
 // GetMessageRef ...
-func (receiveTask ReceiveTask) GetMessageRef(suffix string) *string {
+func (receiveTask ReceiveTask) GetMessageRef(suffix string) impl.STR_PTR {
 	return &receiveTask.MessageRef
 }
 
 /** Camunda **/
 
 // GetCamundaAsyncBefore ...
-func (receiveTask ReceiveTask) GetCamundaAsyncBefore() *bool {
+func (receiveTask ReceiveTask) GetCamundaAsyncBefore() impl.BOOL_PTR {
 	return &receiveTask.CamundaAsyncBefore
 }
 
 // GetCamundaAsyncAfter ...
-func (receiveTask ReceiveTask) GetCamundaAsyncAfter() *bool {
+func (receiveTask ReceiveTask) GetCamundaAsyncAfter() impl.BOOL_PTR {
 	return &receiveTask.CamundaAsyncAfter
 }
 
 // GetCamundaJobPriority ...
-func (receiveTask ReceiveTask) GetCamundaJobPriority() *int {
+func (receiveTask ReceiveTask) GetCamundaJobPriority() impl.INT_PTR {
 	return &receiveTask.CamundaJobPriority
 }
 

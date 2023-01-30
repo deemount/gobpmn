@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/bpmn/attributes"
+	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
 )
 
@@ -88,12 +89,12 @@ func (parallelGateway *ParallelGateway) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (parallelGateway ParallelGateway) GetID() STR_PTR {
+func (parallelGateway ParallelGateway) GetID() impl.STR_PTR {
 	return &parallelGateway.ID
 }
 
 // GetName ...
-func (parallelGateway ParallelGateway) GetName() STR_PTR {
+func (parallelGateway ParallelGateway) GetName() impl.STR_PTR {
 	return &parallelGateway.Name
 }
 

@@ -249,6 +249,20 @@ func (definitions Definitions) GetDiagram(num int) *canvas.Diagram {
 	return &definitions.Diagram[num]
 }
 
+/*
+ * Default String
+ */
+
+// String ...
+func (definitions Definitions) String() string {
+	return fmt.Sprintf("id=%v", definitions.ID)
+}
+
+// String ...
+func (definitions TDefinitions) String() string {
+	return fmt.Sprintf("id=%v", definitions.ID)
+}
+
 /* Schema Fetcher */
 func (definitions Definitions) GetCamundaSchema() {
 	schema, err := utils.FetchSchema(definitions.CamundaSchema)

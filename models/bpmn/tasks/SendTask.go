@@ -97,17 +97,17 @@ func (sendTask SendTask) GetName() impl.STR_PTR {
 /** Camunda **/
 
 // GetCamundaAsyncBefore ...
-func (sendTask SendTask) GetCamundaAsyncBefore() *bool {
+func (sendTask SendTask) GetCamundaAsyncBefore() impl.BOOL_PTR {
 	return &sendTask.CamundaAsyncBefore
 }
 
 // GetCamundaAsyncAfter ...
-func (sendTask SendTask) GetCamundaAsyncAfter() *bool {
+func (sendTask SendTask) GetCamundaAsyncAfter() impl.BOOL_PTR {
 	return &sendTask.CamundaAsyncAfter
 }
 
 // GetCamundaJobPriority ...
-func (sendTask SendTask) GetCamundaJobPriority() *int {
+func (sendTask SendTask) GetCamundaJobPriority() impl.INT_PTR {
 	return &sendTask.CamundaJobPriority
 }
 

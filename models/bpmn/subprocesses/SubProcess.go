@@ -316,42 +316,42 @@ func (subprocess SubProcess) GetIntermediateThrowEvent(num int) *elements.Interm
 /*** Tasks ***/
 
 // SetBusinessRuleTask ...
-func (subprocess SubProcess) GetBusinessRuleTask(num int) *tasks.BusinessRuleTask {
+func (subprocess SubProcess) GetBusinessRuleTask(num int) tasks.BUSINESS_RULE_TASK_PTR {
 	return &subprocess.BusinessRuleTask[num]
 }
 
 // GetTask ...
-func (subprocess SubProcess) GetTask(num int) *tasks.Task {
+func (subprocess SubProcess) GetTask(num int) tasks.TASK_PTR {
 	return &subprocess.Task[num]
 }
 
 // GetUserTask ...
-func (subprocess SubProcess) GetUserTask(num int) *tasks.UserTask {
+func (subprocess SubProcess) GetUserTask(num int) tasks.USER_TASK_PTR {
 	return &subprocess.UserTask[num]
 }
 
 // GetManualTask ...
-func (subprocess SubProcess) GetManualTask(num int) *tasks.ManualTask {
+func (subprocess SubProcess) GetManualTask(num int) tasks.MANUAL_TASK_PTR {
 	return &subprocess.ManualTask[num]
 }
 
 // GetReceiveTask ...
-func (subprocess SubProcess) GetReceiveTask(num int) *tasks.ReceiveTask {
+func (subprocess SubProcess) GetReceiveTask(num int) tasks.RECEIVE_TASK_PTR {
 	return &subprocess.ReceiveTask[num]
 }
 
 // GetScriptTask ...
-func (subprocess SubProcess) GetScriptTask(num int) *tasks.ScriptTask {
+func (subprocess SubProcess) GetScriptTask(num int) tasks.SCRIPT_TASK_PTR {
 	return &subprocess.ScriptTask[num]
 }
 
 // GetSendTask ...
-func (subprocess SubProcess) GetSendTask(num int) *tasks.SendTask {
+func (subprocess SubProcess) GetSendTask(num int) tasks.SEND_TASK_PTR {
 	return &subprocess.SendTask[num]
 }
 
 // GetServiceTask ...
-func (subprocess SubProcess) GetServiceTask(num int) *tasks.ServiceTask {
+func (subprocess SubProcess) GetServiceTask(num int) tasks.SERVICE_TASK_PTR {
 	return &subprocess.ServiceTask[num]
 }
 
@@ -380,27 +380,27 @@ func (subprocess SubProcess) GetTransaction(num int) *Transaction {
 /*** Gateways ***/
 
 // GetExclusiveGateway
-func (subprocess SubProcess) GetExclusiveGateway(num int) *gateways.ExclusiveGateway {
+func (subprocess SubProcess) GetExclusiveGateway(num int) gateways.EXCLUSIVE_GATEWAY_PTR {
 	return &subprocess.ExclusiveGateway[num]
 }
 
 // GetInclsuiveGateway
-func (subprocess SubProcess) GetInclusiveGateway(num int) *gateways.InclusiveGateway {
+func (subprocess SubProcess) GetInclusiveGateway(num int) gateways.INCLUSIVE_GATEWAY_PTR {
 	return &subprocess.InclusiveGateway[num]
 }
 
 // GetParallelGateway
-func (subprocess SubProcess) GetParallelGateway(num int) *gateways.ParallelGateway {
+func (subprocess SubProcess) GetParallelGateway(num int) gateways.PARALLEL_GATEWAY_PTR {
 	return &subprocess.ParallelGateway[num]
 }
 
 // GetComplexGateway
-func (subprocess SubProcess) GetComplexGateway(num int) *gateways.ComplexGateway {
+func (subprocess SubProcess) GetComplexGateway(num int) gateways.COMPLEX_GATEWAY_PTR {
 	return &subprocess.ComplexGateway[num]
 }
 
 // GetEventBasedGateway
-func (subprocess SubProcess) GetEventBasedGateway(num int) *gateways.EventBasedGateway {
+func (subprocess SubProcess) GetEventBasedGateway(num int) gateways.EVENT_BASED_GATEWAYS_PTR {
 	return &subprocess.EventBasedGateway[num]
 }
 

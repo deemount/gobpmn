@@ -105,12 +105,12 @@ func (association Association) GetID() impl.STR_PTR {
 }
 
 // GetSourceRef ...
-func (association Association) GetSourceRef() *string {
+func (association Association) GetSourceRef() impl.STR_PTR {
 	return &association.SourceRef
 }
 
 // GetTargetRef ...
-func (association Association) GetTargetRef() *string {
+func (association Association) GetTargetRef() impl.STR_PTR {
 	return &association.TargetRef
 }
 

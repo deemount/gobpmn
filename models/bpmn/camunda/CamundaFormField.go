@@ -71,18 +71,18 @@ func (formfield CamundaFormField) GetID() impl.STR_PTR {
 }
 
 // GetLabel ...
-func (formfield CamundaFormField) GetLabel() *string {
+func (formfield CamundaFormField) GetLabel() impl.STR_PTR {
 	return &formfield.Label
 }
 
 // GetType ...
 // can be: string, long, boolean, date, enum, custom type
-func (formfield CamundaFormField) GetType() *string {
+func (formfield CamundaFormField) GetType() impl.STR_PTR {
 	return &formfield.Typ
 }
 
 // GetDefaultValue ...
-func (formfield CamundaFormField) GetDefaultValue() *string {
+func (formfield CamundaFormField) GetDefaultValue() impl.STR_PTR {
 	return &formfield.DefaultValue
 }
 

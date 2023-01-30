@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/bpmn/attributes"
+	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
 )
 
@@ -88,12 +89,12 @@ func (eventBasedGateway *EventBasedGateway) SetOutgoing(num int) {
 /** BPMN **/
 
 // GetID ...
-func (eventBasedGateway EventBasedGateway) GetID() STR_PTR {
+func (eventBasedGateway EventBasedGateway) GetID() impl.STR_PTR {
 	return &eventBasedGateway.ID
 }
 
 // GetName ...
-func (eventBasedGateway EventBasedGateway) GetName() STR_PTR {
+func (eventBasedGateway EventBasedGateway) GetName() impl.STR_PTR {
 	return &eventBasedGateway.Name
 }
 

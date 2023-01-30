@@ -1,12 +1,5 @@
 package tasks
 
-import "github.com/deemount/gobpmn/models/bpmn/attributes"
-
-type STR_PTR *string
-
-type DOCUMENTATION_PTR *attributes.Documentation
-type EXTENSION_ELEMENTS_PTR *attributes.ExtensionElements
-
 type BUSINESS_RULE_TASK_PTR *BusinessRuleTask
 type TASK_PTR *Task
 type USER_TASK_PTR *UserTask

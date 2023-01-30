@@ -1,13 +1,83 @@
 package canvas
 
+import (
+	"fmt"
+	"log"
+	"strconv"
+)
+
+// getDefaultCoordinates ...
+func (p DelegateParameter) getDefaultCoordinates() (int, int) {
+	var x, y int
+	switch p.T {
+	case "event":
+		x, y = 179, 159
+	case "pool":
+		x, y = 600, 250
+	case "startevent":
+		x, y = 179, 159
+	}
+	return x, y
+}
+
+// getDefaultElementSize ...
+func (p DelegateParameter) getDefaultElementSize() (int, int) {
+	var width, height int
+	switch p.T {
+	case "activity":
+		width, height = 100, 80
+	case "event":
+		width, height = 36, 36
+	case "pool":
+		width, height = 600, 250
+	case "startevent":
+		width, height = 36, 36
+
+	}
+	return width, height
+}
+
+// setBounds ...
+func (p DelegateParameter) setBounds() {
+	p.S.SetBounds()
+	if p.B.X == 0 && p.B.Y == 0 {
+		p.B.X, p.B.Y = p.getDefaultCoordinates()
+	}
+	p.S.GetBounds().SetCoordinates(p.B.X, p.B.Y)
+	if p.B.Width == 0 && p.B.Height == 0 {
+		p.B.Width, p.B.Height = p.getDefaultElementSize()
+	}
+	p.S.GetBounds().SetSize(p.B.Width, p.B.Height)
+}
+
+/*
+ *
+ */
+
 // SetShape ...
 // d *Shape, typ string, hash string, b Bounds
 func SetShape(p DelegateParameter) {
-	p.S.SetID(p.T, p.H)
+
+	if p.S == nil && p.E == nil {
+		log.Fatal("fatal: missing element pointer in canvas.SetShape()")
+	}
+
+	if p.T == "startevent" {
+		// if startevent selected, then count up the _BPMNShape_StartEvent ID
+		// NOTICE: Seen somewhere in the Camunda Modeller between Version 5 and 8.
+		//         I really don't know, if it's making sense or for what the engine
+		//         needs it later.
+		// TODO: Find out, if it's needed to count up the Shape ID in this special case
+		newHash, _ := strconv.Atoi(p.H)
+		newHash += 1
+		p.S.SetID(p.T, fmt.Sprint(newHash))
+
+	} else {
+		p.S.SetID(p.T, p.H)
+	}
+
 	p.S.SetElement(p.T, p.H)
-	p.S.SetBounds()
-	p.S.GetBounds().SetCoordinates(p.B.X, p.B.Y)
-	p.S.GetBounds().SetSize(p.B.Width, p.B.Height)
+	p.setBounds()
 }
 
 // SetEdge ...

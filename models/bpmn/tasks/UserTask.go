@@ -139,54 +139,54 @@ func (utask UserTask) GetName() impl.STR_PTR {
 /** Camunda **/
 
 // GetCamundaFormKey ...
-func (utask UserTask) GetCamundaFormKey() *string {
+func (utask UserTask) GetCamundaFormKey() impl.STR_PTR {
 	return &utask.CamundaFormKey
 }
 
 // GetCamundaAsyncBefore ...
-func (utask UserTask) GetCamundaAsyncBefore() *bool {
+func (utask UserTask) GetCamundaAsyncBefore() impl.BOOL_PTR {
 	return &utask.CamundaAsyncBefore
 }
 
 // GetCamundaAsyncAfter ...
-func (utask UserTask) GetCamundaAsyncAfter() *bool {
+func (utask UserTask) GetCamundaAsyncAfter() impl.BOOL_PTR {
 	return &utask.CamundaAsyncAfter
 }
 
 // GetCamundaJobPriority ...
-func (utask UserTask) GetCamundaJobPriority() *int {
+func (utask UserTask) GetCamundaJobPriority() impl.INT_PTR {
 	return &utask.CamundaJobPriority
 }
 
 // GetCamundaAssignee ...
-func (utask UserTask) GetCamundaAssignee() *string {
+func (utask UserTask) GetCamundaAssignee() impl.STR_PTR {
 	return &utask.CamundaAssignee
 }
 
 // GetCamundaCandidUsers ...
-func (ut UserTask) GetCamundaCandidateUsers() *string {
+func (ut UserTask) GetCamundaCandidateUsers() impl.STR_PTR {
 	return &ut.CamundaCandidateUsers
 }
 
 // GetCamundaCandidGroups ...
-func (ut UserTask) GetCamundaCandidateGroups() *string {
+func (ut UserTask) GetCamundaCandidateGroups() impl.STR_PTR {
 	return &ut.CamundaCandidateGroups
 }
 
 // GetCamundaDueDate ...
 // rule: due date as an EL expression, e.g. {someDate} or as an ISO date, like 2015-06-29T09:54:00
-func (utask UserTask) GetCamundaDueDate() *string {
+func (utask UserTask) GetCamundaDueDate() impl.STR_PTR {
 	return &utask.CamundaDueDate
 }
 
 // GetCamundaFollowUpDate
 // rule: due date as an EL expression, e.g. {someDate} or as an ISO date, like 2015-06-29T09:54:00
-func (utask UserTask) GetCamundaFollowUpDate() *string {
+func (utask UserTask) GetCamundaFollowUpDate() impl.STR_PTR {
 	return &utask.CamundaFollowUpDate
 }
 
 // GetCamundaPriority ...
-func (utask UserTask) GetCamundaPriority() *int {
+func (utask UserTask) GetCamundaPriority() impl.INT_PTR {
 	return &utask.CamundaPriority
 }
 

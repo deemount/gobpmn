@@ -287,42 +287,42 @@ func (adhoc AdHocSubProcess) GetEndEvent(num int) *elements.EndEvent {
 /*** Tasks ***/
 
 // GetBusinessRuleTask ...
-func (adhoc AdHocSubProcess) GetBusinessRuleTask(num int) *tasks.BusinessRuleTask {
+func (adhoc AdHocSubProcess) GetBusinessRuleTask(num int) tasks.BUSINESS_RULE_TASK_PTR {
 	return &adhoc.BusinessRuleTask[num]
 }
 
 // GetTask ...
-func (adhoc AdHocSubProcess) GetTask(num int) *tasks.Task {
+func (adhoc AdHocSubProcess) GetTask(num int) tasks.TASK_PTR {
 	return &adhoc.Task[num]
 }
 
 // GetUserTask ...
-func (adhoc AdHocSubProcess) GetUserTask(num int) *tasks.UserTask {
+func (adhoc AdHocSubProcess) GetUserTask(num int) tasks.USER_TASK_PTR {
 	return &adhoc.UserTask[num]
 }
 
 // GetManualTask ...
-func (adhoc AdHocSubProcess) GetManualTask(num int) *tasks.ManualTask {
+func (adhoc AdHocSubProcess) GetManualTask(num int) tasks.MANUAL_TASK_PTR {
 	return &adhoc.ManualTask[num]
 }
 
 // GetReceiveTask ...
-func (adhoc AdHocSubProcess) GetReceiveTask(num int) *tasks.ReceiveTask {
+func (adhoc AdHocSubProcess) GetReceiveTask(num int) tasks.RECEIVE_TASK_PTR {
 	return &adhoc.ReceiveTask[num]
 }
 
 // GetScriptTask ...
-func (adhoc AdHocSubProcess) GetScriptTask(num int) *tasks.ScriptTask {
+func (adhoc AdHocSubProcess) GetScriptTask(num int) tasks.SCRIPT_TASK_PTR {
 	return &adhoc.ScriptTask[num]
 }
 
 // GetSendTask ...
-func (adhoc AdHocSubProcess) GetSendTask(num int) *tasks.SendTask {
+func (adhoc AdHocSubProcess) GetSendTask(num int) tasks.SEND_TASK_PTR {
 	return &adhoc.SendTask[num]
 }
 
 // GetServiceTask ...
-func (adhoc AdHocSubProcess) GetServiceTask(num int) *tasks.ServiceTask {
+func (adhoc AdHocSubProcess) GetServiceTask(num int) tasks.SERVICE_TASK_PTR {
 	return &adhoc.ServiceTask[num]
 }
 
@@ -341,27 +341,27 @@ func (adhoc AdHocSubProcess) GetAdHocSubProcess(num int) *AdHocSubProcess {
 /*** Gateway ***/
 
 // GetExclusiveGateway
-func (adhoc AdHocSubProcess) GetExclusiveGateway(num int) *gateways.ExclusiveGateway {
+func (adhoc AdHocSubProcess) GetExclusiveGateway(num int) gateways.EXCLUSIVE_GATEWAY_PTR {
 	return &adhoc.ExclusiveGateway[num]
 }
 
 // GetInclsuiveGateway
-func (adhoc AdHocSubProcess) GetInclusiveGateway(num int) *gateways.InclusiveGateway {
+func (adhoc AdHocSubProcess) GetInclusiveGateway(num int) gateways.INCLUSIVE_GATEWAY_PTR {
 	return &adhoc.InclusiveGateway[num]
 }
 
 // GetParallelGateway
-func (adhoc AdHocSubProcess) GetParallelGateway(num int) *gateways.ParallelGateway {
+func (adhoc AdHocSubProcess) GetParallelGateway(num int) gateways.PARALLEL_GATEWAY_PTR {
 	return &adhoc.ParallelGateway[num]
 }
 
 // GetComplexGateway
-func (adhoc AdHocSubProcess) GetComplexGateway(num int) *gateways.ComplexGateway {
+func (adhoc AdHocSubProcess) GetComplexGateway(num int) gateways.COMPLEX_GATEWAY_PTR {
 	return &adhoc.ComplexGateway[num]
 }
 
 // GetEventBasedGateway
-func (adhoc AdHocSubProcess) GetEventBasedGateway(num int) *gateways.EventBasedGateway {
+func (adhoc AdHocSubProcess) GetEventBasedGateway(num int) gateways.EVENT_BASED_GATEWAYS_PTR {
 	return &adhoc.EventBasedGateway[num]
 }
 

@@ -15,13 +15,12 @@ type CanvasLabelElements interface {
 // BoundsRepository ...
 type BoundsRepository interface {
 	impl.IFBaseCoordinates
-
 	SetSize(width, height int)
-	GetSize() (*int, *int)
+	GetSize() (impl.INT_PTR, impl.INT_PTR)
 	SetWidth(width int)
-	GetWidth() *int
+	GetWidth() impl.INT_PTR
 	SetHeight(height int)
-	GetHeight() *int
+	GetHeight() impl.INT_PTR
 }
 
 // WaypointRepository ...

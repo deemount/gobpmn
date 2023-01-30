@@ -19,7 +19,7 @@ type MarkerBaseReferences interface {
 
 // MarkerFlow ...
 type MarkerFlow interface {
-	SetFlow(suffix string)
+	SetFlow(suffix interface{})
 	GetFlow() *string
 }
 

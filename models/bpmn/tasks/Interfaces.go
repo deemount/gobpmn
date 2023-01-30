@@ -21,11 +21,11 @@ type TasksMarkers interface {
 
 type TasksCamundaBase interface {
 	SetCamundaAsyncBefore(asyncBefore bool)
-	GetCamundaAsyncBefore() *bool
+	GetCamundaAsyncBefore() impl.BOOL_PTR
 	SetCamundaAsyncAfter(asyncAfter bool)
-	GetCamundaAsyncAfter() *bool
+	GetCamundaAsyncAfter() impl.BOOL_PTR
 	SetCamundaJobPriority(priority int)
-	GetCamundaJobPriority() *int
+	GetCamundaJobPriority() impl.INT_PTR
 }
 
 type TasksBaseCoreElements interface {
@@ -42,31 +42,35 @@ type TasksBase interface {
 	TasksBaseCoreElements
 }
 
+/*
+ * @Repositories
+ */
+
 // TasksElementsRepository ...
 type TasksElementsRepository interface {
 	SetBusinessRuleTask(num int)
-	GetBusinessRuleTask(num int) *BusinessRuleTask
+	GetBusinessRuleTask(num int) BUSINESS_RULE_TASK_PTR
 	SetTask(num int)
-	GetTask(num int) *Task
+	GetTask(num int) TASK_PTR
 	SetUserTask(num int)
-	GetUserTask(num int) *UserTask
+	GetUserTask(num int) USER_TASK_PTR
 	SetManualTask(num int)
-	GetManualTask(num int) *ManualTask
+	GetManualTask(num int) MANUAL_TASK_PTR
 	SetReceiveTask(num int)
-	GetReceiveTask(num int) *ReceiveTask
+	GetReceiveTask(num int) RECEIVE_TASK_PTR
 	SetScriptTask(num int)
-	GetScriptTask(num int) *ScriptTask
+	GetScriptTask(num int) SCRIPT_TASK_PTR
 	SetSendTask(num int)
-	GetSendTask(num int) *SendTask
+	GetSendTask(num int) SEND_TASK_PTR
 	SetServiceTask(num int)
-	GetServiceTask(num int) *ServiceTask
+	GetServiceTask(num int) SERVICE_TASK_PTR
 }
 
 // BusinessRuleTaskRepository ...
 type BusinessRuleTaskRepository interface {
 	TasksBase
 	SetCamundaClass(class string)
-	GetCamundaClass() *string
+	GetCamundaClass() impl.STR_PTR
 	String() string
 }
 
@@ -80,7 +84,7 @@ type ManualTaskRepository interface {
 type ReceiveTaskRepository interface {
 	TasksBase
 	SetMessageRef(suffix string)
-	GetMessageRef(suffix string) *string
+	GetMessageRef(suffix string) impl.STR_PTR
 	String() string
 }
 
@@ -114,18 +118,18 @@ type TaskRepository interface {
 type UserTaskRepository interface {
 	TasksBase
 	SetCamundaFormKey(formKey string)
-	GetCamundaFormKey() *string
+	GetCamundaFormKey() impl.STR_PTR
 	SetCamundaAssignee(assignee string)
-	GetCamundaAssignee() *string
+	GetCamundaAssignee() impl.STR_PTR
 	SetCamundaCandidateUsers(users string)
-	GetCamundaCandidateUsers() *string
+	GetCamundaCandidateUsers() impl.STR_PTR
 	SetCamundaCandidateGroups(groups string)
-	GetCamundaCandidateGroups() *string
+	GetCamundaCandidateGroups() impl.STR_PTR
 	SetCamundaDueDate(due string)
-	GetCamundaDueDate() *string
+	GetCamundaDueDate() impl.STR_PTR
 	SetCamundaFollowUpDate(followUp string)
-	GetCamundaFollowUpDate() *string
+	GetCamundaFollowUpDate() impl.STR_PTR
 	SetCamundaPriority(priority int)
-	GetCamundaPriority() *int
+	GetCamundaPriority() impl.INT_PTR
 	String() string
 }

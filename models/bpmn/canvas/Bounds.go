@@ -1,5 +1,7 @@
 package canvas
 
+import "github.com/deemount/gobpmn/models/bpmn/impl"
+
 // NewBounds ...
 func NewBounds() BoundsRepository {
 	return &Bounds{}
@@ -46,31 +48,31 @@ func (bnds *Bounds) SetHeight(height int) {
  */
 
 // GetCoordinates ...
-func (bnds Bounds) GetCoordinates() (*int, *int) {
+func (bnds Bounds) GetCoordinates() (impl.INT_PTR, impl.INT_PTR) {
 	return &bnds.X, &bnds.Y
 }
 
 // GetX ...
-func (bnds Bounds) GetX() *int {
+func (bnds Bounds) GetX() impl.INT_PTR {
 	return &bnds.X
 }
 
 // GetY ...
-func (bnds Bounds) GetY() *int {
+func (bnds Bounds) GetY() impl.INT_PTR {
 	return &bnds.Y
 }
 
 // GetSize ...
-func (bnds Bounds) GetSize() (*int, *int) {
+func (bnds Bounds) GetSize() (impl.INT_PTR, impl.INT_PTR) {
 	return &bnds.Width, &bnds.Height
 }
 
 // GetWidth ...
-func (bnds Bounds) GetWidth() *int {
+func (bnds Bounds) GetWidth() impl.INT_PTR {
 	return &bnds.Width
 }
 
 // GetHeight ...
-func (bnds Bounds) GetHeight() *int {
+func (bnds Bounds) GetHeight() impl.INT_PTR {
 	return &bnds.Height
 }

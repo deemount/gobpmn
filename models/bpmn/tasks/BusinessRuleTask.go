@@ -104,22 +104,22 @@ func (businessRuleTask BusinessRuleTask) GetName() impl.STR_PTR {
 /** Camunda **/
 
 // GetCamundaAsyncBefore ...
-func (businessRuleTask BusinessRuleTask) GetCamundaAsyncBefore() *bool {
+func (businessRuleTask BusinessRuleTask) GetCamundaAsyncBefore() impl.BOOL_PTR {
 	return &businessRuleTask.CamundaAsyncBefore
 }
 
 // GetCamundaAsyncAfter ...
-func (businessRuleTask BusinessRuleTask) GetCamundaAsyncAfter() *bool {
+func (businessRuleTask BusinessRuleTask) GetCamundaAsyncAfter() impl.BOOL_PTR {
 	return &businessRuleTask.CamundaAsyncAfter
 }
 
 // GetCamundaJobPriority ...
-func (businessRuleTask BusinessRuleTask) GetCamundaJobPriority() *int {
+func (businessRuleTask BusinessRuleTask) GetCamundaJobPriority() impl.INT_PTR {
 	return &businessRuleTask.CamundaJobPriority
 }
 
 // GetCamundaClass ...
-func (businessRuleTask BusinessRuleTask) GetCamundaClass() *string {
+func (businessRuleTask BusinessRuleTask) GetCamundaClass() impl.STR_PTR {
 	return &businessRuleTask.CamundaClass
 }
 

@@ -350,42 +350,42 @@ func (process Process) GetIntermediateThrowEvent(num int) *elements.Intermediate
 /*** Tasks ***/
 
 // GetBusinessRuleTask ...
-func (process Process) GetBusinessRuleTask(num int) *tasks.BusinessRuleTask {
+func (process Process) GetBusinessRuleTask(num int) tasks.BUSINESS_RULE_TASK_PTR {
 	return &process.BusinessRuleTask[num]
 }
 
 // GetTask ...
-func (process Process) GetTask(num int) *tasks.Task {
+func (process Process) GetTask(num int) tasks.TASK_PTR {
 	return &process.Task[num]
 }
 
 // GetUserTask ...
-func (process Process) GetUserTask(num int) *tasks.UserTask {
+func (process Process) GetUserTask(num int) tasks.USER_TASK_PTR {
 	return &process.UserTask[num]
 }
 
 // GetManualTask ...
-func (process Process) GetManualTask(num int) *tasks.ManualTask {
+func (process Process) GetManualTask(num int) tasks.MANUAL_TASK_PTR {
 	return &process.ManualTask[num]
 }
 
 // GetReceiveTask ...
-func (process Process) GetReceiveTask(num int) *tasks.ReceiveTask {
+func (process Process) GetReceiveTask(num int) tasks.RECEIVE_TASK_PTR {
 	return &process.ReceiveTask[num]
 }
 
 // GetScriptTask ...
-func (process Process) GetScriptTask(num int) *tasks.ScriptTask {
+func (process Process) GetScriptTask(num int) tasks.SCRIPT_TASK_PTR {
 	return &process.ScriptTask[num]
 }
 
 // GetSendTask ...
-func (process Process) GetSendTask(num int) *tasks.SendTask {
+func (process Process) GetSendTask(num int) tasks.SEND_TASK_PTR {
 	return &process.SendTask[num]
 }
 
 // GetServiceTask ...
-func (process Process) GetServiceTask(num int) *tasks.ServiceTask {
+func (process Process) GetServiceTask(num int) tasks.SERVICE_TASK_PTR {
 	return &process.ServiceTask[num]
 }
 
@@ -412,27 +412,27 @@ func (process Process) GetAdHocSubProcess(num int) *subprocesses.AdHocSubProcess
 /*** Gateways ***/
 
 // GetExclusiveGateway
-func (process Process) GetExclusiveGateway(num int) *gateways.ExclusiveGateway {
+func (process Process) GetExclusiveGateway(num int) gateways.EXCLUSIVE_GATEWAY_PTR {
 	return &process.ExclusiveGateway[num]
 }
 
 // GetInclsuiveGateway
-func (process Process) GetInclusiveGateway(num int) *gateways.InclusiveGateway {
+func (process Process) GetInclusiveGateway(num int) gateways.INCLUSIVE_GATEWAY_PTR {
 	return &process.InclusiveGateway[num]
 }
 
 // GetParallelGateway
-func (process Process) GetParallelGateway(num int) *gateways.ParallelGateway {
+func (process Process) GetParallelGateway(num int) gateways.PARALLEL_GATEWAY_PTR {
 	return &process.ParallelGateway[num]
 }
 
 // GetComplexGateway
-func (process Process) GetComplexGateway(num int) *gateways.ComplexGateway {
+func (process Process) GetComplexGateway(num int) gateways.COMPLEX_GATEWAY_PTR {
 	return &process.ComplexGateway[num]
 }
 
 // GetEventBasedGateway
-func (process Process) GetEventBasedGateway(num int) *gateways.EventBasedGateway {
+func (process Process) GetEventBasedGateway(num int) gateways.EVENT_BASED_GATEWAYS_PTR {
 	return &process.EventBasedGateway[num]
 }
 

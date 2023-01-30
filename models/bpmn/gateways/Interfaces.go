@@ -3,17 +3,18 @@ package gateways
 import (
 	"github.com/deemount/gobpmn/models/bpmn/attributes"
 	"github.com/deemount/gobpmn/models/bpmn/camunda"
+	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
 )
 
 type GatewayID interface {
 	SetID(typ string, suffix interface{})
-	GetID() STR_PTR
+	GetID() impl.STR_PTR
 }
 
 type GatewayName interface {
 	SetName(name string)
-	GetName() STR_PTR
+	GetName() impl.STR_PTR
 }
 
 type GatewayBase interface {
@@ -26,15 +27,15 @@ type GatewayBase interface {
 
 type GatewaysElementsRepository interface {
 	SetExclusiveGateway(num int)
-	GetExclusiveGateway(num int) *ExclusiveGateway
+	GetExclusiveGateway(num int) EXCLUSIVE_GATEWAY_PTR
 	SetInclusiveGateway(num int)
-	GetInclusiveGateway(num int) *InclusiveGateway
+	GetInclusiveGateway(num int) INCLUSIVE_GATEWAY_PTR
 	SetParallelGateway(num int)
-	GetParallelGateway(num int) *ParallelGateway
+	GetParallelGateway(num int) PARALLEL_GATEWAY_PTR
 	SetComplexGateway(num int)
-	GetComplexGateway(num int) *ComplexGateway
+	GetComplexGateway(num int) COMPLEX_GATEWAY_PTR
 	SetEventBasedGateway(num int)
-	GetEventBasedGateway(num int) *EventBasedGateway
+	GetEventBasedGateway(num int) EVENT_BASED_GATEWAYS_PTR
 }
 
 // ComplexGatewayRepository ...

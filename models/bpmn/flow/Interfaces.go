@@ -13,9 +13,9 @@ import (
 // FlowBaseReference ...
 type FlowBaseReferences interface {
 	SetSourceRef(typ string, sourceRef interface{})
-	GetSourceRef() *string
+	GetSourceRef() impl.STR_PTR
 	SetTargetRef(typ string, targetRef interface{})
-	GetTargetRef() *string
+	GetTargetRef() impl.STR_PTR
 }
 
 // FlowSequenceFlow ...

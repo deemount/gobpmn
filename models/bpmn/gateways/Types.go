@@ -1,6 +1,10 @@
 package gateways
 
-type STR_PTR *string
+type EXCLUSIVE_GATEWAY_PTR *ExclusiveGateway
+type INCLUSIVE_GATEWAY_PTR *InclusiveGateway
+type PARALLEL_GATEWAY_PTR *ParallelGateway
+type COMPLEX_GATEWAY_PTR *ComplexGateway
+type EVENT_BASED_GATEWAYS_PTR *EventBasedGateway
 
 type EXCLUSIVE_GATEWAY_SLC []ExclusiveGateway
 type INCLUSIVE_GATEWAY_SLC []InclusiveGateway

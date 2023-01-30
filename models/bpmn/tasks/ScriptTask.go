@@ -97,17 +97,17 @@ func (scriptTask ScriptTask) GetName() impl.STR_PTR {
 /** Camunda **/
 
 // GetCamundaAsyncBefore ...
-func (scriptTask ScriptTask) GetCamundaAsyncBefore() *bool {
+func (scriptTask ScriptTask) GetCamundaAsyncBefore() impl.BOOL_PTR {
 	return &scriptTask.CamundaAsyncBefore
 }
 
 // GetCamundaAsyncAfter ...
-func (scriptTask ScriptTask) GetCamundaAsyncAfter() *bool {
+func (scriptTask ScriptTask) GetCamundaAsyncAfter() impl.BOOL_PTR {
 	return &scriptTask.CamundaAsyncAfter
 }
 
 // GetCamundaJobPriority ...
-func (scriptTask ScriptTask) GetCamundaJobPriority() *int {
+func (scriptTask ScriptTask) GetCamundaJobPriority() impl.INT_PTR {
 	return &scriptTask.CamundaJobPriority
 }
 

@@ -11,8 +11,8 @@ func SetID(typ string, suffix interface{}) string {
 	case "event":
 		r = fmt.Sprintf("Event_%v", suffix)
 		break
-	case "counter":
-		r = fmt.Sprintf("StartEvent_%d", suffix)
+	case "startevent":
+		r = fmt.Sprintf("StartEvent_%v", suffix)
 		break
 	case "id":
 		r = fmt.Sprintf("%s", suffix)
@@ -34,7 +34,7 @@ func SetIntermediateCatchEvent(e *IntermediateCatchEvent, name string, hash ...s
 // SetStartEvent ...
 // e *StartEvent, name string, hash ...string
 func SetStartEvent(p DelegateParameter) {
-	p.SE.SetID("event", p.H[0])
+	p.SE.SetID(p.T, p.H[0])
 	p.SE.SetName(p.N)
 	p.SE.SetOutgoing(1)
 	p.SE.GetOutgoing(0).SetFlow(p.H[1])
@@ -43,7 +43,7 @@ func SetStartEvent(p DelegateParameter) {
 // SetEndEvent ...
 // e *EndEvent, name string, hash ...string
 func SetEndEvent(p DelegateParameter) {
-	p.EE.SetID("event", p.H[0])
+	p.EE.SetID(p.T, p.H[0])
 	p.EE.SetName(p.N)
 	p.EE.SetIncoming(1)
 	p.EE.GetIncoming(0).SetFlow(p.H[1])

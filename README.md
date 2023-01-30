@@ -6,7 +6,7 @@ Author: Salvatore Gonda
 
 ## Introduction ##
 
-This is part of my journey through BPMN. To teach myself, I opened the Camunda Modeler, switch to XML tab and modelled the xsd template in Go.
+This is part of my journey through BPMN. To teach myself, I opened the Camunda Modeler, switch to XML tab and modelled the xsd template in Go. 
 
 ### Status ###
 
@@ -25,15 +25,45 @@ import (
  "github.com/deemount/gobpmn/repository"
 )
 
+var bpmnFactory repository.BpmnFactory
+var bpmnEngine repository.BpmnEngine
+
+// init ...
+func init() {
+  log.Println("main: init factory")
+  bpmnFactory = repository.NewBpmnFactory()
+  log.Println("main: init engine")
+  bpmnEngine = repository.NewBpmnEngine("goBPMN")
+  log.Println("main: init process instance")
+  instance = repository.NewProcessInstance(bpmnEngine)
+}
+
+// main ...
 func main() {
+  log.Println("main: bpmnFactory.Create")
+  file, err := bpmnFactory.Create()
+  if err != nil {
+    panic(err)
+  }
 
- bpmnf := repository.NewBPMNF()
- bpmnf.Set()
- err := bpmnf.Create()
- if err != nil {
-  panic(err)
- }
+  log.Println("main: instance.GetProcessInfo")
+  processInfo, err = instance.GetProcessInfo(context.Background(), file)
+  if err != nil {
+    panic(err)
+  }
 
+  log.Println("main: instance.Create")
+  instanceInfo, err := instance.Create(processInfo.ProcessKey, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  log.Println("main: instance.Run")
+  if err = instance.Run(instanceInfo); err != nil {
+    panic(err)
+  } else {
+    log.Println("main: do your stuff here")
+  }
 }
 ```
 

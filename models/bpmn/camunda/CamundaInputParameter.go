@@ -1,5 +1,7 @@
 package camunda
 
+import "github.com/deemount/gobpmn/models/bpmn/impl"
+
 // NewCamundaInputParameter
 func NewCamundaInputParameter() CamundaInputParameterRepository {
 	return &CamundaInputParameter{}
@@ -51,12 +53,12 @@ func (inputParameter *CamundaInputParameter) SetCamundaMap() {
 /** BPMN **/
 
 // GetLocalVariableName ...
-func (inputParameter CamundaInputParameter) GetLocalVariableName() *string {
+func (inputParameter CamundaInputParameter) GetLocalVariableName() impl.STR_PTR {
 	return &inputParameter.LocalVariableName
 }
 
 // GetVariableAssignmentValue ...
-func (inputParameter CamundaInputParameter) GetVariableAssignmentValue() *string {
+func (inputParameter CamundaInputParameter) GetVariableAssignmentValue() impl.STR_PTR {
 	return &inputParameter.VariableAssignmentValue
 }
 

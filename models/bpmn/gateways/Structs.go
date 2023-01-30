@@ -7,6 +7,19 @@ import (
 	"github.com/deemount/gobpmn/models/bpmn/marker"
 )
 
+// DelegateParameter ...
+type DelegateParameter struct {
+	CG  *ComplexGateway
+	EBG *EventBasedGateway
+	EG  *ExclusiveGateway
+	IG  *InclusiveGateway
+	PG  *ParallelGateway
+}
+
+/*
+ * Elementary
+ */
+
 // Gateways ...
 type Gateways struct {
 	ExclusiveGateway  EXCLUSIVE_GATEWAY_SLC    `xml:"bpmn:exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty" csv:"-"`

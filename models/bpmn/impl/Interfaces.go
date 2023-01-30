@@ -7,7 +7,7 @@ type IFBaseID interface {
 
 type IFBaseListenerID interface {
 	SetListenerID(listenerID string)
-	GetListenerID() *string
+	GetListenerID() STR_PTR
 }
 
 type IFBaseName interface {
@@ -37,49 +37,49 @@ type IFBaseClass interface {
 
 type IFBaseLabel interface {
 	SetLabel(label string)
-	GetLabel() *string
+	GetLabel() STR_PTR
 }
 
 type IFBaseType interface {
 	SetType(typ string)
-	GetType() *string
+	GetType() STR_PTR
 }
 
 type IFBaseConfig interface {
 	SetConfig(config string)
-	GetConfig() *string
+	GetConfig() STR_PTR
 }
 
 type IFBaseKey interface {
 	SetKey(key string)
-	GetKey() *string
+	GetKey() STR_PTR
 }
 
 type IFBaseDefaultValue interface {
 	SetDefaultValue(defaultValue string)
-	GetDefaultValue() *string
+	GetDefaultValue() STR_PTR
 }
 
 type IFBaseScriptFormat interface {
 	SetScriptFormat(format string)
-	GetScriptFormat() *string
+	GetScriptFormat() STR_PTR
 }
 
 type IFBaseLocalVariableName interface {
 	SetLocalVariableName(variable string)
-	GetLocalVariableName() *string
+	GetLocalVariableName() STR_PTR
 }
 
 type IFBaseVariableAssignmentValue interface {
 	SetVariableAssignmentValue(value string)
-	GetVariableAssignmentValue() *string
+	GetVariableAssignmentValue() STR_PTR
 }
 
 type IFBaseCoordinates interface {
 	SetCoordinates(x, y int)
-	GetCoordinates() (*int, *int)
+	GetCoordinates() (INT_PTR, INT_PTR)
 	SetX(x int)
-	GetX() *int
+	GetX() INT_PTR
 	SetY(y int)
-	GetY() *int
+	GetY() INT_PTR
 }

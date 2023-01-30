@@ -431,6 +431,7 @@ func (cp *collaborativeProcess) setCustomerSupportStartEvent() {
 	elements.SetStartEvent(
 		elements.DelegateParameter{
 			SE: e,
+			T:  "event",
 			N:  "Begin of Customer Support Process",
 			H:  []string{cp.CustomerSupportStartEventHash, cp.FromCustomerSupportStartEventHash}})
 	canvas.SetShape(
@@ -438,7 +439,7 @@ func (cp *collaborativeProcess) setCustomerSupportStartEvent() {
 			S: d,
 			T: "event",
 			H: cp.CustomerSupportStartEventHash,
-			B: canvas.Bounds{X: 225, Y: 142, Width: 36, Height: 36}})
+			B: canvas.Bounds{X: 225, Y: 142}})
 }
 
 // setCustomerSupportEndEvent ...
@@ -447,6 +448,7 @@ func (cp *collaborativeProcess) setCustomerSupportEndEvent() {
 	elements.SetEndEvent(
 		elements.DelegateParameter{
 			EE: e,
+			T:  "event",
 			N:  "End of Customer Support Process",
 			H:  []string{cp.CustomerSupportEndEventHash, cp.FromDenyWarrantyClaimHash}})
 	canvas.SetShape(
@@ -454,7 +456,7 @@ func (cp *collaborativeProcess) setCustomerSupportEndEvent() {
 			S: d,
 			T: "event",
 			H: cp.CustomerSupportEndEventHash,
-			B: canvas.Bounds{X: 822, Y: 142, Width: 36, Height: 36}})
+			B: canvas.Bounds{X: 822, Y: 142}})
 }
 
 // setCheckIncomingClaim ...
@@ -471,7 +473,7 @@ func (cp *collaborativeProcess) setCheckIncomingClaim() {
 			S: d,
 			T: "activity",
 			H: cp.CheckIncomingClaimHash,
-			B: canvas.Bounds{X: 320, Y: 120, Width: 100, Height: 80}})
+			B: canvas.Bounds{X: 320, Y: 120}})
 }
 
 // setDenyWarrantyClaim ...
@@ -488,7 +490,7 @@ func (cp *collaborativeProcess) setDenyWarrantyClaim() {
 			S: d,
 			T: "activity",
 			H: cp.DenyWarrantyClaimHash,
-			B: canvas.Bounds{X: 580, Y: 120, Width: 100, Height: 80}})
+			B: canvas.Bounds{X: 580, Y: 120}})
 }
 
 // fromCustomerSupportStartEvent ...
@@ -639,6 +641,7 @@ func (cp *collaborativeProcess) setCustomerStartEvent() {
 	elements.SetStartEvent(
 		elements.DelegateParameter{
 			SE: e,
+			T:  "event",
 			N:  "Begin of Customer Process",
 			H:  []string{cp.CustomerStartEventHash, cp.FromCustomerStartEventHash}})
 	canvas.SetShape(
@@ -646,7 +649,7 @@ func (cp *collaborativeProcess) setCustomerStartEvent() {
 			S: d,
 			T: "event",
 			H: cp.CustomerStartEventHash,
-			B: canvas.Bounds{X: 225, Y: 422, Width: 36, Height: 36}})
+			B: canvas.Bounds{X: 225, Y: 422}})
 }
 
 // setCustomerEndEvent ...
@@ -655,6 +658,7 @@ func (cp *collaborativeProcess) setCustomerEndEvent() {
 	elements.SetEndEvent(
 		elements.DelegateParameter{
 			EE: e,
+			T:  "event",
 			N:  "End of Customer Process",
 			H:  []string{cp.CustomerEndEventHash, cp.FromReceiptWarrantyRefusalHash}})
 	canvas.SetShape(
@@ -662,7 +666,7 @@ func (cp *collaborativeProcess) setCustomerEndEvent() {
 			S: d,
 			T: "event",
 			H: cp.CustomerEndEventHash,
-			B: canvas.Bounds{X: 822, Y: 422, Width: 36, Height: 36}})
+			B: canvas.Bounds{X: 822, Y: 422}})
 }
 
 /**
@@ -687,7 +691,7 @@ func (cp *collaborativeProcess) setNoticeOfDefect() {
 			S: d,
 			T: "activity",
 			H: cp.NoticeOfDefectHash,
-			B: canvas.Bounds{X: 320, Y: 400, Width: 100, Height: 80}})
+			B: canvas.Bounds{X: 320, Y: 400}})
 }
 
 // setWaitingForAnswer ...
@@ -701,7 +705,7 @@ func (cp *collaborativeProcess) setWaitingForAnswer() {
 			S: d,
 			T: "event",
 			H: cp.WaitingForAnswerHash,
-			B: canvas.Bounds{X: 482, Y: 422, Width: 36, Height: 36}})
+			B: canvas.Bounds{X: 482, Y: 422}})
 }
 
 // setReceiptWarrantyRefusal ...
@@ -718,7 +722,7 @@ func (cp *collaborativeProcess) setReceiptWarrantyRefusal() {
 			S: d,
 			T: "activity",
 			H: cp.ReceiptWarrantyRefusalHash,
-			B: canvas.Bounds{X: 580, Y: 400, Width: 100, Height: 80}})
+			B: canvas.Bounds{X: 580, Y: 400}})
 }
 
 /**
@@ -836,7 +840,7 @@ func (cp collaborativeProcess) customerSupportEndEvent() (*elements.EndEvent, *c
 }
 
 // checkIncomingClaim ...
-func (cp collaborativeProcess) checkIncomingClaim() (*tasks.Task, *canvas.Shape) {
+func (cp collaborativeProcess) checkIncomingClaim() (tasks.TASK_PTR, *canvas.Shape) {
 	task := cp.customerSupportProcess().GetTask(0)
 	shape := cp.shapeCheckIncomingClaim(cp.plane())
 	return task, shape
@@ -973,10 +977,12 @@ func (cp *collaborativeProcess) setDiagram() {
 	var n int64 = 1
 	diagram := cp.diagram()
 	diagram.SetID("diagram", n)
-	// plane attributes
-	p := cp.plane()
-	p.SetID("plane", n)
-	p.SetElement("id", cp.CollaborationID)
+	/*
+		// plane attributes
+		p := cp.plane()
+		p.SetID("plane", n)
+		p.SetElement("id", cp.CollaborationID)
+	*/
 }
 
 // diagram ...

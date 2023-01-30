@@ -111,12 +111,12 @@ func (messageFlow MessageFlow) GetName() impl.STR_PTR {
 }
 
 // GetSourceRef ...
-func (messageFlow MessageFlow) GetSourceRef() *string {
+func (messageFlow MessageFlow) GetSourceRef() impl.STR_PTR {
 	return &messageFlow.SourceRef
 }
 
 // GetTargetRef ...
-func (messageFlow MessageFlow) GetTargetRef() *string {
+func (messageFlow MessageFlow) GetTargetRef() impl.STR_PTR {
 	return &messageFlow.TargetRef
 }
 

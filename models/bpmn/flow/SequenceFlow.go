@@ -113,12 +113,12 @@ func (sequenceFlow SequenceFlow) GetName() impl.STR_PTR {
 }
 
 // GetSourceRef ...
-func (sequenceFlow SequenceFlow) GetSourceRef() *string {
+func (sequenceFlow SequenceFlow) GetSourceRef() impl.STR_PTR {
 	return &sequenceFlow.SourceRef
 }
 
 // GetTargetRef ...
-func (sequenceFlow SequenceFlow) GetTargetRef() *string {
+func (sequenceFlow SequenceFlow) GetTargetRef() impl.STR_PTR {
 	return &sequenceFlow.TargetRef
 }
 

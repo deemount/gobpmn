@@ -1,6 +1,10 @@
 package camunda
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/deemount/gobpmn/models/bpmn/impl"
+)
 
 // NewCamundaScript ...
 func NewCamundaScript() CamundaScriptRepository {
@@ -25,6 +29,6 @@ func (cscript *CamundaScript) SetScriptFormat(format string) {
 /* Attributes */
 
 // GetScriptFormat ...
-func (cscript CamundaScript) GetScriptFormat() *string {
+func (cscript CamundaScript) GetScriptFormat() impl.STR_PTR {
 	return &cscript.ScriptFormat
 }

@@ -16,7 +16,7 @@ func NewIncoming() IncomingRepository {
 /** BPMN **/
 
 // SetFlow ...
-func (incoming *Incoming) SetFlow(suffix string) {
+func (incoming *Incoming) SetFlow(suffix interface{}) {
 	incoming.Flow = fmt.Sprintf("Flow_%s", suffix)
 }
 

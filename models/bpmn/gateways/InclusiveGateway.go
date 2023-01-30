@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/bpmn/attributes"
+	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
 )
 
@@ -88,13 +89,13 @@ func (inclusiveGateway *InclusiveGateway) SetOutgoing(num int) {
 /** BPMN **/
 
 // SetID ...
-func (inclusiveGateway InclusiveGateway) GetID() STR_PTR {
+func (inclusiveGateway InclusiveGateway) GetID() impl.STR_PTR {
 	return &inclusiveGateway.ID
 
 }
 
 // SetName ...
-func (inclusiveGateway InclusiveGateway) GetName() STR_PTR {
+func (inclusiveGateway InclusiveGateway) GetName() impl.STR_PTR {
 	return &inclusiveGateway.Name
 }
 
