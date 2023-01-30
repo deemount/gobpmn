@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/deemount/gobpmn/examples"
-	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/bpmn/core"
 )
 
 // BpmnFactory ...
@@ -71,9 +71,9 @@ func (factory *bpmnFactory) set() {
 	//factory.Repo = d.Def()
 
 	// e.g. use struct pointer (no argument)
-	structModel := examples.NewSimpleModel004()
-	d2 := structModel.Create()
-	factory.Repo = d2.Def()
+	structModel := examples.NewSimpleModel001()
+	d := structModel.Create()
+	factory.Repo = d.Def()
 
 }
 

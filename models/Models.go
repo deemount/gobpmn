@@ -3,7 +3,7 @@ package models
 import (
 	"log"
 
-	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/bpmn/core"
 )
 
 type IFModels interface {
@@ -16,7 +16,7 @@ type Models struct {
 
 func NewModels() IFModels {
 	return &Models{
-		core.NewCore()}
+		core.NewDefinitions()}
 }
 
 func (m *Models) Test() {

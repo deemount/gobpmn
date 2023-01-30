@@ -1,199 +1,195 @@
 package examples
 
 import (
-	"github.com/deemount/gobpmn/models/canvas"
-	"github.com/deemount/gobpmn/models/core"
-	"github.com/deemount/gobpmn/models/process"
-	"github.com/deemount/gobpmn/utils"
+	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/core"
+	"github.com/deemount/gobpmn/models/bpmn/events/elements"
+	"github.com/deemount/gobpmn/models/bpmn/flow"
+	"github.com/deemount/gobpmn/models/bpmn/process"
+	"github.com/deemount/gobpmn/models/bpmn/tasks"
 )
 
 // SimpleModel001Repository ...
-type SimpleModel001Repository interface {
-	GetProcess()
-	GetDiagram()
-	GetPlane()
+type SimpleModel001 interface {
+	Create() simpleModel001
 }
 
 // SimpleModel001 ...
-type SimpleModel001 struct {
-	def               *core.Definitions
-	isExecutable      bool
-	ProcessHash       string
-	StartEventCounter int64
-	FromStartEvent    string
-	TaskHash          string
-	FromTask          string
-	EndEventHash      string
+type simpleModel001 struct {
+	def            core.DefinitionsRepository
+	isExecutable   bool
+	Process        Hash
+	StartEventHash string
+	FromStartEvent Hash
+	Task           Hash
+	FromTask       Hash
+	EndEvent       Hash
 }
 
 // NewSimpleModel001 ...
-func NewSimpleModel001(def *core.Definitions) SimpleModel001 {
-	return SimpleModel001{
-		def:               def,
-		isExecutable:      true,
-		ProcessHash:       utils.GenerateHash(),
-		StartEventCounter: 1,
-		FromStartEvent:    utils.GenerateHash(),
-		TaskHash:          utils.GenerateHash(),
-		FromTask:          utils.GenerateHash(),
-		EndEventHash:      utils.GenerateHash(),
+func NewSimpleModel001() SimpleModel001 {
+	return &simpleModel001{
+		def:            core.NewDefinitions(),
+		isExecutable:   true,
+		StartEventHash: "1",
 	}
 }
 
 // Create ...
-func (simpleModel001 *SimpleModel001) Create() {
-	simpleModel001.SetElements()
-	simpleModel001.SetDefinitionsAttributes()
-	simpleModel001.SetProcess()
-	simpleModel001.SetStartEvent()
-	simpleModel001.SetTask()
-	simpleModel001.SetEndEvent()
-	simpleModel001.SetFromStartEventSequenceFlow()
-	simpleModel001.SetFromTaskSequenceFlow()
-	simpleModel001.SetDiagram()
+func (sm001 simpleModel001) Create() simpleModel001 {
+	core.SetMainElements(sm001.def, 1) // TODO: Collaboration 'must-be' optional
+	sm001.setInnerElements()
+	sm001.setDefinitionsAttributes()
+	sm001.setProcess()
+	sm001.setStartEvent()
+	sm001.setTask()
+	sm001.setEndEvent()
+	sm001.setDiagram()
+	return sm001
 }
 
-// SetElements ...
-func (simpleModel001 *SimpleModel001) SetElements() {
-	simpleModel001.def.SetProcess(1)
-	simpleModel001.GetProcess().SetStartEvent(1)
-	simpleModel001.GetProcess().SetTask(1)
-	simpleModel001.GetProcess().SetEndEvent(1)
-	simpleModel001.GetProcess().SetSequenceFlow(2)
-	simpleModel001.def.SetDiagram(1)
-	simpleModel001.GetDiagram().SetPlane()
-	simpleModel001.GetPlane().SetShape(3)
-	simpleModel001.GetPlane().SetEdge(2)
+// Def ...
+func (sm001 simpleModel001) Def() core.DefinitionsRepository {
+	return sm001.def
+}
+
+// setInnerElements ...
+func (sm001 *simpleModel001) setInnerElements() {
+	//Processes
+	sm001.def.SetProcess(1)
+	sm001.process().SetStartEvent(1)
+	sm001.process().SetTask(1)
+	sm001.process().SetEndEvent(1)
+	sm001.process().SetSequenceFlow(2)
+
+	// Canvas
+	diagram := sm001.diagram()
+	diagram.SetPlane()
+	plane := sm001.plane()
+	plane.SetShape(3)
+	plane.SetEdge(2)
 }
 
 // SetDefinitionsAttributes ...
-func (simpleModel001 *SimpleModel001) SetDefinitionsAttributes() {
-	simpleModel001.def.SetDefaultAttributes()
+func (sm001 *simpleModel001) setDefinitionsAttributes() {
+	sm001.def.SetDefaultAttributes()
 }
 
-// SetProcess ...
-func (simpleModel001 *SimpleModel001) SetProcess() {
-	// generics
-	simpleModel001.GetProcess().SetID("hash", simpleModel001.ProcessHash)
-	simpleModel001.GetProcess().SetIsExecutable(simpleModel001.isExecutable)
+// setProcess ...
+func (sm001 *simpleModel001) setProcess() {
+	sm001.process().SetID("hash", sm001.Process.Hash())
+	sm001.process().SetIsExecutable(sm001.isExecutable)
 }
 
 // SetStartEvent ...
-func (simpleModel001 *SimpleModel001) SetStartEvent() {
-	// assign
-	process := simpleModel001.GetProcess()
-	p := simpleModel001.GetPlane()
-	// generics
-	process.GetStartEvent(0).SetID("counter", simpleModel001.StartEventCounter)
-	// outgoing
-	process.GetStartEvent(0).SetOutgoing(1)
-	process.GetStartEvent(0).GetOutgoing(0).SetFlow(simpleModel001.FromStartEvent)
-	// shape attributes
-	p.GetShape(0).SetID("startevent", simpleModel001.StartEventCounter+1)
-	p.GetShape(0).SetElement("startevent", simpleModel001.StartEventCounter)
-	p.GetShape(0).SetBounds()
-	p.GetShape(0).GetBounds().SetCoordinates(179, 159)
-	p.GetShape(0).GetBounds().SetSize(36, 36)
+func (sm001 *simpleModel001) setStartEvent() {
+	elements.SetStartEvent(
+		elements.DelegateParameter{
+			SE: sm001.process().GetStartEvent(0),
+			T:  "startevent",
+			N:  "Begin of Process",
+			H:  []string{sm001.StartEventHash, sm001.FromStartEvent.Hash()}})
+	canvas.SetShape(
+		canvas.DelegateParameter{
+			S: sm001.plane().GetShape(0),
+			T: "startevent",
+			H: sm001.StartEventHash})
+	sm001.fromStartEvent()
 }
 
 // SetTask ...
-func (simpleModel001 *SimpleModel001) SetTask() {
-	// assign
-	process := simpleModel001.GetProcess()
-	p := simpleModel001.GetPlane()
-	// generics
-	process.GetTask(0).SetID("activity", simpleModel001.TaskHash)
-	// incoming
-	process.GetTask(0).SetIncoming(1)
-	process.GetTask(0).Incoming[0].SetFlow(simpleModel001.FromStartEvent)
-	// outgoing
-	process.GetTask(0).SetOutgoing(1)
-	process.GetTask(0).GetOutgoing(0).SetFlow(simpleModel001.FromTask)
-	// shape attributes
-	p.GetShape(1).SetID("activity", simpleModel001.TaskHash)
-	p.GetShape(1).SetElement("activity", simpleModel001.TaskHash)
-	p.GetShape(1).SetBounds()
-	p.GetShape(1).GetBounds().SetCoordinates(270, 137)
-	p.GetShape(1).GetBounds().SetSize(100, 80)
+func (sm001 *simpleModel001) setTask() {
+	tasks.SetTask(
+		tasks.DelegateParameter{
+			TA: sm001.process().GetTask(0),
+			T:  "activity",
+			N:  "Task",
+			H:  []string{sm001.Task.string, sm001.FromStartEvent.string, sm001.FromTask.Hash()}})
+	canvas.SetShape(
+		canvas.DelegateParameter{
+			S: sm001.plane().GetShape(1),
+			T: "activity",
+			H: sm001.Task.string,
+			B: canvas.Bounds{X: 270, Y: 137}})
+	sm001.fromTask()
 }
 
 // SetEndEvent ...
-func (simpleModel001 *SimpleModel001) SetEndEvent() {
-	// assign
-	process := simpleModel001.GetProcess()
-	p := simpleModel001.GetPlane()
-	// generics
-	process.GetEndEvent(0).SetID("event", simpleModel001.EndEventHash)
-	// incoming
-	process.GetEndEvent(0).SetIncoming(1)
-	process.GetEndEvent(0).Incoming[0].SetFlow(simpleModel001.FromTask)
-	// shape attributes
-	p.GetShape(2).SetID("event", simpleModel001.EndEventHash)
-	p.GetShape(2).SetElement("event", simpleModel001.EndEventHash)
-	p.GetShape(2).SetBounds()
-	p.GetShape(2).GetBounds().SetCoordinates(432, 159)
-	p.GetShape(2).GetBounds().SetSize(36, 36)
+func (sm001 *simpleModel001) setEndEvent() {
+	elements.SetEndEvent(
+		elements.DelegateParameter{
+			EE: sm001.process().GetEndEvent(0),
+			T:  "event",
+			N:  "End of Process",
+			H:  []string{sm001.EndEvent.string, sm001.FromTask.string}})
+	canvas.SetShape(
+		canvas.DelegateParameter{
+			S: sm001.plane().GetShape(2),
+			T: "event",
+			H: sm001.EndEvent.string,
+			B: canvas.Bounds{X: 432, Y: 159}})
 }
 
-// SetFromStartEventSequenceFlow ...
-func (simpleModel001 *SimpleModel001) SetFromStartEventSequenceFlow() {
-	// assign
-	process := simpleModel001.GetProcess()
-	p := simpleModel001.GetPlane()
-	// generics
-	process.GetSequenceFlow(0).SetID("flow", simpleModel001.FromStartEvent)
-	process.GetSequenceFlow(0).SetSourceRef("startevent", simpleModel001.StartEventCounter)
-	process.GetSequenceFlow(0).SetTargetRef("activity", simpleModel001.TaskHash)
-	// shape attributes
-	p.GetEdge(0).SetID("flow", simpleModel001.FromStartEvent)
-	p.GetEdge(0).SetElement("flow", simpleModel001.FromStartEvent)
-	p.GetEdge(0).SetWaypoint()
-	p.GetEdge(0).GetWaypoint(0).SetCoordinates(215, 177)
-	p.GetEdge(0).GetWaypoint(1).SetCoordinates(270, 177)
+// fromStartEvent ...
+func (sm001 *simpleModel001) fromStartEvent() {
+	flow.SetSequenceFlow(
+		flow.DelegateParameter{
+			SF: sm001.process().GetSequenceFlow(0),
+			T:  "flow",
+			ST: "startevent",
+			TT: "activity",
+			H:  []string{sm001.FromStartEvent.string, sm001.StartEventHash, sm001.Task.Hash()}})
+	canvas.SetEdge(
+		canvas.DelegateParameter{
+			E: sm001.plane().GetEdge(0),
+			T: "flow",
+			H: sm001.FromStartEvent.string,
+			W: []canvas.Waypoint{{X: 215, Y: 177}, {X: 270, Y: 177}}})
 }
 
-// SetFromTaskSequenceFlow ...
-func (simpleModel001 *SimpleModel001) SetFromTaskSequenceFlow() {
-	// assign
-	process := simpleModel001.GetProcess()
-	p := simpleModel001.GetPlane()
-	// generics
-	process.GetSequenceFlow(1).SetID("flow", simpleModel001.FromTask)
-	process.GetSequenceFlow(1).SetSourceRef("activity", simpleModel001.TaskHash)
-	process.GetSequenceFlow(1).SetTargetRef("event", simpleModel001.EndEventHash)
-	// shape attributes
-	p.GetEdge(1).SetID("flow", simpleModel001.FromTask)
-	p.GetEdge(1).SetElement("flow", simpleModel001.FromTask)
-	p.GetEdge(1).SetWaypoint()
-	p.GetEdge(1).GetWaypoint(0).SetCoordinates(370, 177)
-	p.GetEdge(1).GetWaypoint(1).SetCoordinates(432, 177)
+// fromTask ...
+func (sm001 *simpleModel001) fromTask() {
+	flow.SetSequenceFlow(
+		flow.DelegateParameter{
+			SF: sm001.process().GetSequenceFlow(1),
+			T:  "flow",
+			ST: "activity",
+			TT: "event",
+			H:  []string{sm001.FromTask.string, sm001.Task.string, sm001.EndEvent.Hash()}})
+	canvas.SetEdge(
+		canvas.DelegateParameter{
+			E: sm001.plane().GetEdge(1),
+			T: "flow",
+			H: sm001.FromTask.string,
+			W: []canvas.Waypoint{{X: 370, Y: 177}, {X: 432, Y: 177}}})
 }
 
-func (simpleModel001 *SimpleModel001) SetDiagram() {
+// setDiagram ...
+func (sm001 *simpleModel001) setDiagram() {
 	// diagram attributes
 	var n int64 = 1
-	simpleModel001.def.Diagram[0].SetID("diagram", n)
+	sm001.diagram().SetID("diagram", n)
 	// plane attributes
-	p := simpleModel001.GetPlane()
+	p := sm001.plane()
 	p.SetID("plane", n)
-	p.SetElement("process", simpleModel001.ProcessHash)
+	p.SetElement("process", sm001.Process.string)
 }
 
 /*
  * Getter
  */
 
-// GetProcess ...
-func (simpleModel001 SimpleModel001) GetProcess() *process.Process {
-	return &simpleModel001.def.Process[0]
+// process ...
+func (sm001 simpleModel001) process() *process.Process {
+	return sm001.def.GetProcess(0)
 }
 
-// GetDiagram ...
-func (simpleModel001 SimpleModel001) GetDiagram() *canvas.Diagram {
-	return &simpleModel001.def.Diagram[0]
+// diagram ...
+func (sm001 simpleModel001) diagram() *canvas.Diagram {
+	return sm001.def.GetDiagram(0)
 }
 
-// GetPlane ...
-func (simpleModel001 SimpleModel001) GetPlane() *canvas.Plane {
-	return &simpleModel001.def.Diagram[0].Plane[0]
+// plane ...
+func (sm001 simpleModel001) plane() *canvas.Plane {
+	return sm001.diagram().GetPlane()
 }

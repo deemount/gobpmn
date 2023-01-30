@@ -5,10 +5,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/deemount/gobpmn/models/compulsion"
-	"github.com/deemount/gobpmn/models/events/elements"
-	"github.com/deemount/gobpmn/spec/process_instance"
-	"github.com/deemount/gobpmn/workflows"
+	"github.com/deemount/gobpmn/engine/spec/process_instance"
+	"github.com/deemount/gobpmn/engine/workflows"
+	"github.com/deemount/gobpmn/models/bpmn/events/elements"
+	"github.com/deemount/gobpmn/models/bpmn/impl"
 )
 
 type ProcessInstance struct {
@@ -97,7 +97,7 @@ func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 
 	go func() {
 		err := dispatcher.Dispatch(context.Background(), elements.TStartEvent{
-			BaseAttributes: compulsion.BaseAttributes{
+			BaseAttributes: impl.BaseAttributes{
 				ID: "111",
 			},
 		})

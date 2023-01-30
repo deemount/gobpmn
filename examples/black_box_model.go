@@ -8,10 +8,10 @@ package examples
  **/
 
 import (
-	"github.com/deemount/gobpmn/models/canvas"
-	"github.com/deemount/gobpmn/models/core"
-	"github.com/deemount/gobpmn/models/marker"
-	"github.com/deemount/gobpmn/models/pool"
+	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/core"
+	"github.com/deemount/gobpmn/models/bpmn/flow"
+	"github.com/deemount/gobpmn/models/bpmn/pool"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -343,23 +343,23 @@ func (bb blackBoxModel) GetParticipantManufacturer(e *pool.Collaboration) *pool.
 	return e.GetParticipant(2)
 }
 
-func (bb blackBoxModel) GetMessageOrder() *marker.MessageFlow {
+func (bb blackBoxModel) GetMessageOrder() *flow.MessageFlow {
 	return bb.GetCollaboration().GetMessageFlow(0)
 }
 
-func (bb blackBoxModel) GetMessageRequestSpareParts() *marker.MessageFlow {
+func (bb blackBoxModel) GetMessageRequestSpareParts() *flow.MessageFlow {
 	return bb.GetCollaboration().GetMessageFlow(1)
 }
 
-func (bb blackBoxModel) GetMessageReplacementSupply() *marker.MessageFlow {
+func (bb blackBoxModel) GetMessageReplacementSupply() *flow.MessageFlow {
 	return bb.GetCollaboration().GetMessageFlow(2)
 }
 
-func (bb blackBoxModel) GetMessageConfirmation() *marker.MessageFlow {
+func (bb blackBoxModel) GetMessageConfirmation() *flow.MessageFlow {
 	return bb.GetCollaboration().GetMessageFlow(3)
 }
 
-func (bb blackBoxModel) GetMessageShipment() *marker.MessageFlow {
+func (bb blackBoxModel) GetMessageShipment() *flow.MessageFlow {
 	return bb.GetCollaboration().GetMessageFlow(4)
 }
 

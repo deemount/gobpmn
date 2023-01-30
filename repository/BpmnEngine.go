@@ -10,7 +10,7 @@ import (
 
 	"github.com/bwmarrin/snowflake"
 
-	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/bpmn/core"
 	"github.com/deemount/gobpmn/utils"
 )
 

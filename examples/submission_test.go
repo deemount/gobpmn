@@ -3,7 +3,7 @@ package examples
 import (
 	"testing"
 
-	"github.com/deemount/gobpmn/models/core"
+	"github.com/deemount/gobpmn/models/bpmn/core"
 )
 
 type Processes struct {
