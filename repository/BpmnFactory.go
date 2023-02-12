@@ -78,10 +78,17 @@ func (factory *bpmnFactory) set() {
 	//d := repositoryModel.Create()
 	//factory.Repo = d.Def()
 
+<<<<<<< HEAD
 	// 3
 	//repositoryModel := examples.NewSimpleModel001()
 	//d := repositoryModel.Create()
 	//factory.Repo = d.Def()
+=======
+	// e.g. use struct pointer (no argument)
+	structModel := examples.NewSimpleModel001()
+	d := structModel.Create()
+	factory.Repo = d.Def()
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 
 }
 

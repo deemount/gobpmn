@@ -1,5 +1,6 @@
 package canvas
 
+<<<<<<< HEAD
 type BOUNDS_SLC []Bounds
 type DIAGRAM_SLC []Diagram
 type EDGE_SLC []Edge
@@ -21,3 +22,6 @@ type LABEL_PTR *Label
 type PLANE_PTR *Plane
 type SHAPE_PTR *Shape
 type WAYPOINT_PTR *Waypoint
+=======
+type STR_PTR *string
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4

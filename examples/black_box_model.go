@@ -9,9 +9,15 @@ package examples
 
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
+<<<<<<< HEAD
 	"github.com/deemount/gobpmn/models/bpmn/collaboration"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 	"github.com/deemount/gobpmn/models/bpmn/flow"
+=======
+	"github.com/deemount/gobpmn/models/bpmn/core"
+	"github.com/deemount/gobpmn/models/bpmn/flow"
+	"github.com/deemount/gobpmn/models/bpmn/pool"
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 	"github.com/deemount/gobpmn/utils"
 )
 

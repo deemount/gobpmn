@@ -103,6 +103,7 @@ func SetLabel(p DelegateParameter) {
 // default coords and size are: x="129" y="52" width="600" height="250"
 // when start event is also default at x="179" y="159" width="36" height="36"
 // e *Shape, typ string, isHorizontal bool, hash string, b Bounds
+<<<<<<< HEAD
 // e.g. below from collaborative process
 // PoolCustomerSupport: canvas.Bounds{X: 150, Y: 80, Width: 800, Height: 160}
 // PoolCustomer: canvas.Bounds{X: 150, Y: 360, Width: 800, Height: 160}
@@ -110,12 +111,17 @@ func SetLabel(p DelegateParameter) {
 // CustomerStartEvent: canvas.Bounds{X: 225, Y: 422, Width: 36, Height: 36}
 // CustomerSupportEndEvent: canvas.Bounds{X: 822, Y: 142, Width: 36, Height: 36}
 // CustomerEndEvent: canvas.Bounds{X: 822, Y: 422, Width: 36, Height: 36}
+=======
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 func SetPool(p DelegateParameter) {
 	p.S.SetID(p.T, p.H)
 	p.S.SetElement(p.T, p.H)
 	p.S.SetIsHorizontal(p.I)
 	p.S.SetBounds()
+<<<<<<< HEAD
 	// TODO:
+=======
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 	if &p.B.X == nil && &p.B.Y == nil && &p.B.Width == nil && &p.B.Height == nil {
 		b := Bounds{X: 129, Y: 52, Width: 600, Height: 250}
 		p.S.GetBounds().SetCoordinates(b.X, b.Y)

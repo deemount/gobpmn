@@ -5,11 +5,18 @@ import (
 	"log"
 
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
+<<<<<<< HEAD
 	"github.com/deemount/gobpmn/models/bpmn/collaboration"
 	"github.com/deemount/gobpmn/models/bpmn/events"
 	"github.com/deemount/gobpmn/models/bpmn/events/elements"
 	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
+=======
+	"github.com/deemount/gobpmn/models/bpmn/events/elements"
+	"github.com/deemount/gobpmn/models/bpmn/impl"
+	"github.com/deemount/gobpmn/models/bpmn/marker"
+	"github.com/deemount/gobpmn/models/bpmn/pool"
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 	"github.com/deemount/gobpmn/models/bpmn/process"
 	"github.com/deemount/gobpmn/utils"
 )
@@ -171,12 +178,20 @@ func (definitions *Definitions) SetCategory(num int) {
 
 // SetMessage ...
 func (definitions *Definitions) SetMessage(num int) {
+<<<<<<< HEAD
 	definitions.Message = make(events.MESSAGE_SLC, num)
+=======
+	definitions.Msg = make([]elements.Message, num)
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 }
 
 // SetSignal ...
 func (definitions *Definitions) SetSignal(num int) {
+<<<<<<< HEAD
 	definitions.Signal = make(events.SIGNAL_SLC, num)
+=======
+	definitions.Signal = make([]elements.Signal, num)
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 }
 
 /** BPMNDI **/
@@ -243,7 +258,11 @@ func (definitions Definitions) GetCategory(num int) *marker.Category {
 
 // GetMessage ...
 func (definitions Definitions) GetMessage(num int) *elements.Message {
+<<<<<<< HEAD
 	return &definitions.Message[num]
+=======
+	return &definitions.Msg[num]
+>>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 }
 
 // GetSignal ...
