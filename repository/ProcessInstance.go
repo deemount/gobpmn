@@ -6,11 +6,6 @@ import (
 
 	"github.com/deemount/gobpmn/engine/spec/process_instance"
 	"github.com/deemount/gobpmn/engine/workflows"
-<<<<<<< HEAD
-=======
-	"github.com/deemount/gobpmn/models/bpmn/events/elements"
-	"github.com/deemount/gobpmn/models/bpmn/impl"
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 )
 
 type ProcessInstance struct {
@@ -97,7 +92,6 @@ func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 
 	//log.Printf("processinstance -> dispatcher: %+v ", dispatcher)
 
-<<<<<<< HEAD
 	/*
 		go func() {
 			err := dispatcher.Dispatch(context.Background(), elements.TStartEvent{
@@ -109,20 +103,6 @@ func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 				log.Println(err)
 			}
 		}()
-=======
-	go func() {
-		err := dispatcher.Dispatch(context.Background(), elements.TStartEvent{
-			BaseAttributes: impl.BaseAttributes{
-				ID: "111",
-			},
-		})
-		if err != nil {
-			log.Println(err)
-		}
-	}()
-
-	select {}
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 
 		select {}
 	*/

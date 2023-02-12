@@ -1,83 +1,56 @@
 package examples
 
-/**************************************************************************************/
-/**
- * @Import
- *
- * Import models and utils package to build the model
- **/
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 	"github.com/deemount/gobpmn/models/bpmn/process"
 )
 
-/**************************************************************************************/
-/**
- * @BASE CLASS
- *
- *
- **/
-
 type PrivateBusiness interface {
-	Create() privateBusinessModel
+	Create() PrivateBusinessModel
 }
 
-type privateBusinessEvent struct{}
-
-type privateBusinessTask struct{}
-
-type privateBusinessSequence struct{}
-
-type privateBusinessModel struct {
-	def *core.Definitions
-	privateBusinessEvent
-	privateBusinessTask
-	privateBusinessSequence
+type PrivateBusinessModel struct {
+	Def core.DefinitionsRepository
+	PrivateBusinessEvent
+	PrivateBusinessTask
+	PrivateBusinessSequence
 }
+
+type PrivateBusinessEvent struct{}
+type PrivateBusinessTask struct{}
+type PrivateBusinessSequence struct{}
 
 func NewPrivateBusiness() PrivateBusiness {
-	return &privateBusinessModel{
-		def:                     new(core.Definitions),
-		privateBusinessEvent:    privateBusinessEvent{},
-		privateBusinessTask:     privateBusinessTask{},
-		privateBusinessSequence: privateBusinessSequence{},
-	}
+	pb := Builder.Inject(PrivateBusinessModel{}).(PrivateBusinessModel)
+	pb.Def = core.NewDefinitions()
+	return &pb
 }
 
-func (pb privateBusinessModel) Create() privateBusinessModel {
-	pb.setMainElements()  // Initialize number of main elements
-	pb.setInnerElements() // Initialize number of inner elements
+func (pb PrivateBusinessModel) Create() PrivateBusinessModel {
+	Builder.Build(pb.Def)
+	pb.setInnerElements()
 	pb.setDefinitionsAttributes()
 	return pb
 }
 
-func (pb *privateBusinessModel) setMainElements() {
-	pb.def.SetCollaboration()
-	pb.def.SetProcess(1)
-	pb.def.SetDiagram(1)
+func (pb *PrivateBusinessModel) setMainElements() {
+	pb.Def.SetCollaboration()
+	pb.Def.SetProcess(1)
+	pb.Def.SetDiagram(1)
 }
 
-func (pb *privateBusinessModel) setInnerElements() {
-	diagram := pb.GetDiagram()
+func (pb PrivateBusinessModel) Build() core.DefinitionsRepository { return pb.Def }
+
+func (pb *PrivateBusinessModel) setInnerElements() {
+	diagram := pb.diagram()
 	diagram.SetPlane()
-	plane := pb.GetPlane()
+	plane := pb.plane()
 	plane.SetShape(5)
 	plane.SetEdge(4)
 }
 
-func (pb *privateBusinessModel) setDefinitionsAttributes() {
-	pb.def.SetDefaultAttributes()
-}
-
-func (pb privateBusinessModel) GetProcess() *process.Process {
-	return pb.def.GetProcess(0)
-}
-
-func (pb privateBusinessModel) GetDiagram() *canvas.Diagram {
-	return pb.def.GetDiagram(0)
-}
-
-func (pb privateBusinessModel) GetPlane() *canvas.Plane {
-	return pb.GetDiagram().GetPlane()
-}
+func (pb *PrivateBusinessModel) setDefinitionsAttributes() { pb.Def.SetDefaultAttributes() }
+func (pb PrivateBusinessModel) process() *process.Process  { return pb.Def.GetProcess(0) }
+func (pb PrivateBusinessModel) diagram() *canvas.Diagram   { return pb.Def.GetDiagram(0) }
+func (pb PrivateBusinessModel) plane() *canvas.Plane       { return pb.diagram().GetPlane() }

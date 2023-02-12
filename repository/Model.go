@@ -9,17 +9,10 @@ package repository
 
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
-<<<<<<< HEAD
 	"github.com/deemount/gobpmn/models/bpmn/collaboration"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 	"github.com/deemount/gobpmn/models/bpmn/events/elements"
 	"github.com/deemount/gobpmn/models/bpmn/flow"
-=======
-	"github.com/deemount/gobpmn/models/bpmn/core"
-	"github.com/deemount/gobpmn/models/bpmn/events/elements"
-	"github.com/deemount/gobpmn/models/bpmn/flow"
-	"github.com/deemount/gobpmn/models/bpmn/pool"
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 	"github.com/deemount/gobpmn/models/bpmn/process"
 	"github.com/deemount/gobpmn/models/bpmn/tasks"
 	"github.com/deemount/gobpmn/utils"
@@ -85,7 +78,7 @@ type model struct {
 func NewModel(def *core.Definitions) Model {
 	return &model{
 		// Definitions
-		def: core.NewDefinitions(&model{}),
+		def: core.NewDefinitions(),
 		// Pool
 		Pool: Pool{
 			IsExecutable:  true,

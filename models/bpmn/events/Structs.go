@@ -1,6 +1,5 @@
 package events
 
-<<<<<<< HEAD
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/events/elements"
@@ -23,10 +22,6 @@ type DelegateParameter struct {
 
 // ProcessEvents ...
 type ProcessEvents struct {
-=======
-// Events ...
-type Events struct {
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 	StartEvent             START_EVENT_SLC              `xml:"bpmn:startEvent,omitemnpty" json:"startEvent,omitempty" csv:"-"`
 	BoundaryEvent          BOUNDARY_EVENT_SLC           `xml:"bpmn:boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty" csv:"-"`
 	EndEvent               END_EVENT_SLC                `xml:"bpmn:endEvent,omitempty" json:"endEvent,omitempty"`
@@ -34,13 +29,8 @@ type Events struct {
 	IntermediateThrowEvent INTERMEDIATE_THROW_EVENT_SLC `xml:"bpmn:intermediateThrowEvent,omitempty" json:"intermediateThrowEvent,omitempty" csv:"-"`
 }
 
-<<<<<<< HEAD
 // TProcessEvents ...
 type TProcessEvents struct {
-=======
-// TEvents ...
-type TEvents struct {
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 	StartEvent             TSTART_EVENT_SLC              `xml:"startEvent,omitemnpty" json:"startEvent,omitempty" csv:"-"`
 	BoundaryEvent          TBOUNDARY_EVENT_SLC           `xml:"boundaryEvent,omitemnpty" json:"boundaryEvent,omitempty" csv:"-"`
 	EndEvent               TEND_EVENT_SLC                `xml:"endEvent,omitempty" json:"endEvent,omitempty"`

@@ -9,37 +9,23 @@ package examples
 
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
-<<<<<<< HEAD
 	"github.com/deemount/gobpmn/models/bpmn/collaboration"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 	"github.com/deemount/gobpmn/models/bpmn/flow"
-=======
-	"github.com/deemount/gobpmn/models/bpmn/core"
-	"github.com/deemount/gobpmn/models/bpmn/flow"
-	"github.com/deemount/gobpmn/models/bpmn/pool"
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 	"github.com/deemount/gobpmn/utils"
 )
-
-/**************************************************************************************/
-/**
- * @BASE CLASS
- *
- *
- **/
 
 type BlackBoxModel interface {
 	Create() blackBoxModel
 }
 
-/**************************************************************************************/
-/**
- * @OBJECTS
- * - blackBoxPool
- * - blackBoxMessage
- **/
+type blackBoxModel struct {
+	def core.DefinitionsRepository
+	BlackBoxPool
+	BlackBoxMessage
+}
 
-type blackBoxPool struct {
+type BlackBoxPool struct {
 	CollaborationID     string
 	CustomerID          string
 	CustomerName        string
@@ -49,7 +35,7 @@ type blackBoxPool struct {
 	ManufacturerName    string
 }
 
-type blackBoxMessage struct {
+type BlackBoxMessage struct {
 	OrderHash             string
 	RequestSparePartsHash string
 	ReplacementSupplyHash string
@@ -57,23 +43,10 @@ type blackBoxMessage struct {
 	ShipmentHash          string
 }
 
-type blackBoxModel struct {
-	def core.DefinitionsRepository
-	blackBoxPool
-	blackBoxMessage
-}
-
-/**************************************************************************************/
-/**
- * @BUILDER
- *
- *
- **/
-
 func NewBlackBoxModel() BlackBoxModel {
 	return &blackBoxModel{
 		def: new(core.Definitions),
-		blackBoxPool: blackBoxPool{
+		BlackBoxPool: BlackBoxPool{
 			CollaborationID:     utils.GenerateHash(),
 			CustomerID:          utils.GenerateHash(),
 			CustomerName:        "Customer Name",
@@ -82,7 +55,7 @@ func NewBlackBoxModel() BlackBoxModel {
 			ManufacturerID:      utils.GenerateHash(),
 			ManufacturerName:    "Manufacturer",
 		},
-		blackBoxMessage: blackBoxMessage{
+		BlackBoxMessage: BlackBoxMessage{
 			OrderHash:             utils.GenerateHash(),
 			RequestSparePartsHash: utils.GenerateHash(),
 			ReplacementSupplyHash: utils.GenerateHash(),
@@ -91,17 +64,6 @@ func NewBlackBoxModel() BlackBoxModel {
 		},
 	}
 }
-
-/**************************************************************************************/
-/**
- * @Create
- * @@setMainElements
- * @@setInnerElements
- * @@setDefinitionsAttributes
- * @@setCollaboration
- * @@setDiagram
- * @Def
- **/
 
 func (bb blackBoxModel) Create() blackBoxModel {
 	bb.setMainElements()
@@ -112,31 +74,7 @@ func (bb blackBoxModel) Create() blackBoxModel {
 	return bb
 }
 
-// Def ...
-func (bb *blackBoxModel) Def() *core.DefinitionsRepository {
-	return &bb.def
-}
-
-/**************************************************************************************/
-
-/**
- * @Setters I
- * @setMainElements
- * @@models.Definitions: SetCollaboration
- * @@models.Definitions: SetProcess
- * @@models.Definitions: SetDiagram
- *
- * @setInnerElements
- * @@Model: GetCollaboration
- * @@Model: GetDiagram
- *
- * @setDefinitionsAttributes
- * @@models.Definitions: SetDefaultAttributes
- *
- * @setCollaboration
- * @@Model: GetParticipant
- * @@Model: GetCollaboration
- **/
+func (bb *blackBoxModel) Build() *core.DefinitionsRepository { return &bb.def }
 
 func (bb *blackBoxModel) setMainElements() {
 	bb.def.SetCollaboration()
@@ -269,15 +207,6 @@ func (bb *blackBoxModel) setCollaboration() {
 	edgeMsgShipment.GetLabel().GetBounds().SetSize(47, 14)
 }
 
-/**
- * @Setters II
- * @Process
- * @private setPoolCustomer
- * @private setPoolCustomerSupport
- * @private setPoolManufacturer
- * @private setDiagram
-**/
-
 func (bb *blackBoxModel) setPoolCustomer() {
 	e := bb.GetShapePoolCustomer(bb.GetPlane())
 	e.SetID("participant", bb.CustomerID)
@@ -316,22 +245,6 @@ func (bb *blackBoxModel) setDiagram() {
 	p.SetID("plane", n)
 	p.SetElement("collaboration", bb.CollaborationID)
 }
-
-/**************************************************************************************/
-
-/**
- * @Getters I
- * @GetCollaboration -> models.Collaboration
- * @GetParticipantCustomer -> models.Participant
- * @GetParticipantCustomerSupport -> models.Participant
- * @GetParticipantManufacturer -> models.Participant
- * @GetMessageOrder -> models.MessageFlow
- * @GetMessageRequestSpareParts -> models.MessageFlow
- * @GetMessageReplacementSupply -> models.MessageFlow
- * @GetMessageConfirmation -> models.MessageFlow
- * @GetMessageShipment -> models.MessageFlow
- * @GetDiagram -> canvas.Diagram
-**/
 
 func (bb blackBoxModel) GetCollaboration() *collaboration.Collaboration {
 	return bb.def.GetCollaboration()

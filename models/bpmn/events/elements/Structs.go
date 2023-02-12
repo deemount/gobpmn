@@ -3,17 +3,13 @@ package elements
 import (
 	"github.com/deemount/gobpmn/models/bpmn/attributes"
 	"github.com/deemount/gobpmn/models/bpmn/camunda"
-<<<<<<< HEAD
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
-=======
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 	"github.com/deemount/gobpmn/models/bpmn/events/definitions"
 	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
 )
 
 // event
-<<<<<<< HEAD
 type DelegateParameter struct {
 	BE    *BoundaryEvent
 	SE    *StartEvent
@@ -29,22 +25,6 @@ type DelegateParameter struct {
 	N     string
 	H     []string
 	TEDH  string // TimerEventDefinition Hash
-=======
-// BE: be *BoundaryEvent, typ string, name string, hash string
-// SE: se *StartEvent, typ string, name string, hash string
-// EE: ee *EndEvent, typ string, name string, hash string
-// ICE: ice *IntermediateCatchEvent, typ string, name string, hash string
-// ITE: ite *IntermediateCatchEvent, typ string, name string, hash string
-type DelegateParameter struct {
-	BE  *BoundaryEvent
-	SE  *StartEvent
-	EE  *EndEvent
-	ICE *IntermediateCatchEvent
-	ITE *IntermediateThrowEvent
-	T   string
-	N   string
-	H   []string
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 }
 
 /*

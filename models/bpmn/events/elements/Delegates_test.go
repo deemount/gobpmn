@@ -39,11 +39,7 @@ func TestSetIntermediateCatchEvent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-<<<<<<< HEAD
 
-=======
-			SetIntermediateCatchEvent(tt.args.e, tt.args.name, tt.args.hash...)
->>>>>>> 645a2223b8faa7522808edfd0136a0ac06a3e7f4
 		})
 	}
 }
