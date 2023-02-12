@@ -71,7 +71,7 @@ type MessageEventDefinitionRepository interface {
 	impl.IFBaseID
 
 	SetMsgRef(suffix string)
-	GetMsgRef() *string
+	GetMsgRef() impl.STR_PTR
 }
 
 // SignalEventDefinitionRepository ...

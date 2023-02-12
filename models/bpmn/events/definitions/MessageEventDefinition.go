@@ -43,6 +43,6 @@ func (med MessageEventDefinition) GetID() impl.STR_PTR {
 }
 
 // GetMsgRef ...
-func (med MessageEventDefinition) GetMsgRef() *string {
+func (med MessageEventDefinition) GetMsgRef() impl.STR_PTR {
 	return &med.MsgRef
 }

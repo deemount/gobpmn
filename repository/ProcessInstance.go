@@ -2,13 +2,10 @@ package repository
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/deemount/gobpmn/engine/spec/process_instance"
 	"github.com/deemount/gobpmn/engine/workflows"
-	"github.com/deemount/gobpmn/models/bpmn/events/elements"
-	"github.com/deemount/gobpmn/models/bpmn/impl"
 )
 
 type ProcessInstance struct {
@@ -88,26 +85,27 @@ func (processInstance *ProcessInstance) Run(inst *ProcessInstanceInfo) error {
 	}
 
 	// get the id of startevent: queue[0].baseElement.BaseAttributes.ID
-	log.Printf("processinstance -> queue: %+v", queue)
+	//log.Printf("processinstance -> queue: %+v", queue)
 
-	dispatcher := workflows.NewDispatcher()
-	dispatcher.Register(queue[0].Element)
+	//dispatcher := workflows.NewDispatcher()
+	//dispatcher.Register(queue[0].Element)
 
-	log.Printf("processinstance -> dispatcher: %+v ", dispatcher)
+	//log.Printf("processinstance -> dispatcher: %+v ", dispatcher)
 
-	go func() {
-		err := dispatcher.Dispatch(context.Background(), elements.TStartEvent{
-			BaseAttributes: impl.BaseAttributes{
-				ID: "111",
-			},
-		})
-		if err != nil {
-			log.Println(err)
-		}
-	}()
+	/*
+		go func() {
+			err := dispatcher.Dispatch(context.Background(), elements.TStartEvent{
+				BaseAttributes: impl.BaseAttributes{
+					ID: "111",
+				},
+			})
+			if err != nil {
+				log.Println(err)
+			}
+		}()
 
-	select {}
-
+		select {}
+	*/
 	/*for len(queue) > 0 {
 		element := queue[0].element
 		inboundFlowId := queue[0].inboundFlowId

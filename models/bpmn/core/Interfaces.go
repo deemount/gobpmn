@@ -2,26 +2,23 @@ package core
 
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
-	"github.com/deemount/gobpmn/models/bpmn/events/elements"
+	"github.com/deemount/gobpmn/models/bpmn/collaboration"
+	"github.com/deemount/gobpmn/models/bpmn/events"
 	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
-	"github.com/deemount/gobpmn/models/bpmn/pool"
 	"github.com/deemount/gobpmn/models/bpmn/process"
 )
 
 type DefinitionsElements interface {
 	SetCollaboration()
-	GetCollaboration() *pool.Collaboration
+	GetCollaboration() collaboration.COLLABORATION_PTR
 	SetProcess(num int)
-	GetProcess(num int) *process.Process
+	GetProcess(num int) process.PROCESS_PTR
 	SetCategory(num int)
 	GetCategory(num int) *marker.Category
-	SetMessage(num int)
-	GetMessage(num int) *elements.Message
-	GetSignal(num int) *elements.Signal
-	SetSignal(num int)
-	GetDiagram(num int) *canvas.Diagram
+	events.CoreEventsElementsRepository
 	SetDiagram(num int)
+	GetDiagram(num int) canvas.DIAGRAM_PTR
 }
 
 // DefinitionsRepository ...
@@ -48,5 +45,6 @@ type DefinitionsRepository interface {
 	SetExporter()
 	SetExporterVersion(version string)
 
+	SetMainElements(num int)
 	SetDefaultAttributes()
 }

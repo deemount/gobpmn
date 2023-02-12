@@ -95,7 +95,7 @@ type SubProcess struct {
 	attributes.Attributes
 	camunda.CoreAttributes
 	marker.IncomingOutgoing
-	events.Events
+	events.ProcessEvents
 	tasks.Tasks
 	gateways.Gateways
 	Subprocesses
@@ -110,7 +110,7 @@ type TSubProcess struct {
 	attributes.Attributes
 	camunda.TCoreAttributes
 	marker.IncomingOutgoing
-	events.TEvents
+	events.TProcessEvents
 	tasks.TTasks
 	gateways.TGateways
 	TriggeredByEvent                 bool                                    `xml:"triggeredByEvent,attr,omitempty" json:"triggeredByEvent,omitempty"`

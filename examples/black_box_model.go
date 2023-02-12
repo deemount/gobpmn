@@ -9,9 +9,9 @@ package examples
 
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/collaboration"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 	"github.com/deemount/gobpmn/models/bpmn/flow"
-	"github.com/deemount/gobpmn/models/bpmn/pool"
 	"github.com/deemount/gobpmn/utils"
 )
 
@@ -327,19 +327,19 @@ func (bb *blackBoxModel) setDiagram() {
  * @GetDiagram -> canvas.Diagram
 **/
 
-func (bb blackBoxModel) GetCollaboration() *pool.Collaboration {
+func (bb blackBoxModel) GetCollaboration() *collaboration.Collaboration {
 	return bb.def.GetCollaboration()
 }
 
-func (bb blackBoxModel) GetParticipantCustomer(e *pool.Collaboration) *pool.Participant {
+func (bb blackBoxModel) GetParticipantCustomer(e *collaboration.Collaboration) *collaboration.Participant {
 	return e.GetParticipant(0)
 }
 
-func (bb blackBoxModel) GetParticipantCustomerSupport(e *pool.Collaboration) *pool.Participant {
+func (bb blackBoxModel) GetParticipantCustomerSupport(e *collaboration.Collaboration) *collaboration.Participant {
 	return e.GetParticipant(1)
 }
 
-func (bb blackBoxModel) GetParticipantManufacturer(e *pool.Collaboration) *pool.Participant {
+func (bb blackBoxModel) GetParticipantManufacturer(e *collaboration.Collaboration) *collaboration.Participant {
 	return e.GetParticipant(2)
 }
 

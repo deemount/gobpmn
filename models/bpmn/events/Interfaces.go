@@ -4,7 +4,7 @@ import (
 	"github.com/deemount/gobpmn/models/bpmn/events/elements"
 )
 
-type EventsElementsRepository interface {
+type ProcessEventsElementsRepository interface {
 	SetStartEvent(num int)
 	GetStartEvent(num int) *elements.StartEvent
 	SetBoundaryEvent(num int)
@@ -15,4 +15,11 @@ type EventsElementsRepository interface {
 	GetIntermediateCatchEvent(num int) *elements.IntermediateCatchEvent
 	SetIntermediateThrowEvent(num int)
 	GetIntermediateThrowEvent(num int) *elements.IntermediateThrowEvent
+}
+
+type CoreEventsElementsRepository interface {
+	SetSignal(num int)
+	GetSignal(num int) *elements.Signal
+	SetMessage(num int)
+	GetMessage(num int) *elements.Message
 }

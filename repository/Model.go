@@ -9,10 +9,10 @@ package repository
 
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/collaboration"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 	"github.com/deemount/gobpmn/models/bpmn/events/elements"
 	"github.com/deemount/gobpmn/models/bpmn/flow"
-	"github.com/deemount/gobpmn/models/bpmn/pool"
 	"github.com/deemount/gobpmn/models/bpmn/process"
 	"github.com/deemount/gobpmn/models/bpmn/tasks"
 	"github.com/deemount/gobpmn/utils"
@@ -40,10 +40,10 @@ type Model interface {
  **/
 
 type Pool struct {
-	IsExecutable    bool
-	CollaborationID string
-	ParticipantID   string
-	ProcessID       string
+	IsExecutable  bool
+	Collaboration string
+	Participant   string
+	ProcessID     string
 }
 
 type event struct {
@@ -78,13 +78,13 @@ type model struct {
 func NewModel(def *core.Definitions) Model {
 	return &model{
 		// Definitions
-		def: core.NewDefinitions(),
+		def: core.NewDefinitions(&model{}),
 		// Pool
 		Pool: Pool{
-			IsExecutable:    true,
-			CollaborationID: "uniqueCollaborationId",
-			ParticipantID:   "uniqueParticipantId",
-			ProcessID:       "uniqueProcessId",
+			IsExecutable:  true,
+			Collaboration: "uniqueCollaborationId",
+			Participant:   "uniqueParticipantId",
+			ProcessID:     "uniqueProcessId",
 		},
 		// Event
 		event: event{
@@ -192,8 +192,8 @@ func (m *model) setDefinitionsAttributes() {
 
 func (m *model) setCollaboration() {
 	participant := m.GetParticipant(m.GetCollaboration())
-	m.GetCollaboration().SetID("id", m.CollaborationID)
-	participant.SetID("id", m.ParticipantID)
+	m.GetCollaboration().SetID("id", m.Collaboration)
+	participant.SetID("id", m.Participant)
 	participant.SetName("Participant")
 	participant.SetProcessRef("id", m.ProcessID)
 	m.setPool()
@@ -208,8 +208,8 @@ func (m *model) setCollaboration() {
 **/
 func (m *model) setPool() {
 	e := m.GetShapePool(m.GetPlane())
-	e.SetID("id", m.ParticipantID)
-	e.SetElement("id", m.ParticipantID)
+	e.SetID("id", m.Participant)
+	e.SetElement("id", m.Participant)
 	e.SetIsHorizontal(true)
 	e.SetBounds()
 	e.Bounds[0].SetCoordinates(150, 80)
@@ -229,7 +229,7 @@ func (m *model) setDiagram() {
 	// plane attributes
 	p := m.GetPlane()
 	p.SetID("plane", n)
-	p.SetElement("id", m.CollaborationID)
+	p.SetElement("id", m.Collaboration)
 }
 
 /**
@@ -342,11 +342,11 @@ func (m *model) fromTask() {
  * @GetProcess -> models.Process
  * @GetDiagram -> models.Diagram
 **/
-func (m model) GetCollaboration() *pool.Collaboration {
+func (m model) GetCollaboration() *collaboration.Collaboration {
 	return m.def.GetCollaboration()
 }
 
-func (m model) GetParticipant(e *pool.Collaboration) *pool.Participant {
+func (m model) GetParticipant(e *collaboration.Collaboration) *collaboration.Participant {
 	return e.GetParticipant(0)
 }
 

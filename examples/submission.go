@@ -9,10 +9,10 @@ package examples
 
 import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/collaboration"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 	"github.com/deemount/gobpmn/models/bpmn/events/elements"
 	"github.com/deemount/gobpmn/models/bpmn/flow"
-	"github.com/deemount/gobpmn/models/bpmn/pool"
 	"github.com/deemount/gobpmn/models/bpmn/process"
 	"github.com/deemount/gobpmn/models/bpmn/tasks"
 	"github.com/deemount/gobpmn/utils"
@@ -39,7 +39,7 @@ type Model interface {
  * - model
  **/
 
-type Pool struct {
+type Pool2 struct {
 	IsExecutable    bool
 	CollaborationID string
 	ParticipantID   string
@@ -62,7 +62,7 @@ type sequence struct {
 
 type model struct {
 	def core.DefinitionsRepository
-	Pool
+	Pool2
 	event
 	task
 	sequence
@@ -80,7 +80,7 @@ func NewModel(def *core.Definitions) Model {
 		// Definitions
 		def: def,
 		// Pool
-		Pool: Pool{
+		Pool2: Pool2{
 			IsExecutable:    true,
 			CollaborationID: "uniqueCollaborationId",
 			ParticipantID:   "uniqueParticipantId",
@@ -339,11 +339,11 @@ func (m *model) fromTask() {
  * @GetProcess -> models.Process
  * @GetDiagram -> models.Diagram
 **/
-func (m model) GetCollaboration() *pool.Collaboration {
+func (m model) GetCollaboration() *collaboration.Collaboration {
 	return m.def.GetCollaboration()
 }
 
-func (m model) GetParticipant(e *pool.Collaboration) *pool.Participant {
+func (m model) GetParticipant(e *collaboration.Collaboration) *collaboration.Participant {
 	return e.GetParticipant(0)
 }
 

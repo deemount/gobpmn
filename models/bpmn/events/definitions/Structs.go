@@ -6,6 +6,20 @@ import (
 	"github.com/deemount/gobpmn/models/bpmn/time"
 )
 
+type DelegateParameter struct {
+	CED *CancelEventDefinition
+	CPD *CompensateEventDefinition
+	COD *ConditionalEventDefinition
+	EED *EscalationEventDefinition
+	ERD *ErrorEventDefinition
+	MED *MessageEventDefinition
+	SED *SignalEventDefinition
+	TED *TimerEventDefinition
+	T   string   // Typ
+	TD  string   // TimerDefinition
+	H   []string // Hash
+}
+
 // Boundaries ...
 type Boundaries struct {
 	CancelEventDefinition      CANCEL_EVENT_DEF_SLC      `xml:"bpmn:cancelEventDefinition,omitempty" json:"cancelEventDefinition,omitempty"`

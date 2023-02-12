@@ -17,7 +17,7 @@ import (
 type Process struct {
 	impl.BaseAttributes
 	attributes.Attributes
-	events.Events
+	events.ProcessEvents
 	tasks.Tasks
 	subprocesses.Subprocesses
 	gateways.Gateways
@@ -45,7 +45,7 @@ type Process struct {
 type TProcess struct {
 	impl.BaseAttributes
 	attributes.TAttributes
-	events.TEvents
+	events.TProcessEvents
 	tasks.TTasks
 	subprocesses.TSubprocesses
 	gateways.TGateways

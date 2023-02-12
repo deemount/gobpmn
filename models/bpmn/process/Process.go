@@ -30,7 +30,7 @@ func NewProcess() ProcessRepository {
 // SetID ...
 func (process *Process) SetID(typ string, suffix interface{}) {
 	switch typ {
-	case "hash":
+	case "process":
 		process.ID = fmt.Sprintf("Process_%v", suffix)
 		break
 	case "id":

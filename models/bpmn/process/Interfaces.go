@@ -18,7 +18,7 @@ type ProcessRepository interface {
 	impl.IFBaseID
 	impl.IFBaseName
 	attributes.AttributesBaseElements
-	events.EventsElementsRepository
+	events.ProcessEventsElementsRepository
 	tasks.TasksElementsRepository
 	gateways.GatewaysElementsRepository
 	subprocesses.SubprocessesElementsRepository

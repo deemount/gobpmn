@@ -3,6 +3,7 @@ package tasks
 import (
 	"github.com/deemount/gobpmn/models/bpmn/attributes"
 	"github.com/deemount/gobpmn/models/bpmn/camunda"
+	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/flow"
 	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
@@ -18,6 +19,9 @@ type DelegateParameter struct {
 	SCT *ScriptTask
 	SET *SendTask
 	SVT *ServiceTask
+	SF  *flow.SequenceFlow
+	SH  *canvas.Shape
+	BS  canvas.Bounds
 	T   string
 	N   string
 	H   []string

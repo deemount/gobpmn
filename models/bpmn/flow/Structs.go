@@ -2,18 +2,23 @@ package flow
 
 import (
 	"github.com/deemount/gobpmn/models/bpmn/attributes"
+	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/conditional"
 	"github.com/deemount/gobpmn/models/bpmn/impl"
 )
 
 // flow
 type DelegateParameter struct {
-	SF *SequenceFlow // element pointer
-	ST string        // source type
-	TT string        // target type
-	T  string        // typ
-	N  string        // name
-	H  []string      // hash
+	SF *SequenceFlow
+	MF *MessageFlow
+	ED *canvas.Edge
+	WP []canvas.Waypoint
+	BS canvas.Bounds
+	ST string   // source type
+	TT string   // target type
+	T  string   // typ
+	N  string   // name
+	H  []string // hash
 }
 
 type SourceTargetRef struct {

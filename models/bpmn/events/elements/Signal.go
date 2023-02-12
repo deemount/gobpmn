@@ -53,3 +53,17 @@ func (signal Signal) GetID() impl.STR_PTR {
 func (signal Signal) GetName() impl.STR_PTR {
 	return &signal.Name
 }
+
+/*
+ * Default String
+ */
+
+// String ...
+func (signal Signal) String() string {
+	return fmt.Sprintf("id=%v, name=%v", signal.ID, signal.Name)
+}
+
+// String ...
+func (signal TSignal) String() string {
+	return fmt.Sprintf("id=%v, name=%v", signal.ID, signal.Name)
+}

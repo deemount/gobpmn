@@ -83,7 +83,7 @@ type SubProcessRepository interface {
 	flow.FlowSequenceFlow
 	tasks.TasksElementsRepository
 	gateways.GatewaysElementsRepository
-	events.EventsElementsRepository
+	events.ProcessEventsElementsRepository
 	SubprocessesElementsRepository
 
 	SetTriggeredByEvent(triggered bool)

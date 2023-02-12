@@ -4,30 +4,28 @@ import (
 	"encoding/xml"
 
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
-	"github.com/deemount/gobpmn/models/bpmn/events/elements"
+	"github.com/deemount/gobpmn/models/bpmn/collaboration"
+	"github.com/deemount/gobpmn/models/bpmn/events"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
-	"github.com/deemount/gobpmn/models/bpmn/pool"
 	"github.com/deemount/gobpmn/models/bpmn/process"
 )
 
 // DefinitionsBaseElements ...
 type DefinitionsBaseElements struct {
-	Collaboration []pool.Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration"`
-	Process       []process.Process    `xml:"bpmn:process,omitempty" json:"process"`
-	Category      []marker.Category    `xml:"bpmn:category,omitempty" json:"category,omitempty"`
-	Msg           []elements.Message   `xml:"bpmn:message,omitempty" json:"message,omitempty"`
-	Signal        []elements.Signal    `xml:"bpmn:signal,omitempty" json:"signal,omitempty"`
-	Diagram       []canvas.Diagram     `xml:"bpmndi:BPMNDiagram,omitempty" json:"diagram"`
+	Collaboration []collaboration.Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration"`
+	Process       []process.Process             `xml:"bpmn:process,omitempty" json:"process"`
+	Category      []marker.Category             `xml:"bpmn:category,omitempty" json:"category,omitempty"`
+	events.CoreEvents
+	Diagram []canvas.Diagram `xml:"bpmndi:BPMNDiagram,omitempty" json:"diagram"`
 }
 
 // TDefinitionsBaseElements ...
 type TDefinitionsBaseElements struct {
-	Collaboration []pool.TCollaboration `xml:"collaboration,omitempty" json:"collaboration"`
-	Process       []process.TProcess    `xml:"process,omitempty" json:"process"`
-	Category      []marker.TCategory    `xml:"category,omitempty" json:"category,omitempty"`
-	Msg           []elements.TMessage   `xml:"message,omitempty" json:"message,omitempty"`
-	Signal        []elements.TSignal    `xml:"signal,omitempty" json:"signal,omitempty"`
-	Diagram       []canvas.TDiagram     `xml:"BPMNDiagram,omitempty" json:"diagram"`
+	Collaboration []collaboration.TCollaboration `xml:"collaboration,omitempty" json:"collaboration"`
+	Process       []process.TProcess             `xml:"process,omitempty" json:"process"`
+	Category      []marker.TCategory             `xml:"category,omitempty" json:"category,omitempty"`
+	events.TCoreEvents
+	Diagram []canvas.TDiagram `xml:"BPMNDiagram,omitempty" json:"diagram"`
 }
 
 // Definitions represents the root element

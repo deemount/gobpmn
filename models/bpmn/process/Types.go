@@ -1,3 +1,6 @@
 package process
 
-type STR_PTR *string
+type PROCESS_SLC []Process
+type TPROCESS_SLC []TProcess
+
+type PROCESS_PTR *Process

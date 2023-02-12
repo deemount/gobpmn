@@ -1,23 +1,8 @@
 package pool
 
 import (
-	"github.com/deemount/gobpmn/models/bpmn/attributes"
-	"github.com/deemount/gobpmn/models/bpmn/flow"
 	"github.com/deemount/gobpmn/models/bpmn/impl"
-	"github.com/deemount/gobpmn/models/bpmn/loop"
 )
-
-// CollaborationRepository ...
-type CollaborationRepository interface {
-	impl.IFBaseID
-	attributes.AttributesBaseElements
-
-	SetParticipant(num int)
-	GetParticipant(num int) *Participant
-
-	SetMessageFlow(num int)
-	GetMessageFlow(num int) *flow.MessageFlow
-}
 
 // FlowNodeRefRepository ...
 type FlowNodeRefRepository interface {
@@ -37,19 +22,4 @@ type LaneSetRepository interface {
 	impl.IFBaseID
 	SetLane(num int)
 	GetLane(num int) *Lane
-}
-
-// ParticipantRepository ...
-type ParticipantRepository interface {
-	impl.IFBaseID
-	impl.IFBaseName
-
-	SetProcessRef(typ string, suffix string)
-	GetProcessRef() *string
-
-	SetDocumentation()
-	GetDocumentation() *attributes.Documentation
-
-	SetParticipantMultiplicity()
-	GetParticipantMultiplicity() *loop.ParticipantMultiplicity
 }

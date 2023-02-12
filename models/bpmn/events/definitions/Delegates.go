@@ -43,9 +43,10 @@ func SetID(typ string, suffix interface{}) string {
 }
 
 // SetTimerEventDefinition ...
-func SetTimerEventDefinition(t *TimerEventDefinition, timerDefinition string, hash string) {
-	t.SetID("timer", hash)
-	t.SetTimeDuration()
-	t.GetTimeDuration().SetTimerDefinitionType()
-	t.GetTimeDuration().SetTimerDefinition(timerDefinition)
+// t *TimerEventDefinition, timerDefinition string, hash string
+func SetTimerEventDefinition(p DelegateParameter) {
+	p.TED.SetID("timer", p.H[0])
+	p.TED.SetTimeDuration()
+	p.TED.GetTimeDuration().SetTimerDefinitionType()
+	p.TED.GetTimeDuration().SetTimerDefinition(p.TD)
 }

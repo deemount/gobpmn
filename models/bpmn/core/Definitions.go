@@ -5,10 +5,11 @@ import (
 	"log"
 
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
+	"github.com/deemount/gobpmn/models/bpmn/collaboration"
+	"github.com/deemount/gobpmn/models/bpmn/events"
 	"github.com/deemount/gobpmn/models/bpmn/events/elements"
 	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
-	"github.com/deemount/gobpmn/models/bpmn/pool"
 	"github.com/deemount/gobpmn/models/bpmn/process"
 	"github.com/deemount/gobpmn/utils"
 )
@@ -20,13 +21,17 @@ var (
 	schemaBpmnDI              = "http://www.omg.org/spec/BPMN/20100524/DI"
 	schemaOMGDI               = "http://www.omg.org/spec/DD/20100524/DI"
 	schemaOMGDC               = "http://www.omg.org/spec/DD/20100524/DC"
+	schemaBpmnIOSchema        = "http://bpmn.io/schema/bpmn"
 	schemaBpmnIOBioColor      = "http://bpmn.io/schema/bpmn/biocolor/1.0"
+	schemaCamunda             = "http://camunda.org/schema/1.0/bpmn"
+	schemaCamundaZebee        = "http://camunda.org/schema/zeebe/1.0"
+	schemaCamundaModeler      = "http://camunda.org/schema/modeler/1.0"
 	schemaW3XmlSchema         = "http://www.w3.org/2001/XMLSchema"
 	schemaW3XmlSchemaInstance = "http://www.w3.org/2001/XMLSchema-instance"
 )
 
 // NewDefinitions ...
-func NewDefinitions() DefinitionsRepository {
+func NewDefinitions(p interface{}) DefinitionsRepository {
 	return &Definitions{}
 }
 
@@ -101,24 +106,24 @@ func (definitions *Definitions) SetID(typ string, suffix interface{}) {
 
 // SetTargetNamespace ...
 func (definitions *Definitions) SetTargetNamespace() {
-	definitions.TargetNamespace = "http://bpmn.io/schema/bpmn"
+	definitions.TargetNamespace = schemaBpmnIOSchema
 }
 
 /** Camunda **/
 
 // SetCamundaSchema ...
 func (definitions *Definitions) SetCamundaSchema() {
-	definitions.CamundaSchema = "http://camunda.org/schema/1.0/bpmn"
+	definitions.CamundaSchema = schemaCamunda
 }
 
 // SetZeebe ...
 func (definitions *Definitions) SetZeebeSchema() {
-	definitions.Zeebe = "http://camunda.org/schema/zeebe/1.0"
+	definitions.Zeebe = schemaCamundaZebee
 }
 
 // SetModeler ...
 func (definitions *Definitions) SetModelerSchema() {
-	definitions.Modeler = "http://camunda.org/schema/modeler/1.0"
+	definitions.Modeler = schemaCamundaModeler
 }
 
 // SetModelerExecutionPlatform ...
@@ -149,12 +154,12 @@ func (definitions *Definitions) SetExporterVersion(version string) {
 
 // SetCollaboration ...
 func (definitions *Definitions) SetCollaboration() {
-	definitions.Collaboration = make([]pool.Collaboration, 1)
+	definitions.Collaboration = make(collaboration.COLLABORATION_SLC, 1)
 }
 
 // SetProcess ...
 func (definitions *Definitions) SetProcess(num int) {
-	definitions.Process = make([]process.Process, num)
+	definitions.Process = make(process.PROCESS_SLC, num)
 }
 
 // SetCategory ...
@@ -162,21 +167,23 @@ func (definitions *Definitions) SetCategory(num int) {
 	definitions.Category = make([]marker.Category, num)
 }
 
+/*** Events ***/
+
 // SetMessage ...
 func (definitions *Definitions) SetMessage(num int) {
-	definitions.Msg = make([]elements.Message, num)
+	definitions.Message = make(events.MESSAGE_SLC, num)
 }
 
 // SetSignal ...
 func (definitions *Definitions) SetSignal(num int) {
-	definitions.Signal = make([]elements.Signal, num)
+	definitions.Signal = make(events.SIGNAL_SLC, num)
 }
 
 /** BPMNDI **/
 
 // SetDiagram ...
 func (definitions *Definitions) SetDiagram(num int) {
-	definitions.Diagram = make([]canvas.Diagram, num)
+	definitions.Diagram = make(canvas.DIAGRAM_SLC, num)
 }
 
 /*
@@ -218,12 +225,12 @@ func (definitions Definitions) GetID() impl.STR_PTR {
 /** BPMN **/
 
 // GetCollaboration ...
-func (definitions Definitions) GetCollaboration() *pool.Collaboration {
+func (definitions Definitions) GetCollaboration() collaboration.COLLABORATION_PTR {
 	return &definitions.Collaboration[0]
 }
 
 // GetProcess ...
-func (definitions Definitions) GetProcess(num int) *process.Process {
+func (definitions Definitions) GetProcess(num int) process.PROCESS_PTR {
 	return &definitions.Process[num]
 }
 
@@ -232,9 +239,11 @@ func (definitions Definitions) GetCategory(num int) *marker.Category {
 	return &definitions.Category[num]
 }
 
+/*** Events ***/
+
 // GetMessage ...
 func (definitions Definitions) GetMessage(num int) *elements.Message {
-	return &definitions.Msg[num]
+	return &definitions.Message[num]
 }
 
 // GetSignal ...
@@ -245,7 +254,7 @@ func (definitions Definitions) GetSignal(num int) *elements.Signal {
 /** BPMNDI **/
 
 // SetDiagram ...
-func (definitions Definitions) GetDiagram(num int) *canvas.Diagram {
+func (definitions Definitions) GetDiagram(num int) canvas.DIAGRAM_PTR {
 	return &definitions.Diagram[num]
 }
 
