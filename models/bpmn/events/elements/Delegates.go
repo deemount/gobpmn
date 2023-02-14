@@ -2,7 +2,6 @@ package elements
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/events/definitions"
@@ -80,6 +79,3 @@ func SetEndEvent(p DelegateParameter) {
 
 // SetMessage ...
 func SetMessage(p DelegateParameter) {}
-
-// IsMessage ...
-func IsMessage(field string) bool { return strings.ToLower(field) == structMessage }

@@ -1,9 +1,6 @@
 package collaborative_process
 
 import (
-	"log"
-	"reflect"
-
 	"github.com/deemount/gobpmn/factory"
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/collaboration"
@@ -70,11 +67,6 @@ type Customer struct {
 func New() Proxy {
 	p := Builder.Inject(Process{}).(Process)
 	p.Def = core.NewDefinitions()
-	miType := reflect.TypeOf(p.Def)
-	for i := 0; i < miType.NumMethod(); i++ {
-		method := miType.Method(i)
-		log.Printf("%v", method.Name)
-	}
 	return &p
 }
 
