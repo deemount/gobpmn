@@ -6,13 +6,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/deemount/gobpmn/examples"
+	"github.com/deemount/gobpmn/examples/collaborative_process"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 )
 
 // BpmnFactory ...
 type BpmnFactory interface {
-	Create() (bpmnFactory, error)
+	Build() (bpmnFactory, error)
 	GetCurrentlyCreatedFile() string
 }
 
@@ -68,10 +68,10 @@ func (factory *bpmnFactory) set() {
 	// e.g. use struct pointer (no argument)
 
 	// 1
-	repositoryModel := examples.NewCollaborativeProcess()
-	//repositoryModel := examples.NewSimpleModel001()
-	d := repositoryModel.Create()
-	factory.Repo = d.Build()
+	//repositoryModel := small_process.New()
+	repositoryModel := collaborative_process.New()
+	d := repositoryModel.Build()
+	factory.Repo = d.Call()
 
 	// 2
 	// repositoryModel := examples.NewBlackBoxModel()
@@ -85,8 +85,8 @@ func (factory *bpmnFactory) set() {
 
 }
 
-// Create ...
-func (factory bpmnFactory) Create() (bpmnFactory, error) {
+// Build...
+func (factory bpmnFactory) Build() (bpmnFactory, error) {
 
 	var err error
 

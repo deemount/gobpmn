@@ -71,18 +71,18 @@ func (h Builder) hash() Builder {
 // inject ...
 func (h *Builder) inject(p interface{}) interface{} {
 
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("factory.builder: inject recovered", r)
+		}
+	}()
+
 	log.Println("factory.builder: start injecting fields")
 
 	ref := NewReflect(p)
-	ref.Interface().New().Maps()
+	ref.Interface().New().Maps().Reflection()
 
-	// get anonymous field from interface {}
-	ref.reflectAnonymousFields()
-
-	// after reflected anonymous fields
-	ref.reflectBuilderType()
-	ref.reflectBoolType()
-
+	// TODO: Describe how the injection rule for anonymous fields is
 	// anonymous field are reflected
 	if ref.hasAnonymous() {
 
@@ -95,71 +95,44 @@ func (h *Builder) inject(p interface{}) interface{} {
 			// walk through the values of fields by the interface {}
 			for i := 0; i < n.NumField(); i++ {
 
+				name := n.Type().Field(i).Name
+				if strings.Contains(name, field) {
+					log.Printf("factory.builder: detected field %s contains anonymous field %s", name, field)
+				}
+
 				// set by kind of reflected value above
 				switch n.Field(i).Kind() {
 
 				// kind is a struct
 				case reflect.Struct:
 
-					builderField := n.Type().Field(i).Name
-
-					if h.isPool(field) {
-						if strings.Contains(builderField, fieldProcess) {
-							h.NumProc++
-						}
-						if strings.Contains(builderField, fieldID) {
-							h.NumPart++
-						}
-					}
-
-					if h.isMessage(field) {
-						if strings.Contains(builderField, fieldMessage) {
-							h.NumMsg++
-						}
-					}
-
-					if strings.Contains(builderField, field) {
-
-					}
-
-					/*
-						if strings.Contains(builderField, fieldStartEvent) && utils.After(builderField, "From") == fieldStartEvent {
-							h.NumStartEvent++
-						}
-
-						if strings.Contains(builderField, fieldEndEvent) && utils.After(builderField, "From") == fieldEndEvent {
-							h.NumEndEvent++
-						}
-					*/
+					h.inPool(field, name)
+					h.inMessage(field, name)
 
 					// generate hash value
 					hash := h.hash()
 					n.Field(i).Set(reflect.ValueOf(hash))
 
-					log.Printf("factory.builder: inject struct field %s", builderField)
+					log.Printf("factory.builder: inject struct field %s", name)
 
 					break
 
 				// kind is a bool
 				case reflect.Bool:
 
-					val := n.Type().Field(i).Name
-
 					// only the first field, which IsExecutable is set to true,
 					// means, only one process in a collaboration can be executed at runtime
 					// this can be changed in the future, if the engine fits for more execution
 					// options
-					if strings.Contains(val, boolIsExecutable) && i == 0 {
+					if strings.Contains(name, boolIsExecutable) && i == 0 {
 						n.Field(0).SetBool(true)
-						log.Printf("factory.builder: inject bool field %s", val)
+						log.Printf("factory.builder: inject first bool field %s once", name)
 					}
 
 					break
 				}
 			}
 		}
-
-		p = ref.Set()
 
 	}
 
@@ -209,11 +182,12 @@ func (h *Builder) inject(p interface{}) interface{} {
 
 		}
 
-		p = ref.Set()
-
 	}
 
+	p = ref.Set()
 	ref.countWords()
+
+	log.Printf("0: %v", reflect.TypeOf(p).NumMethod())
 
 	return p
 
@@ -232,6 +206,27 @@ func (h *Builder) build(p interface{}) {
 	// set main elements of the core package
 	// h.numProc represents number of processes
 	core.SetMainElements(tmp.Interface().(def), h.NumProc)
+}
+
+// inPool ...
+func (h *Builder) inPool(field, builderField string) {
+	if h.isPool(field) {
+		if strings.Contains(builderField, fieldProcess) {
+			h.NumProc++
+		}
+		if strings.Contains(builderField, fieldID) {
+			h.NumPart++
+		}
+	}
+}
+
+// inMessage ...
+func (h *Builder) inMessage(field, builderField string) {
+	if h.isMessage(field) {
+		if strings.Contains(builderField, fieldMessage) {
+			h.NumMsg++
+		}
+	}
 }
 
 // isZero ...

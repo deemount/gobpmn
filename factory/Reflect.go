@@ -39,11 +39,23 @@ func (ref *Reflect) New() *Reflect {
 // config: all boolean fields
 // builder: all builder fields
 // words: all collected words splitted
-func (ref *Reflect) Maps() {
+func (ref *Reflect) Maps() *Reflect {
 	ref.anonym = make(map[int]string)
 	ref.config = make(map[int]string)
 	ref.builder = make(map[int]string)
 	ref.words = make(map[int][]string)
+	return ref
+}
+
+// reflect fields of interface {}
+func (ref *Reflect) Reflection() {
+	ref.anonymousFields()
+	ref.builderType()
+	ref.boolType()
+}
+
+func (ref *Reflect) Methods() {
+	reflect.TypeOf(ref.IF).NumMethod()
 }
 
 // Set temporary variable values to interface {}
@@ -52,9 +64,8 @@ func (ref *Reflect) Set() any {
 	return ref.Element.Interface()
 }
 
-// reflectAppAnonymousFields takes all compounds which are anonymous
-// The implementation is O(N) for insertions
-func (ref *Reflect) reflectAnonymousFields() {
+// anonymousFields takes all compounds which are anonymous
+func (ref *Reflect) anonymousFields() {
 
 	fields := reflect.VisibleFields(reflect.TypeOf(ref.IF))
 	i := 0
@@ -71,8 +82,9 @@ func (ref *Reflect) reflectAnonymousFields() {
 
 }
 
-// reflectBuilderType with three static filter options
-func (ref Reflect) reflectBuilderType() {
+// builderType with three static filter options
+func (ref Reflect) builderType() {
+
 	fields := reflect.VisibleFields(reflect.TypeOf(ref.IF))
 	count := 0
 	index := len(ref.words)
@@ -84,12 +96,14 @@ func (ref Reflect) reflectBuilderType() {
 			index++
 		}
 	}
+
 }
 
-// reflectBoolType with one static filter option, which must be kind of reflect.Bool
+// boolType with one static filter option, which must be kind of reflect.Bool
 // The bool type of a field in a struct describes mostly configuration settings
 // The field must contain a sibling in title case, e.g. IsExecutable
-func (ref Reflect) reflectBoolType() {
+func (ref Reflect) boolType() {
+
 	fields := reflect.VisibleFields(reflect.TypeOf(ref.IF))
 	count := 0
 	index := len(ref.words)
@@ -101,6 +115,7 @@ func (ref Reflect) reflectBoolType() {
 			index++
 		}
 	}
+
 }
 
 // countWords ...
