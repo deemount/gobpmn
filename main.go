@@ -28,7 +28,7 @@ func init() {
 func main() {
 
 	log.Println("main: bpmnFactory.Create")
-	file, err := bpmnFactory.Create()
+	file, err := bpmnFactory.Build()
 	if err != nil {
 		panic(err)
 	}

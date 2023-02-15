@@ -6,11 +6,10 @@ import (
 )
 
 var (
-	fieldShort = "vnts"
-	fieldLong  = "events"
+	structEvents = "events"
 )
 
-// IsDefinitions ...
+// IsEvents ...
 func IsEvents(field reflect.StructField) bool {
-	return strings.ToLower(field.Name) == fieldShort || strings.ToLower(field.Name) == fieldLong
+	return strings.ToLower(field.Name) == structEvents
 }

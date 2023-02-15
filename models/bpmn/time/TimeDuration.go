@@ -1,15 +1,10 @@
 package time
 
-import "fmt"
+import (
+	"fmt"
 
-// TimeDurationRepository ...
-type TimeDurationRepository interface{ TimeBase }
-
-// TimeDuration ...
-type TimeDuration struct {
-	TimerDefType string `xml:"xsi:type,attr,omitempty" json:"timerDefType,omitempty"`
-	TimerDef     string `xml:",innerxml" json:"timerDef,omitempty"`
-}
+	"github.com/deemount/gobpmn/models/bpmn/impl"
+)
 
 // NewTimeDuration ...
 func NewTimeDuration() TimeDurationRepository {
@@ -43,11 +38,11 @@ func (timeduration *TimeDuration) SetTimerDefinition(timerDefinition string) {
 /** BPMN **/
 
 // GetTimerDefinitionType ...
-func (timeduration TimeDuration) GetTimerDefinitionType() STR_PTR {
+func (timeduration TimeDuration) GetTimerDefinitionType() impl.STR_PTR {
 	return &timeduration.TimerDefType
 }
 
 // GetTimerDefinition ...
-func (timeduration TimeDuration) GetTimerDefinition() STR_PTR {
+func (timeduration TimeDuration) GetTimerDefinition() impl.STR_PTR {
 	return &timeduration.TimerDef
 }

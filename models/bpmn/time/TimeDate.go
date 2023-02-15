@@ -1,21 +1,17 @@
 package time
 
-import "fmt"
+import (
+	"fmt"
 
-// TimeDateRepository ...
-type TimeDateRepository interface{ TimeBase }
+	"github.com/deemount/gobpmn/models/bpmn/impl"
+)
 
-// TimeDate ...
-type TimeDate struct {
-	TimerDefType string `xml:"xsi:type,attr,omitempty" json:"timerDefType,omitempty"`
-	TimerDef     string `xml:",innerxml" json:"timerDef,omitempty"`
-}
-
+// NewTimeDate ...
 func NewTimeDate() TimeDateRepository {
 	return &TimeDate{}
 }
 
-/**
+/*
  * Default Setters
  */
 
@@ -33,7 +29,7 @@ func (timedate *TimeDate) SetTimerDefinition(timerDefinition string) {
 	timedate.TimerDef = timerDefinition
 }
 
-/**
+/*
  * Default Getters
  */
 
@@ -42,11 +38,11 @@ func (timedate *TimeDate) SetTimerDefinition(timerDefinition string) {
 /** BPMN **/
 
 // GetTimerDefinitionType ...
-func (timedate TimeDate) GetTimerDefinitionType() STR_PTR {
+func (timedate TimeDate) GetTimerDefinitionType() impl.STR_PTR {
 	return &timedate.TimerDefType
 }
 
 // GetTimerDefinition ...
-func (timedate TimeDate) GetTimerDefinition() STR_PTR {
+func (timedate TimeDate) GetTimerDefinition() impl.STR_PTR {
 	return &timedate.TimerDef
 }

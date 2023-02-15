@@ -5,15 +5,31 @@ import (
 	"strings"
 )
 
+var (
+	repository = "DefinitionsRepository"
+	fieldLong  = "definitions"
+	fieldShort = "def"
+)
+
 // ReflectDefinitions ...
 func ReflectDefinitions() reflect.Type {
 	var def *DefinitionsRepository
 	return reflect.TypeOf(def)
 }
 
-func ReflectDefinitionsMethodsToMap() map[int]string {
+func ReflectDefinitionsGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
 	t := reflect.TypeOf(Definitions{})
+	for i := 0; i < t.NumMethod(); i++ {
+		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+func ReflectDefinitionsMethodsToMap() map[int]string {
+	var ptr *Definitions
+	m := make(map[int]string)
+	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
 	}
