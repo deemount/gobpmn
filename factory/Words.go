@@ -68,6 +68,11 @@ var (
 	// bool
 	boolIsExecutable = "IsExecutable"
 
+	// methods (actually used in Builder.build only)
+	MethodSetCollaboration = "SetCollaboration"
+	MethodSetProcess       = "SetProcess"
+	MethodSetDiagram       = "SetDiagram"
+
 	// map
 	words = map[string]map[int]string{
 		"type": {

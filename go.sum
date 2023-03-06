@@ -1,6 +1,6 @@
 github.com/bwmarrin/snowflake v0.3.0 h1:xm67bEhkKh6ij1790JB83OujPR5CzNe8QuQqAgISZN0=
 github.com/bwmarrin/snowflake v0.3.0/go.mod h1:NdZxfVWX+oR6y2K0o6qAYv6gIOP9rjG0/E9WsDpxqwE=
-github.com/gocarina/gocsv v0.0.0-20220729221910-a7386ae0b221 h1:+GNiawgsTceS4Qnua+M5WKJTtebeIc1vbreV9LwGyl0=
-github.com/gocarina/gocsv v0.0.0-20220729221910-a7386ae0b221/go.mod h1:5YoVOkjYAQumqlV356Hj3xeYh4BdZuLE0/nRkf2NKkI=
+github.com/gocarina/gocsv v0.0.0-20230123225133-763e25b40669 h1:MvZzCA/mduVWoBSVKJeMdv+AqXQmZZ8i6p8889ejt/Y=
+github.com/gocarina/gocsv v0.0.0-20230123225133-763e25b40669/go.mod h1:5YoVOkjYAQumqlV356Hj3xeYh4BdZuLE0/nRkf2NKkI=
 github.com/streadway/amqp v1.0.0 h1:kuuDrUJFZL1QYL9hUNuCxNObNzB0bV/ZG5jV3RWAQgo=
 github.com/streadway/amqp v1.0.0/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=

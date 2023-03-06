@@ -159,6 +159,9 @@ func (definitions *Definitions) SetCollaboration() {
 
 // SetProcess ...
 func (definitions *Definitions) SetProcess(num int) {
+	if num == 0 {
+		num = 1
+	}
 	definitions.Process = make(process.PROCESS_SLC, num)
 }
 

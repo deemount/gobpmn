@@ -129,7 +129,9 @@ func (ref Reflect) countWords() {
 }
 
 // isNotDefinitions ...
-func (ref *Reflect) isDefinitions(field reflect.StructField) bool { return core.IsDefinitions(field) }
+func (ref *Reflect) isDefinitions(field reflect.StructField) bool {
+	return core.IsDefinitions(field)
+}
 
 // isNotDefinitions ...
 func (ref *Reflect) isNotDefinitions(field reflect.StructField) bool {
@@ -137,16 +139,24 @@ func (ref *Reflect) isNotDefinitions(field reflect.StructField) bool {
 }
 
 // hasAnonymous ...
-func (ref *Reflect) hasAnonymous() bool { return len(ref.anonym) > 0 }
+func (ref *Reflect) hasAnonymous() bool {
+	return len(ref.anonym) > 0
+}
 
 // hasNotAnonymous ...
-func (ref *Reflect) hasNotAnonymous() bool { return len(ref.anonym) == 0 }
+func (ref *Reflect) hasNotAnonymous() bool {
+	return len(ref.anonym) == 0
+}
 
 // isAnonymous ...
-func (ref *Reflect) isAnonymous(field reflect.StructField) bool { return field.Anonymous }
+func (ref *Reflect) isAnonymous(field reflect.StructField) bool {
+	return field.Anonymous
+}
 
 // isNotAnonymous ...
-func (ref *Reflect) isNotAnonymous(field reflect.StructField) bool { return !field.Anonymous }
+func (ref *Reflect) isNotAnonymous(field reflect.StructField) bool {
+	return !field.Anonymous
+}
 
 // isBpmnBuilder ...
 func (ref *Reflect) isBpmnBuilder(field reflect.StructField) bool {

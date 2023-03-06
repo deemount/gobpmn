@@ -17,7 +17,9 @@ func GenerateHash() string {
 	}
 	s := fmt.Sprintf("%x", b)
 
-	h.Write([]byte(s))
+	if _, err := h.Write([]byte(s)); err != nil {
+		panic(err)
+	}
 	defer h.Reset()
 
 	return fmt.Sprintf("%x", h.Sum(nil))

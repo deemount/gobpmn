@@ -23,6 +23,17 @@ func ReflectAdHocProcessMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectAdHocSubProcessMethodsToSlice ...
+func ReflectAdHocProcessMethodsToSlice() []string {
+	var ptr *AdHocSubProcess
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCallActivityGetMethodsToMap ...
 func ReflectCallActivityGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -40,6 +51,17 @@ func ReflectCallActivityMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCallActivityMethodsToSlice ...
+func ReflectCallActivityMethodsToSlice() []string {
+	var ptr *CallActivity
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -65,6 +87,17 @@ func ReflectSubProcessMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectSubProcessMethodsToSlice ...
+func ReflectSubProcessMethodsToSlice() []string {
+	var ptr *SubProcess
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectTransactionGetMethodsToMap ...
 func ReflectTransactionGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -82,6 +115,17 @@ func ReflectTransactionMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectTransactionMethodsToSlice ...
+func ReflectTransactionMethodsToSlice() []string {
+	var ptr *Transaction
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

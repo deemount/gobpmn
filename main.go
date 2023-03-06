@@ -4,6 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"log"
+	"time"
 
 	"github.com/deemount/gobpmn/repository"
 )
@@ -26,6 +27,8 @@ func init() {
 
 // main ...
 func main() {
+
+	start := time.Now()
 
 	log.Println("main: bpmnFactory.Create")
 	file, err := bpmnFactory.Build()
@@ -52,6 +55,8 @@ func main() {
 		log.Println("main: do your stuff here")
 		// Do your stuff here
 	}
+
+	log.Println("total time:", time.Since(start))
 
 	// TESTING MESSAGE BROKER
 	/*

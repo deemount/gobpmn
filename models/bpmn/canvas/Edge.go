@@ -46,6 +46,11 @@ func (edge *Edge) SetWaypoint() {
 	edge.Waypoint = make([]Waypoint, 2)
 }
 
+// SetWaypoints ...
+func (edge *Edge) SetWaypoints(num int) {
+	edge.Waypoint = make([]Waypoint, num)
+}
+
 // SetLabel ...
 func (edge *Edge) SetLabel() {
 	edge.Label = make([]Label, 1)

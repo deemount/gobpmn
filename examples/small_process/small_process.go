@@ -1,6 +1,8 @@
 package small_process
 
 import (
+	"log"
+
 	"github.com/deemount/gobpmn/factory"
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/core"
@@ -42,23 +44,22 @@ func (p Process) Build() Process {
 	return p
 }
 
-// Build ...
-func (p Process) Call() core.DefinitionsRepository { return p.Def }
+// Call ...
+func (p Process) Call() core.DefinitionsRepository {
+	return p.Def
+}
 
 // setInnerElements ...
 func (p *Process) setInnerElements() {
-	//Processes
-	p.Def.SetProcess(Builder.NumProc)
+	// Process Elements
 	p.process().SetStartEvent(Builder.NumStartEvent)
 	p.process().SetTask(Builder.NumTask)
 	p.process().SetEndEvent(Builder.NumEndEvent)
-	p.process().SetSequenceFlow(2)
+	p.process().SetSequenceFlow(2) // TODO: calculate num of flows by the elements above?
 	// Canvas
-	diagram := p.diagram()
-	diagram.SetPlane()
-	plane := p.plane()
-	plane.SetShape(3)
-	plane.SetEdge(2)
+	p.diagram().SetPlane()
+	p.plane().SetShape(3) // TODO: calculate num of flows by the elements above?
+	p.plane().SetEdge(2)  // TODO: calculate num of flows by the elements above?
 }
 
 // setProcess ...
@@ -81,35 +82,28 @@ func (p *Process) setStartEvent() {
 
 // fromStartEvent ...
 func (p *Process) fromStartEvent() {
+	log.Printf("%v")
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.process().GetSequenceFlow(0),
-			T:  "flow",
-			ST: "startevent",
-			TT: "activity",
-			H:  []string{p.FromStartEvent.Suffix, p.StartEvent.Suffix, p.Task.Suffix}})
-	canvas.SetEdge(
-		canvas.DelegateParameter{
-			E: p.plane().GetEdge(0),
-			T: "flow",
-			H: p.FromStartEvent.Suffix,
-			W: []canvas.Waypoint{{X: 215, Y: 177}, {X: 270, Y: 177}}})
+			SF:    p.process().GetSequenceFlow(0),
+			ED:    p.plane().GetEdge(0),
+			BSPTR: p.plane().GetShape(0).GetBounds(),
+			T:     "flow",
+			ST:    "startevent",
+			TT:    "activity",
+			H:     []string{p.FromStartEvent.Suffix, p.StartEvent.Suffix, p.Task.Suffix}})
 }
 
 // setTask ...
 func (p *Process) setTask() {
 	tasks.SetTask(
 		tasks.DelegateParameter{
-			TA: p.process().GetTask(0),
-			T:  "activity",
-			N:  "Task",
-			H:  []string{p.Task.Suffix, p.FromStartEvent.Suffix, p.FromTask.Suffix}})
-	canvas.SetShape(
-		canvas.DelegateParameter{
-			S: p.plane().GetShape(1),
-			T: "activity",
-			H: p.Task.Suffix,
-			B: canvas.Bounds{X: 270, Y: 137}})
+			TA:     p.process().GetTask(0),
+			SH:     p.plane().GetShape(1),
+			WPPREV: p.plane().GetEdge(0).GetWaypoint(1),
+			T:      "activity",
+			N:      "Task",
+			H:      []string{p.Task.Suffix, p.FromStartEvent.Suffix, p.FromTask.Suffix}})
 	p.fromTask()
 }
 
@@ -117,29 +111,25 @@ func (p *Process) setTask() {
 func (p *Process) fromTask() {
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.process().GetSequenceFlow(1),
-			T:  "flow",
-			ST: "activity",
-			TT: "event",
-			H:  []string{p.FromTask.Suffix, p.Task.Suffix, p.EndEvent.Suffix}})
-	canvas.SetEdge(
-		canvas.DelegateParameter{
-			E: p.plane().GetEdge(1),
-			T: "flow",
-			H: p.FromTask.Suffix,
-			W: []canvas.Waypoint{{X: 370, Y: 177}, {X: 432, Y: 177}}})
+			SF:    p.process().GetSequenceFlow(1),
+			ED:    p.plane().GetEdge(1),
+			BSPTR: p.plane().GetShape(1).GetBounds(),
+			T:     "flow",
+			ST:    "activity",
+			TT:    "event",
+			H:     []string{p.FromTask.Suffix, p.Task.Suffix, p.EndEvent.Suffix}})
 }
 
 // setEndEvent ...
 func (p *Process) setEndEvent() {
 	elements.SetEndEvent(
 		elements.DelegateParameter{
-			EE: p.process().GetEndEvent(0),
-			SH: p.plane().GetShape(2),
-			T:  "event",
-			N:  "End of Process",
-			H:  []string{p.EndEvent.Suffix, p.FromTask.Suffix},
-			BS: canvas.Bounds{X: 432, Y: 159}})
+			EE:     p.process().GetEndEvent(0),
+			SH:     p.plane().GetShape(2),
+			WPPREV: p.plane().GetEdge(1).GetWaypoint(1),
+			T:      "event",
+			N:      "End of Process",
+			H:      []string{p.EndEvent.Suffix, p.FromTask.Suffix}})
 }
 
 // setDiagram ...

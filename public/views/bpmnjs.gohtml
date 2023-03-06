@@ -1,0 +1,19 @@
+{{define "yield"}}
+  <div id="canvas"></div>
+  <script>
+    var diagramUrl = './bpmn/diagram_1.bpmn';
+    var bpmnViewer = new BpmnJS({
+      container: '#canvas'
+    });
+    async function openDiagram(bpmnXML) {
+      try {
+        await bpmnViewer.importXML(bpmnXML);
+        var canvas = bpmnViewer.get('canvas');
+        canvas.zoom('fit-viewport');
+      } catch (err) {
+        console.error('could not import BPMN 2.0 diagram', err);
+      }
+    }
+    $.get(diagramUrl, openDiagram, 'text');
+  </script>
+{{end}}

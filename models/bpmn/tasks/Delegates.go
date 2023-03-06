@@ -13,6 +13,6 @@ func SetTask(p DelegateParameter) {
 	p.TA.GetOutgoing(0).SetFlow(p.H[2])
 	if p.SH != nil {
 		canvas.SetShape(
-			canvas.DelegateParameter{S: p.SH, T: p.T, H: p.H[0], B: p.BS})
+			canvas.DelegateParameter{S: p.SH, T: p.T, H: p.H[0], WPPREV: p.WPPREV, B: p.BS})
 	}
 }

@@ -23,6 +23,17 @@ func ReflectCamundaConnectorMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaConnectorMethodsToSlice ...
+func ReflectCamundaConnectorMethodsToSlice() []string {
+	var ptr *CamundaConnector
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaConnectorIDGetMethodsToMap ...
 func ReflectCamundaConnectorIDGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -40,6 +51,17 @@ func ReflectCamundaConnectorIDMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaConnectorIDMethodsToSlice ...
+func ReflectCamundaConnectorIDMethodsToSlice() []string {
+	var ptr *CamundaConnectorID
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -65,6 +87,17 @@ func ReflectCamundaConstraintMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaConstraintMethodsToSlice ...
+func ReflectCamundaConstraintMethodsToSlice() []string {
+	var ptr *CamundaConstraint
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaEntryGetMethodsToMap ...
 func ReflectCamundaEntryGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -82,6 +115,17 @@ func ReflectCamundaEntryMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaEntryMethodsToSlice ...
+func ReflectCamundaEntryMethodsToSlice() []string {
+	var ptr *CamundaEntry
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -107,6 +151,17 @@ func ReflectCamundaExecutionListenerMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaExecutionListenerMethodsToSlice ...
+func ReflectCamundaExecutionListenerMethodsToSlice() []string {
+	var ptr *CamundaExecutionListener
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaExecutionListenerGetMethodsToMap ...
 func ReflectCamundaExpressionGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -124,6 +179,17 @@ func ReflectCamundaExpressionMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaExpressionMethodsToSlice ...
+func ReflectCamundaExpressionMethodsToSlice() []string {
+	var ptr *CamundaExpression
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -149,6 +215,17 @@ func ReflectCamundaFailedJobRetryCycleMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaFailedJobRetryCycleMethodsToSlice ...
+func ReflectCamundaFailedJobRetryCycleMethodsToSlice() []string {
+	var ptr *CamundaFailedJobRetryCycle
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaFieldGetMethodsToMap ...
 func ReflectCamundaFieldGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -166,6 +243,17 @@ func ReflectCamundaFieldMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaFieldMethodsToSlice ...
+func ReflectCamundaFieldMethodsToSlice() []string {
+	var ptr *CamundaField
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -191,6 +279,17 @@ func ReflectCamundaFormDataMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaFormDataMethodsToSlice ...
+func ReflectCamundaFormDataMethodsToSlice() []string {
+	var ptr *CamundaFormData
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaFormFieldGetMethodsToMap ...
 func ReflectCamundaFormFieldGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -208,6 +307,17 @@ func ReflectCamundaFormFieldMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaFormFieldMethodsToSlice ...
+func ReflectCamundaFormFieldMethodsToSlice() []string {
+	var ptr *CamundaFormField
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -233,6 +343,17 @@ func ReflectCamundaInMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaInMethodsToSlice ...
+func ReflectCamundaInMethodsToSlice() []string {
+	var ptr *CamundaIn
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaInputOutputGetMethodsToMap ...
 func ReflectCamundaInputOutputGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -250,6 +371,17 @@ func ReflectCamundaInputOutputMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaInputOutputMethodsToSlice ...
+func ReflectCamundaInputOutputMethodsToSlice() []string {
+	var ptr *CamundaInputOutput
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -275,6 +407,17 @@ func ReflectCamundaInputParameterMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaInputParameterMethodsToSlice ...
+func ReflectCamundaInputParameterMethodsToSlice() []string {
+	var ptr *CamundaInputParameter
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaListGetMethodsToMap ...
 func ReflectCamundaListGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -292,6 +435,17 @@ func ReflectCamundaListMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaInputParameterMethodsToSlice ...
+func ReflectCamundaListMethodsToSlice() []string {
+	var ptr *CamundaList
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -317,6 +471,17 @@ func ReflectCamundaMapMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaMapMethodsToSlice ...
+func ReflectCamundaMapMethodsToSlice() []string {
+	var ptr *CamundaMap
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaOutGetMethodsToMap ...
 func ReflectCamundaOutGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -334,6 +499,17 @@ func ReflectCamundaOutMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaOutMethodsToSlice ...
+func ReflectCamundaOutMethodsToSlice() []string {
+	var ptr *CamundaOut
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -359,6 +535,17 @@ func ReflectCamundaOutputParameterMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaOutMethodsToSlice ...
+func ReflectCamundaOutputParameterMethodsToSlice() []string {
+	var ptr *CamundaOutputParameter
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaPropertiesGetMethodsToMap ...
 func ReflectCamundaPropertiesGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -369,13 +556,24 @@ func ReflectCamundaPropertiesGetMethodsToMap() map[int]string {
 	return m
 }
 
-// ReflectCamundaPropertiesGetMethodsToMap ...
+// ReflectCamundaPropertiesMethodsToMap ...
 func ReflectCamundaPropertiesMethodsToMap() map[int]string {
 	var ptr *CamundaProperties
 	m := make(map[int]string)
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaPropertiesMethodsToSlice ...
+func ReflectCamundaPropertiesMethodsToSlice() []string {
+	var ptr *CamundaProperties
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -401,6 +599,17 @@ func ReflectCamundaPropertyMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaPropertyMethodsToSlice ...
+func ReflectCamundaPropertyMethodsToSlice() []string {
+	var ptr *CamundaProperty
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaScriptGetMethodsToMap ...
 func ReflectCamundaScriptGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -418,6 +627,17 @@ func ReflectCamundaScriptMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaPScriptMethodsToSlice ...
+func ReflectCamundaScriptMethodsToSlice() []string {
+	var ptr *CamundaScript
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -443,6 +663,17 @@ func ReflectCamundaStringMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaStringMethodsToSlice ...
+func ReflectCamundaStringMethodsToSlice() []string {
+	var ptr *CamundaString
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaTaskListenerGetMethodsToMap ...
 func ReflectCamundaTaskListenerGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -460,6 +691,17 @@ func ReflectCamundaTaskListenerMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaTaskListenerMethodsToSlice ...
+func ReflectCamundaTaskListenerMethodsToSlice() []string {
+	var ptr *CamundaTaskListener
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -485,6 +727,17 @@ func ReflectCamundaValidationMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCamundaValidationMethodsToSlice ...
+func ReflectCamundaValidationMethodsToSlice() []string {
+	var ptr *CamundaValidation
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCamundaValueGetMethodsToMap ...
 func ReflectCamundaValueGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -502,6 +755,17 @@ func ReflectCamundaValueMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCamundaValueMethodsToSlice ...
+func ReflectCamundaValueMethodsToSlice() []string {
+	var ptr *CamundaValue
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

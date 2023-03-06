@@ -9,16 +9,17 @@ import (
 
 // flow
 type DelegateParameter struct {
-	SF *SequenceFlow
-	MF *MessageFlow
-	ED *canvas.Edge
-	WP []canvas.Waypoint
-	BS canvas.Bounds
-	ST string   // source type
-	TT string   // target type
-	T  string   // typ
-	N  string   // name
-	H  []string // hash
+	SF    *SequenceFlow
+	MF    *MessageFlow
+	ED    *canvas.Edge
+	WP    []canvas.Waypoint
+	BS    canvas.Bounds  // bounds ref by value for ... // TODO: describe for what (look at collaborative_process -> fromCheckIncomingClaim)
+	BSPTR *canvas.Bounds // bounds pointer to get bounds of last element
+	ST    string         // source type
+	TT    string         // target type
+	T     string         // typ
+	N     string         // name
+	H     []string       // hash
 }
 
 type SourceTargetRef struct {

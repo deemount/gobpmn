@@ -23,6 +23,17 @@ func ReflectLoopCardinalityMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectLoopCardinalityMethodsToSlice ...
+func ReflectLoopCardinalityMethodsToSlice() []string {
+	var ptr *LoopCardinality
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectMultiInstanceLoopCharacteristicsGetMethodsToMap ...
 func ReflectMultiInstanceLoopCharacteristicsGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -40,6 +51,17 @@ func ReflectMultiInstanceLoopCharacteristicsMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectMultiInstanceLoopCharacteristicsMethodsToSlice ...
+func ReflectMultiInstanceLoopCharacteristicsMethodsToSlice() []string {
+	var ptr *MultiInstanceLoopCharacteristics
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -65,6 +87,17 @@ func ReflectParticipantMultiplicityMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectParticipantMultiplicityMethodsToSlice ...
+func ReflectParticipantMultiplicityMethodsToSlice() []string {
+	var ptr *ParticipantMultiplicity
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectStandardLoopCharacteristicsGetMethodsToMap ...
 func ReflectStandardLoopCharacteristicsGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -82,6 +115,17 @@ func ReflectStandardLoopCharacteristicsMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectStandardLoopCharacteristicsMethodsToSlice ...
+func ReflectStandardLoopCharacteristicsMethodsToSlice() []string {
+	var ptr *StandardLoopCharacteristics
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

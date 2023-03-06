@@ -23,6 +23,17 @@ func ReflectBoundsMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectBoundsMethodsToSlice ...
+func ReflectBoundsMethodsToSlice() []string {
+	var ptr *Bounds
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectDiagramGetMethodsToMap ...
 func ReflectDiagramGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -40,6 +51,17 @@ func ReflectDiagramMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectDiagramMethodsToSlice ...
+func ReflectDiagramMethodsToSlice() []string {
+	var ptr *Diagram
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -65,6 +87,17 @@ func ReflectEdgeMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectEdgeMethodsToSlice ...
+func ReflectEdgeMethodsToSlice() []string {
+	var ptr *Edge
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectLabelGetMethodsToMap ...
 func ReflectLabelGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -82,6 +115,17 @@ func ReflectLabelMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectLabelMethodsToSlice ...
+func ReflectLabelMethodsToSlice() []string {
+	var ptr *Label
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -107,6 +151,17 @@ func ReflectPlaneMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectPlaneMethodsToSlice ...
+func ReflectPlaneMethodsToSlice() []string {
+	var ptr *Plane
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectShapeGetMethodsToMap ...
 func ReflectShapeGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -128,6 +183,17 @@ func ReflectShapeMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectShapeMethodsToSlice ...
+func ReflectShapeMethodsToSlice() []string {
+	var ptr *Shape
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectWaypointGetMethodsToMap ...
 func ReflectWaypointGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -145,6 +211,17 @@ func ReflectWaypointMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectWaypointMethodsToSlice ...
+func ReflectWaypointMethodsToSlice() []string {
+	var ptr *Waypoint
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

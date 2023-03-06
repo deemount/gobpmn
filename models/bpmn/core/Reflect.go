@@ -36,6 +36,16 @@ func ReflectDefinitionsMethodsToMap() map[int]string {
 	return m
 }
 
+func ReflectDefinitionsMethodsToSlice() []string {
+	var ptr *Definitions
+	t := reflect.TypeOf(ptr)
+	m := []string{}
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectDefinitionsIsFirst ...
 func ReflectDefinitionsIsFirst(p any) bool {
 	if reflect.TypeOf(p).Field(0).Type.Name() == repository {

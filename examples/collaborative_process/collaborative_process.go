@@ -67,13 +67,13 @@ type Customer struct {
 func New() Proxy {
 	p := Builder.Inject(Process{}).(Process)
 	p.Def = core.NewDefinitions()
+	Builder.Build(p.Def)
 	return &p
 }
 
 // Build ...
 func (p Process) Build() Process {
 	// Elements
-	Builder.Build(p.Def)
 	p.setInnerElements()
 	p.setDefinitionsAttributes()
 	p.setCollaboration()

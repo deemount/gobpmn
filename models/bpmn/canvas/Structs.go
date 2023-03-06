@@ -6,13 +6,18 @@ package canvas
 // Label: d *Edge, b Bounds
 // Pool: e *Shape, typ string, isHorizontal bool, hash string, b Bounds
 type DelegateParameter struct {
-	S *Shape
-	E *Edge
-	T string
-	H string
-	I bool
-	W []Waypoint
-	B Bounds
+	S      *Shape
+	E      *Edge
+	T      string // typ
+	H      string // hash
+	I      bool
+	W      []Waypoint
+	WPPREV *Waypoint
+	B      Bounds
+	BSPTR  *Bounds
+	ST     string // source ref
+	TT     string // target ref
+	SZ     []int  // sizes
 }
 
 /*

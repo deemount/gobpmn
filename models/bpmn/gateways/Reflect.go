@@ -23,6 +23,17 @@ func ReflectComplexGatewayMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectComplexGatewayMethodsToSlice ...
+func ReflectComplexGatewayMethodsToSlice() []string {
+	var ptr *ComplexGateway
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectEventBasedGatewayGetMethodsToMap ...
 func ReflectEventBasedGatewayGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -40,6 +51,17 @@ func ReflectEventBasedGatewayMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectEventBasedGatewayMethodsToSlice ...
+func ReflectEventBasedGatewayMethodsToSlice() []string {
+	var ptr *EventBasedGateway
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -65,6 +87,17 @@ func ReflectExclusiveGatewayMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectExclusiveGatewayMethodsToSlice ...
+func ReflectExclusiveGatewayMethodsToSlice() []string {
+	var ptr *EventBasedGateway
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectInclusiveGatewayMethodsToMap ...
 func ReflectInclusiveGatewayGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -86,8 +119,19 @@ func ReflectInclusiveGatewayMethodsToMap() map[int]string {
 	return m
 }
 
-// ReflectParallelGatewayMethodsToMap ...
-func ReflectParallelGatewayMethodsToMap() map[int]string {
+// ReflectInclusiveGatewayMethodsToSlice ...
+func ReflectInclusiveGatewayMethodsToSlice() []string {
+	var ptr *InclusiveGateway
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
+// ReflectParallelGatewayGetMethodsToMap ...
+func ReflectParallelGatewayGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
 	t := reflect.TypeOf(ParallelGateway{})
 	for i := 0; i < t.NumMethod(); i++ {
@@ -97,12 +141,23 @@ func ReflectParallelGatewayMethodsToMap() map[int]string {
 }
 
 // ReflectParallelGatewayMethodsToMap ...
-func ReflectParallelGatewayGetMethodsToMap() map[int]string {
+func ReflectParallelGatewayMethodsToMap() map[int]string {
 	var ptr *ParallelGateway
 	m := make(map[int]string)
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectParallelGatewayMethodsToSlice ...
+func ReflectParallelGatewayMethodsToSlice() []string {
+	var ptr *ParallelGateway
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

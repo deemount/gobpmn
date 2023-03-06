@@ -23,6 +23,17 @@ func ReflectTimeCycleMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectTimeCycleMethodsToSlice ...
+func ReflectTimeCycleMethodsToSlice() []string {
+	var ptr *TimeCycle
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectTimeDateGetMethodsToMap ...
 func ReflectTimeDateGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -44,6 +55,17 @@ func ReflectTimeDateMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectTimeDateMethodsToSlice ...
+func ReflectTimeDateMethodsToSlice() []string {
+	var ptr *TimeDate
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectTimeDurationGetMethodsToMap ...
 func ReflectTimeDurationGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -61,6 +83,17 @@ func ReflectTimeDurationMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectTimeDurationMethodsToSlice ...
+func ReflectTimeDurationMethodsToSlice() []string {
+	var ptr *TimeDuration
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

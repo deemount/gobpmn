@@ -21,6 +21,16 @@ func ReflectTextMethodsToMap() map[int]string {
 	return m
 }
 
+func ReflectTextMethodsToSlice() []string {
+	var ptr *Text
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 func ReflectTextAnnotationGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
 	t := reflect.TypeOf(TextAnnotation{})
@@ -36,6 +46,16 @@ func ReflectTextAnnotationMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+func ReflectTextAnnotationMethodsToSlice() []string {
+	var ptr *TextAnnotation
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

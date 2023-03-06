@@ -6,18 +6,19 @@ import (
 )
 
 type DelegateParameter struct {
-	BE   *elements.BoundaryEvent
-	SE   *elements.StartEvent
-	EE   *elements.EndEvent
-	ICE  *elements.IntermediateCatchEvent
-	ITE  *elements.IntermediateThrowEvent
-	SH   *canvas.Shape
-	BS   canvas.Bounds
-	TD   string   // TimerDefinition
-	T    string   // Typ
-	N    string   // Name
-	H    []string // Hash
-	TEDH string   // TimerEventDefinition Hash
+	BE     *elements.BoundaryEvent
+	SE     *elements.StartEvent
+	EE     *elements.EndEvent
+	ICE    *elements.IntermediateCatchEvent
+	ITE    *elements.IntermediateThrowEvent
+	SH     *canvas.Shape
+	BS     canvas.Bounds
+	WPPREV *canvas.Waypoint // previous waypoint
+	TD     string           // TimerDefinition
+	T      string           // Typ
+	N      string           // Name
+	H      []string         // Hash
+	TEDH   string           // TimerEventDefinition Hash
 }
 
 // ProcessEvents ...

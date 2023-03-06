@@ -1,6 +1,8 @@
 package process
 
-import "reflect"
+import (
+	"reflect"
+)
 
 // ReflectProcessMethodsToMap ...
 func ReflectProcessGetMethodsToMap() map[int]string {
@@ -19,6 +21,17 @@ func ReflectProcessMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectProcessMethodsToSlice ...
+func ReflectProcessMethodsToSlice() []string {
+	var ptr *Process
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

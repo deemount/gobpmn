@@ -51,6 +51,7 @@ func (h *Builder) Build(p interface{}) { h.build(p) }
 
 // hash ...
 func (h Builder) hash() Builder {
+
 	n := 8
 	b := make([]byte, n)
 	c := fnv.New32a()
@@ -60,7 +61,9 @@ func (h Builder) hash() Builder {
 	}
 	s := fmt.Sprintf("%x", b)
 
-	c.Write([]byte(s))
+	if _, err := c.Write([]byte(s)); err != nil {
+		panic(err)
+	}
 	defer c.Reset()
 
 	r := Builder{Suffix: fmt.Sprintf("%x", string(c.Sum(nil)))}
@@ -68,7 +71,11 @@ func (h Builder) hash() Builder {
 	return r
 }
 
-// inject ...
+// inject is one of hte main ideas behind the project
+// The method itself reflects a given struct and inject
+// signed fields with hash values. I chose this type of algorithm,
+// because it does the logic behind the building of a bpmn.
+// Kinda magic ...
 func (h *Builder) inject(p interface{}) interface{} {
 
 	defer func() {
@@ -82,7 +89,7 @@ func (h *Builder) inject(p interface{}) interface{} {
 	ref := NewReflect(p)
 	ref.Interface().New().Maps().Reflection()
 
-	// TODO: Describe how the injection rule for anonymous fields is
+	// TODO: Describe how the injection rules for anonymous fields are
 	// anonymous field are reflected
 	if ref.hasAnonymous() {
 
@@ -109,9 +116,8 @@ func (h *Builder) inject(p interface{}) interface{} {
 					h.inPool(field, name)
 					h.inMessage(field, name)
 
-					// generate hash value
-					hash := h.hash()
-					n.Field(i).Set(reflect.ValueOf(hash))
+					hash := h.hash()                      // generate hash value
+					n.Field(i).Set(reflect.ValueOf(hash)) // inject the field
 
 					log.Printf("factory.builder: inject struct field %s", name)
 
@@ -161,9 +167,8 @@ func (h *Builder) inject(p interface{}) interface{} {
 				h.NumEndEvent++
 			}
 
-			// generate hash value
-			hash := h.hash()
-			n.Set(reflect.ValueOf(hash))
+			hash := h.hash()             // generate hash value
+			n.Set(reflect.ValueOf(hash)) // inject the field
 
 			log.Printf("factory.builder: inject struct field %v", builderField)
 
@@ -187,25 +192,37 @@ func (h *Builder) inject(p interface{}) interface{} {
 	p = ref.Set()
 	ref.countWords()
 
-	log.Printf("0: %v", reflect.TypeOf(p).NumMethod())
+	log.Printf("factory.builder: eof inject number of reflected methods %v", reflect.TypeOf(p).NumMethod())
 
 	return p
 
 }
 
-// build ...
+// build contains the reflected process definition
+// and can call SetMainElements from the core package or
+// calls it by the reflected method name.
+// This method hides some of the setters by building the BPMN
+// with reflection
 func (h *Builder) build(p interface{}) {
+
 	// el is the interface {}
 	el := reflect.ValueOf(&p).Elem()
 
 	// Allocate a temporary variable with type of the struct.
 	// el.Elem() is the value contained in the interface
-	tmp := reflect.New(el.Elem().Type()).Elem()
-	tmp.Set(el.Elem())
+	definitions := reflect.New(el.Elem().Type()).Elem() // *core.Definitions
+	definitions.Set(el.Elem())                          // reflected process definitions el will be assigned to the core definitions
 
-	// set main elements of the core package
-	// h.numProc represents number of processes
-	core.SetMainElements(tmp.Interface().(def), h.NumProc)
+	// set collaboration, process and diagram
+	collaboration := definitions.MethodByName(MethodSetCollaboration)
+	collaboration.Call([]reflect.Value{})
+
+	process := definitions.MethodByName(MethodSetProcess)
+	process.Call([]reflect.Value{reflect.ValueOf(h.NumProc)}) // h.numProc represents number of processes
+
+	diagram := definitions.MethodByName(MethodSetDiagram)
+	diagram.Call([]reflect.Value{reflect.ValueOf(1)})
+
 }
 
 // inPool ...

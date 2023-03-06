@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/deemount/gobpmn/models/bpmn/artifacts"
@@ -25,507 +25,434 @@ import (
 	"github.com/deemount/gobpmn/models/bpmn/process"
 	"github.com/deemount/gobpmn/models/bpmn/subprocesses"
 	"github.com/deemount/gobpmn/models/bpmn/tasks"
-	"github.com/deemount/gobpmn/models/bpmn/time"
+	tm "github.com/deemount/gobpmn/models/bpmn/time"
+	"github.com/deemount/gobpmn/public/views"
+	"github.com/deemount/gobpmn/utils"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
-	html := `<head>
-                    <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>
-              </head>
-                  <html>
-				  <body>
-                  <h1>Methods</h1>
-                  <p>
-				  <select>
-				    <option value="text">artifacts.Text</option>
-					<option value="text_annotation">artifacts.TextAnnotation</option>
-				    <option value="documentation">attributes.Documentation</option>
-					<option value="extension_elements">attributes.ExtensionElements</option>
-					<option value="property">attributes.Property</option>
-					<option value="bounds">canvas.Bounds</option>
-					<option value="diagram">canvas.Diagram</option>
-					<option value="edge">canvas.Edge</option>
-					<option value="label">canvas.Label</option>
-					<option value="plane">canvas.Plane</option>
-					<option value="plane">canvas.Shape</option>
-					<option value="plane">canvas.Waypoint</option>
-					<option value="camunda_connector">camunda.CamundaConnector</option>
-					<option value="camunda_connector_id">camunda.CamundaConnectorID</option>
-					<option value="camunda_constraint">camunda.CamundaConstraint</option>
-					<option value="camunda_entry">camunda.CamundaEntry</option>
-					<option value="camunda_execution_listener">camunda.CamundaExecutionListener</option>
-					<option value="camunda_expression">camunda.CamundaExpression</option>
-					<option value="camunda_failed_job_retry_cycle">camunda.CamundaFailedJobretryCycle</option>
-					<option value="camunda_field">camunda.CamundaField</option>
-					<option value="camunda_form_data">camunda.CamundaFormData</option>
-					<option value="camunda_form_field">camunda.CamundaFormField</option>
-					<option value="camunda_in">camunda.CamundaIn</option>
-					<option value="camunda_input_output">camunda.CamundaInputOutput</option>
-					<option value="camunda_input_parameter">camunda.CamundaInpuParameter</option>
-					<option value="camunda_list">camunda.CamundaList</option>
-					<option value="camunda_map">camunda.CamundaMap</option>
-					<option value="camunda_out">camunda.CamundaOut</option>
-					<option value="camunda_output_parameter">camunda.CamundaOutputParameter</option>
-					<option value="camunda_properties">camunda.CamundaProperties</option>
-					<option value="camunda_property">camunda.CamundaProperty</option>
-					<option value="camunda_script">camunda.CamundaScript</option>
-					<option value="camunda_string">camunda.CamundaString</option>
-					<option value="camunda_task_listener">camunda.CamundaTaskListener</option>
-					<option value="camunda_validation">camunda.CamundaValidation</option>
-					<option value="camunda_value">camunda.CamundaValue</option>
-					<option value="collaboration">collaboration.Collaboration</option>
-					<option value="participant">collaboration.Participant</option>
-					<option value="completion_condition">conditional.CompletionCondition</option>
-					<option value="condition">conditional.Condition</option>
-					<option value="condition_expression">conditional.ConditionExpression</option>
-					<option value="definitions">core.Definitions</option>
-					<option value="data_object">data.DataObject</option>
-					<option value="data_object_reference">data.DataObjectReference</option>
-					<option value="data_store_reference">data.DataStoreReference</option>
-					<option value="cancel_event_definition">definitions.CancelEventDefinition</option>
-					<option value="compensate_event_definition">definitions.CompensateEventDefinition</option>
-					<option value="conditional_event_definition">definitions.ConditionalEventDefinition</option>
-					<option value="error_event_definition">definitions.ErrorEventDefinition</option>
-					<option value="escalation_event_definition">definitions.EscalationEventDefinition</option>
-					<option value="link_event_definition">definitions.LinkEventDefinition</option>
-					<option value="message_event_definition">definitions.MessageEventDefinition</option>
-					<option value="signal_event_definition">definitions.SignalEventDefinition</option>
-					<option value="terminate_event_definition">definitions.TerminateEventDefinition</option>
-					<option value="timer_event_definition">definitions.TimerEventDefinition</option>
-					<option value="boundary_event">elements.BoundaryEvent</option>
-					<option value="end_event">elements.EndEvent</option>
-					<option value="intermediate_catch_event">elements.IntermediateCatchEvent</option>
-					<option value="intermediate_throw_event">elements.IntermediateThrowEvent</option>
-					<option value="message">elements.Message</option>
-					<option value="signal">elements.Signal</option>
-					<option value="start_event">elements.StartEvent</option>
-					<option value="association">flow.Association</option>
-					<option value="data_input_association">flow.DataInputAssociation</option>
-					<option value="message_flow">flow.MessageFlow</option>
-					<option value="sequence_flow">flow.SequenceFlow</option>
-					<option value="complex_gateway">gateways.ComplexGateway</option>
-					<option value="event_based_gateway">gateways.EventBasedGateway</option>
-					<option value="exclusive_gateway">gateways.ExclusiveGateway</option>
-					<option value="inclusive_gateway">gateways.InclusiveGateway</option>
-					<option value="parallel_gateway">gateways.ParallelGateway</option>
-					<option value="loop_cardinality">loop.LoopCardinality</option>
-					<option value="multi_instance_loop_characteristics">loop.MultiInstanceLoopCharacteristics</option>
-					<option value="participant_multiplicity">loop.ParticipantMultiplicity</option>
-					<option value="standard_loop_characteristics">loop.StandardLoopCharacteristics</option>
-					<option value="category">marker.Category</option>
-					<option value="category_value">marker.CategoryValue</option>
-					<option value="group">marker.Group</option>
-					<option value="incoming">marker.Incoming</option>
-					<option value="outgoing">marker.Outgoing</option>
-					<option value="flow_node_ref">pool.FlowNodeRef</option>
-					<option value="lane">pool.Lane</option>
-					<option value="lane_set">pool.LaneSet</option>
-					<option value="process">process.Process</option>
-					<option value="adhoc_subprocess">subprocesses.AdHocSubprocess</option>
-					<option value="call_activity">subprocesses.CallActivity</option>
-					<option value="subprocess">subprocesses.SubProcess</option>
-					<option value="transaction">subprocesses.Transaction</option>
-					<option value="business_rule_task">tasks.BusinessRuleTask</option>
-					<option value="manual_task">tasks.ManualTask</option>
-					<option value="receive_task">tasks.ReceiveTask</option>
-					<option value="script_task">tasks.ScriptTask</option>
-					<option value="send_task">tasks.SendTask</option>
-					<option value="service_task">tasks.ServiceTask</option>
-					<option value="task">tasks.Task</option>
-					<option value="user_task">tasks.UserTask</option>
-					<option value="time_cycle">time.TimeCycle</option>
-					<option value="time_date">time.TimeDate</option>
-					<option value="time_duration">time.TimeDuration</option>
-				  </select>
-				  <input id='methods_btn' type='button' value='methods'>
-				  </p>
-				  <div id='result'></div><br><br>
-                  </body></html>
+var index *views.View
+var contact *views.View
+var bpmnjs *views.View
+var elmnts *views.View
 
-                   <script>
-                   $(document).ready(function () {
-                         $('#methods_btn').click(function () {
-                             $.ajax({
-                               url: 'methods',
-                               type: 'post',
-                               dataType: 'html',
-                               data : { methods: $("select option:selected").val()},
-                               success : function(data) {
-                                 $('#result').html(data);
-                               },
-                             });
-                          });
-                	});
-                    </script>`
+func main() {
 
-	w.Write([]byte(fmt.Sprintf(html)))
+	index = views.NewView("bootstrap", "views/index.gohtml")
+	elmnts = views.NewView("bootstrap", "views/elements.gohtml")
+	bpmnjs = views.NewView("bpmnjs", "views/bpmnjs.gohtml")
 
+	// http.Handler
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", indexHandler)
+	mux.HandleFunc("/elements", elementsHandler)
+	mux.HandleFunc("/bpmnjs", bpmnJsHandler)
+	mux.HandleFunc("/methods", receiveMethods)
+
+	if err := http.ListenAndServe(":8080", mux); err != nil {
+		panic(err)
+	}
+}
+
+func elementsHandler(w http.ResponseWriter, r *http.Request) {
+
+	userDir, _ := os.UserHomeDir()
+	packageEnv := "/go/src/github.com/deemount/gobpmn/models/bpmn/"
+	option := ``
+
+	// get methods by elements
+	err := filepath.Walk(userDir+packageEnv,
+		func(path string, info os.FileInfo, err error) error {
+
+			if err != nil {
+				return err
+			}
+
+			if !info.IsDir() &&
+				info.Name() != ".DS_Store" &&
+				info.Name() != "Reflect.go" &&
+				info.Name() != "Delegates.go" &&
+				info.Name() != "Structs.go" &&
+				info.Name() != "Interfaces.go" &&
+				info.Name() != "Types.go" {
+
+				fileName := filepath.Base(path)
+				fileName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
+
+				option += `<option value="` + utils.ToSnakeCase(fileName) + `">` + filepath.Base(filepath.Dir(path)) + `.` + fileName + `</option>`
+
+			}
+			return err
+		})
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	elmnts.Render(w, option)
 }
 
 func receiveMethods(w http.ResponseWriter, r *http.Request) {
 
 	var names string
-	var m map[int]string
+	var m []string
 
 	if r.Method == "POST" {
+
 		methods := r.FormValue("methods")
 
 		switch methods {
 
 		// artifacts
 		case "text":
-			m = artifacts.ReflectTextMethodsToMap()
+			m = artifacts.ReflectTextMethodsToSlice()
 			break
 		case "text_annotation":
-			m = artifacts.ReflectTextAnnotationMethodsToMap()
+			m = artifacts.ReflectTextAnnotationMethodsToSlice()
 			break
 
 		// attributes
 		case "documentation":
-			m = attributes.ReflectDocumentationMethodsToMap()
+			m = attributes.ReflectDocumentationMethodsToSlice()
 			break
 		case "extension_elements":
-			m = attributes.ReflectExtensionElementsMethodsToMap()
+			m = attributes.ReflectExtensionElementsMethodsToSlice()
 			break
 		case "property":
-			m = attributes.ReflectPropertyMethodsToMap()
+			m = attributes.ReflectPropertyMethodsToSlice()
 			break
 
 		// camunda
 		case "camunda_connector":
-			m = camunda.ReflectCamundaConnectorMethodsToMap()
+			m = camunda.ReflectCamundaConnectorMethodsToSlice()
 			break
 		case "camunda_connector_id":
-			m = camunda.ReflectCamundaConnectorIDMethodsToMap()
+			m = camunda.ReflectCamundaConnectorIDMethodsToSlice()
 			break
 		case "camunda_constraint":
-			m = camunda.ReflectCamundaConstraintMethodsToMap()
+			m = camunda.ReflectCamundaConstraintMethodsToSlice()
 			break
 		case "camunda_execution_listener":
-			m = camunda.ReflectCamundaExecutionListenerMethodsToMap()
+			m = camunda.ReflectCamundaExecutionListenerMethodsToSlice()
 			break
 		case "camunda_expression":
-			m = camunda.ReflectCamundaExpressionMethodsToMap()
+			m = camunda.ReflectCamundaExpressionMethodsToSlice()
 			break
 		case "camunda_failed_job_retry_cycle":
-			m = camunda.ReflectCamundaFailedJobRetryCycleMethodsToMap()
+			m = camunda.ReflectCamundaFailedJobRetryCycleMethodsToSlice()
 			break
 		case "camunda_field":
-			m = camunda.ReflectCamundaFieldMethodsToMap()
+			m = camunda.ReflectCamundaFieldMethodsToSlice()
 			break
 		case "camunda_form_data":
-			m = camunda.ReflectCamundaFormDataMethodsToMap()
+			m = camunda.ReflectCamundaFormDataMethodsToSlice()
 			break
 		case "camunda_form_field":
-			m = camunda.ReflectCamundaFormFieldMethodsToMap()
+			m = camunda.ReflectCamundaFormFieldMethodsToSlice()
 			break
 		case "camunda_in":
-			m = camunda.ReflectCamundaInMethodsToMap()
+			m = camunda.ReflectCamundaInMethodsToSlice()
 			break
 		case "camunda_input_output":
-			m = camunda.ReflectCamundaInputOutputMethodsToMap()
+			m = camunda.ReflectCamundaInputOutputMethodsToSlice()
 			break
 		case "camunda_list":
-			m = camunda.ReflectCamundaListMethodsToMap()
+			m = camunda.ReflectCamundaListMethodsToSlice()
 			break
 		case "camunda_map":
-			m = camunda.ReflectCamundaMapMethodsToMap()
+			m = camunda.ReflectCamundaMapMethodsToSlice()
 			break
 		case "camunda_out":
-			m = camunda.ReflectCamundaOutMethodsToMap()
+			m = camunda.ReflectCamundaOutMethodsToSlice()
 			break
 		case "camunda_output_parameter":
-			m = camunda.ReflectCamundaOutputParameterMethodsToMap()
+			m = camunda.ReflectCamundaOutputParameterMethodsToSlice()
 			break
 		case "camunda_properties":
-			m = camunda.ReflectCamundaPropertiesMethodsToMap()
+			m = camunda.ReflectCamundaPropertiesMethodsToSlice()
 			break
 		case "camunda_property":
-			m = camunda.ReflectCamundaPropertyMethodsToMap()
+			m = camunda.ReflectCamundaPropertyMethodsToSlice()
 			break
 		case "camunda_script":
-			m = camunda.ReflectCamundaScriptMethodsToMap()
+			m = camunda.ReflectCamundaScriptMethodsToSlice()
 			break
 		case "camunda_string":
-			m = camunda.ReflectCamundaStringMethodsToMap()
+			m = camunda.ReflectCamundaStringMethodsToSlice()
 			break
 		case "camunda_task_listener":
-			m = camunda.ReflectCamundaTaskListenerMethodsToMap()
+			m = camunda.ReflectCamundaTaskListenerMethodsToSlice()
 			break
 		case "camunda_validation":
-			m = camunda.ReflectCamundaValidationMethodsToMap()
+			m = camunda.ReflectCamundaValidationMethodsToSlice()
 			break
 		case "camunda_value":
-			m = camunda.ReflectCamundaValueMethodsToMap()
+			m = camunda.ReflectCamundaValueMethodsToSlice()
 			break
 
 		// canvas
 		case "bounds":
-			m = canvas.ReflectBoundsMethodsToMap()
+			m = canvas.ReflectBoundsMethodsToSlice()
 			break
 		case "diagram":
-			m = canvas.ReflectDiagramMethodsToMap()
+			m = canvas.ReflectDiagramMethodsToSlice()
 			break
 		case "edge":
-			m = canvas.ReflectEdgeMethodsToMap()
+			m = canvas.ReflectEdgeMethodsToSlice()
 			break
 		case "label":
-			m = canvas.ReflectLabelMethodsToMap()
+			m = canvas.ReflectLabelMethodsToSlice()
 			break
 		case "plane":
-			m = canvas.ReflectPlaneMethodsToMap()
+			m = canvas.ReflectPlaneMethodsToSlice()
 			break
 		case "shape":
-			m = canvas.ReflectShapeMethodsToMap()
+			m = canvas.ReflectShapeMethodsToSlice()
 			break
 		case "waypoint":
-			m = canvas.ReflectWaypointMethodsToMap()
+			m = canvas.ReflectWaypointMethodsToSlice()
 			break
 
 		// collaboration
 		case "collaboration":
-			m = collaboration.ReflectCollaborationMethodsToMap()
+			m = collaboration.ReflectCollaborationMethodsToSlice()
 			break
 		case "participant":
-			m = collaboration.ReflectParticipantMethodsToMap()
+			m = collaboration.ReflectParticipantMethodsToSlice()
 			break
 
 		// conditional
 		case "completion_condition":
-			m = conditional.ReflectCompletionConditionMethodsToMap()
+			m = conditional.ReflectCompletionConditionMethodsToSlice()
 			break
 		case "condition":
-			m = conditional.ReflectConditionMethodsToMap()
+			m = conditional.ReflectConditionMethodsToSlice()
 			break
 		case "condition_expression":
-			m = conditional.ReflectConditionExpressionMethodsToMap()
+			m = conditional.ReflectConditionExpressionMethodsToSlice()
 			break
 
 		// core
 		case "definitions":
-			m = core.ReflectDefinitionsMethodsToMap()
+			m = core.ReflectDefinitionsMethodsToSlice()
 			break
 
 		// data
 		case "data_object":
-			m = data.ReflectDataObjectMethodsToMap()
+			m = data.ReflectDataObjectMethodsToSlice()
 			break
 		case "data_object_reference":
-			m = data.ReflectDataObjectReferenceMethodsToMap()
+			m = data.ReflectDataObjectReferenceMethodsToSlice()
 			break
 		case "data_store_reference":
-			m = data.ReflectDataStoreReferenceMethodsToMap()
+			m = data.ReflectDataStoreReferenceMethodsToSlice()
 			break
 
 		// event definitions
 		case "cancel_event_definition":
-			m = definitions.ReflectCancelEventDefinitionMethodsToMap()
+			m = definitions.ReflectCancelEventDefinitionMethodsToSlice()
 			break
 		case "compensate_event_defintion":
-			m = definitions.ReflectCompensateEventDefinitionMethodsToMap()
+			m = definitions.ReflectCompensateEventDefinitionMethodsToSlice()
 			break
 		case "conditional_event_definition":
-			m = definitions.ReflectConditionalEventDefinitionMethodsToMap()
+			m = definitions.ReflectConditionalEventDefinitionMethodsToSlice()
 			break
 		case "escalation_event_definition":
-			m = definitions.ReflectEscalationEventDefinitionMethodsToMap()
+			m = definitions.ReflectEscalationEventDefinitionMethodsToSlice()
 			break
 		case "link_event_definition":
-			m = definitions.ReflectLinkEventDefinitionMethodsToMap()
+			m = definitions.ReflectLinkEventDefinitionMethodsToSlice()
 			break
 		case "message_event_definition":
-			m = definitions.ReflectMessageEventDefinitionMethodsToMap()
+			m = definitions.ReflectMessageEventDefinitionMethodsToSlice()
 			break
 		case "signal_event_definition":
-			m = definitions.ReflectSignalEventDefinitionMethodsToMap()
+			m = definitions.ReflectSignalEventDefinitionMethodsToSlice()
 			break
 		case "terminate_event_definition":
-			m = definitions.ReflectTerminateEventDefinitionMethodsToMap()
+			m = definitions.ReflectTerminateEventDefinitionMethodsToSlice()
 			break
 		case "timer_event_definition":
-			m = definitions.ReflectTimerEventDefinitionMethodsToMap()
+			m = definitions.ReflectTimerEventDefinitionMethodsToSlice()
 			break
 
 		// elements
 		case "boundary_event":
-			m = elements.ReflectBoundaryEventMethodsToMap()
+			m = elements.ReflectBoundaryEventMethodsToSlice()
 			break
 		case "end_event":
-			m = elements.ReflectEndEventMethodsToMap()
+			m = elements.ReflectEndEventMethodsToSlice()
 			break
 		case "intermediate_catch_event":
-			m = elements.ReflectIntermediateCatchEventMethodsToMap()
+			m = elements.ReflectIntermediateCatchEventMethodsToSlice()
 			break
 		case "intermediate_throw_event":
-			m = elements.ReflectIntermediateThrowEventMethodsToMap()
+			m = elements.ReflectIntermediateThrowEventMethodsToSlice()
 			break
 		case "message":
-			m = elements.ReflectMessageMethodsToMap()
+			m = elements.ReflectMessageMethodsToSlice()
 			break
 		case "signal":
-			m = elements.ReflectSignalMethodsToMap()
+			m = elements.ReflectSignalMethodsToSlice()
 			break
 		case "start_event":
-			m = elements.ReflectStartEventlMethodsToMap()
+			m = elements.ReflectStartEventlMethodsToSlice()
 			break
 
 		// flow
 		case "association":
-			m = flow.ReflectAssociationMethodsToMap()
+			m = flow.ReflectAssociationMethodsToSlice()
 			break
 		case "data_input_association":
-			m = flow.ReflectDataInputAssociationMethodsToMap()
+			m = flow.ReflectDataInputAssociationMethodsToSlice()
 			break
 		case "message_flow":
-			m = flow.ReflectMessageFlowMethodsToMap()
+			m = flow.ReflectMessageFlowMethodsToSlice()
 			break
 		case "sequence_flow":
-			m = flow.ReflectSequenceFlowMethodsToMap()
+			m = flow.ReflectSequenceFlowMethodsToSlice()
 			break
 
 		// gateways
 		case "complex_gateway":
-			m = gateways.ReflectComplexGatewayMethodsToMap()
+			m = gateways.ReflectComplexGatewayMethodsToSlice()
 			break
 		case "event_based_gateway":
-			m = gateways.ReflectEventBasedGatewayMethodsToMap()
+			m = gateways.ReflectEventBasedGatewayMethodsToSlice()
 			break
 		case "exclusive_gateway":
-			m = gateways.ReflectExclusiveGatewayMethodsToMap()
+			m = gateways.ReflectExclusiveGatewayMethodsToSlice()
 			break
 		case "inclsusive_gateway":
-			m = gateways.ReflectInclusiveGatewayMethodsToMap()
+			m = gateways.ReflectInclusiveGatewayMethodsToSlice()
 			break
 		case "parallel_gateway":
-			m = gateways.ReflectParallelGatewayMethodsToMap()
+			m = gateways.ReflectParallelGatewayMethodsToSlice()
 			break
 
 		// loop
 		case "loop_cardinality":
-			m = loop.ReflectLoopCardinalityMethodsToMap()
+			m = loop.ReflectLoopCardinalityMethodsToSlice()
 			break
 		case "multi_instance_loop_characteristics":
-			m = loop.ReflectMultiInstanceLoopCharacteristicsMethodsToMap()
+			m = loop.ReflectMultiInstanceLoopCharacteristicsMethodsToSlice()
 			break
 		case "participant_multiplicity":
-			m = loop.ReflectParticipantMultiplicityMethodsToMap()
+			m = loop.ReflectParticipantMultiplicityMethodsToSlice()
 			break
 		case "standard_loop_characteristics":
-			m = loop.ReflectStandardLoopCharacteristicsMethodsToMap()
+			m = loop.ReflectStandardLoopCharacteristicsMethodsToSlice()
 			break
 
 		// marker
 		case "category":
-			m = marker.ReflectCategoryMethodsToMap()
+			m = marker.ReflectCategoryMethodsToSlice()
 			break
 		case "category_value":
-			m = marker.ReflectCategoryValueMethodsToMap()
+			m = marker.ReflectCategoryValueMethodsToSlice()
 			break
 		case "group":
-			m = marker.ReflectGroupMethodsToMap()
+			m = marker.ReflectGroupMethodsToSlice()
 			break
 		case "incoming":
-			m = marker.ReflectIncomingMethodsToMap()
+			m = marker.ReflectIncomingMethodsToSlice()
 			break
 		case "outgoing":
-			m = marker.ReflectOutgoingMethodsToMap()
+			m = marker.ReflectOutgoingMethodsToSlice()
 			break
 
 		// pool
 		case "flow_node_ref":
-			m = pool.ReflectFlowNodeRefMethodsToMap()
+			m = pool.ReflectFlowNodeRefMethodsToSlice()
 			break
 		case "lane":
-			m = pool.ReflectLaneMethodsToMap()
+			m = pool.ReflectLaneMethodsToSlice()
 			break
 		case "lane_set":
-			m = pool.ReflectLaneSetMethodsToMap()
+			m = pool.ReflectLaneSetMethodsToSlice()
 			break
 
 		// process
 		case "process":
-			m = process.ReflectProcessMethodsToMap()
+			m = process.ReflectProcessMethodsToSlice()
 			break
 
 		// subprocesses
-		case "adhoc_subprocess":
-			m = subprocesses.ReflectAdHocProcessMethodsToMap()
+		case "ad_hoc_sub_process":
+			m = subprocesses.ReflectAdHocProcessMethodsToSlice()
 			break
 		case "call_activity":
-			m = subprocesses.ReflectCallActivityMethodsToMap()
+			m = subprocesses.ReflectCallActivityMethodsToSlice()
 			break
-		case "subprocess":
-			m = subprocesses.ReflectSubProcessMethodsToMap()
+		case "sub_process":
+			m = subprocesses.ReflectSubProcessMethodsToSlice()
 			break
 		case "transaction":
-			m = subprocesses.ReflectTransactionMethodsToMap()
+			m = subprocesses.ReflectTransactionMethodsToSlice()
 			break
 
 		// tasks
 		case "business_rule_task":
-			m = tasks.ReflectBusinessRuleTaskMethodsToMap()
+			m = tasks.ReflectBusinessRuleTaskMethodsToSlice()
 			break
 		case "manual_task":
-			m = tasks.ReflectManualTaskMethodsToMap()
+			m = tasks.ReflectManualTaskMethodsToSlice()
 			break
 		case "receive_task":
-			m = tasks.ReflectReceiveTaskMethodsToMap()
+			m = tasks.ReflectReceiveTaskMethodsToSlice()
 			break
 		case "script_task":
-			m = tasks.ReflectScriptTaskMethodsToMap()
+			m = tasks.ReflectScriptTaskMethodsToSlice()
 			break
 		case "send_task":
-			m = tasks.ReflectSendTaskMethodsToMap()
+			m = tasks.ReflectSendTaskMethodsToSlice()
 			break
 		case "service_task":
-			m = tasks.ReflectServiceTaskMethodsToMap()
+			m = tasks.ReflectServiceTaskMethodsToSlice()
 			break
 		case "task":
-			m = tasks.ReflectTaskMethodsToMap()
+			m = tasks.ReflectTaskMethodsToSlice()
 			break
 		case "user_task":
-			m = tasks.ReflectUserTaskMethodsToMap()
+			m = tasks.ReflectUserTaskMethodsToSlice()
 			break
 
 		// time
 		case "time_cycle":
-			m = time.ReflectTimeCycleMethodsToMap()
+			m = tm.ReflectTimeCycleMethodsToSlice()
 			break
 		case "time_date":
-			m = time.ReflectTimeDateMethodsToMap()
+			m = tm.ReflectTimeDateMethodsToSlice()
 			break
 		case "time_duration":
-			m = time.ReflectTimeDurationMethodsToMap()
+			m = tm.ReflectTimeDurationMethodsToSlice()
 			break
 		}
 
 		for _, name := range m {
-			names += name + "<br>"
+			names += `<button class="list-group-item list-group-item-action">` + name + `</button>`
 		}
 
 		methods = strings.Replace(methods, "_", " ", -1)
 		methods = strings.Title(strings.ToLower(methods))
 		methods = strings.Replace(methods, " ", "", -1)
-		log.Printf("Receive methods %s", methods)
+		html := `<div class="list-group">` + names + `</div>`
+		log.Printf("configuration: received methods from %s", methods)
 
-		w.Write([]byte("<p>" + names + "<p>"))
+		if _, err := w.Write([]byte(html)); err != nil {
+			panic(err)
+		}
 	}
 }
 
-func main() {
-	// http.Handler
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", Home)
-	mux.HandleFunc("/methods", receiveMethods)
+func bpmnJsHandler(w http.ResponseWriter, r *http.Request) {
+	bpmnjs.Render(w, nil)
+}
 
-	files, err := ioutil.ReadDir("./")
-	if err != nil {
-		log.Fatal(err)
-	}
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	index.Render(w, nil)
+}
 
-	for _, f := range files {
-		fmt.Println(f.Name())
-	}
-
-	http.ListenAndServe(":8080", mux)
+func contactHandler(w http.ResponseWriter, r *http.Request) {
+	contact.Render(w, nil)
 }

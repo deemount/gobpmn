@@ -23,6 +23,17 @@ func ReflectCollaborationMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCollaborationMethodsToSlice ...
+func ReflectCollaborationMethodsToSlice() []string {
+	var ptr *Collaboration
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectParticipantMethodsToMap ...
 func ReflectParticipantGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -40,6 +51,17 @@ func ReflectParticipantMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectParticipantMethodsToSlice ...
+func ReflectParticipantMethodsToSlice() []string {
+	var ptr *Participant
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

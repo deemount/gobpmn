@@ -57,8 +57,8 @@ func SetIntermediateCatchEvent(p DelegateParameter) {
 func SetStartEvent(p DelegateParameter) {
 	p.SE.SetID(p.T, p.H[0])
 	p.SE.SetName(p.N)
-	p.SE.SetOutgoing(1)
-	p.SE.GetOutgoing(0).SetFlow(p.H[1])
+	p.SE.SetOutgoing(1)                 // startevent has by default one outgoing
+	p.SE.GetOutgoing(0).SetFlow(p.H[1]) // set second hash value to flow
 	if p.SH != nil {
 		canvas.SetShape(
 			canvas.DelegateParameter{S: p.SH, T: p.T, H: p.H[0], B: p.BS})

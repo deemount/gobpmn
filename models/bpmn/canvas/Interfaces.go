@@ -45,6 +45,7 @@ type EdgeRepository interface {
 	CanvasLabelElements
 
 	SetWaypoint()
+	SetWaypoints(num int)
 	GetWaypoint(num int) *Waypoint
 }
 
@@ -78,5 +79,8 @@ type ShapeRepository interface {
 	CanvasLabelElements
 
 	SetIsHorizontal(isHorizontal bool)
-	GetIsHorizontal() *bool
+	GetIsHorizontal() impl.BOOL_PTR
+
+	SetIsMarkerVisible(isMarkerVisible bool)
+	GetIsMarkerVisible() impl.BOOL_PTR
 }

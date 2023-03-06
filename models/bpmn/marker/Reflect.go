@@ -23,6 +23,17 @@ func ReflectCategoryMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCategoryMethodsToSlice ...
+func ReflectCategoryMethodsToSlice() []string {
+	var ptr *Category
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCategoryValueMethodsToMap ...
 func ReflectCategoryValueGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -40,6 +51,17 @@ func ReflectCategoryValueMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCategoryValueMethodsToSlice ...
+func ReflectCategoryValueMethodsToSlice() []string {
+	var ptr *CategoryValue
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -65,6 +87,17 @@ func ReflectGroupMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectGroupMethodsToSlice ...
+func ReflectGroupMethodsToSlice() []string {
+	var ptr *Group
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectIncomingGetMethodsToMap ...
 func ReflectIncomingGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -86,6 +119,17 @@ func ReflectIncomingMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectIncomingMethodsToSlice ...
+func ReflectIncomingMethodsToSlice() []string {
+	var ptr *Incoming
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectOutgoingMethodsToMap ...
 func ReflectOutgoingGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -103,6 +147,17 @@ func ReflectOutgoingMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectOutgoingMethodsToSlice ...
+func ReflectOutgoingMethodsToSlice() []string {
+	var ptr *Outgoing
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

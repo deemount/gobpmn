@@ -23,6 +23,17 @@ func ReflectCancelEventDefinitionMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectCancelEventDefinitionMethodsToSlice ...
+func ReflectCancelEventDefinitionMethodsToSlice() []string {
+	var ptr *CancelEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectCompensateEventDefinitionGetMethodsToMap ...
 func ReflectCompensateEventDefinitionGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -40,6 +51,17 @@ func ReflectCompensateEventDefinitionMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectCompensateEventDefinitionMethodsToSlice ...
+func ReflectCompensateEventDefinitionMethodsToSlice() []string {
+	var ptr *CompensateEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -65,6 +87,17 @@ func ReflectConditionalEventDefinitionMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectConditionalEventDefinitionMethodsToSlice ...
+func ReflectConditionalEventDefinitionMethodsToSlice() []string {
+	var ptr *ConditionalEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectErrorEventDefinitionGetMethodsToMap ...
 func ReflectErrorEventDefinitionGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -82,6 +115,17 @@ func ReflectErrorEventDefinitionMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectErrorEventDefinitionMethodsToSlice ...
+func ReflectErrorEventDefinitionMethodsToSlice() []string {
+	var ptr *ErrorEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -107,6 +151,17 @@ func ReflectEscalationEventDefinitionMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectEscalationEventDefinitionMethodsToSlice ...
+func ReflectEscalationEventDefinitionMethodsToSlice() []string {
+	var ptr *EscalationEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectLinkEventDefinitionGetMethodsToMap ...
 func ReflectLinkEventDefinitionGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -124,6 +179,17 @@ func ReflectLinkEventDefinitionMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectLinkEventDefinitionMethodsToSlice ...
+func ReflectLinkEventDefinitionMethodsToSlice() []string {
+	var ptr *LinkEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -149,6 +215,17 @@ func ReflectMessageEventDefinitionMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectMessageEventDefinitionMethodsToSlice ...
+func ReflectMessageEventDefinitionMethodsToSlice() []string {
+	var ptr *MessageEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectSignalEventDefinitionGetMethodsToMap ...
 func ReflectSignalEventDefinitionGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -166,6 +243,17 @@ func ReflectSignalEventDefinitionMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectSignalEventDefinitionMethodsToSlice ...
+func ReflectSignalEventDefinitionMethodsToSlice() []string {
+	var ptr *SignalEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }
@@ -191,8 +279,19 @@ func ReflectTerminateEventDefinitionMethodsToMap() map[int]string {
 	return m
 }
 
-// ReflectTimerEventDefinitionMethodsToMap ...
-func ReflectTimerEventDefinitionMethodsToMap() map[int]string {
+// ReflectTerminateEventDefinitionMethodsToSlice ...
+func ReflectTerminateEventDefinitionMethodsToSlice() []string {
+	var ptr *TerminateEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
+// ReflectTimerEventDefinitionGetMethodsToMap ...
+func ReflectTimerEventDefinitionGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
 	t := reflect.TypeOf(TimerEventDefinition{})
 	for i := 0; i < t.NumMethod(); i++ {
@@ -202,12 +301,23 @@ func ReflectTimerEventDefinitionMethodsToMap() map[int]string {
 }
 
 // ReflectTimerEventDefinitionMethodsToMap ...
-func ReflectTimerEventDefinitionGetMethodsToMap() map[int]string {
+func ReflectTimerEventDefinitionMethodsToMap() map[int]string {
 	var ptr *TimerEventDefinition
 	m := make(map[int]string)
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectTimerEventDefinitionMethodsToSlice ...
+func ReflectTimerEventDefinitionMethodsToSlice() []string {
+	var ptr *TimerEventDefinition
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

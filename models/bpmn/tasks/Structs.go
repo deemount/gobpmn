@@ -11,20 +11,21 @@ import (
 
 // tasks
 type DelegateParameter struct {
-	BRT *BusinessRuleTask
-	TA  *Task
-	UT  *UserTask
-	MT  *ManualTask
-	RT  *ReceiveTask
-	SCT *ScriptTask
-	SET *SendTask
-	SVT *ServiceTask
-	SF  *flow.SequenceFlow
-	SH  *canvas.Shape
-	BS  canvas.Bounds
-	T   string
-	N   string
-	H   []string
+	BRT    *BusinessRuleTask
+	TA     *Task
+	UT     *UserTask
+	MT     *ManualTask
+	RT     *ReceiveTask
+	SCT    *ScriptTask
+	SET    *SendTask
+	SVT    *ServiceTask
+	SF     *flow.SequenceFlow
+	SH     *canvas.Shape
+	BS     canvas.Bounds
+	WPPREV *canvas.Waypoint // second waypoint of previous edge
+	T      string
+	N      string
+	H      []string
 }
 
 /*

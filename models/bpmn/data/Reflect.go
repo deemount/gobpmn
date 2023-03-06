@@ -23,6 +23,17 @@ func ReflectDataObjectMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectDataObjectMethodsToSlice ...
+func ReflectDataObjectMethodsToSlice() []string {
+	var ptr *DataObject
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectDataObjectReferenceMethodsToMap ...
 func ReflectDataObjectReferenceGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -44,6 +55,17 @@ func ReflectDataObjectReferenceMethodsToMap() map[int]string {
 	return m
 }
 
+// ReflectDataObjectReferenceMethodsToSlice ...
+func ReflectDataObjectReferenceMethodsToSlice() []string {
+	var ptr *DataObjectReference
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
+	}
+	return m
+}
+
 // ReflectDataStoreReferenceGetMethodsToMap ...
 func ReflectDataStoreReferenceGetMethodsToMap() map[int]string {
 	m := make(map[int]string)
@@ -61,6 +83,17 @@ func ReflectDataStoreReferenceMethodsToMap() map[int]string {
 	t := reflect.TypeOf(ptr)
 	for i := 0; i < t.NumMethod(); i++ {
 		m[i] = t.Method(i).Name
+	}
+	return m
+}
+
+// ReflectDataStoreReferenceMethodsToSlice ...
+func ReflectDataStoreReferenceMethodsToSlice() []string {
+	var ptr *DataStoreReference
+	m := []string{}
+	t := reflect.TypeOf(ptr)
+	for i := 0; i < t.NumMethod(); i++ {
+		m = append(m, t.Method(i).Name)
 	}
 	return m
 }

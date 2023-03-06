@@ -112,12 +112,12 @@ func (shape Shape) GetElement() impl.STR_PTR {
 }
 
 // GetIsHorizontal ...
-func (shape Shape) GetIsHorizontal() *bool {
+func (shape Shape) GetIsHorizontal() impl.BOOL_PTR {
 	return &shape.IsHorizontal
 }
 
 // GetIsMarkerVisible ...
-func (shape Shape) GetIsMarkerVisible() *bool {
+func (shape Shape) GetIsMarkerVisible() impl.BOOL_PTR {
 	return &shape.IsMarkerVisible
 }
 
@@ -125,7 +125,7 @@ func (shape Shape) GetIsMarkerVisible() *bool {
 
 /** DC **/
 
-// SetBounds ...
+// GetBounds ...
 func (shape Shape) GetBounds() *Bounds {
 	return &shape.Bounds[0]
 }

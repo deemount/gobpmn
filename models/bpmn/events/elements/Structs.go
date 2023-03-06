@@ -11,20 +11,21 @@ import (
 
 // event
 type DelegateParameter struct {
-	BE    *BoundaryEvent
-	SE    *StartEvent
-	EE    *EndEvent
-	ICE   *IntermediateCatchEvent
-	ITE   *IntermediateThrowEvent
-	MSG   *Message
-	SH    *canvas.Shape
-	BS    canvas.Bounds
-	ISTED bool   // IsTimerEventDefinition
-	TD    string // TimerDefinition
-	T     string
-	N     string
-	H     []string
-	TEDH  string // TimerEventDefinition Hash
+	BE     *BoundaryEvent
+	SE     *StartEvent
+	EE     *EndEvent
+	ICE    *IntermediateCatchEvent
+	ITE    *IntermediateThrowEvent
+	MSG    *Message
+	SH     *canvas.Shape
+	BS     canvas.Bounds
+	WPPREV *canvas.Waypoint
+	ISTED  bool   // IsTimerEventDefinition
+	TD     string // TimerDefinition
+	T      string
+	N      string
+	H      []string
+	TEDH   string // TimerEventDefinition Hash
 }
 
 /*
