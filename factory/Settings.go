@@ -8,4 +8,7 @@ type Settings struct {
 	NumStartEvent int
 	NumEndEvent   int
 	NumTask       int
+	NumFlow       int
+	NumShape      int
+	NumEdge       int
 }

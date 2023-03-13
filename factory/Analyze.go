@@ -2,8 +2,8 @@ package factory
 
 // Analyze ...
 type Analyze struct {
-	anonym  map[int]string
-	config  map[int]string
-	builder map[int]string
-	words   map[int][]string
+	Anonym  map[int]string
+	Config  map[int]string
+	Builder map[int]string
+	Words   map[int][]string
 }

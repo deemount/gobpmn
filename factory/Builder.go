@@ -14,7 +14,7 @@ import (
 	"github.com/deemount/gobpmn/utils"
 )
 
-type def core.DefinitionsRepository
+type Def core.DefinitionsRepository
 
 // Builder ...
 type Builder struct {
@@ -71,11 +71,13 @@ func (h Builder) hash() Builder {
 	return r
 }
 
-// inject is one of hte main ideas behind the project
-// The method itself reflects a given struct and inject
-// signed fields with hash values. I chose this type of algorithm,
-// because it does the logic behind the building of a bpmn.
-// Kinda magic ...
+// inject itself reflects a given struct and inject
+// signed fields with hash values.
+// There are two conditions to assign fields of a strcut:
+// a) The struct has anonymous fields
+// b) The struct has no anymous fields
+// It also counts the element in their specification to know
+// how much elements of each package needs to be mapped later then.
 func (h *Builder) inject(p interface{}) interface{} {
 
 	defer func() {
@@ -94,12 +96,12 @@ func (h *Builder) inject(p interface{}) interface{} {
 	if ref.hasAnonymous() {
 
 		// walk through the map with names of anonymous fields
-		for _, field := range ref.anonym {
+		for _, field := range ref.Anonym {
 
 			// get the reflected value of field
 			n := ref.Temporary.FieldByName(field)
 
-			// walk through the values of fields by the interface {}
+			// walk through the values of fields assigned to the interface {}
 			for i := 0; i < n.NumField(); i++ {
 
 				name := n.Type().Field(i).Name
@@ -109,19 +111,6 @@ func (h *Builder) inject(p interface{}) interface{} {
 
 				// set by kind of reflected value above
 				switch n.Field(i).Kind() {
-
-				// kind is a struct
-				case reflect.Struct:
-
-					h.inPool(field, name)
-					h.inMessage(field, name)
-
-					hash := h.hash()                      // generate hash value
-					n.Field(i).Set(reflect.ValueOf(hash)) // inject the field
-
-					log.Printf("factory.builder: inject struct field %s", name)
-
-					break
 
 				// kind is a bool
 				case reflect.Bool:
@@ -136,6 +125,48 @@ func (h *Builder) inject(p interface{}) interface{} {
 					}
 
 					break
+
+				// kind is a struct
+				case reflect.Struct:
+
+					h.inPool(field, name)
+					h.inMessage(field, name)
+					h.inStartEvent(name)
+					h.inTask(name)
+					h.inEndEvent(name)
+
+					strHash := fmt.Sprintf("%s", n.Field(i).FieldByName("Suffix"))
+					if strHash == "" {
+						log.Printf("factory.builder: current fieldname %s has no hash value", n.Type().Field(i).Name)
+						hash := h.hash()                      // generate hash value
+						n.Field(i).Set(reflect.ValueOf(hash)) // inject the field
+						log.Printf("factory.builder: inject current fieldname %s (%v) with hash value ", n.Type().Field(i).Name, n.Field(i).FieldByName("Suffix"))
+					} else {
+						log.Printf("factory.builder: current fieldname %s (%v) has got hash value before", n.Type().Field(i).Name, n.Field(i).FieldByName("Suffix"))
+					}
+
+					// TODO: Check previous element; maybe a solution trying to erate the hash slice
+					if i > 0 {
+						if n.Field(i-1).Kind() != reflect.Bool {
+							log.Printf("factory.builder: previous fieldname was %s (%v)", n.Type().Field(i-1).Name, n.Field(i-1).FieldByName("Suffix"))
+						}
+					} else {
+						log.Printf("factory.builder: current fieldname %s has no previous field", n.Type().Field(i).Name)
+					}
+
+					// TODO: Check next element and set hash value; maybe a solution trying to erate the hash slice
+					if i+1 < n.NumField() {
+						nexthash := h.hash()                          // generate hash value
+						n.Field(i + 1).Set(reflect.ValueOf(nexthash)) // inject the field
+						log.Printf("factory.builder: inject next fieldname at %v: %s (%v)", n.Type().Name(), n.Type().Field(i+1).Name, n.Field(i+1).FieldByName("Suffix"))
+					} else {
+						log.Printf("factory.builder: current fieldname %s has no fieldname to the next", n.Type().Field(i).Name)
+					}
+
+					log.Println("factory.builder: >> field injection done")
+
+					break
+
 				}
 			}
 		}
@@ -146,7 +177,7 @@ func (h *Builder) inject(p interface{}) interface{} {
 	if ref.hasNotAnonymous() {
 
 		// walk through the map with names of builder fields
-		for _, builderField := range ref.builder {
+		for _, builderField := range ref.Builder {
 
 			// get the reflected value of field
 			n := ref.Temporary.FieldByName(builderField)
@@ -157,14 +188,17 @@ func (h *Builder) inject(p interface{}) interface{} {
 
 			if strings.Contains(builderField, fieldStartEvent) && utils.After(builderField, "From") == fieldStartEvent {
 				h.NumStartEvent++
+				h.NumShape++
 			}
 
 			if strings.Contains(builderField, fieldTask) && utils.After(builderField, "From") == fieldTask {
 				h.NumTask++
+				h.NumShape++
 			}
 
 			if strings.Contains(builderField, fieldEndEvent) {
 				h.NumEndEvent++
+				h.NumShape++
 			}
 
 			hash := h.hash()             // generate hash value
@@ -175,7 +209,7 @@ func (h *Builder) inject(p interface{}) interface{} {
 		}
 
 		// walk through the map with names of boolean fields
-		for _, configField := range ref.config {
+		for _, configField := range ref.Config {
 
 			// get the reflected value of field
 			n2 := ref.Temporary.FieldByName(configField)
@@ -192,7 +226,7 @@ func (h *Builder) inject(p interface{}) interface{} {
 	p = ref.Set()
 	ref.countWords()
 
-	log.Printf("factory.builder: eof inject number of reflected methods %v", reflect.TypeOf(p).NumMethod())
+	log.Printf("factory.builder: eof inject; detect %d of reflected public methods", reflect.TypeOf(p).NumMethod())
 
 	return p
 
@@ -225,6 +259,8 @@ func (h *Builder) build(p interface{}) {
 
 }
 
+/*** Semantic, Analyze and Statistic ***/
+
 // inPool ...
 func (h *Builder) inPool(field, builderField string) {
 	if h.isPool(field) {
@@ -233,6 +269,7 @@ func (h *Builder) inPool(field, builderField string) {
 		}
 		if strings.Contains(builderField, fieldID) {
 			h.NumPart++
+			h.NumShape++
 		}
 	}
 }
@@ -242,7 +279,32 @@ func (h *Builder) inMessage(field, builderField string) {
 	if h.isMessage(field) {
 		if strings.Contains(builderField, fieldMessage) {
 			h.NumMsg++
+			h.NumEdge++
 		}
+	}
+}
+
+// inStartEvent ...
+func (h *Builder) inStartEvent(builderField string) {
+	if strings.Contains(builderField, fieldStartEvent) && utils.After(builderField, "From") == "" {
+		h.NumStartEvent++
+		h.NumShape++
+	}
+}
+
+// inTask ...
+func (h *Builder) inTask(builderField string) {
+	if strings.Contains(builderField, fieldTask) && utils.After(builderField, "From") == "" {
+		h.NumTask++
+		h.NumShape++
+	}
+}
+
+// inEndEvent ...
+func (h *Builder) inEndEvent(builderField string) {
+	if strings.Contains(builderField, fieldEndEvent) {
+		h.NumEndEvent++
+		h.NumShape++
 	}
 }
 

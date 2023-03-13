@@ -1,8 +1,6 @@
 package small_process
 
 import (
-	"log"
-
 	"github.com/deemount/gobpmn/factory"
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/core"
@@ -34,7 +32,7 @@ func New() Proxy {
 
 // Build ...
 func (p Process) Build() Process {
-	p.setInnerElements()
+	p.elements()
 	p.attributes()
 	p.setProcess()
 	p.setStartEvent()
@@ -50,7 +48,7 @@ func (p Process) Call() core.DefinitionsRepository {
 }
 
 // setInnerElements ...
-func (p *Process) setInnerElements() {
+func (p *Process) elements() {
 	// Process Elements
 	p.process().SetStartEvent(Builder.NumStartEvent)
 	p.process().SetTask(Builder.NumTask)
@@ -58,8 +56,8 @@ func (p *Process) setInnerElements() {
 	p.process().SetSequenceFlow(2) // TODO: calculate num of flows by the elements above?
 	// Canvas
 	p.diagram().SetPlane()
-	p.plane().SetShape(3) // TODO: calculate num of flows by the elements above?
-	p.plane().SetEdge(2)  // TODO: calculate num of flows by the elements above?
+	p.plane().SetShape(Builder.NumShape) // TODO: calculate num of flows by the elements above?
+	p.plane().SetEdge(2)                 // TODO: calculate num of flows by the elements above?
 }
 
 // setProcess ...
@@ -82,7 +80,6 @@ func (p *Process) setStartEvent() {
 
 // fromStartEvent ...
 func (p *Process) fromStartEvent() {
-	log.Printf("%v")
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
 			SF:    p.process().GetSequenceFlow(0),

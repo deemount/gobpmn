@@ -12,12 +12,12 @@ type DelegateParameter struct {
 	H      string // hash
 	I      bool
 	W      []Waypoint
-	WPPREV *Waypoint
+	WPPREV *Waypoint // previous waypoint (needed in activity or event)
 	B      Bounds
-	BSPTR  *Bounds
-	ST     string // source ref
-	TT     string // target ref
-	SZ     []int  // sizes
+	BSPTR  *Bounds // bounds pointer (needed in flow)
+	ST     string  // source ref
+	TT     string  // target ref
+	SZ     []int   // sizes
 }
 
 /*

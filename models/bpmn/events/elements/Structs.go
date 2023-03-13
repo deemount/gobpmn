@@ -19,6 +19,7 @@ type DelegateParameter struct {
 	MSG    *Message
 	SH     *canvas.Shape
 	BS     canvas.Bounds
+	BSPTR  *canvas.Bounds
 	WPPREV *canvas.Waypoint
 	ISTED  bool   // IsTimerEventDefinition
 	TD     string // TimerDefinition

@@ -55,6 +55,14 @@ func delta(a, b Point) Delta {
 
 /*** Defaults ***/
 
+func (p DelegateParameter) defaultDistanceTop() int {
+	return 50
+}
+
+func (p DelegateParameter) defaultDistanceLeft() int {
+	return 50
+}
+
 // defaultEdgeLength ...
 func (p DelegateParameter) defaultEdgeLength() int {
 	return 55
@@ -71,6 +79,7 @@ func (p DelegateParameter) defaultCoordinates() (int, int) {
 	case "startevent":
 		x, y = 179, 159
 	}
+	log.Printf("canvas.delegates: set default coordinates x: %d, y: %d for %s", x, y, p.T)
 	return x, y
 }
 
@@ -105,23 +114,44 @@ func (p DelegateParameter) defaultElementSize() (int, int) {
  *
  */
 
-// findCoordinates ...
-func (p *DelegateParameter) findCoordinates() (int, int) {
+// findCoordinatesByPreviousWaypoint ...
+func (p *DelegateParameter) findCoordinatesByPreviousWaypoint() (int, int) {
 
-	log.Println("canvas.delegates: (findCoordinates) no bounds are set in shape")
+	log.Println("canvas.delegates: find coordinates by previous waypoint no bounds set in shape")
 
 	// To set the right coordinates for the given shape, I need to the height of the shape to calculate the point on the Y-axis
 	// I assume, that the previous edge, which points to >>this<< shape, is a straight line from the last waypoint
 	// So, p.WPPREV.X is the endpoint of the edge and connects directly to the shape, means it is the startpoint X of the shape
 
-	log.Printf("canvas.delegates: (findCoordinates) got shape type %s", p.T)
+	log.Printf("canvas.delegates: find coordinates by previous waypoint got shape type %s", p.T)
 	_, height := p.defaultElementSize()
 
-	log.Printf("canvas.delegates: (findCoordinates) got previous waypoint %d, %d", p.WPPREV.X, p.WPPREV.Y)
+	log.Printf("canvas.delegates: find coordinates by previous waypoint got previous waypoint %d, %d", p.WPPREV.X, p.WPPREV.Y)
 	x := p.WPPREV.X
 	y := p.WPPREV.Y - (height / 2)
 
-	log.Printf("canvas.delegates: (findCoordinates) return coordinates %d, %d", x, y)
+	log.Printf("canvas.delegates: find coordinates by previous waypoint returns coordinates %d, %d", x, y)
+
+	return x, y
+}
+
+// findCoordinatesByPreviousBounds ...
+func (p *DelegateParameter) findCoordinatesByPreviousBounds() (int, int) {
+
+	log.Println("canvas.delegates: find coordinates by previous bounds detects no bounds set in shape")
+
+	// To set the right coordinates for the given shape, I need the height of the shape to calculate the point on the Y-axis
+	// I assume, that the previous bounds, which is inside the shape (pool), has
+	// So, p.WPPREV.X is the endpoint of the edge and connects directly to the shape, means it is the startpoint X of the shape
+
+	log.Printf("canvas.delegates: find coordinates by previous bounds got shape type %s", p.T)
+	_, height := p.defaultElementSize()
+
+	log.Printf("canvas.delegates: find coordinates by previous bounds got previous waypoint %d, %d", p.BSPTR.X, p.BSPTR.Y)
+	x := p.BSPTR.X + p.defaultDistanceLeft()
+	y := (p.BSPTR.Y + (p.BSPTR.Height / 2)) - (height / 2)
+
+	log.Printf("canvas.delegates: find coordinates by previous bounds returns coordinates %d, %d", x, y)
 
 	return x, y
 }
@@ -135,13 +165,18 @@ func (p *DelegateParameter) setBounds() {
 
 	// if coordinates of x and y are zero, decide between two conditions:
 	// * if previous waypoint is not nil, find the coordinates
+	// * if
 	// * else set default coordinates, when previous waypoint is nil
 	if p.B.X == 0 && p.B.Y == 0 {
 
 		if p.WPPREV != nil {
-			p.B.X, p.B.Y = p.findCoordinates()
+			p.B.X, p.B.Y = p.findCoordinatesByPreviousWaypoint()
 		} else {
-			p.B.X, p.B.Y = p.defaultCoordinates()
+			if p.BSPTR != nil {
+				p.B.X, p.B.Y = p.findCoordinatesByPreviousBounds()
+			} else {
+				p.B.X, p.B.Y = p.defaultCoordinates()
+			}
 		}
 
 	}
@@ -200,8 +235,8 @@ func (p *DelegateParameter) setWaypoints() {
 		//            The next element is then in dependence of the flow, showing to.
 		//			  For this option I need to know the >>default<< length of a flow and X of the first waypoint.
 		//			  Also, I need to know, if the element is at the same Y-Position like the element before.
-		//			  Like for X value I need to use the build order I explained at the top of the page
-		//			  I assume that the following element is at the same Y-axis from where the previous elements flow is starting from.
+		//			  Like for X value, I need to use the build order I explained at the top of the page
+		//			  I assume that the following element is at the same Y-position from where the previous elements flow is starting from.
 		//			  e.g.
 		//			  startevent waypoint 2 X1: unknown
 		//			  default edge length X2: 55
@@ -241,6 +276,7 @@ func SetShape(p DelegateParameter) {
 	}
 
 	// detect startevent
+	//
 	if p.T == "startevent" {
 
 		// TODO: Find out, if it's needed to count up the Shape ID in this special case (Camunda related)
@@ -282,26 +318,67 @@ func SetLabel(p DelegateParameter) {
 // SetPool ...
 // default coords and size are: x="129" y="52" width="600" height="250"
 // when start event is also default at x="179" y="159" width="36" height="36"
+// Notice:
+// width of pool >>must<< grow with length of the process, which is defined with
+// an endevent (terminate and so on) at his X,Y-points and a default distance right
+// to the element.
+// calculating X and Y for a startevent inside the first pool:
+// e.g.
+// startevent X = pool X + default distance left
+// pool X = startevent X - default distance left
+// default distance left = startevent X - pool X
+//
+// e.g.
+// startevent Y = ((pool (height) / 2) + pool Y) - (startevent (height) / 2)
+// (startevent (height) / 2) = ((pool (height) / 2) + pool Y) - startevent Y
+//
 // e *Shape, typ string, isHorizontal bool, hash string, b Bounds
 // e.g. below from collaborative process
-// PoolCustomerSupport: canvas.Bounds{X: 150, Y: 80, Width: 800, Height: 160}
+// TODO: recalculate the real X and Y by given defaults from pool at
 // PoolCustomer: canvas.Bounds{X: 150, Y: 360, Width: 800, Height: 160}
 // CustomerSupportStartEvent: canvas.Bounds{X: 225, Y: 142, Width: 36, Height: 36}
 // CustomerStartEvent: canvas.Bounds{X: 225, Y: 422, Width: 36, Height: 36}
 // CustomerSupportEndEvent: canvas.Bounds{X: 822, Y: 142, Width: 36, Height: 36}
 // CustomerEndEvent: canvas.Bounds{X: 822, Y: 422, Width: 36, Height: 36}
 func SetPool(p DelegateParameter) {
+
 	p.S.SetID(p.T, p.H)
 	p.S.SetElement(p.T, p.H)
 	p.S.SetIsHorizontal(p.I)
+
 	p.S.SetBounds()
-	// TODO: calculate bounds for pool
-	if &p.B.X == nil && &p.B.Y == nil && &p.B.Width == nil && &p.B.Height == nil {
-		b := Bounds{X: 129, Y: 52, Width: 600, Height: 250}
-		p.S.GetBounds().SetCoordinates(b.X, b.Y)
-		p.S.GetBounds().SetSize(b.Width, b.Height)
+
+	defaultCoordinates := Bounds{X: 129, Y: 52}
+	defaultSize := Bounds{Width: 600, Height: 250}
+
+	// TODO: calculate X,Y for many pools
+
+	// If a pool has a bounds pointer, it can't be the first pool
+	// The bounds pointer in a pool set shows the next pool the orientation
+	if p.BSPTR != nil {
+
+		if p.B.X == 0 && p.B.Y == 0 {
+			if p.BSPTR.X == defaultCoordinates.X && p.BSPTR.Y == defaultCoordinates.Y {
+				x := defaultCoordinates.X
+				y := defaultCoordinates.Y + defaultSize.Height + p.defaultDistanceTop()
+				p.S.GetBounds().SetCoordinates(x, y)
+			}
+		}
+
 	} else {
-		p.S.GetBounds().SetCoordinates(p.B.X, p.B.Y)
+
+		if p.B.X == 0 && p.B.Y == 0 {
+			p.S.GetBounds().SetCoordinates(defaultCoordinates.X, defaultCoordinates.Y)
+		} else {
+			p.S.GetBounds().SetCoordinates(p.B.X, p.B.Y)
+		}
+
+	}
+
+	// TODO: calculate Width,Height for many pools
+	if p.B.Width == 0 && p.B.Height == 0 {
+		p.S.GetBounds().SetSize(defaultSize.Width, defaultSize.Height)
+	} else {
 		p.S.GetBounds().SetSize(p.B.Width, p.B.Height)
 	}
 

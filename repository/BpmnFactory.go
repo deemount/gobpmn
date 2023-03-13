@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/deemount/gobpmn/examples/small_process"
+	"github.com/deemount/gobpmn/examples/collaborative_process"
 	"github.com/deemount/gobpmn/models/bpmn/core"
 )
 
@@ -68,8 +68,8 @@ func (factory *bpmnFactory) set() {
 	// e.g. use struct pointer (no argument)
 
 	// 1
-	repositoryModel := small_process.New()
-	//repositoryModel := collaborative_process.New()
+	//repositoryModel := small_process.New()
+	repositoryModel := collaborative_process.New()
 	d := repositoryModel.Build()
 	factory.Repo = d.Call()
 

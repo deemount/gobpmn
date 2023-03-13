@@ -8,6 +8,7 @@ import (
 	"github.com/deemount/gobpmn/utils"
 )
 
+// Reflect struct defines
 type Reflect struct {
 	Analyze
 	IF        interface{}
@@ -40,10 +41,10 @@ func (ref *Reflect) New() *Reflect {
 // builder: all builder fields
 // words: all collected words splitted
 func (ref *Reflect) Maps() *Reflect {
-	ref.anonym = make(map[int]string)
-	ref.config = make(map[int]string)
-	ref.builder = make(map[int]string)
-	ref.words = make(map[int][]string)
+	ref.Anonym = make(map[int]string)
+	ref.Config = make(map[int]string)
+	ref.Builder = make(map[int]string)
+	ref.Words = make(map[int][]string)
 	return ref
 }
 
@@ -59,6 +60,8 @@ func (ref *Reflect) Methods() {
 }
 
 // Set temporary variable values to interface {}
+// This method is set inside a build method, where
+// fields of a struct got reflected by names
 func (ref *Reflect) Set() any {
 	ref.Element.Set(ref.Temporary)
 	return ref.Element.Interface()
@@ -71,8 +74,8 @@ func (ref *Reflect) anonymousFields() {
 	i := 0
 	for _, field := range fields {
 		if ref.isAnonymous(field) {
-			ref.anonym[i] = field.Name
-			ref.words[i] = utils.Split(ref.anonym[i])
+			ref.Anonym[i] = field.Name
+			ref.Words[i] = utils.Split(ref.Anonym[i])
 			i++
 		}
 	}
@@ -87,16 +90,15 @@ func (ref Reflect) builderType() {
 
 	fields := reflect.VisibleFields(reflect.TypeOf(ref.IF))
 	count := 0
-	index := len(ref.words)
+	index := len(ref.Words)
 	for _, field := range fields {
 		if ref.isNotAnonymous(field) && ref.isNotDefinitions(field) && ref.isBpmnBuilder(field) {
-			ref.builder[count] = field.Name
-			ref.words[index] = utils.Split(ref.builder[count])
+			ref.Builder[count] = field.Name
+			ref.Words[index] = utils.Split(ref.Builder[count])
 			count++
 			index++
 		}
 	}
-
 }
 
 // boolType with one static filter option, which must be kind of reflect.Bool
@@ -106,11 +108,11 @@ func (ref Reflect) boolType() {
 
 	fields := reflect.VisibleFields(reflect.TypeOf(ref.IF))
 	count := 0
-	index := len(ref.words)
+	index := len(ref.Words)
 	for _, field := range fields {
 		if field.Type.Kind() == reflect.Bool {
-			ref.config[count] = field.Name
-			ref.words[index] = utils.Split(ref.config[count])
+			ref.Config[count] = field.Name
+			ref.Words[index] = utils.Split(ref.Config[count])
 			count++
 			index++
 		}
@@ -121,9 +123,9 @@ func (ref Reflect) boolType() {
 // countWords ...
 func (ref Reflect) countWords() {
 	l := 0
-	length := len(ref.words)
+	length := len(ref.Words)
 	for i := 0; i < length; i++ {
-		l += len(ref.words[i])
+		l += len(ref.Words[i])
 	}
 	log.Printf("factory.reflect: count app words %v", l)
 }
@@ -140,12 +142,12 @@ func (ref *Reflect) isNotDefinitions(field reflect.StructField) bool {
 
 // hasAnonymous ...
 func (ref *Reflect) hasAnonymous() bool {
-	return len(ref.anonym) > 0
+	return len(ref.Anonym) > 0
 }
 
 // hasNotAnonymous ...
 func (ref *Reflect) hasNotAnonymous() bool {
-	return len(ref.anonym) == 0
+	return len(ref.Anonym) == 0
 }
 
 // isAnonymous ...

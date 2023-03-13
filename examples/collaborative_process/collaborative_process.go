@@ -22,44 +22,44 @@ type Process struct {
 
 // Pool ...
 type Pool struct {
-	CustomerSupportIsExecutable bool
-	CustomerIsExecutable        bool
-	Collaboration               factory.Builder
-	CustomerSupportID           factory.Builder
-	CustomerSupportProcess      factory.Builder
-	CustomerID                  factory.Builder
-	CustomerProcess             factory.Builder
+	CustomerSupportIsExecutable bool            // inject: 1, next: -
+	CustomerIsExecutable        bool            // inject: -, next: -
+	Collaboration               factory.Builder // inject: 2, next: -
+	CustomerSupportID           factory.Builder // inject: 3, next: 1
+	CustomerSupportProcess      factory.Builder // inject: 4, next: 2
+	CustomerID                  factory.Builder // inject: 5, next: 3
+	CustomerProcess             factory.Builder // inject: 6, next: 4
 }
 
 // Message ...
 type Message struct {
-	CustomerToCustomerSupportMessage factory.Builder
-	CustomerSupportToCustomerMessage factory.Builder
+	CustomerToCustomerSupportMessage factory.Builder //
+	CustomerSupportToCustomerMessage factory.Builder // next: 5
 }
 
 // CustomerSupportProcess ...
 type CustomerSupport struct {
-	CustomerSupportStartEvent     factory.Builder
-	FromCustomerSupportStartEvent factory.Builder
-	CheckIncomingClaim            factory.Builder
-	FromCheckIncomingClaim        factory.Builder
-	DenyWarrantyClaim             factory.Builder
-	FromDenyWarrantyClaim         factory.Builder
-	CustomerSupportEndEvent       factory.Builder
+	CustomerSupportStartEvent     factory.Builder //
+	FromCustomerSupportStartEvent factory.Builder //next: 6
+	CheckIncomingClaimTask        factory.Builder //next: 7
+	FromCheckIncomingClaimTask    factory.Builder //next: 8
+	DenyWarrantyClaimTask         factory.Builder //next: 9
+	FromDenyWarrantyClaimTask     factory.Builder //next: 10
+	CustomerSupportEndEvent       factory.Builder //next: 11
 }
 
 // Customer ...
 type Customer struct {
-	CustomerStartEvent                   factory.Builder
-	FromCustomerStartEvent               factory.Builder
-	NoticeOfDefect                       factory.Builder
-	FromNoticeOfDefect                   factory.Builder
-	WaitingForAnswer                     factory.Builder
-	TimerEventDefinitionWaitingForAnswer factory.Builder
-	FromWaitingForAnswer                 factory.Builder
-	ReceiptWarrantyRefusal               factory.Builder
-	FromReceiptWarrantyRefusal           factory.Builder
-	CustomerEndEvent                     factory.Builder
+	CustomerStartEvent                   factory.Builder //
+	FromCustomerStartEvent               factory.Builder //12
+	NoticeOfDefectTask                   factory.Builder //13
+	FromNoticeOfDefectTask               factory.Builder //14
+	WaitingForAnswerTask                 factory.Builder //15
+	TimerEventDefinitionWaitingForAnswer factory.Builder //16
+	FromWaitingForAnswerTask             factory.Builder //17
+	ReceiptWarrantyRefusalTask           factory.Builder //18
+	FromReceiptWarrantyRefusalTask       factory.Builder //19
+	CustomerEndEvent                     factory.Builder //20
 }
 
 // NewCollaborativeProcess refers to the definitions struct to start building the model
@@ -74,21 +74,22 @@ func New() Proxy {
 // Build ...
 func (p Process) Build() Process {
 	// Elements
-	p.setInnerElements()
-	p.setDefinitionsAttributes()
+	p.elements()
+	p.attributes()
+	// Collaboration
 	p.setCollaboration()
 	// Customer Support
 	p.setCustomerSupportProcess()
 	p.setCustomerSupportStartEvent()
-	p.setCheckIncomingClaim()
-	p.setDenyWarrantyClaim()
+	p.setCheckIncomingClaimTask()
+	p.setDenyWarrantyClaimTask()
 	p.setCustomerSupportEndEvent()
 	// Customer
 	p.setCustomerProcess()
 	p.setCustomerStartEvent()
-	p.setNoticeOfDefect()
-	p.setWaitingForAnswer()
-	p.setReceiptWarrantyRefusal()
+	p.setNoticeOfDefectTask()
+	p.setWaitingForAnswerTask()
+	p.setReceiptWarrantyRefusalTask()
 	p.setCustomerEndEvent()
 	// Canvas
 	p.setDiagram()
@@ -99,19 +100,19 @@ func (p Process) Build() Process {
 func (p Process) Call() core.DefinitionsRepository { return p.Def }
 
 // setInnerElements ...
-func (p *Process) setInnerElements() {
+func (p *Process) elements() {
 	// Collaboration
 	collaboration := p.collaboration()
 	collaboration.SetID("collaboration", p.Collaboration.Suffix)
 	collaboration.SetParticipant(Builder.NumPart)
 	collaboration.SetMessageFlow(Builder.NumMsg)
 	// Processes
-	p.customerSupportProcess().SetStartEvent(1)
-	p.customerSupportProcess().SetEndEvent(1)
+	p.customerSupportProcess().SetStartEvent(Builder.NumStartEvent / Builder.NumPart)
+	p.customerSupportProcess().SetEndEvent(Builder.NumEndEvent / Builder.NumPart)
 	p.customerSupportProcess().SetTask(2)
 	p.customerSupportProcess().SetSequenceFlow(3)
-	p.customerProcess().SetStartEvent(1)
-	p.customerProcess().SetEndEvent(1)
+	p.customerProcess().SetStartEvent(Builder.NumStartEvent / Builder.NumPart)
+	p.customerProcess().SetEndEvent(Builder.NumEndEvent / Builder.NumPart)
 	p.customerProcess().SetTask(2)
 	p.customerProcess().SetIntermediateCatchEvent(1)
 	p.customerProcess().SetSequenceFlow(4)
@@ -119,13 +120,8 @@ func (p *Process) setInnerElements() {
 	diagram := p.diagram()
 	diagram.SetPlane()
 	plane := p.plane()
-	plane.SetShape(11)
+	plane.SetShape(Builder.NumShape)
 	plane.SetEdge(9)
-}
-
-// setDefinitionsAttributes ...
-func (p *Process) setDefinitionsAttributes() {
-	p.Def.SetDefaultAttributes()
 }
 
 // setCollaboration ...
@@ -160,49 +156,23 @@ func (p *Process) setMessageFlows() {
 	flow.SetMessageFlow(
 		flow.DelegateParameter{
 			MF: p.collaboration().GetMessageFlow(0),
-			T:  "flow",
+			ED: p.plane().GetEdge(7),
 			N:  "claim",
 			ST: "activity",
 			TT: "activity",
-			H:  []string{p.CustomerToCustomerSupportMessage.Suffix, p.NoticeOfDefect.Suffix, p.CheckIncomingClaim.Suffix}})
-	p.setMessageClaim()
+			H:  []string{p.CustomerToCustomerSupportMessage.Suffix, p.NoticeOfDefectTask.Suffix, p.CheckIncomingClaimTask.Suffix},
+			BS: canvas.Bounds{X: 387, Y: 290, Width: 26, Height: 14},
+			WP: []canvas.Waypoint{{X: 370, Y: 400}, {X: 370, Y: 200}}})
 	flow.SetMessageFlow(
 		flow.DelegateParameter{
 			MF: p.collaboration().GetMessageFlow(1),
-			T:  "flow",
+			ED: p.plane().GetEdge(8),
 			N:  "refusal",
 			ST: "activity",
 			TT: "activity",
-			H:  []string{p.CustomerSupportToCustomerMessage.Suffix, p.DenyWarrantyClaim.Suffix, p.ReceiptWarrantyRefusal.Suffix}})
-	p.setMessageRefusal()
-}
-
-// setMessageClaim ...
-func (p *Process) setMessageClaim() {
-	canvas.SetEdge(
-		canvas.DelegateParameter{
-			E: p.plane().GetEdge(7),
-			T: "flow",
-			H: p.CustomerToCustomerSupportMessage.Suffix,
-			W: []canvas.Waypoint{{X: 370, Y: 400}, {X: 370, Y: 200}}})
-	canvas.SetLabel(
-		canvas.DelegateParameter{
-			E: p.plane().GetEdge(7),
-			B: canvas.Bounds{X: 387, Y: 290, Width: 26, Height: 14}})
-}
-
-// setMessageRefusal ...
-func (p *Process) setMessageRefusal() {
-	canvas.SetEdge(
-		canvas.DelegateParameter{
-			E: p.plane().GetEdge(8),
-			T: "flow",
-			H: p.CustomerSupportToCustomerMessage.Suffix,
-			W: []canvas.Waypoint{{X: 630, Y: 200}, {X: 630, Y: 400}}})
-	canvas.SetLabel(
-		canvas.DelegateParameter{
-			E: p.plane().GetEdge(8),
-			B: canvas.Bounds{X: 643, Y: 290, Width: 34, Height: 14}})
+			H:  []string{p.CustomerSupportToCustomerMessage.Suffix, p.DenyWarrantyClaimTask.Suffix, p.ReceiptWarrantyRefusalTask.Suffix},
+			BS: canvas.Bounds{X: 643, Y: 290, Width: 34, Height: 14},
+			WP: []canvas.Waypoint{{X: 630, Y: 200}, {X: 630, Y: 400}}})
 }
 
 // setPools ...
@@ -220,11 +190,10 @@ func (p *Process) setCustomerSupportPool() {
 			S: p.plane().GetShape(0),
 			T: "participant",
 			I: true,
-			H: p.CustomerSupportID.Suffix,
-			B: canvas.Bounds{X: 150, Y: 80, Width: 800, Height: 160}})
+			H: p.CustomerSupportID.Suffix})
 }
 
-// setProcessCustomerSupport ...
+// setCustomerSupportProcess ...
 func (p *Process) setCustomerSupportProcess() {
 	p.customerSupportProcess().SetID("process", p.CustomerSupportProcess.Suffix)
 	p.customerSupportProcess().SetIsExecutable(p.CustomerSupportIsExecutable)
@@ -234,12 +203,10 @@ func (p *Process) setCustomerSupportProcess() {
 func (p *Process) setCustomerSupportStartEvent() {
 	elements.SetStartEvent(
 		elements.DelegateParameter{
-			SE: p.customerSupportProcess().GetStartEvent(0),
-			SH: p.plane().GetShape(2),
-			T:  "event",
-			N:  "Begin of Customer Support Process",
-			H:  []string{p.CustomerSupportStartEvent.Suffix, p.FromCustomerSupportStartEvent.Suffix},
-			BS: canvas.Bounds{X: 225, Y: 142}})
+			SE:    p.customerSupportProcess().GetStartEvent(0),
+			SH:    p.plane().GetShape(1),
+			BSPTR: p.plane().GetShape(0).GetBounds(),
+			H:     []string{p.CustomerSupportStartEvent.Suffix, p.FromCustomerSupportStartEvent.Suffix}})
 	p.fromCustomerSupportStartEvent()
 }
 
@@ -247,92 +214,85 @@ func (p *Process) setCustomerSupportStartEvent() {
 func (p *Process) fromCustomerSupportStartEvent() {
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.customerSupportProcess().GetSequenceFlow(0),
-			ED: p.plane().GetEdge(0),
-			T:  "flow",
-			ST: "event",
-			TT: "activity",
-			H:  []string{p.FromCustomerSupportStartEvent.Suffix, p.CustomerSupportStartEvent.Suffix, p.CheckIncomingClaim.Suffix},
-			WP: []canvas.Waypoint{{X: 261, Y: 160}, {X: 320, Y: 160}}})
+			SF:    p.customerSupportProcess().GetSequenceFlow(0),
+			ED:    p.plane().GetEdge(0),
+			BSPTR: p.plane().GetShape(1).GetBounds(),
+			ST:    "event",
+			TT:    "activity",
+			H:     []string{p.FromCustomerSupportStartEvent.Suffix, p.CustomerSupportStartEvent.Suffix, p.CheckIncomingClaimTask.Suffix}})
 }
 
 // setCheckIncomingClaim ...
-func (p *Process) setCheckIncomingClaim() {
+func (p *Process) setCheckIncomingClaimTask() {
 	tasks.SetTask(
 		tasks.DelegateParameter{
-			TA: p.customerSupportProcess().GetTask(0),
-			SH: p.plane().GetShape(4),
-			T:  "activity",
-			N:  "Check incoming claim",
-			H:  []string{p.CheckIncomingClaim.Suffix, p.FromCustomerSupportStartEvent.Suffix, p.FromCheckIncomingClaim.Suffix},
-			BS: canvas.Bounds{X: 320, Y: 120}})
-	p.fromCheckIncomingClaim()
+			TA:     p.customerSupportProcess().GetTask(0),
+			SH:     p.plane().GetShape(2),
+			WPPREV: p.plane().GetEdge(0).GetWaypoint(1),
+			N:      "Check incoming claim",
+			H:      []string{p.CheckIncomingClaimTask.Suffix, p.FromCustomerSupportStartEvent.Suffix, p.FromCheckIncomingClaimTask.Suffix}})
+	p.fromCheckIncomingClaimTask()
 }
 
 // fromCheckIncomingClaim ...
-func (p *Process) fromCheckIncomingClaim() {
+func (p *Process) fromCheckIncomingClaimTask() {
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.customerSupportProcess().GetSequenceFlow(1),
-			ED: p.plane().GetEdge(1),
-			T:  "flow",
-			N:  "decide",
-			ST: "activity",
-			TT: "activity",
-			H:  []string{p.FromCheckIncomingClaim.Suffix, p.CheckIncomingClaim.Suffix, p.DenyWarrantyClaim.Suffix},
-			WP: []canvas.Waypoint{{X: 420, Y: 160}, {X: 580, Y: 160}},
-			BS: canvas.Bounds{X: 485, Y: 142, Width: 33, Height: 14}})
+			SF:    p.customerSupportProcess().GetSequenceFlow(1),
+			ED:    p.plane().GetEdge(1),
+			BSPTR: p.plane().GetShape(2).GetBounds(),
+			N:     "decide",
+			ST:    "activity",
+			TT:    "activity",
+			H:     []string{p.FromCheckIncomingClaimTask.Suffix, p.CheckIncomingClaimTask.Suffix, p.DenyWarrantyClaimTask.Suffix},
+			BS:    canvas.Bounds{X: 485, Y: 142, Width: 33, Height: 14}}) // TODO: label bounds needs to fit to the flow
 }
 
 // setDenyWarrantyClaim ...
-func (p *Process) setDenyWarrantyClaim() {
+func (p *Process) setDenyWarrantyClaimTask() {
 	tasks.SetTask(
 		tasks.DelegateParameter{
-			TA: p.customerSupportProcess().GetTask(1),
-			T:  "activity",
-			N:  "Deny warranty claim",
-			H:  []string{p.DenyWarrantyClaim.Suffix, p.FromCheckIncomingClaim.Suffix, p.FromDenyWarrantyClaim.Suffix},
-			SH: p.plane().GetShape(5),
-			BS: canvas.Bounds{X: 580, Y: 120}})
-	p.fromDenyWarrantyClaim()
+			TA:     p.customerSupportProcess().GetTask(1),
+			SH:     p.plane().GetShape(3),
+			WPPREV: p.plane().GetEdge(1).GetWaypoint(1),
+			N:      "Deny warranty claim",
+			H:      []string{p.DenyWarrantyClaimTask.Suffix, p.FromCheckIncomingClaimTask.Suffix, p.FromDenyWarrantyClaimTask.Suffix}})
+	p.fromDenyWarrantyClaimTask()
 }
 
 // fromDenyWarrantyClaim ...
-func (p *Process) fromDenyWarrantyClaim() {
+func (p *Process) fromDenyWarrantyClaimTask() {
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.customerSupportProcess().GetSequenceFlow(2),
-			ED: p.plane().GetEdge(2),
-			T:  "flow",
-			ST: "activity",
-			TT: "event",
-			H:  []string{p.FromDenyWarrantyClaim.Suffix, p.DenyWarrantyClaim.Suffix, p.CustomerSupportEndEvent.Suffix},
-			WP: []canvas.Waypoint{{X: 680, Y: 160}, {X: 822, Y: 160}}})
+			SF:    p.customerSupportProcess().GetSequenceFlow(2),
+			ED:    p.plane().GetEdge(2),
+			BSPTR: p.plane().GetShape(3).GetBounds(),
+			ST:    "activity",
+			TT:    "event",
+			H:     []string{p.FromDenyWarrantyClaimTask.Suffix, p.DenyWarrantyClaimTask.Suffix, p.CustomerSupportEndEvent.Suffix}})
 }
 
 // setCustomerSupportEndEvent ...
 func (p *Process) setCustomerSupportEndEvent() {
 	elements.SetEndEvent(
 		elements.DelegateParameter{
-			EE: p.customerSupportProcess().GetEndEvent(0),
-			SH: p.plane().GetShape(3),
-			T:  "event",
-			N:  "End of Customer Support Process",
-			H:  []string{p.CustomerSupportEndEvent.Suffix, p.FromDenyWarrantyClaim.Suffix},
-			BS: canvas.Bounds{X: 822, Y: 142}})
+			EE:     p.customerSupportProcess().GetEndEvent(0),
+			SH:     p.plane().GetShape(4),
+			WPPREV: p.plane().GetEdge(2).GetWaypoint(1),
+			H:      []string{p.CustomerSupportEndEvent.Suffix, p.FromDenyWarrantyClaimTask.Suffix}})
 }
 
 /**** Customer Process ****/
 
-// setPoolCustomer
+// setCustomerPool
 func (p *Process) setCustomerPool() {
 	canvas.SetPool(
 		canvas.DelegateParameter{
-			S: p.plane().GetShape(1),
-			T: "participant",
-			I: true,
-			H: p.CustomerID.Suffix,
-			B: canvas.Bounds{X: 150, Y: 360, Width: 800, Height: 160}})
+			S:     p.plane().GetShape(5),
+			BSPTR: p.plane().GetShape(0).GetBounds(),
+			T:     "participant",
+			I:     true,
+			H:     p.CustomerID.Suffix})
 }
 
 // setProcessCustomer ...
@@ -345,12 +305,10 @@ func (p *Process) setCustomerProcess() {
 func (p *Process) setCustomerStartEvent() {
 	elements.SetStartEvent(
 		elements.DelegateParameter{
-			SE: p.customerProcess().GetStartEvent(0),
-			SH: p.plane().GetShape(6),
-			T:  "event",
-			N:  "Begin of Customer Process",
-			H:  []string{p.CustomerStartEvent.Suffix, p.FromCustomerStartEvent.Suffix},
-			BS: canvas.Bounds{X: 225, Y: 422}})
+			SE:    p.customerProcess().GetStartEvent(0),
+			SH:    p.plane().GetShape(6),
+			BSPTR: p.plane().GetShape(5).GetBounds(),
+			H:     []string{p.CustomerStartEvent.Suffix, p.FromCustomerStartEvent.Suffix}})
 	p.fromCustomerStartEvent()
 }
 
@@ -358,25 +316,23 @@ func (p *Process) setCustomerStartEvent() {
 func (p *Process) fromCustomerStartEvent() {
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.customerProcess().GetSequenceFlow(0),
-			ED: p.plane().GetEdge(3),
-			T:  "flow",
-			ST: "event",
-			TT: "activity",
-			H:  []string{p.FromCustomerStartEvent.Suffix, p.CustomerStartEvent.Suffix, p.NoticeOfDefect.Suffix},
-			WP: []canvas.Waypoint{{X: 261, Y: 440}, {X: 320, Y: 440}}})
+			SF:    p.customerProcess().GetSequenceFlow(0),
+			ED:    p.plane().GetEdge(3),
+			BSPTR: p.plane().GetShape(6).GetBounds(),
+			ST:    "event",
+			TT:    "activity",
+			H:     []string{p.FromCustomerStartEvent.Suffix, p.CustomerStartEvent.Suffix, p.NoticeOfDefectTask.Suffix}})
 }
 
 // setNoticeOfDefect ...
-func (p *Process) setNoticeOfDefect() {
+func (p *Process) setNoticeOfDefectTask() {
 	tasks.SetTask(
 		tasks.DelegateParameter{
-			TA: p.customerProcess().GetTask(0),
-			SH: p.plane().GetShape(8),
-			T:  "activity",
-			N:  "Notice of defect",
-			H:  []string{p.NoticeOfDefect.Suffix, p.FromCustomerStartEvent.Suffix, p.FromNoticeOfDefect.Suffix},
-			BS: canvas.Bounds{X: 320, Y: 400}})
+			TA:     p.customerProcess().GetTask(0),
+			SH:     p.plane().GetShape(7),
+			WPPREV: p.plane().GetEdge(3).GetWaypoint(1),
+			N:      "Notice of defect",
+			H:      []string{p.NoticeOfDefectTask.Suffix, p.FromCustomerStartEvent.Suffix, p.FromNoticeOfDefectTask.Suffix}})
 	p.fromNoticeOfDefect()
 }
 
@@ -384,28 +340,27 @@ func (p *Process) setNoticeOfDefect() {
 func (p *Process) fromNoticeOfDefect() {
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.customerProcess().GetSequenceFlow(1),
-			ED: p.plane().GetEdge(4),
-			T:  "flow",
-			ST: "activity",
-			TT: "event",
-			H:  []string{p.FromNoticeOfDefect.Suffix, p.NoticeOfDefect.Suffix, p.WaitingForAnswer.Suffix},
-			WP: []canvas.Waypoint{{X: 420, Y: 440}, {X: 482, Y: 440}}})
+			SF:    p.customerProcess().GetSequenceFlow(1),
+			ED:    p.plane().GetEdge(4),
+			BSPTR: p.plane().GetShape(7).GetBounds(),
+			ST:    "activity",
+			TT:    "event",
+			H:     []string{p.FromNoticeOfDefectTask.Suffix, p.NoticeOfDefectTask.Suffix, p.WaitingForAnswerTask.Suffix}})
 }
 
 // setWaitingForAnswer ...
-func (p *Process) setWaitingForAnswer() {
+func (p *Process) setWaitingForAnswerTask() {
 	elements.SetIntermediateCatchEvent(
 		elements.DelegateParameter{
-			ISTED: true,
-			ICE:   p.customerProcess().GetIntermediateCatchEvent(0),
-			SH:    p.plane().GetShape(9),
-			T:     "event",
-			N:     "Waiting for answer",
-			TD:    "PT1M",
-			H:     []string{p.WaitingForAnswer.Suffix, p.FromNoticeOfDefect.Suffix, p.FromWaitingForAnswer.Suffix},
-			TEDH:  p.TimerEventDefinitionWaitingForAnswer.Suffix,
-			BS:    canvas.Bounds{X: 482, Y: 422}})
+			ISTED:  true,
+			ICE:    p.customerProcess().GetIntermediateCatchEvent(0),
+			SH:     p.plane().GetShape(8),
+			WPPREV: p.plane().GetEdge(4).GetWaypoint(1),
+			T:      "event",
+			N:      "Waiting for answer",
+			TD:     "PT1M",
+			H:      []string{p.WaitingForAnswerTask.Suffix, p.FromNoticeOfDefectTask.Suffix, p.FromWaitingForAnswerTask.Suffix},
+			TEDH:   p.TimerEventDefinitionWaitingForAnswer.Suffix})
 	p.fromWaitingForAnswer()
 }
 
@@ -413,25 +368,23 @@ func (p *Process) setWaitingForAnswer() {
 func (p *Process) fromWaitingForAnswer() {
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.customerProcess().GetSequenceFlow(2),
-			ED: p.plane().GetEdge(5),
-			T:  "flow",
-			ST: "event",
-			TT: "activity",
-			H:  []string{p.FromWaitingForAnswer.Suffix, p.WaitingForAnswer.Suffix, p.ReceiptWarrantyRefusal.Suffix},
-			WP: []canvas.Waypoint{{X: 518, Y: 440}, {X: 580, Y: 440}}})
+			SF:    p.customerProcess().GetSequenceFlow(2),
+			ED:    p.plane().GetEdge(5),
+			BSPTR: p.plane().GetShape(8).GetBounds(),
+			ST:    "event",
+			TT:    "activity",
+			H:     []string{p.FromWaitingForAnswerTask.Suffix, p.WaitingForAnswerTask.Suffix, p.ReceiptWarrantyRefusalTask.Suffix}})
 }
 
 // setReceiptWarrantyRefusal ...
-func (p *Process) setReceiptWarrantyRefusal() {
+func (p *Process) setReceiptWarrantyRefusalTask() {
 	tasks.SetTask(
 		tasks.DelegateParameter{
-			TA: p.customerProcess().GetTask(1),
-			SH: p.plane().GetShape(10),
-			T:  "activity",
-			N:  "Receipt warranty refusal",
-			H:  []string{p.ReceiptWarrantyRefusal.Suffix, p.FromWaitingForAnswer.Suffix, p.FromReceiptWarrantyRefusal.Suffix},
-			BS: canvas.Bounds{X: 580, Y: 400}})
+			TA:     p.customerProcess().GetTask(1),
+			SH:     p.plane().GetShape(9),
+			WPPREV: p.plane().GetEdge(5).GetWaypoint(1),
+			N:      "Receipt warranty refusal",
+			H:      []string{p.ReceiptWarrantyRefusalTask.Suffix, p.FromWaitingForAnswerTask.Suffix, p.FromReceiptWarrantyRefusalTask.Suffix}})
 	p.fromReceiptWarrantyRefusal()
 }
 
@@ -439,25 +392,22 @@ func (p *Process) setReceiptWarrantyRefusal() {
 func (p *Process) fromReceiptWarrantyRefusal() {
 	flow.SetSequenceFlow(
 		flow.DelegateParameter{
-			SF: p.customerProcess().GetSequenceFlow(3),
-			ED: p.plane().GetEdge(6),
-			T:  "flow",
-			ST: "activity",
-			TT: "event",
-			H:  []string{p.FromReceiptWarrantyRefusal.Suffix, p.ReceiptWarrantyRefusal.Suffix, p.CustomerEndEvent.Suffix},
-			WP: []canvas.Waypoint{{X: 680, Y: 440}, {X: 822, Y: 440}}})
+			SF:    p.customerProcess().GetSequenceFlow(3),
+			ED:    p.plane().GetEdge(6),
+			BSPTR: p.plane().GetShape(9).GetBounds(),
+			ST:    "activity",
+			TT:    "event",
+			H:     []string{p.FromReceiptWarrantyRefusalTask.Suffix, p.ReceiptWarrantyRefusalTask.Suffix, p.CustomerEndEvent.Suffix}})
 }
 
 // setCustomerEndEvent ...
 func (p *Process) setCustomerEndEvent() {
 	elements.SetEndEvent(
 		elements.DelegateParameter{
-			EE: p.customerProcess().GetEndEvent(0),
-			SH: p.plane().GetShape(7),
-			T:  "event",
-			N:  "End of Customer Process",
-			H:  []string{p.CustomerEndEvent.Suffix, p.FromReceiptWarrantyRefusal.Suffix},
-			BS: canvas.Bounds{X: 822, Y: 422}})
+			EE:     p.customerProcess().GetEndEvent(0),
+			SH:     p.plane().GetShape(10),
+			WPPREV: p.plane().GetEdge(6).GetWaypoint(1),
+			H:      []string{p.CustomerEndEvent.Suffix, p.FromReceiptWarrantyRefusalTask.Suffix}})
 }
 
 // setDiagram ...
@@ -466,24 +416,15 @@ func (p *Process) setDiagram() {
 	var n int64 = 1
 	p.diagram().SetID("diagram", n)
 	// plane attributes
-	plane := p.plane()
-	plane.SetID("plane", n)
-	plane.SetElement("collaboration", p.Collaboration.Suffix)
+	p.plane().SetID("plane", n)
+	p.plane().SetElement("collaboration", p.Collaboration.Suffix)
 }
 
-/**** Getter ****/
+/**** Default Setter/Getter ****/
 
-// collaboration ...
+func (p *Process) attributes()                                { p.Def.SetDefaultAttributes() }
 func (p Process) collaboration() *collaboration.Collaboration { return p.Def.GetCollaboration() }
-
-// customerSupportProces ...
-func (p Process) customerSupportProcess() *process.Process { return p.Def.GetProcess(0) }
-
-// customerProcess ...
-func (p Process) customerProcess() *process.Process { return p.Def.GetProcess(1) }
-
-// diagram ...
-func (p Process) diagram() *canvas.Diagram { return p.Def.GetDiagram(0) }
-
-// plane ...
-func (p Process) plane() *canvas.Plane { return p.diagram().GetPlane() }
+func (p Process) customerSupportProcess() *process.Process    { return p.Def.GetProcess(0) }
+func (p Process) customerProcess() *process.Process           { return p.Def.GetProcess(1) }
+func (p Process) diagram() *canvas.Diagram                    { return p.Def.GetDiagram(0) }
+func (p Process) plane() *canvas.Plane                        { return p.diagram().GetPlane() }
