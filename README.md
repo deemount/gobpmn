@@ -23,7 +23,7 @@ go run main.go
 
 ### Docker ###
 
-Reminder: 
+Reminder:
 
 * RabbitMQ is just in a state of testing
 * ElasticSearch is in a state of testing
