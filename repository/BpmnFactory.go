@@ -68,10 +68,8 @@ func (factory *bpmnFactory) set() {
 	// e.g. use struct pointer (no argument)
 
 	// 1
-	//repositoryModel := small_process.New()
-	repositoryModel := collaborative_process.New()
-	d := repositoryModel.Build()
-	factory.Repo = d.Call()
+	//repositoryModel := small_process.New().Build().Call()
+	factory.Repo = collaborative_process.New().Build().Call()
 
 	// 2
 	// repositoryModel := examples.NewBlackBoxModel()

@@ -57,7 +57,7 @@ type CategoryRepository interface {
 	attributes.AttributesBaseElements
 
 	SetCategoryValue()
-	GetCategoryValue() *CategoryValue
+	GetCategoryValue() CATEGORY_VALUE_PTR
 }
 
 // CategoryValueRepository ...

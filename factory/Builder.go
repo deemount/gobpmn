@@ -20,7 +20,8 @@ type Def core.DefinitionsRepository
 type Builder struct {
 	Reflect
 	Settings
-	Suffix string
+	Suffix    string
+	HashTable []string
 }
 
 // Hash ...
@@ -71,6 +72,52 @@ func (h Builder) hash() Builder {
 	return r
 }
 
+// hashTable ...
+// Note:
+// @self is a pseudo and means "this hash is set to this element"
+// Ruleset for a straight process without any decision:
+// A Collaboration has one hash value: self
+// A Participant has two hash values: id, process
+// A Pool has one hash value: id
+// A StartEvent has two hash values: self, next (flow: from)
+// A Flow has three hash values: self, previous, next (task ...)
+// A Task, Event has three hash values: self, previous (flow: from), next (flow. from)
+// A EndEvent has two hash values: self, previous (flow: from)
+func (h Builder) hashTable(index int, val reflect.Value) Builder {
+
+	n := 8
+	b := make([]byte, n)
+	c := fnv.New32a()
+
+	if _, err := rand.Read(b); err != nil {
+		panic(err)
+	}
+	s := fmt.Sprintf("%x", b)
+
+	if _, err := c.Write([]byte(s)); err != nil {
+		panic(err)
+	}
+	defer c.Reset()
+
+	r := Builder{
+		HashTable: []string{
+			fmt.Sprintf("%x", string(c.Sum(nil))),
+		},
+	}
+
+	strHash := fmt.Sprintf("%s", val.Field(index).FieldByName("Suffix"))
+	if strHash == "" {
+		val.Field(index).Set(reflect.ValueOf(r))
+	}
+
+	if index+1 < val.NumField() {
+		nexthash := Builder{HashTable: []string{}}          // generate hash value
+		val.Field(index + 1).Set(reflect.ValueOf(nexthash)) // inject the field
+	}
+
+	return r
+}
+
 // inject itself reflects a given struct and inject
 // signed fields with hash values.
 // There are two conditions to assign fields of a strcut:
@@ -91,12 +138,20 @@ func (h *Builder) inject(p interface{}) interface{} {
 	ref := NewReflect(p)
 	ref.Interface().New().Maps().Reflection()
 
+	// TODO: ref.Analyze fields can be used here
+	//log.Printf("ref.Analyze.Anonym %+v", ref.Analyze.Anonym)
+	//log.Printf("ref.Analyze.Builder %+v", ref.Analyze.Builder)
+	//log.Printf("ref.Analyze.Config %+v", ref.Analyze.Config)
+	//log.Printf("ref.Analyze.Words %+v", ref.Analyze.Words)
+
+	l := 0
+
 	// TODO: Describe how the injection rules for anonymous fields are
 	// anonymous field are reflected
 	if ref.hasAnonymous() {
 
 		// walk through the map with names of anonymous fields
-		for _, field := range ref.Anonym {
+		for index, field := range ref.Anonym {
 
 			// get the reflected value of field
 			n := ref.Temporary.FieldByName(field)
@@ -106,7 +161,8 @@ func (h *Builder) inject(p interface{}) interface{} {
 
 				name := n.Type().Field(i).Name
 				if strings.Contains(name, field) {
-					log.Printf("factory.builder: detected field %s contains anonymous field %s", name, field)
+					// TODO: Thanks for the info, but it seems that it's useless
+					//log.Printf("factory.builder: detected field %s contains anonymous field %s", name, field)
 				}
 
 				// set by kind of reflected value above
@@ -122,30 +178,35 @@ func (h *Builder) inject(p interface{}) interface{} {
 					if strings.Contains(name, boolIsExecutable) && i == 0 {
 						n.Field(0).SetBool(true)
 						log.Printf("factory.builder: inject first bool field %s once", name)
+					} else {
+						log.Printf("factory.builder: second bool field %s stays false", name)
 					}
+
+					log.Printf("factory.builder: >> field injection %d of %d done", i+1, n.NumField())
 
 					break
 
 				// kind is a struct
 				case reflect.Struct:
 
-					h.inPool(field, name)
-					h.inMessage(field, name)
-					h.inStartEvent(name)
-					h.inTask(name)
-					h.inEndEvent(name)
+					// TODO: The counting list could become bigger, when different elements needs to be counted
+					h.countPool(field, name)    // counts processes, participants and their shapes
+					h.countMessage(field, name) // counts message flows and their edges
+					h.countStartEvent(name)     // counts startevents
+					h.countTask(name)           // counts tasks
+					h.countEndEvent(name)       // counts endevent
 
 					strHash := fmt.Sprintf("%s", n.Field(i).FieldByName("Suffix"))
 					if strHash == "" {
-						log.Printf("factory.builder: current fieldname %s has no hash value", n.Type().Field(i).Name)
 						hash := h.hash()                      // generate hash value
 						n.Field(i).Set(reflect.ValueOf(hash)) // inject the field
-						log.Printf("factory.builder: inject current fieldname %s (%v) with hash value ", n.Type().Field(i).Name, n.Field(i).FieldByName("Suffix"))
+						//h.HashTable[0] = hash.Suffix
+						log.Printf("factory.builder: inject first at process index [%d] => %v on current fieldname %s (%v) with hash value ", index, ref.Analyze.Words[index], n.Type().Field(i).Name, n.Field(i).FieldByName("Suffix"))
 					} else {
 						log.Printf("factory.builder: current fieldname %s (%v) has got hash value before", n.Type().Field(i).Name, n.Field(i).FieldByName("Suffix"))
 					}
 
-					// TODO: Check previous element; maybe a solution trying to erate the hash slice
+					// TODO: Check only previous element; maybe a solution trying to erate the hash slice
 					if i > 0 {
 						if n.Field(i-1).Kind() != reflect.Bool {
 							log.Printf("factory.builder: previous fieldname was %s (%v)", n.Type().Field(i-1).Name, n.Field(i-1).FieldByName("Suffix"))
@@ -158,20 +219,25 @@ func (h *Builder) inject(p interface{}) interface{} {
 					if i+1 < n.NumField() {
 						nexthash := h.hash()                          // generate hash value
 						n.Field(i + 1).Set(reflect.ValueOf(nexthash)) // inject the field
+						//h.HashTable[1] = nexthash.Suffix
 						log.Printf("factory.builder: inject next fieldname at %v: %s (%v)", n.Type().Name(), n.Type().Field(i+1).Name, n.Field(i+1).FieldByName("Suffix"))
 					} else {
 						log.Printf("factory.builder: current fieldname %s has no fieldname to the next", n.Type().Field(i).Name)
 					}
 
-					log.Println("factory.builder: >> field injection done")
+					log.Printf("factory.builder: >> field injection %d of %d done", i+1, n.NumField())
 
 					break
 
 				}
-			}
-		}
 
+			}
+			l++
+		}
+		log.Printf("factory.builder: range %dx anonym ", l)
 	}
+
+	log.Printf("hashtable %v", h.HashTable)
 
 	// anonymous field aren't reflected
 	if ref.hasNotAnonymous() {
@@ -262,7 +328,7 @@ func (h *Builder) build(p interface{}) {
 /*** Semantic, Analyze and Statistic ***/
 
 // inPool ...
-func (h *Builder) inPool(field, builderField string) {
+func (h *Builder) countPool(field, builderField string) {
 	if h.isPool(field) {
 		if strings.Contains(builderField, fieldProcess) {
 			h.NumProc++
@@ -275,7 +341,7 @@ func (h *Builder) inPool(field, builderField string) {
 }
 
 // inMessage ...
-func (h *Builder) inMessage(field, builderField string) {
+func (h *Builder) countMessage(field, builderField string) {
 	if h.isMessage(field) {
 		if strings.Contains(builderField, fieldMessage) {
 			h.NumMsg++
@@ -284,24 +350,24 @@ func (h *Builder) inMessage(field, builderField string) {
 	}
 }
 
-// inStartEvent ...
-func (h *Builder) inStartEvent(builderField string) {
+// isStartEvent ...
+func (h *Builder) countStartEvent(builderField string) {
 	if strings.Contains(builderField, fieldStartEvent) && utils.After(builderField, "From") == "" {
 		h.NumStartEvent++
 		h.NumShape++
 	}
 }
 
-// inTask ...
-func (h *Builder) inTask(builderField string) {
+// isTask ...
+func (h *Builder) countTask(builderField string) {
 	if strings.Contains(builderField, fieldTask) && utils.After(builderField, "From") == "" {
 		h.NumTask++
 		h.NumShape++
 	}
 }
 
-// inEndEvent ...
-func (h *Builder) inEndEvent(builderField string) {
+// isEndEvent ...
+func (h *Builder) countEndEvent(builderField string) {
 	if strings.Contains(builderField, fieldEndEvent) {
 		h.NumEndEvent++
 		h.NumShape++

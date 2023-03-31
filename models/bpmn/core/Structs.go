@@ -12,18 +12,18 @@ import (
 
 // DefinitionsBaseElements ...
 type DefinitionsBaseElements struct {
-	Collaboration []collaboration.Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration"`
-	Process       []process.Process             `xml:"bpmn:process,omitempty" json:"process"`
-	Category      []marker.Category             `xml:"bpmn:category,omitempty" json:"category,omitempty"`
+	Collaboration collaboration.COLLABORATION_SLC `xml:"bpmn:collaboration,omitempty" json:"collaboration"`
+	Process       process.PROCESS_SLC             `xml:"bpmn:process,omitempty" json:"process"`
+	Category      marker.CATEGORY_SLC             `xml:"bpmn:category,omitempty" json:"category,omitempty"`
 	events.CoreEvents
 	Diagram []canvas.Diagram `xml:"bpmndi:BPMNDiagram,omitempty" json:"diagram"`
 }
 
 // TDefinitionsBaseElements ...
 type TDefinitionsBaseElements struct {
-	Collaboration []collaboration.TCollaboration `xml:"collaboration,omitempty" json:"collaboration"`
-	Process       []process.TProcess             `xml:"process,omitempty" json:"process"`
-	Category      []marker.TCategory             `xml:"category,omitempty" json:"category,omitempty"`
+	Collaboration collaboration.TCOLLABORATION_SLC `xml:"collaboration,omitempty" json:"collaboration"`
+	Process       process.TPROCESS_SLC             `xml:"process,omitempty" json:"process"`
+	Category      []marker.TCategory               `xml:"category,omitempty" json:"category,omitempty"`
 	events.TCoreEvents
 	Diagram []canvas.TDiagram `xml:"BPMNDiagram,omitempty" json:"diagram"`
 }

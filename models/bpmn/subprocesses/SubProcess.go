@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/deemount/gobpmn/models/bpmn/attributes"
+	"github.com/deemount/gobpmn/models/bpmn/events"
 	"github.com/deemount/gobpmn/models/bpmn/events/elements"
 	"github.com/deemount/gobpmn/models/bpmn/flow"
 	"github.com/deemount/gobpmn/models/bpmn/gateways"
@@ -97,7 +98,7 @@ func (subprocess *SubProcess) SetStartEvent(num int) {
 
 // SetEndEvent ...
 func (subprocess *SubProcess) SetEndEvent(num int) {
-	subprocess.EndEvent = make([]elements.EndEvent, num)
+	subprocess.EndEvent = make(events.END_EVENT_SLC, num)
 }
 
 // SetBoundaryEvent ...
@@ -294,7 +295,7 @@ func (subprocess SubProcess) GetStartEvent(num int) *elements.StartEvent {
 }
 
 // GetEndEvent ...
-func (subprocess SubProcess) GetEndEvent(num int) *elements.EndEvent {
+func (subprocess SubProcess) GetEndEvent(num int) events.END_EVENT_PTR {
 	return &subprocess.EndEvent[num]
 }
 

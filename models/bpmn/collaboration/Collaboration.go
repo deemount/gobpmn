@@ -49,7 +49,7 @@ func (collaboration *Collaboration) SetExtensionElements() {
 
 // SetParticipant ...
 func (collaboration *Collaboration) SetParticipant(num int) {
-	collaboration.Participant = make([]Participant, num)
+	collaboration.Participant = make(PARTICIPANT_SLC, num)
 }
 
 // SetMessageFlow ...
@@ -85,7 +85,7 @@ func (collaboration Collaboration) GetExtensionElements() *attributes.ExtensionE
 }
 
 // GetParticipant ...
-func (collaboration Collaboration) GetParticipant(num int) *Participant {
+func (collaboration Collaboration) GetParticipant(num int) PARTICIPANT_PTR {
 	return &collaboration.Participant[num]
 }
 

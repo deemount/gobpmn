@@ -37,7 +37,7 @@ func (category *Category) SetID(typ string, suffix interface{}) {
 
 // SetCategoryValue...
 func (category *Category) SetCategoryValue() {
-	category.CategoryValue = make([]CategoryValue, 1)
+	category.CategoryValue = make(CATEGORY_VALUE_SLC, 1)
 }
 
 /*** Attributes ***/
@@ -70,7 +70,7 @@ func (category Category) GetID() impl.STR_PTR {
 /** BPMN **/
 
 // SetCategoryValue...
-func (category Category) GetCategoryValue() *CategoryValue {
+func (category Category) GetCategoryValue() CATEGORY_VALUE_PTR {
 	return &category.CategoryValue[0]
 }
 

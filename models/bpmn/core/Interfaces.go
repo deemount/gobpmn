@@ -15,7 +15,7 @@ type DefinitionsElements interface {
 	SetProcess(num int)
 	GetProcess(num int) process.PROCESS_PTR
 	SetCategory(num int)
-	GetCategory(num int) *marker.Category
+	GetCategory(num int) marker.CATEGORY_PTR
 	events.CoreEventsElementsRepository
 	SetDiagram(num int)
 	GetDiagram(num int) canvas.DIAGRAM_PTR

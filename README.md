@@ -23,8 +23,17 @@ go run main.go
 
 ### Docker ###
 
+Reminder: 
+
+* RabbitMQ is just in a state of testing
+* ElasticSearch is in a state of testing
+
 ```bash
 docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+```
+
+```bash
+docker run -d --name es01 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -it docker.elastic.co/elasticsearch/elasticsearch:7.14.0
 ```
 
 ### To Do's ###

@@ -10,7 +10,7 @@ type ProcessEventsElementsRepository interface {
 	SetBoundaryEvent(num int)
 	GetBoundaryEvent(num int) *elements.BoundaryEvent
 	SetEndEvent(num int)
-	GetEndEvent(num int) *elements.EndEvent
+	GetEndEvent(num int) END_EVENT_PTR
 	SetIntermediateCatchEvent(num int)
 	GetIntermediateCatchEvent(num int) *elements.IntermediateCatchEvent
 	SetIntermediateThrowEvent(num int)
@@ -19,7 +19,7 @@ type ProcessEventsElementsRepository interface {
 
 type CoreEventsElementsRepository interface {
 	SetSignal(num int)
-	GetSignal(num int) *elements.Signal
+	GetSignal(num int) SIGNAL_PTR
 	SetMessage(num int)
-	GetMessage(num int) *elements.Message
+	GetMessage(num int) MESSAGE_PTR
 }

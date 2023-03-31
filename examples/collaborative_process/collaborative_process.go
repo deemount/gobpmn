@@ -22,13 +22,15 @@ type Process struct {
 
 // Pool ...
 type Pool struct {
-	CustomerSupportIsExecutable bool            // inject: 1, next: -
-	CustomerIsExecutable        bool            // inject: -, next: -
-	Collaboration               factory.Builder // inject: 2, next: -
-	CustomerSupportID           factory.Builder // inject: 3, next: 1
-	CustomerSupportProcess      factory.Builder // inject: 4, next: 2
-	CustomerID                  factory.Builder // inject: 5, next: 3
-	CustomerProcess             factory.Builder // inject: 6, next: 4
+	// configuration
+	CustomerSupportIsExecutable bool // inject: 1, next: -
+	CustomerIsExecutable        bool // inject: 2, next: - (no injection; see injection rules for configuration: boolean)
+	// pool related
+	Collaboration          factory.Builder // inject: 3, index: 0, next: 3
+	CustomerSupportID      factory.Builder // inject: 4, index: 0, next:
+	CustomerSupportProcess factory.Builder // inject: 5, index: 0, next: 2
+	CustomerID             factory.Builder // inject: 6, index: 0, next: 3
+	CustomerProcess        factory.Builder // inject: 7, index: 0, next: 4
 }
 
 // Message ...
@@ -51,15 +53,15 @@ type CustomerSupport struct {
 // Customer ...
 type Customer struct {
 	CustomerStartEvent                   factory.Builder //
-	FromCustomerStartEvent               factory.Builder //12
-	NoticeOfDefectTask                   factory.Builder //13
-	FromNoticeOfDefectTask               factory.Builder //14
-	WaitingForAnswerTask                 factory.Builder //15
-	TimerEventDefinitionWaitingForAnswer factory.Builder //16
-	FromWaitingForAnswerTask             factory.Builder //17
-	ReceiptWarrantyRefusalTask           factory.Builder //18
-	FromReceiptWarrantyRefusalTask       factory.Builder //19
-	CustomerEndEvent                     factory.Builder //20
+	FromCustomerStartEvent               factory.Builder //next: 12
+	NoticeOfDefectTask                   factory.Builder //next: 13
+	FromNoticeOfDefectTask               factory.Builder //next: 14
+	WaitingForAnswerTask                 factory.Builder //next: 15
+	TimerEventDefinitionWaitingForAnswer factory.Builder //next: 16
+	FromWaitingForAnswerTask             factory.Builder //next: 17
+	ReceiptWarrantyRefusalTask           factory.Builder //next: 18
+	FromReceiptWarrantyRefusalTask       factory.Builder //next: 19
+	CustomerEndEvent                     factory.Builder //next: 20
 }
 
 // NewCollaborativeProcess refers to the definitions struct to start building the model

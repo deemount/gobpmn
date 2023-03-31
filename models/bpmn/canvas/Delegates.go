@@ -117,20 +117,18 @@ func (p DelegateParameter) defaultElementSize() (int, int) {
 // findCoordinatesByPreviousWaypoint ...
 func (p *DelegateParameter) findCoordinatesByPreviousWaypoint() (int, int) {
 
-	log.Println("canvas.delegates: find coordinates by previous waypoint no bounds set in shape")
+	log.Println("canvas.delegates: no bounds set in shape, but found previous waypoint")
 
 	// To set the right coordinates for the given shape, I need to the height of the shape to calculate the point on the Y-axis
 	// I assume, that the previous edge, which points to >>this<< shape, is a straight line from the last waypoint
 	// So, p.WPPREV.X is the endpoint of the edge and connects directly to the shape, means it is the startpoint X of the shape
 
-	log.Printf("canvas.delegates: find coordinates by previous waypoint got shape type %s", p.T)
+	log.Printf("canvas.delegates: got shape type %s", p.T)
 	_, height := p.defaultElementSize()
 
-	log.Printf("canvas.delegates: find coordinates by previous waypoint got previous waypoint %d, %d", p.WPPREV.X, p.WPPREV.Y)
+	log.Printf("canvas.delegates: got previous waypoint %d, %d", p.WPPREV.X, p.WPPREV.Y)
 	x := p.WPPREV.X
 	y := p.WPPREV.Y - (height / 2)
-
-	log.Printf("canvas.delegates: find coordinates by previous waypoint returns coordinates %d, %d", x, y)
 
 	return x, y
 }
@@ -138,20 +136,18 @@ func (p *DelegateParameter) findCoordinatesByPreviousWaypoint() (int, int) {
 // findCoordinatesByPreviousBounds ...
 func (p *DelegateParameter) findCoordinatesByPreviousBounds() (int, int) {
 
-	log.Println("canvas.delegates: find coordinates by previous bounds detects no bounds set in shape")
+	log.Println("canvas.delegates: no bounds set in shape, but found previous bounds")
 
 	// To set the right coordinates for the given shape, I need the height of the shape to calculate the point on the Y-axis
-	// I assume, that the previous bounds, which is inside the shape (pool), has
+	// I assume, that the previous bounds, which is inside the shape (pool), has ...
 	// So, p.WPPREV.X is the endpoint of the edge and connects directly to the shape, means it is the startpoint X of the shape
 
-	log.Printf("canvas.delegates: find coordinates by previous bounds got shape type %s", p.T)
+	log.Printf("canvas.delegates: got shape type %s", p.T)
 	_, height := p.defaultElementSize()
 
-	log.Printf("canvas.delegates: find coordinates by previous bounds got previous waypoint %d, %d", p.BSPTR.X, p.BSPTR.Y)
+	log.Printf("canvas.delegates: got previous bounds %d, %d", p.BSPTR.X, p.BSPTR.Y)
 	x := p.BSPTR.X + p.defaultDistanceLeft()
 	y := (p.BSPTR.Y + (p.BSPTR.Height / 2)) - (height / 2)
-
-	log.Printf("canvas.delegates: find coordinates by previous bounds returns coordinates %d, %d", x, y)
 
 	return x, y
 }
@@ -164,8 +160,8 @@ func (p *DelegateParameter) setBounds() {
 	p.S.SetBounds()
 
 	// if coordinates of x and y are zero, decide between two conditions:
-	// * if previous waypoint is not nil, find the coordinates
-	// * if
+	// * if previous waypoint is not nil, find the coordinates by waypoint
+	// * if previous bounds is not nil, find the coordinates by bounds
 	// * else set default coordinates, when previous waypoint is nil
 	if p.B.X == 0 && p.B.Y == 0 {
 
@@ -188,7 +184,7 @@ func (p *DelegateParameter) setBounds() {
 	}
 	p.S.GetBounds().SetSize(p.B.Width, p.B.Height)
 
-	log.Printf("canvas.delegates: set bounds for %s (%s)", p.S.ID, p.S.Element)
+	log.Printf("canvas.delegates: set bounds (coordinates: %d, %d, size: %d, %d) for %s (%s)", p.B.X, p.B.Y, p.B.Width, p.B.Height, p.S.ID, p.S.Element)
 
 }
 

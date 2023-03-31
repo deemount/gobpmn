@@ -129,4 +129,9 @@ var (
 			0: boolIsExecutable,
 		},
 	}
+
+	prepositions = map[int]string{
+		0: "from",
+		1: "to",
+	}
 )

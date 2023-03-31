@@ -35,7 +35,7 @@ func (ref *Reflect) New() *Reflect {
 	return ref
 }
 
-// Make initializes maps to analyze later
+// Maps initializes maps to analyze then later
 // anonym: all anonymous fields
 // config: all boolean fields
 // builder: all builder fields
@@ -60,7 +60,7 @@ func (ref *Reflect) Methods() {
 }
 
 // Set temporary variable values to interface {}
-// This method is set inside a build method, where
+// This method is set inside at the end of a build method, where
 // fields of a struct got reflected by names
 func (ref *Reflect) Set() any {
 	ref.Element.Set(ref.Temporary)

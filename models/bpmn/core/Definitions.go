@@ -7,7 +7,6 @@ import (
 	"github.com/deemount/gobpmn/models/bpmn/canvas"
 	"github.com/deemount/gobpmn/models/bpmn/collaboration"
 	"github.com/deemount/gobpmn/models/bpmn/events"
-	"github.com/deemount/gobpmn/models/bpmn/events/elements"
 	"github.com/deemount/gobpmn/models/bpmn/impl"
 	"github.com/deemount/gobpmn/models/bpmn/marker"
 	"github.com/deemount/gobpmn/models/bpmn/process"
@@ -167,7 +166,7 @@ func (definitions *Definitions) SetProcess(num int) {
 
 // SetCategory ...
 func (definitions *Definitions) SetCategory(num int) {
-	definitions.Category = make([]marker.Category, num)
+	definitions.Category = make(marker.CATEGORY_SLC, num)
 }
 
 /*** Events ***/
@@ -238,19 +237,19 @@ func (definitions Definitions) GetProcess(num int) process.PROCESS_PTR {
 }
 
 // GetCategory ...
-func (definitions Definitions) GetCategory(num int) *marker.Category {
+func (definitions Definitions) GetCategory(num int) marker.CATEGORY_PTR {
 	return &definitions.Category[num]
 }
 
 /*** Events ***/
 
 // GetMessage ...
-func (definitions Definitions) GetMessage(num int) *elements.Message {
+func (definitions Definitions) GetMessage(num int) events.MESSAGE_PTR {
 	return &definitions.Message[num]
 }
 
 // GetSignal ...
-func (definitions Definitions) GetSignal(num int) *elements.Signal {
+func (definitions Definitions) GetSignal(num int) events.SIGNAL_PTR {
 	return &definitions.Signal[num]
 }
 
@@ -276,6 +275,7 @@ func (definitions TDefinitions) String() string {
 }
 
 /* Schema Fetcher */
+// TODO: Must be implemented? Or make a helper function out of it
 func (definitions Definitions) GetCamundaSchema() {
 	schema, err := utils.FetchSchema(definitions.CamundaSchema)
 	if err != nil {

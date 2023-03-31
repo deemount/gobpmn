@@ -26,15 +26,15 @@ type TIncomingOutgoing struct {
 
 // Category ...
 type Category struct {
-	ID            string          `xml:"id,attr,omitempty" json:"id"`
-	CategoryValue []CategoryValue `xml:"bpmn:categoryValue,omitempty" json:"categoryValue,omitempty"`
+	ID            string             `xml:"id,attr,omitempty" json:"id"`
+	CategoryValue CATEGORY_VALUE_SLC `xml:"bpmn:categoryValue,omitempty" json:"categoryValue,omitempty"`
 	attributes.Attributes
 }
 
 // TCategory ...
 type TCategory struct {
-	ID            string          `xml:"id,attr,omitempty" json:"id"`
-	CategoryValue []CategoryValue `xml:"categoryValue,omitempty" json:"categoryValue,omitempty"`
+	ID            string             `xml:"id,attr,omitempty" json:"id"`
+	CategoryValue CATEGORY_VALUE_SLC `xml:"categoryValue,omitempty" json:"categoryValue,omitempty"`
 	attributes.TAttributes
 }
 

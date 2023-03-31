@@ -85,7 +85,6 @@ func (p *Process) fromStartEvent() {
 			SF:    p.process().GetSequenceFlow(0),
 			ED:    p.plane().GetEdge(0),
 			BSPTR: p.plane().GetShape(0).GetBounds(),
-			T:     "flow",
 			ST:    "startevent",
 			TT:    "activity",
 			H:     []string{p.FromStartEvent.Suffix, p.StartEvent.Suffix, p.Task.Suffix}})
@@ -111,7 +110,6 @@ func (p *Process) fromTask() {
 			SF:    p.process().GetSequenceFlow(1),
 			ED:    p.plane().GetEdge(1),
 			BSPTR: p.plane().GetShape(1).GetBounds(),
-			T:     "flow",
 			ST:    "activity",
 			TT:    "event",
 			H:     []string{p.FromTask.Suffix, p.Task.Suffix, p.EndEvent.Suffix}})
