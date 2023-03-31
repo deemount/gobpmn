@@ -229,9 +229,9 @@ func (p *DelegateParameter) setWaypoints() {
 		//
 		// Answer  I: If I follow the build order with default sizes, the second waypoint describes the bounds of the next element
 		//            The next element is then in dependence of the flow, showing to.
-		//			  For this option I need to know the >>default<< length of a flow and X of the first waypoint.
+		//			  For this option I need to know the >>default<< length of a flow and X-Position of the first waypoint.
 		//			  Also, I need to know, if the element is at the same Y-Position like the element before.
-		//			  Like for X value, I need to use the build order I explained at the top of the page
+		//			  Like for X-Position value, I need to use the build order I explained at the top of the page
 		//			  I assume that the following element is at the same Y-position from where the previous elements flow is starting from.
 		//			  e.g.
 		//			  startevent waypoint 2 X1: unknown
