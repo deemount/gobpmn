@@ -27,7 +27,7 @@ type Builder struct {
 // Hash ...
 func (h *Builder) Hash() string {
 	if h.isZero() {
-		r := h.hash()
+		r, _ := h.hash()
 		h.Suffix = r.Suffix
 	}
 	return h.Suffix
