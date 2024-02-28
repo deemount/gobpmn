@@ -1,0 +1,69 @@
+linters-settings:
+  govet:
+    check-shadowing: true
+    settings:
+      printf:
+        funcs:
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+  gocyclo:
+    min-complexity: 50
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  misspell:
+    locale: US
+  revive:
+    confidence: 0.8
+  lll:
+    line-length: 160
+    # tab width in spaces. Default to 1.
+    tab-width: 1
+  funlen:
+    lines: 150
+    statements: 80
+
+linters:
+  # please, do not use `enable-all`: it's deprecated and will be removed soon.
+  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
+  disable-all: true
+  enable:
+    - errcheck
+    - funlen
+    - goconst
+    - gocyclo
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - revive
+    - staticcheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+
+  # don't enable:
+  # - gochecknoglobals
+  # - gocognit
+  # - godox
+  # - maligned
+  # - prealloc
+
+run:
+  skip-dirs: []
+    # - test/testdata_etc
+  skip-files:
+    - ".*_test\\.go$"
+
+issues:
+  exclude-rules: []
+  #

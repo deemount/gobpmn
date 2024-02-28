@@ -1,8 +1,0 @@
- {{template "flashes" .}}
-{{define "flashes"}}
-  {{range $key, $value := .Flashes}}
-    <div class="alert alert-{{$key}}">
-      {{$value}}
-    </div>
-  {{end}}
-{{end}}
