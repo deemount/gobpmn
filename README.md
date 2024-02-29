@@ -14,9 +14,9 @@ gobpmn is definitely not (yet) a commercial project and does not claim to be.
 
 ## Participate
 
-You are very welcome to contribute to this project if you feel called to do so. Of course, I would also be happy if you let me know if you want to take a line or two from gobpmn for your own project, workflow engine or library.
+You are very welcome to contribute to this project if you feel called to do so. Of course, I would also be happy if you let me know if you want to take a line code or two from gobpmn for your own project, workflow engine or library. Feel free to take what you need.
 
-## Further Links
+## Repositories
 
 + [gobpmnTypes](https://github.com/deemount/gobpmnTypes)
 + [gobpmnModels](https://github.com/deemount/gobpmnModels)
@@ -24,3 +24,12 @@ You are very welcome to contribute to this project if you feel called to do so. 
 + [gobpmnDiagram](https://github.com/deemount/gobpmnDiagram)
 + [gobpmnBuilder](https://github.com/deemount/gobpmnBuilder)
 + [gobpmnReflection](https://github.com/deemount/gobpmnReflection)
+
+The original code in this repository has been copied to another repository.
+
++ [gobpmnLab](https://github.com/deemount/gobpmnLab)
+
+## Further Links
+
++ [BPMN Specification](https://www.omg.org/spec/BPMN)
++ [Camunda BPMN](https://camunda.com/bpmn/)
