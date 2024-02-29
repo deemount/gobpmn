@@ -1,22 +1,12 @@
 # gobpmn
 
-## What it is?
+## Wiki
 
-gobpmn is a project for Business Process Model Notation (BPMN) and written in Go. What was a small attempt in the beginning has now grown so much that I decided to distribute this project in several repositories for a better overview and handling. gobpmn does not claim to be complete, but I am motivated enough to try to achieve this goal anyway.
+The documentation is now written in the wiki of the respective module
 
-gobpmn is also a library for elements and attributes from the OMG specification for BPMN and is orientated towards this, as well as the Camunda Modeller in version 7.
+[Wiki](https://github.com/deemount/gobpmn/wiki)
 
-gobpmn is also an experimental laboratory for testing new techniques in Go and can be seen as a Sandbox. By distributing the modules to repositories, we now have a completely new environment for testing certain features. This also allows me to deepen my own expertise in Go.
-
-## What it is not?
-
-gobpmn is definitely not (yet) a commercial project and does not claim to be.
-
-## Participate
-
-You are very welcome to contribute to this project if you feel called to do so. Of course, I would also be happy if you let me know if you want to take a line code or two from gobpmn for your own project, workflow engine or library. Feel free to take what you need.
-
-## Repositories
+## Modules
 
 + [gobpmnTypes](https://github.com/deemount/gobpmnTypes)
 + [gobpmnModels](https://github.com/deemount/gobpmnModels)
@@ -25,7 +15,11 @@ You are very welcome to contribute to this project if you feel called to do so. 
 + [gobpmnBuilder](https://github.com/deemount/gobpmnBuilder)
 + [gobpmnReflection](https://github.com/deemount/gobpmnReflection)
 
-The original code in this repository has been copied to another repository.
+
+## Testing
+
+**Note:** The original code in this repository has been copied to another repository.
+You can also test the idea behind it directly. Simply follow the link to the lab
 
 + [gobpmnLab](https://github.com/deemount/gobpmnLab)
 
