@@ -2,9 +2,7 @@
 
 ## Wiki
 
-The documentation is now written in the wiki of the respective module
-
-[Wiki](https://github.com/deemount/gobpmn/wiki)
+The [documentation](https://github.com/deemount/gobpmn/wiki) is now written in the wiki of the respective module
 
 ## Modules
 
@@ -14,7 +12,6 @@ The documentation is now written in the wiki of the respective module
 + [gobpmnDiagram](https://github.com/deemount/gobpmnDiagram)
 + [gobpmnBuilder](https://github.com/deemount/gobpmnBuilder)
 + [gobpmnReflection](https://github.com/deemount/gobpmnReflection)
-
 
 ## Testing
 
