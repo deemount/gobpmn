@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # gobpmn
 
 ## Wiki
@@ -29,3 +30,6 @@ You can also test the idea behind it directly. Simply follow the link to the lab
 
 + [BPMN Specification](https://www.omg.org/spec/BPMN)
 + [Camunda BPMN](https://camunda.com/bpmn/)
+=======
+# gobpmnEngine
+>>>>>>> origin/dev
