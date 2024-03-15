@@ -25,6 +25,12 @@ You can also test the idea behind it directly. Simply follow the link to the lab
 
 + [gobpmnLab](https://github.com/deemount/gobpmnLab)
 
+## Examples
+
+In addition, a repository with available applications has now been created. Examples for execution are stored here.
+
++ [gobpmnByExample](https://github.com/deemount/gobpmnByExample)
+
 ## Further Links
 
 + [BPMN Specification](https://www.omg.org/spec/BPMN)
