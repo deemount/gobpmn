@@ -1,8 +1,10 @@
 # gobpmn
 
+gobpmn is a module-based library that makes it possible to read and create business process models. This library also offers further configuration options to support and integrate a workflow.
+
 ## Wiki
 
-The [documentation](https://github.com/deemount/gobpmn/wiki) is now written in the wiki of the respective module
+Read the [documentation](https://github.com/deemount/gobpmn/wiki)
 
 ## Modules
 
@@ -35,3 +37,9 @@ In addition, a repository with available applications has now been created. Exam
 
 + [BPMN Specification](https://www.omg.org/spec/BPMN)
 + [Camunda BPMN](https://camunda.com/bpmn/)
++ [bpmn.io](https://bpmn.io/)
+
+Checkout the other projects for BPMN written in Go
+
++ [gobpm](https://github.com/dr-dobermann/gobpm)
++ [lib-bpmn-engine](https://github.com/nitram509/lib-bpmn-engine)
