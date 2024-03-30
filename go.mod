@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 module github.com/deemount/gobpmnEngine
 
 go 1.22.1
@@ -16,8 +15,3 @@ require (
 	github.com/deemount/gobpmnReflection v0.0.0-20240323202924-de2a09a92ecf // indirect
 	github.com/deemount/gobpmnTypes v0.0.0-20240323202946-75faa584e156 // indirect
 )
-=======
-module github.com/deemount/gobpmn
-
-go 1.22
->>>>>>> b0db64ccdf4884c52d1e5ed5f6feb879e9a63c68
