@@ -33,4 +33,4 @@ The model can be exported to various formats, such as XML or JSON.
 
 */
 
-package gobpmn
+package main

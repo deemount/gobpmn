@@ -1,12 +1,18 @@
 # gobpmn
 
+***This repository is in a state of update in the next days(2025/02/27)***
+
 gobpmn is a module-based library that makes it possible to read and create business process models. This library also offers further configuration options to support and integrate a workflow.
 
 ## Wiki
 
+***Wiki will be changed in the next days***
+
 Read the [documentation](https://github.com/deemount/gobpmn/wiki)
 
 ## Modules
+
+***Modules are deprecated! This repository get's an significant update***
 
 gobpmn consists of several modules that can be downloaded and imported via the terminal using the go get command.
 The documentation for this repository contains a more detailed explanation of each individual module
