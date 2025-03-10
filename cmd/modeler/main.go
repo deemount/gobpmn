@@ -8,9 +8,13 @@ import (
 	"log"
 	_ "net/http/pprof"
 	"time"
+
+	"github.com/deemount/gobpmn/internal/parser"
+	"github.com/deemount/gobpmn/pkg/core/common"
+	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
 
-var bpmnModeller BPMNModeller
+var bpmnParser parser.BPMNParser
 
 // ExampleProcess is a struct that represents a process model
 // with BPMN elements, with named fields.
@@ -18,7 +22,7 @@ type ExampleProcess struct {
 
 	// Def MUST be set to a DefinitionsRepository,
 	// otherwise the model will not be valid. It MUST be set at the first place.
-	Def DefinitionsRepository // Refers to the DefinitionsRepository
+	Def foundation.DefinitionsRepository // Refers to the DefinitionsRepository
 
 	// If IsExecutable is set, the process is executable and set to true.
 	// Otherwise, the process is not executable and set to false.
@@ -27,22 +31,22 @@ type ExampleProcess struct {
 	IsExecutable bool // Process Configuration
 
 	// All elements of the BPMN model
-	Process             BPMN // BPMN Element
-	StartEvent          BPMN // BPMN Element
-	FromStartEvent      BPMN // BPMN Element
-	Task                BPMN // BPMN Element
-	FromTask            BPMN // BPMN Element
-	SecondTask          BPMN // BPMN Element
-	FromSecondTask      BPMN // BPMN Element
-	ScriptTask          BPMN // BPMN Element
-	FromScriptTask      BPMN // BPMN Element
-	OtherScriptTask     BPMN // BPMN Element
-	FromOtherScriptTask BPMN // BPMN Element
-	UserTask            BPMN // BPMN Element
-	FromUserTask        BPMN // BPMN Element
-	SpecialUserTask     BPMN // BPMN Element
-	FromSpecialUserTask BPMN // BPMN Element
-	EndEvent            BPMN // BPMN Element
+	Process             common.BPMN // BPMN Element
+	StartEvent          common.BPMN // BPMN Element
+	FromStartEvent      common.BPMN // BPMN Element
+	Task                common.BPMN // BPMN Element
+	FromTask            common.BPMN // BPMN Element
+	SecondTask          common.BPMN // BPMN Element
+	FromSecondTask      common.BPMN // BPMN Element
+	ScriptTask          common.BPMN // BPMN Element
+	FromScriptTask      common.BPMN // BPMN Element
+	OtherScriptTask     common.BPMN // BPMN Element
+	FromOtherScriptTask common.BPMN // BPMN Element
+	UserTask            common.BPMN // BPMN Element
+	FromUserTask        common.BPMN // BPMN Element
+	SpecialUserTask     common.BPMN // BPMN Element
+	FromSpecialUserTask common.BPMN // BPMN Element
+	EndEvent            common.BPMN // BPMN Element
 }
 
 // RentingProcess is a struct that represents a collaborative process model
@@ -53,7 +57,7 @@ type (
 	RentingProcess struct {
 
 		// The first field must be set to a DefinitionsRepository.
-		Def DefinitionsRepository // Refers to the DefinitionsRepository
+		Def foundation.DefinitionsRepository // Refers to the DefinitionsRepository
 
 		// The second field must be set to a pool.
 		// A pool must have the name Pool in itself to become identified as such and should/can
@@ -67,35 +71,35 @@ type (
 
 	// RentingPool ...
 	RentingPool struct {
-		TenantIsExecutable   bool // Process Configuration
-		LandlordIsExecutable bool // Process Configuration
-		Collaboration        BPMN // BPMN Element
-		TenantProcess        BPMN // BPMN Element
-		TenantParticipant    BPMN // BPMN Element
-		LandlordProcess      BPMN // BPMN Element
-		LandlordParticipant  BPMN // BPMN Element
+		TenantIsExecutable   bool        // Process Configuration
+		LandlordIsExecutable bool        // Process Configuration
+		Collaboration        common.BPMN // BPMN Element
+		TenantProcess        common.BPMN // BPMN Element
+		TenantParticipant    common.BPMN // BPMN Element
+		LandlordProcess      common.BPMN // BPMN Element
+		LandlordParticipant  common.BPMN // BPMN Element
 	}
 
 	// Tenant
 	Tenant struct {
-		StartEvent     BPMN // BPMN Element
-		FromStartEvent BPMN // BPMN Element
-		Task           BPMN // BPMN Element
-		FromTask       BPMN // BPMN Element
-		EndEvent       BPMN // BPMN Element
+		StartEvent     common.BPMN // BPMN Element
+		FromStartEvent common.BPMN // BPMN Element
+		Task           common.BPMN // BPMN Element
+		FromTask       common.BPMN // BPMN Element
+		EndEvent       common.BPMN // BPMN Element
 	}
 
 	// Landlord
 	Landlord struct {
-		StartEvent     BPMN // BPMN Element
-		FromStartEvent BPMN // BPMN Element
-		FirstTask      BPMN // BPMN Element
-		FromFirstTask  BPMN // BPMN Element
-		SecondTask     BPMN // BPMN Element
-		FromSecondTask BPMN // BPMN Element
-		ScriptTask     BPMN // BPMN Element
-		FromScriptTask BPMN // BPMN Element
-		EndEvent       BPMN // BPMN Element
+		StartEvent     common.BPMN // BPMN Element
+		FromStartEvent common.BPMN // BPMN Element
+		FirstTask      common.BPMN // BPMN Element
+		FromFirstTask  common.BPMN // BPMN Element
+		SecondTask     common.BPMN // BPMN Element
+		FromSecondTask common.BPMN // BPMN Element
+		ScriptTask     common.BPMN // BPMN Element
+		FromScriptTask common.BPMN // BPMN Element
+		EndEvent       common.BPMN // BPMN Element
 	}
 )
 
@@ -108,7 +112,7 @@ func main() {
 	 * ExampleProcess
 	 */
 
-	exampleProcess, err := NewReflectDI[ExampleProcess](ctx, ExampleProcess{})
+	exampleProcess, err := common.NewReflectDI[ExampleProcess](ctx, ExampleProcess{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -121,9 +125,9 @@ func main() {
 	*/
 
 	// create the process model
-	example, err := NewBPMNModeller(
-		WithCounter(),
-		WithDefinitions(exampleProcess.Def))
+	example, err := parser.NewBPMNParser(
+		parser.WithCounter(),
+		parser.WithDefinitions(exampleProcess.Def))
 	if err != nil {
 		panic(err)
 	}

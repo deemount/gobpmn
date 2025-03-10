@@ -1,4 +1,4 @@
-package main
+package common
 
 // go:build 1.23
 
@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const DefaultTimeout = 60 * time.Second
+const DefaultTimeout = 2 * time.Second
 
 // NewReflectDI ...
 // If a error occurs, the function returns a new instance of the model and the error.

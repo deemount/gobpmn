@@ -5,6 +5,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"hash/fnv"
+
+	"github.com/deemount/gobpmn/pkg/core/infrastructure"
 )
 
 var (
@@ -23,30 +25,30 @@ type (
 		SetDC()
 		SetTargetNamespace()
 		SetProcess(num int)
-		GetProcess(num int) *Process
+		GetProcess(num int) *infrastructure.Process
 		SetCollaboration()
-		GetCollaboration() *Collaboration
+		GetCollaboration() *infrastructure.Collaboration
 		SetMainElements(num int)
 		SetDefaultAttributes()
 	}
 
 	// Definitions ...
 	Definitions struct {
-		XMLName         xml.Name        `xml:"bpmn:definitions" json:"-"`
-		Bpmn            string          `xml:"xmlns:bpmn,attr" json:"-"`
-		DC              string          `xml:"xmlns:dc,attr,omitempty" json:"-"`
-		ID              string          `xml:"id,attr" json:"id"`
-		TargetNamespace string          `xml:"targetNamespace,attr" json:"-"`
-		Collaboration   []Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration,omitempty"`
-		Process         []Process       `xml:"bpmn:process,omitempty" json:"process"`
+		XMLName         xml.Name                       `xml:"bpmn:definitions" json:"-"`
+		Bpmn            string                         `xml:"xmlns:bpmn,attr" json:"-"`
+		DC              string                         `xml:"xmlns:dc,attr,omitempty" json:"-"`
+		ID              string                         `xml:"id,attr" json:"id"`
+		TargetNamespace string                         `xml:"targetNamespace,attr" json:"-"`
+		Collaboration   []infrastructure.Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration,omitempty"`
+		Process         []infrastructure.Process       `xml:"bpmn:process,omitempty" json:"process"`
 	}
 
 	// TDefinitions ...
 	TDefinitions struct {
-		XMLName       xml.Name         `xml:"definitions" json:"-"`
-		ID            string           `xml:"id,attr" json:"id"`
-		Collaboration []TCollaboration `xml:"collaboration,omitempty" json:"collaboration,omitempty"`
-		Process       []TProcess       `xml:"process,omitempty" json:"process"`
+		XMLName       xml.Name                        `xml:"definitions" json:"-"`
+		ID            string                          `xml:"id,attr" json:"id"`
+		Collaboration []infrastructure.TCollaboration `xml:"collaboration,omitempty" json:"collaboration,omitempty"`
+		Process       []infrastructure.TProcess       `xml:"process,omitempty" json:"process"`
 	}
 )
 
@@ -87,11 +89,11 @@ func (d *Definitions) SetTargetNamespace() {
 
 // SetCollaboration ...
 func (d *Definitions) SetCollaboration() {
-	d.Collaboration = make([]Collaboration, 1)
+	d.Collaboration = make([]infrastructure.Collaboration, 1)
 }
 
 // GetCollaboration ...
-func (d Definitions) GetCollaboration() *Collaboration {
+func (d Definitions) GetCollaboration() *infrastructure.Collaboration {
 	return &d.Collaboration[0]
 }
 
@@ -100,11 +102,11 @@ func (d *Definitions) SetProcess(num int) {
 	if num == 0 {
 		num = 1
 	}
-	d.Process = make([]Process, num)
+	d.Process = make([]infrastructure.Process, num)
 }
 
 // GetProcess ...
-func (d Definitions) GetProcess(num int) *Process {
+func (d Definitions) GetProcess(num int) *infrastructure.Process {
 	return &d.Process[num]
 }
 

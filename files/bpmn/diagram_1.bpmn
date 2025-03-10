@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Definitions_69d9fadc" targetNamespace="http://bpmn.io/schema/bpmn">
+   <bpmn:process id="Process_ab5b38d4" name="Process" isExecutable="true">
+     <bpmn:startEvent id="StartEvent_1" name="StartEvent" isInterrupting="true">
+       <bpmn:outgoing>Flow_c2215ebc</bpmn:outgoing>
+     </bpmn:startEvent>
+     <bpmn:endEvent id="Event_fef45521" name="EndEvent">
+       <bpmn:incoming>Flow_b5a37e2f</bpmn:incoming>
+     </bpmn:endEvent>
+     <bpmn:userTask id="Activity_06a2b1fc" name="UserTask"></bpmn:userTask>
+     <bpmn:userTask id="Activity_f43c640b" name="SpecialUserTask"></bpmn:userTask>
+     <bpmn:scriptTask id="Activity_8983da87" name="ScriptTask"></bpmn:scriptTask>
+     <bpmn:scriptTask id="Activity_34892263" name="OtherScriptTask"></bpmn:scriptTask>
+     <bpmn:task id="Activity_323d383b" name="Task"></bpmn:task>
+     <bpmn:task id="Activity_183711b9" name="SecondTask"></bpmn:task>
+     <bpmn:sequenceFlow id="Flow_c2215ebc" name="FromStartEvent" sourceRef="" targetRef=""></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_09c131cb" name="FromTask" sourceRef="" targetRef=""></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_06d4723b" name="FromSecondTask" sourceRef="" targetRef=""></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_052a046c" name="FromScriptTask" sourceRef="" targetRef=""></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_3de44c92" name="FromOtherScriptTask" sourceRef="" targetRef=""></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_dcbc3ca1" name="FromUserTask" sourceRef="" targetRef=""></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_b5a37e2f" name="FromSpecialUserTask" sourceRef="" targetRef=""></bpmn:sequenceFlow>
+   </bpmn:process>
+ </bpmn:definitions>

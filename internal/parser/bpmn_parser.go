@@ -1,4 +1,4 @@
-package main
+package parser
 
 import (
 	"encoding/json"
@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+
+	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
 
 var (
@@ -24,32 +26,32 @@ var (
 
 type (
 
-	// BPMNModellerRepository ...
-	BPMNModellerRepository interface {
+	// BPMNParserRepository ...
+	BPMNParserRepository interface {
 		Marshal() error
 	}
 
-	// BPMNModeller ...
-	BPMNModeller struct {
-		Counter        int                   // Counter is the number of created files
-		FilenamePrefix string                // FilenamePrefix is a part of the name of the current file
-		FilePathBPMN   string                // FilePathBPMN is the path to the bpmn files
-		FilePathJSON   string                // FilePathJSON is the path to the json files
-		Def            *Definitions          // Def is the pointer definition of the model
-		Repo           DefinitionsRepository // Repo is the repository of the model
+	// BPMNParser ...
+	BPMNParser struct {
+		Counter        int                              // Counter is the number of created files
+		FilenamePrefix string                           // FilenamePrefix is a part of the name of the current file
+		FilePathBPMN   string                           // FilePathBPMN is the path to the bpmn files
+		FilePathJSON   string                           // FilePathJSON is the path to the json files
+		Def            *foundation.Definitions          // Def is the pointer definition of the model
+		Repo           foundation.DefinitionsRepository // Repo is the repository of the model
 	}
 
-	// Option is a functional option type for the Modeller
-	Option = func(modeller *BPMNModeller) error
+	// Option is a functional option type for the Parser
+	Option = func(parser *BPMNParser) error
 )
 
-// NewBPMNModeller initializes the modeller with the given options
-// and returns the bpmn modeller repository.
+// NewBPMNParser initializes the parser with the given options
+// and returns the bpmn parser repository.
 // The method sets the default values and applies the options
-// to the modeller.
-func NewBPMNModeller(opts ...Option) (BPMNModellerRepository, error) {
+// to the parser.
+func NewBPMNParser(opts ...Option) (BPMNParserRepository, error) {
 	// Set the default values
-	modeller := &BPMNModeller{
+	parser := &BPMNParser{
 		Counter:        DefaultCounter,
 		FilenamePrefix: DefaultFilenamePrefix,
 		FilePathBPMN:   DefaultPathBPMN,
@@ -57,24 +59,24 @@ func NewBPMNModeller(opts ...Option) (BPMNModellerRepository, error) {
 		Def:            nil,
 		Repo:           nil,
 	}
-	// Apply the options to the modeller
+	// Apply the options to the parser
 	for _, opt := range opts {
-		opt(modeller)
+		opt(parser)
 	}
-	if err := modeller.validate(); err != nil {
+	if err := parser.validate(); err != nil {
 		return nil, err
 	}
-	return modeller, nil
+	return parser, nil
 }
 
-// Marshal builds the bpmn and json files and returns the BPMNModeller
+// Marshal builds the bpmn and json files and returns the BPMNParser
 // and an error if an error occurs during the process.
 // The method calls the MarshalBPMN and MarshalJSON methods.
-func (modeller BPMNModeller) Marshal() error {
-	if err := modeller.save(); err != nil {
+func (parser BPMNParser) Marshal() error {
+	if err := parser.save(); err != nil {
 		return err
 	}
-	_, err := modeller.marshalJSON()
+	_, err := parser.marshalJSON()
 	if err != nil {
 		return err
 	}
@@ -82,22 +84,22 @@ func (modeller BPMNModeller) Marshal() error {
 }
 
 // Save ...
-func (modeller *BPMNModeller) save() error {
+func (parser *BPMNParser) save() error {
 
-	if modeller.FilePathBPMN == "" {
+	if parser.FilePathBPMN == "" {
 		return ErrEmptyFilePathBPMN
 	}
-	bpmnData, err := xml.MarshalIndent(&modeller.Repo, " ", "  ")
+	bpmnData, err := xml.MarshalIndent(&parser.Repo, " ", "  ")
 	if err != nil {
 		return fmt.Errorf("error marshaling BPMN data: %v", err)
 	}
 
-	return modeller.writeFile(modeller.FilePathBPMN, modeller.getFilename(), bpmnData, "bpmn")
+	return parser.writeFile(parser.FilePathBPMN, parser.getFilename(), bpmnData, "bpmn")
 
 }
 
 // writeFile handles the file writing process and error handling.
-func (modeller *BPMNModeller) writeFile(path, filename string, data []byte, extension string) error {
+func (parser *BPMNParser) writeFile(path, filename string, data []byte, extension string) error {
 	fullPath := fmt.Sprintf("%s/%s.%s", path, filename, extension)
 
 	f, err := os.Create(fullPath)
@@ -130,14 +132,13 @@ func (modeller *BPMNModeller) writeFile(path, filename string, data []byte, exte
 }
 
 // MarshalJSON marshals the repository data to JSON and saves it as a file.
-// BUG: It marshals also the xml header.
-func (modeller *BPMNModeller) marshalJSON() ([]byte, error) {
-	jsonData, err := json.MarshalIndent(modeller.Repo, " ", "  ")
+func (parser *BPMNParser) marshalJSON() ([]byte, error) {
+	jsonData, err := json.MarshalIndent(parser.Repo, " ", "  ")
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling JSON data: %v", err)
 	}
 
-	err = modeller.writeFile(modeller.FilePathJSON, modeller.getFilename(), jsonData, "json")
+	err = parser.writeFile(parser.FilePathJSON, parser.getFilename(), jsonData, "json")
 	if err != nil {
 		return nil, err
 	}
@@ -148,14 +149,14 @@ func (modeller *BPMNModeller) marshalJSON() ([]byte, error) {
 // GetFilename returns the current bpmn filename
 // It is a helper method to get the current bpmn filename, which
 // relies on the same instance
-func (modeller BPMNModeller) getFilename() string {
-	return fmt.Sprintf("%s_%d", modeller.FilenamePrefix, modeller.Counter)
+func (parser BPMNParser) getFilename() string {
+	return fmt.Sprintf("%s_%d", parser.FilenamePrefix, parser.Counter)
 }
 
-// validate validates the modeller fields
+// validate validates the parser fields
 // and returns an error if the validation fails.
-func (modeller *BPMNModeller) validate() error {
-	if modeller.FilePathBPMN == "" {
+func (parser *BPMNParser) validate() error {
+	if parser.FilePathBPMN == "" {
 		return ErrEmptyFilePathBPMN
 	}
 	return nil
@@ -163,7 +164,7 @@ func (modeller *BPMNModeller) validate() error {
 
 // WithPath validates and sets paths for BPMN and JSON files
 func WithPath(paths ...string) Option {
-	return func(modeller *BPMNModeller) error {
+	return func(parser *BPMNParser) error {
 		if len(paths) == 0 || len(paths) > 2 {
 			return fmt.Errorf("invalid number of paths provided; expected 1 or 2, got %d", len(paths))
 		}
@@ -174,9 +175,9 @@ func WithPath(paths ...string) Option {
 			}
 		}
 
-		modeller.FilePathBPMN = paths[0]
+		parser.FilePathBPMN = paths[0]
 		if len(paths) == 2 {
-			modeller.FilePathJSON = paths[1]
+			parser.FilePathJSON = paths[1]
 		}
 		return nil
 	}
@@ -194,17 +195,17 @@ func isValidPath(path string) bool {
 
 // WithCounter counts .bpmn files in the provided path and updates the Counter
 func WithCounter() Option {
-	return func(modeller *BPMNModeller) error {
-		if modeller.FilePathBPMN == "" {
+	return func(parser *BPMNParser) error {
+		if parser.FilePathBPMN == "" {
 			return ErrEmptyFilePathBPMN
 		}
 
-		count, err := countBPMNFiles(modeller.FilePathBPMN)
+		count, err := countBPMNFiles(parser.FilePathBPMN)
 		if err != nil {
 			return fmt.Errorf("error counting BPMN files: %v", err)
 		}
 
-		modeller.Counter = count + 1 // Next file will use this counter
+		parser.Counter = count + 1 // Next file will use this counter
 		return nil
 	}
 }
@@ -225,13 +226,13 @@ func countBPMNFiles(dir string) (int, error) {
 	return count, nil
 }
 
-// WithFilenamePrefix sets the filename prefix for the modeller
+// WithFilenamePrefix sets the filename prefix for the parser
 func WithFilenamePrefix(filenamePrefix string) Option {
-	return func(modeller *BPMNModeller) error {
+	return func(parser *BPMNParser) error {
 		if !isValidFilenamePrefix(filenamePrefix) {
 			return fmt.Errorf("invalid filename prefix: %s", filenamePrefix)
 		}
-		modeller.FilenamePrefix = filenamePrefix
+		parser.FilenamePrefix = filenamePrefix
 		return nil
 	}
 }
@@ -242,13 +243,13 @@ func isValidFilenamePrefix(prefix string) bool {
 	return validPrefix.MatchString(prefix)
 }
 
-// WithDefinitions assigns a DefinitionsRepository to the modeller.
-func WithDefinitions(repo DefinitionsRepository) Option {
-	return func(modeller *BPMNModeller) error {
+// WithDefinitions assigns a DefinitionsRepository to the parser.
+func WithDefinitions(repo foundation.DefinitionsRepository) Option {
+	return func(parser *BPMNParser) error {
 		if repo == nil {
 			return errors.New("invalid DefinitionsRepository: repository is nil")
 		}
-		modeller.Repo = repo
+		parser.Repo = repo
 		return nil
 	}
 }

@@ -1,47 +1,20 @@
-package main
+package common
 
 import (
 	"context"
 	"fmt"
 	"reflect"
 	"strings"
+
+	"github.com/deemount/gobpmn/pkg/config"
+	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
-
-// BPMN ...
-type BPMN struct {
-	Pos, Width, Height, X, Y int
-	Type, Hash               string
-}
-
-// ModelConfig holds the configuration for model generation
-type modelConfig struct {
-	Name     string
-	Fields   []reflect.StructField
-	Instance reflect.Value
-	Def      reflect.Value
-	Pool     reflect.Value
-}
-
-// ProcessConfig holds process-specific configuration
-type processConfig struct {
-	Process     []reflect.Value
-	ProcessName []string
-	ProcessType []string
-	ProcessHash []string
-	ProcessExec []bool
-}
-
-// participantConfig holds participant-specific configuration
-type participantConfig struct {
-	ParticipantName []string
-	ParticipantHash []string
-}
 
 // ReflectValue represents the core structure for BPMN reflection
 type ReflectValue struct {
-	modelConfig
-	processConfig
-	participantConfig
+	config.ModelConfig
+	config.ProcessConfig
+	config.ParticipantConfig
 	FlowNeighbors    map[string]map[string]interface{}
 	InstanceNumField int
 }
@@ -56,7 +29,7 @@ func NewReflectValue(model interface{}) (*ReflectValue, error) {
 	typeOf := reflect.TypeOf(model)
 
 	return &ReflectValue{
-		modelConfig: modelConfig{
+		ModelConfig: config.ModelConfig{
 			Name:     extractPrefixBeforeProcess(typeOf.Name()),
 			Fields:   reflect.VisibleFields(typeOf),
 			Instance: reflect.New(typeOf).Elem(), // create a new object of the struct
@@ -98,7 +71,7 @@ func (v *ReflectValue) setupDefinition() error {
 		return nil
 	}
 
-	definitions := NewDefinitions()
+	definitions := foundation.NewDefinitions()
 	definitions.SetDefaultAttributes()
 	v.Def.Set(reflect.ValueOf(definitions))
 
