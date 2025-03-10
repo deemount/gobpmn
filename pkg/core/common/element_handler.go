@@ -1,4 +1,4 @@
-package main
+package common
 
 // go:build 1.23
 

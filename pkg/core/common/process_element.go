@@ -1,4 +1,4 @@
-package main
+package common
 
 // processElement represents a BPMN process element type
 type processElement string

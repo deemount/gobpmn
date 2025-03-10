@@ -1,4 +1,4 @@
-package main
+package common
 
 // initializeIndices initializes indices for different types of elements
 func initializeIndices() map[processElement]int {

@@ -1,0 +1,93 @@
+{
+   "id": "Definitions_69d9fadc",
+   "process": [
+     {
+       "id": "Process_ab5b38d4",
+       "name": "Process",
+       "isExecutable": true,
+       "startEvent": [
+         {
+           "id": "StartEvent_1",
+           "name": "StartEvent",
+           "isInterrupting": true,
+           "outgoing": [
+             {
+               "flow": "Flow_c2215ebc"
+             }
+           ]
+         }
+       ],
+       "endEvent": [
+         {
+           "id": "Event_fef45521",
+           "name": "EndEvent",
+           "incoming": [
+             {
+               "flow": "Flow_b5a37e2f"
+             }
+           ]
+         }
+       ],
+       "userTask": [
+         {
+           "id": "Activity_06a2b1fc",
+           "name": "UserTask"
+         },
+         {
+           "id": "Activity_f43c640b",
+           "name": "SpecialUserTask"
+         }
+       ],
+       "scriptTask": [
+         {
+           "id": "Activity_8983da87",
+           "name": "ScriptTask"
+         },
+         {
+           "id": "Activity_34892263",
+           "name": "OtherScriptTask"
+         }
+       ],
+       "task": [
+         {
+           "id": "Activity_323d383b",
+           "name": "Task"
+         },
+         {
+           "id": "Activity_183711b9",
+           "name": "SecondTask"
+         }
+       ],
+       "sequenceFlow": [
+         {
+           "id": "Flow_c2215ebc",
+           "name": "FromStartEvent"
+         },
+         {
+           "id": "Flow_09c131cb",
+           "name": "FromTask"
+         },
+         {
+           "id": "Flow_06d4723b",
+           "name": "FromSecondTask"
+         },
+         {
+           "id": "Flow_052a046c",
+           "name": "FromScriptTask"
+         },
+         {
+           "id": "Flow_3de44c92",
+           "name": "FromOtherScriptTask"
+         },
+         {
+           "id": "Flow_dcbc3ca1",
+           "name": "FromUserTask"
+         },
+         {
+           "id": "Flow_b5a37e2f",
+           "name": "FromSpecialUserTask"
+         }
+       ]
+     }
+   ]
+ }
