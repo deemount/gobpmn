@@ -14,7 +14,7 @@ gobpmn is an experimental library that makes it possible to reflect structs in G
 2. To run the app, copy and paste this into your terminal
 
 ```bash
-go run `ls *.go | grep -v _test.go`
+go run cmd/modeler/main.go
 ```
 
 ## Wiki
