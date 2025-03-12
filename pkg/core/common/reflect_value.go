@@ -211,7 +211,7 @@ func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
 			return fmt.Errorf("Error configuring pool: %v", err)
 		}
 		v.multipleProcess(q)
-		if err := processor.ProcessElements(processorCtx); err != nil {
+		if err := processor.ProcessElementsWithContext(processorCtx); err != nil {
 			return err
 		}
 

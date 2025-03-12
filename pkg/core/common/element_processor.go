@@ -79,7 +79,7 @@ func (ep *ElementProcessor) createProcessingConfig(processIdx int, field reflect
  */
 
 // ProcessElementsWithContext adds context support for processing multiple elements
-func (ep *ElementProcessor) ProcessElements(ctx context.Context) error {
+func (ep *ElementProcessor) ProcessElementsWithContext(ctx context.Context) error {
 	done := make(chan error, 1) // NOTE: buffered channel
 
 	go func() {
@@ -95,7 +95,7 @@ func (ep *ElementProcessor) ProcessElements(ctx context.Context) error {
 
 }
 
-// ProcessMultipleElement processes all elements across multiple processes.
+// processMultipleElements processes all elements across multiple processes.
 // It handles error slice for better resource management.
 // It ranges over the process names and processes each process.
 // Each field is taken from v.Instance.
@@ -144,6 +144,8 @@ func (ep *ElementProcessor) processField(processIdx, fieldIdx int, config *Proce
 	if !isValidField(info) {
 		return nil
 	}
+
+	//log.Printf("info: %v", info)
 
 	elementType := ElementType(info.typ)
 
