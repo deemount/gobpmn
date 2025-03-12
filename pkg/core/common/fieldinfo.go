@@ -24,15 +24,38 @@ type FieldInfo struct {
 
 // extractFieldInfo gathers all necessary field information.
 func extractFieldInfo(field reflect.Value, idx int) FieldInfo {
-	return FieldInfo{
-		name:       field.Type().Field(idx).Name,
-		extName:    extractLastTwoWords(field.Type().Field(idx).Name),
-		typ:        field.Field(idx).FieldByName("Type").String(),
-		element:    matchElementType(field.Type().Field(idx).Name),
-		hash:       field.Field(idx).FieldByName("Hash").String(),
-		hashBefore: field.Field(idx - 1).FieldByName("Hash").String(),
-		nextHash:   getNextHash(field, idx, field.NumField()),
+
+	info := FieldInfo{
+		name:    field.Type().Field(idx).Name,
+		extName: extractLastTwoWords(field.Type().Field(idx).Name),
+		element: matchElementType(field.Type().Field(idx).Name),
 	}
+
+	// Safely get the type if the field has one
+	typeField := field.Field(idx).FieldByName("Type")
+	if typeField.IsValid() {
+		info.typ = typeField.String()
+	}
+
+	// Safely get the hash if the field has one
+	hashField := field.Field(idx).FieldByName("Hash")
+	if hashField.IsValid() {
+		info.hash = hashField.String()
+	}
+
+	// Safely get the hashBefore only if idx > 0
+	if idx > 0 {
+		prevField := field.Field(idx - 1).FieldByName("Hash")
+		if prevField.IsValid() {
+			info.hashBefore = prevField.String()
+		}
+	}
+
+	// Get the next hash
+	info.nextHash = getNextHash(field, idx, field.NumField())
+
+	return info
+
 }
 
 // isValidField checks if a field is valid

@@ -4,7 +4,6 @@ package common
 
 import (
 	"fmt"
-	"log"
 	"reflect"
 )
 
@@ -949,9 +948,9 @@ func (h *FlowHandler) SetProperties(flow reflect.Value, info FieldInfo) error {
 	if err := h.BaseElement.SetProperties(flow, info); err != nil {
 		return err
 	}
-	sourceRef := h.processor.value.FlowNeighbors[info.name]["SourceRef"].(map[string]interface{})
-	targetRef := h.processor.value.FlowNeighbors[info.name]["TargetRef"].(map[string]interface{})
-	log.Printf("SourceRef: %s, %s, %s", info.name, sourceRef["Value"].(BPMN).Hash, targetRef["Value"].(BPMN).Hash)
+	//sourceRef := h.processor.value.FlowNeighbors[info.name]["SourceRef"].(map[string]interface{})
+	//targetRef := h.processor.value.FlowNeighbors[info.name]["TargetRef"].(map[string]interface{})
+	//log.Printf("SourceRef: %s, %s, %s", info.name, sourceRef["Value"].(BPMN).Hash, targetRef["Value"].(BPMN).Hash)
 	// Set flow-specific properties
 	// BUG: panic: reflect: Call with too few input arguments
 	/*if err := h.setFlowSpecificProperties(flow, info); err != nil {
