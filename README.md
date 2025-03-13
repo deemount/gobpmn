@@ -35,3 +35,9 @@ Checkout the other projects for BPMN written in Go
 
 * [gobpm](https://github.com/dr-dobermann/gobpm)
 * [lib-bpmn-engine](https://github.com/nitram509/lib-bpmn-engine)
+
+Check my articles for this project on medium.com
+
+* [Two-Pass-Matching with Go](https://medium.com/@salvatoregonda/two-pass-matching-with-go-480faffe88fa)
+* [Go & BPMN: A modelling approach with reflect, Part 1](https://medium.com/@salvatoregonda/go-bpmn-a-modelling-approach-with-reflect-part-1-6f572adeac79)
+* [Go & BPMN: A programmatic approach](https://medium.com/@salvatoregonda/go-bpmn-a-programmatic-approach-c25cbef45cc6)
