@@ -120,7 +120,9 @@ type (
 		InclusiveGateway       []InclusiveGateway       `xml:"bpmn:inclusiveGateway,omitempty" json:"inclusiveGateway,omitempty"`
 		ExclusiveGateway       []ExclusiveGateway       `xml:"bpmn:exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty"`
 		ParallelGateway        []ParallelGateway        `xml:"bpmn:parallelGateway,omitempty" json:"parallelGateway,omitempty"`
+		Gateway                []Gateway                `xml:"bpmn:gateway,omitempty" json:"gateway,omitempty"`
 		UserTask               []UserTask               `xml:"bpmn:userTask,omitempty" json:"userTask,omitempty"`
+		ServiceTask            []ServiceTask            `xml:"bpmn:serviceTask,omitempty" json:"serviceTask,omitempty"`
 		ScriptTask             []ScriptTask             `xml:"bpmn:scriptTask,omitempty" json:"scriptTask,omitempty"`
 		Task                   []Task                   `xml:"bpmn:task,omitempty" json:"task,omitempty"`
 		SequenceFlow           []SequenceFlow           `xml:"bpmn:sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
@@ -139,7 +141,9 @@ type (
 		InclusiveGateway       []TInclusiveGateway       `xml:"inclusiveGateway,omitempty" json:"inclusiveGateway,omitempty"`
 		ExclusiveGateway       []TExclusiveGateway       `xml:"exclusiveGateway,omitempty" json:"exclusiveGateway,omitempty"`
 		ParallelGateway        []TParallelGateway        `xml:"parallelGateway,omitempty" json:"parallelGateway,omitempty"`
+		Gateway                []TGateway                `xml:"gateway,omitempty" json:"gateway,omitempty"`
 		UserTask               []TUserTask               `xml:"userTask,omitempty" json:"userTask,omitempty"`
+		ServiceTask            []TServiceTask            `xml:"serviceTask,omitempty" json:"serviceTask,omitempty"`
 		ScriptTask             []TScriptTask             `xml:"scriptTask,omitempty" json:"scriptTask,omitempty"`
 		Task                   []TTask                   `xml:"task,omitempty" json:"task,omitempty"`
 		SequenceFlow           []TSequenceFlow           `xml:"sequenceFlow,omitempty" json:"sequenceFlow,omitempty"`
@@ -251,6 +255,16 @@ func (ps Process) GetParallelGateway(num int) *ParallelGateway {
 	return &ps.ParallelGateway[num]
 }
 
+// SetGateway ...
+func (ps *Process) SetGateway(num int) {
+	ps.Gateway = make([]Gateway, num)
+}
+
+// GetGateway ...
+func (ps Process) GetGateway(num int) *Gateway {
+	return &ps.Gateway[num]
+}
+
 // SetUserTask ...
 func (ps *Process) SetUserTask(num int) {
 	ps.UserTask = make([]UserTask, num)
@@ -259,6 +273,16 @@ func (ps *Process) SetUserTask(num int) {
 // GetUserTask ...
 func (ps Process) GetUserTask(num int) *UserTask {
 	return &ps.UserTask[num]
+}
+
+// SetServiceTask ...
+func (ps *Process) SetServiceTask(num int) {
+	ps.ServiceTask = make([]ServiceTask, num)
+}
+
+// GetServiceTask ...
+func (ps Process) GetServiceTask(num int) *ServiceTask {
+	return &ps.ServiceTask[num]
 }
 
 // SetScriptTask ...
@@ -840,6 +864,71 @@ func (pg ParallelGateway) GetOutgoing(num int) *Outgoing {
 	return &pg.Outgoing[num]
 }
 
+// Gateway ...
+type (
+
+	// Gateway ...
+	Gateway struct {
+		ID       string     `xml:"id,attr,omitempty" json:"id"`
+		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
+		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+		Outgoing []Outgoing `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	}
+
+	// TGateway ...
+	TGateway struct {
+		ID       string     `xml:"id,attr,omitempty" json:"id"`
+		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
+		Incoming []Incoming `xml:"incoming,omitempty" json:"incoming,omitempty"`
+		Outgoing []Outgoing `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	}
+)
+
+// SetID ...
+func (gt *Gateway) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "gateway":
+		gt.ID = fmt.Sprintf("Gateway_%v", suffix)
+	case "id":
+		gt.ID = fmt.Sprintf("%s", suffix)
+	}
+}
+
+// GetID ...
+func (gt Gateway) GetID() *string {
+	return &gt.ID
+}
+
+// SetName ...
+func (gt *Gateway) SetName(name string) {
+	gt.Name = name
+}
+
+// GetName ...
+func (gt Gateway) GetName() *string {
+	return &gt.Name
+}
+
+// SetIncoming ...
+func (gt *Gateway) SetIncoming(num int) {
+	gt.Incoming = make([]Incoming, num)
+}
+
+// GetIncoming ...
+func (gt Gateway) GetIncoming(num int) *Incoming {
+	return &gt.Incoming[num]
+}
+
+// SetOutgoing ...
+func (gt *Gateway) SetOutgoing(num int) {
+	gt.Outgoing = make([]Outgoing, num)
+}
+
+// GetOutgoing ...
+func (gt Gateway) GetOutgoing(num int) *Outgoing {
+	return &gt.Outgoing[num]
+}
+
 // Task ...
 type (
 
@@ -1032,6 +1121,70 @@ func (ut UserTask) GetOutgoing(num int) *Outgoing {
 	return &ut.Outgoing[num]
 }
 
+// ServiceTask ...
+type (
+
+	// ServiceTask ...
+	ServiceTask struct {
+		ID       string     `xml:"id,attr,omitempty" json:"id"`
+		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
+		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
+		Outgoing []Outgoing `xml:"bpmn:outgoing,omitempty" json:"outgoing,omitempty"`
+	}
+
+	// TServiceTask ...
+	TServiceTask struct {
+		ID       string     `xml:"id,attr,omitempty" json:"id"`
+		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
+		Incoming []Incoming `xml:"incoming,omitempty" json:"incoming,omitempty"`
+		Outgoing []Outgoing `xml:"outgoing,omitempty" json:"outgoing,omitempty"`
+	}
+)
+
+// SetID ...
+func (st *ServiceTask) SetID(typ string, suffix interface{}) {
+	switch typ {
+	case "activity":
+		st.ID = fmt.Sprintf("Activity_%v", suffix)
+	case "id":
+		st.ID = fmt.Sprintf("%s", suffix)
+	}
+}
+
+// GetID ...
+func (st ServiceTask) GetID() *string {
+	return &st.ID
+}
+
+// SetName ...
+func (st *ServiceTask) SetName(name string) {
+	st.Name = name
+}
+
+// GetName ...
+func (st ServiceTask) GetName() *string {
+	return &st.Name
+}
+
+// SetIncoming ...
+func (st *ServiceTask) SetIncoming(num int) {
+	st.Incoming = make([]Incoming, num)
+}
+
+// GetIncoming ...
+func (st ServiceTask) GetIncoming(num int) *Incoming {
+	return &st.Incoming[num]
+}
+
+// SetOutgoing ...
+func (st *ServiceTask) SetOutgoing(num int) {
+	st.Outgoing = make([]Outgoing, num)
+}
+
+func (st ServiceTask) GetOutgoing(num int) *Outgoing {
+	return &st.Outgoing[num]
+}
+
 // SequenceFlow ...
 type (
 
@@ -1156,7 +1309,7 @@ func (out Outgoing) GetFlow() *string {
 func getLastPart(input string) string {
 	if strings.Contains(input, "_") {
 		parts := strings.Split(input, "_")
-		// Gib den letzten Teil zurück
+		// return the last part of the string
 		return parts[len(parts)-1]
 	}
 	// no Snake-Case-String. Return the original string.

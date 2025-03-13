@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const DefaultTimeout = 2 * time.Second
+const DefaultTimeout = 1 * time.Second
 
 // NewReflectDI ...
 // If a error occurs, the function returns a new instance of the model and the error.
@@ -68,11 +68,21 @@ func NewReflectDI[T any](ctx context.Context, model T) (result T, err error) {
 	return typed, nil
 }
 
-// targetFieldName returns the field value by the name in v.Instance.
-func targetFieldName(v *ReflectValue, name string) reflect.Value {
+// instanceFieldName returns the field value by the name in v.Instance.
+func instanceFieldName(v *ReflectValue, name string) reflect.Value {
 	value := v.Instance.FieldByName(name)
 	if !value.IsValid() {
+		fmt.Printf("targetFieldName: field %s not found in instance. Available fields: %v\n", name, getFieldNames(v.Instance))
 		return reflect.Value{}
 	}
 	return value
+}
+
+// getFieldNames returns the names of all fields in a reflect.Value instance
+func getFieldNames(instance reflect.Value) []string {
+	var fieldNames []string
+	for i := range instance.NumField() {
+		fieldNames = append(fieldNames, instance.Type().Field(i).Name)
+	}
+	return fieldNames
 }

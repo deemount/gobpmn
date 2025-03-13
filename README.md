@@ -1,8 +1,12 @@
 # gobpmn
 
+![gobpmn](https://github.com/deemount/gobpmn/docs/img/header.webp "a gopher in front of business model")
+
 ## Description
 
 gobpmn is an experimental library that makes it possible to reflect structs in Go and create business process models with it.
+
+***STILL IN DEVELOPMENT***
 
 ## Requirements
 
@@ -10,11 +14,11 @@ gobpmn is an experimental library that makes it possible to reflect structs in G
 
 ## Install
 
-1. Clone ro the download the .zip-File of the repository
+1. Clone the repository or the download the .zip-File of the repository
 2. To run the app, copy and paste this into your terminal
 
 ```bash
-go run cmd/modeler/main.go
+go run cmd/[dirname]/main.go
 ```
 
 ## Wiki

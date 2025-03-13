@@ -56,7 +56,7 @@ func (v *ReflectValue) initialize() error {
 func (v *ReflectValue) setupInstanceFields() error {
 	v.InstanceNumField = v.Instance.NumField()
 
-	v.Def = targetFieldName(v, "Def")
+	v.Def = instanceFieldName(v, "Def")
 	if !v.Def.IsValid() {
 		return fmt.Errorf("definition field is not valid")
 	}
@@ -94,7 +94,7 @@ func (v *ReflectValue) handleModelType(q *Quantity, m *Mapping) error {
 func (v *ReflectValue) handlePool(q *Quantity, m *Mapping) error {
 	for _, field := range m.Anonym {
 		if strings.Contains(field, "Pool") {
-			v.Pool = targetFieldName(v, field)
+			v.Pool = instanceFieldName(v, field)
 			q.countFieldsInPool(v)
 			if !v.Pool.IsValid() {
 				return fmt.Errorf("invalid pool field: %s", field)
@@ -256,7 +256,7 @@ func (v *ReflectValue) nonAnonym(m *Mapping) {
 // Note: maybe redudant; look at method config.
 func (v *ReflectValue) setIsExecutableByField(fields map[int]string) {
 	for _, field := range fields {
-		targetFieldName(v, field).SetBool(true)
+		instanceFieldName(v, field).SetBool(true)
 		break
 	}
 }
@@ -276,7 +276,7 @@ func (v *ReflectValue) setIsExecutableByMethod(process reflect.Value, isExecutab
 // Note: this method is used in a single process and in usage in the method "nonAnonym".
 func (v *ReflectValue) populateReflectionFields(reflectionFields map[int]string) {
 	for _, field := range reflectionFields {
-		f := targetFieldName(v, field)
+		f := instanceFieldName(v, field)
 		fName, _ := v.Instance.Type().FieldByName(field)
 		typ := typ(fName.Name)
 		hash, _ := hash(typ)
@@ -372,8 +372,8 @@ func (v *ReflectValue) applyProcessMethods(processIdx int, q *Quantity) error {
 
 // anonym sets the fields in the BPMN model.
 func (v *ReflectValue) anonym(field string) {
-	targetField := targetFieldName(v, field) // must be a struct, which represents a process
-	targetNum := targetField.NumField()      // get the number of fields in the struct
+	targetField := instanceFieldName(v, field) // must be a struct, which represents a process
+	targetNum := targetField.NumField()        // get the number of fields in the struct
 
 	for idx := 0; idx < targetNum; idx++ {
 		name := targetField.Type().Field(idx).Name
@@ -586,11 +586,14 @@ func (v *ReflectValue) configureParticipant(participant reflect.Value, details P
 
 // multipleProcess processes multiple processes in the BPMN model.
 func (v *ReflectValue) multipleProcess(q *Quantity) error {
+
 	q.RLock()
 	defer q.RUnlock()
+
 	if err := v.configurePool(); err != nil {
 		return fmt.Errorf("failed to configure multiple processes: %w", err)
 	}
+
 	for processIdx := 0; processIdx < q.Process; processIdx++ {
 
 		process := v.Process[processIdx]
@@ -642,7 +645,7 @@ func (v *ReflectValue) configurePool() error {
 	}
 
 	l, j, n := 0, 0, 0
-	for i := 0; i < v.Pool.NumField(); i++ {
+	for i := range v.Pool.NumField() {
 		name := v.Pool.Type().Field(i).Name
 		field := v.Pool.Field(i)
 

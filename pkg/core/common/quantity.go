@@ -77,7 +77,7 @@ func (q *Quantity) countFieldsInInstance(v *ReflectValue) error {
 // countMultipleProcessElements handles counting for elements in multiple processes.
 // - It counts the elements in v.Instance.
 func (q *Quantity) countMultipleProcessElements(v *ReflectValue, processIdx int, processName string) error {
-	field := targetFieldName(v, processName)
+	field := instanceFieldName(v, processName)
 	if !field.IsValid() {
 		return fmt.Errorf("invalid field for process %s", processName)
 	}

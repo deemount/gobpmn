@@ -103,7 +103,7 @@ func (ep *ElementProcessor) processMultipleElements() error {
 	var errs []error
 
 	for processIdx, processName := range ep.value.ProcessName {
-		field := targetFieldName(ep.value, processName) // NOTE: v.Instance is called once here in the whole element processor.
+		field := instanceFieldName(ep.value, processName) // NOTE: v.Instance is called once here in the whole element processor.
 
 		if !field.IsValid() {
 			errs = append(errs, fmt.Errorf("invalid field for process: %s", processName))
@@ -145,8 +145,6 @@ func (ep *ElementProcessor) processField(processIdx, fieldIdx int, config *Proce
 		return nil
 	}
 
-	//log.Printf("info: %v", info)
-
 	elementType := ElementType(info.typ)
 
 	handler, exists := ep.handlers[elementType]
@@ -166,7 +164,7 @@ func (ep *ElementProcessor) processField(processIdx, fieldIdx int, config *Proce
 func (ep *ElementProcessor) ProcessStandalone(ctx context.Context) error {
 	done := make(chan error, 1)
 	go func() {
-		done <- ep.processSingleElement()
+		done <- ep.processElement()
 	}()
 	select {
 	case err := <-done:
@@ -176,8 +174,8 @@ func (ep *ElementProcessor) ProcessStandalone(ctx context.Context) error {
 	}
 }
 
-// ProcessStandalone processes elements for a single process
-func (ep *ElementProcessor) processSingleElement() error {
+// processElement processes elements for a single process
+func (ep *ElementProcessor) processElement() error {
 
 	config := &ProcessingConfig{
 		indices: initializeIndices(),
@@ -199,7 +197,7 @@ func (ep *ElementProcessor) processSingleElement() error {
 		}
 
 		// NOTE: somehow the first field is DEF, which is a call on a interface value. This is not handled.
-		if err := ep.processSingleStructField(field, fieldType, fieldIdx, config); err != nil {
+		if err := ep.processStructField(field, fieldType, fieldIdx, config); err != nil {
 			return fmt.Errorf("failed to process field %s: %w", fieldType.Name, err)
 		}
 
@@ -210,7 +208,7 @@ func (ep *ElementProcessor) processSingleElement() error {
 }
 
 // processSingleStructField processes a single struct field.
-func (ep *ElementProcessor) processSingleStructField(field reflect.Value, fieldType reflect.StructField, fieldIdx int, config *ProcessingConfig) error {
+func (ep *ElementProcessor) processStructField(field reflect.Value, fieldType reflect.StructField, fieldIdx int, config *ProcessingConfig) error {
 
 	typ := field.FieldByName("Type").String()
 

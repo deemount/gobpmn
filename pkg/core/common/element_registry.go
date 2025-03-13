@@ -72,11 +72,25 @@ var ElementTypeList = []Match{
 		regex:    regexp.MustCompile(`^InclusiveGateway$`),
 	},
 	{
+		name:     "Gateway",
+		element:  gateway,
+		exact:    false, // NOTE: maybe useless; scale the fuunctionality
+		priority: 2,     // NOTE: maybe useless; scale the fuunctionality
+		regex:    regexp.MustCompile(`Gateway`),
+	},
+	{
 		name:     "UserTask",
 		element:  userTask,
 		exact:    false, // NOTE: maybe useless; scale the fuunctionality
 		priority: 2,     // NOTE: maybe useless; scale the fuunctionality
 		regex:    regexp.MustCompile(`^UserTask$`),
+	},
+	{
+		name:     "ServiceTask",
+		element:  serviceTask,
+		exact:    false, // NOTE: maybe useless; scale the fuunctionality
+		priority: 2,     // NOTE: maybe useless; scale the fuunctionality
+		regex:    regexp.MustCompile(`^ServiceTask$`),
 	},
 	{
 		name:     "ScriptTask",
