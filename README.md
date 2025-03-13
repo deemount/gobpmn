@@ -1,4 +1,4 @@
-# gobpmn
+# gobpmn v0
 
 ![gobpmn](https://github.com/deemount/gobpmn/docs/img/header.webp "a gopher in front of business model")
 
