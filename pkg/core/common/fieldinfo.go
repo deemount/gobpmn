@@ -94,7 +94,7 @@ func collectFromFieldsWithNeighbors(data interface{}) map[string]map[string]inte
 		var targetRefFieldValue interface{}
 
 		// iterate over all fields
-		for i := 0; i < val.NumField(); i++ {
+		for i := range val.NumField() {
 
 			field := val.Type().Field(i)
 			fieldValue := val.Field(i)

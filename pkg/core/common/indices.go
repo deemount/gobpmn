@@ -9,10 +9,12 @@ func initializeIndices() map[processElement]int {
 		intermediateThrowEvent: 0,
 		task:                   0,
 		userTask:               0,
+		serviceTask:            0,
 		scriptTask:             0,
 		sequenceFlow:           0,
 		inclusiveGateway:       0,
 		exclusiveGateway:       0,
 		parallelGateway:        0,
+		gateway:                0,
 	}
 }

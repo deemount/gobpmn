@@ -92,7 +92,7 @@ func (h *StartEventHandler) SetProperties(element reflect.Value, info FieldInfo)
 // setStartEventSpecificProperties sets start event specific properties.
 func (h *StartEventHandler) setStartEventSpecificProperties(el reflect.Value) error {
 	properties := map[string]interface{}{
-		// TODO: IsInterrupting needs a more generic handling.
+		// TODO: IsInterrupting needs a more generic handling. It's not always true.
 		"IsInterrupting": true,
 	}
 
@@ -109,7 +109,7 @@ func (h *StartEventHandler) setStartEventSpecificProperties(el reflect.Value) er
 }
 
 // configureFlow configures the flow for a start event
-// Note: A start event always has exactly one outgoing flow
+// Note: A start event always has exactly one outgoing flow and no incoming flow
 func (h *StartEventHandler) configureFlow(el reflect.Value, info FieldInfo) error {
 	if err := h.setOutgoingFlowCount(el); err != nil {
 		return fmt.Errorf("failed to set outgoing flow count: %w", err)
@@ -442,6 +442,7 @@ type GatewayIndices struct {
 	inclusive int
 	exclusive int
 	parallel  int
+	gateway   int
 }
 
 // GatewayHandler handles different types of gateways
@@ -464,6 +465,7 @@ func (h *GatewayHandler) Handle(processIndex int, info FieldInfo, config *Proces
 		inclusive: config.indices[inclusiveGateway],
 		exclusive: config.indices[exclusiveGateway],
 		parallel:  config.indices[parallelGateway],
+		gateway:   config.indices[gateway],
 	}
 
 	var err error
@@ -475,6 +477,8 @@ func (h *GatewayHandler) Handle(processIndex int, info FieldInfo, config *Proces
 		err = h.handleExclusiveGateway(processIndex, info, config, &indices.exclusive)
 	case parallelGateway:
 		err = h.handleParallelGateway(processIndex, info, config, &indices.parallel)
+	case gateway:
+		err = h.handleGateway(processIndex, info, config, &indices.gateway)
 	default:
 		return fmt.Errorf("unsupported gateway type: %s", info.element)
 	}
@@ -486,6 +490,7 @@ func (h *GatewayHandler) Handle(processIndex int, info FieldInfo, config *Proces
 	config.indices[inclusiveGateway] = indices.inclusive
 	config.indices[exclusiveGateway] = indices.exclusive
 	config.indices[parallelGateway] = indices.parallel
+	config.indices[gateway] = indices.gateway
 
 	return nil
 
@@ -574,6 +579,34 @@ func (h *GatewayHandler) handleParallelGateway(processIdx int, info FieldInfo, c
 
 }
 
+// handleGateway processes gateway elements.
+// It calls the GetGateway method on the process and sets the properties for the gateway.
+func (h *GatewayHandler) handleGateway(processIdx int, info FieldInfo, config *ProcessingConfig, idx *int) error {
+	if *idx >= config.counts[info.element] {
+		return nil
+	}
+
+	methodName := fmt.Sprintf("Get%s", info.element)
+
+	el, err := callMethodValue(
+		h.processor.value.Process[processIdx],
+		methodName,
+		[]reflect.Value{reflect.ValueOf(*idx)},
+	)
+	if err != nil {
+		return fmt.Errorf("failed to get gateway: %w", err)
+	}
+
+	if err := h.SetProperties(el, info); err != nil {
+		return fmt.Errorf("failed to set gateway properties: %w", err)
+	}
+
+	(*idx)++
+
+	return nil
+
+}
+
 // SetProperties sets properties for gateways.
 func (h *GatewayHandler) SetProperties(element reflect.Value, info FieldInfo) error {
 
@@ -590,6 +623,8 @@ func (h *GatewayHandler) SetProperties(element reflect.Value, info FieldInfo) er
 		return h.setExclusiveGatewayProperties(element)
 	case parallelGateway:
 		return h.setParallelGatewayProperties(element)
+	case gateway:
+		return h.setGatewayProperties(element)
 	default:
 		return fmt.Errorf("unsupported gateway type: %s", info.element)
 	}
@@ -650,11 +685,30 @@ func (h *GatewayHandler) setParallelGatewayProperties(element reflect.Value) err
 
 }
 
+// setGatewayProperties sets gateway specific properties.
+func (h *GatewayHandler) setGatewayProperties(element reflect.Value) error {
+	properties := map[string]interface{}{
+		// Add more properties as needed
+	}
+
+	for propName, propValue := range properties {
+		if err := callMethod(element, "Set"+propName, []reflect.Value{
+			reflect.ValueOf(propValue),
+		}); err != nil {
+			return fmt.Errorf("failed to set %s: %w", propName, err)
+		}
+	}
+
+	return nil
+
+}
+
 // ActivityIndices holds indices for different types of activities
 type ActivityIndices struct {
-	userTask   int
-	scriptTask int
-	task       int
+	userTask    int
+	serviceTask int
+	scriptTask  int
+	task        int
 }
 
 // ActivityHandler handles different types of activities
@@ -677,9 +731,10 @@ func (h *ActivityHandler) Handle(processIdx int, info FieldInfo, config *Process
 
 	// Initialize indices
 	indices := ActivityIndices{
-		userTask:   config.indices[userTask],
-		scriptTask: config.indices[scriptTask],
-		task:       config.indices[task],
+		userTask:    config.indices[userTask],
+		serviceTask: config.indices[serviceTask],
+		scriptTask:  config.indices[scriptTask],
+		task:        config.indices[task],
 	}
 
 	var err error
@@ -687,6 +742,8 @@ func (h *ActivityHandler) Handle(processIdx int, info FieldInfo, config *Process
 	switch info.element {
 	case userTask:
 		err = h.handleUserTask(processIdx, info, config, &indices.userTask)
+	case serviceTask:
+		err = h.handleServiceTask(processIdx, info, config, &indices.serviceTask)
 	case scriptTask:
 		err = h.handleScriptTask(processIdx, info, config, &indices.scriptTask)
 	case task:
@@ -701,6 +758,7 @@ func (h *ActivityHandler) Handle(processIdx int, info FieldInfo, config *Process
 
 	config.indices[task] = indices.task
 	config.indices[userTask] = indices.userTask
+	config.indices[serviceTask] = indices.serviceTask
 	config.indices[scriptTask] = indices.scriptTask
 
 	return nil
@@ -791,7 +849,35 @@ func (h *ActivityHandler) handleScriptTask(processIdx int, info FieldInfo, confi
 
 }
 
-// setProperties sets properties for activities.
+// handleServiceTask processes service task elements.
+// It calls the GetServiceTask method on the process and sets the properties for the service task.
+func (h *ActivityHandler) handleServiceTask(processIdx int, info FieldInfo, config *ProcessingConfig, idx *int) error {
+	if *idx >= config.counts[info.element] {
+		return nil
+	}
+
+	methodName := fmt.Sprintf("Get%s", info.element)
+
+	el, err := callMethodValue(
+		h.processor.value.Process[processIdx],
+		methodName,
+		[]reflect.Value{reflect.ValueOf(*idx)},
+	)
+	if err != nil {
+		return fmt.Errorf("failed to get service task: %w", err)
+	}
+
+	if err := h.SetProperties(el, info); err != nil {
+		return fmt.Errorf("failed to set service task properties: %w", err)
+	}
+
+	(*idx)++
+
+	return nil
+
+}
+
+// SetProperties sets properties for activities.
 // It calls the SetProperties method in the BaseElement to set common properties, like ID and Name.
 func (h *ActivityHandler) SetProperties(element reflect.Value, info FieldInfo) error {
 
@@ -804,6 +890,8 @@ func (h *ActivityHandler) SetProperties(element reflect.Value, info FieldInfo) e
 	switch info.element {
 	case userTask:
 		return h.setUserTaskProperties(element)
+	case serviceTask:
+		return h.setServiceTaskProperties(element)
 	case scriptTask:
 		return h.setScriptTaskProperties(element)
 	case task:
@@ -816,6 +904,24 @@ func (h *ActivityHandler) SetProperties(element reflect.Value, info FieldInfo) e
 
 // setUserTaskProperties sets specific properties.
 func (h *ActivityHandler) setUserTaskProperties(element reflect.Value) error {
+	properties := map[string]interface{}{
+		// Add more properties as needed
+	}
+
+	for propName, propValue := range properties {
+		if err := callMethod(element, "Set"+propName, []reflect.Value{
+			reflect.ValueOf(propValue),
+		}); err != nil {
+			return fmt.Errorf("failed to set %s: %w", propName, err)
+		}
+	}
+
+	return nil
+
+}
+
+// setServiceTaskProperties sets specific properties.
+func (h *ActivityHandler) setServiceTaskProperties(element reflect.Value) error {
 	properties := map[string]interface{}{
 		// Add more properties as needed
 	}
