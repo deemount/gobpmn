@@ -330,7 +330,7 @@ func (v *ReflectValue) configureStandalone() error {
 
 	process := v.Process[0]
 
-	for i := 0; i < v.InstanceNumField; i++ {
+	for i := range v.InstanceNumField {
 		field := v.Instance.Field(i)
 		fieldType := v.Instance.Type().Field(i)
 
@@ -375,7 +375,7 @@ func (v *ReflectValue) anonym(field string) {
 	targetField := instanceFieldName(v, field) // must be a struct, which represents a process
 	targetNum := targetField.NumField()        // get the number of fields in the struct
 
-	for idx := 0; idx < targetNum; idx++ {
+	for idx := range targetNum {
 		name := targetField.Type().Field(idx).Name
 
 		switch targetField.Field(idx).Kind() {
@@ -529,7 +529,7 @@ type ParticipantDetails struct {
 // setupParticipants configures all participants in the collaboration
 func (v *ReflectValue) setupParticipants(collaboration reflect.Value, participantCount int) error {
 
-	for idx := 0; idx < participantCount; idx++ {
+	for idx := range participantCount {
 
 		participant, err := v.getParticipant(collaboration, idx)
 		if err != nil {
@@ -594,7 +594,7 @@ func (v *ReflectValue) multipleProcess(q *Quantity) error {
 		return fmt.Errorf("failed to configure multiple processes: %w", err)
 	}
 
-	for processIdx := 0; processIdx < q.Process; processIdx++ {
+	for processIdx := range q.Process {
 
 		process := v.Process[processIdx]
 		isExecutable := v.ProcessExec[processIdx]

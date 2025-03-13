@@ -53,7 +53,7 @@ func (h *StartEventHandler) handleStartEvent(processIdx int, info FieldInfo, con
 		info.typ = "event"
 	}
 
-	element, err := callMethodValue(
+	el, err := callMethodValue(
 		h.processor.value.Process[processIdx],
 		"GetStartEvent",
 		[]reflect.Value{reflect.ValueOf(*idx)},
@@ -62,11 +62,11 @@ func (h *StartEventHandler) handleStartEvent(processIdx int, info FieldInfo, con
 		return fmt.Errorf("failed to get start event: %w", err)
 	}
 
-	if err := h.SetProperties(element, info); err != nil {
+	if err := h.SetProperties(el, info); err != nil {
 		return fmt.Errorf("failed to set start event properties: %w", err)
 	}
 
-	if err := h.configureFlow(element, info); err != nil {
+	if err := h.configureFlow(el, info); err != nil {
 		return fmt.Errorf("failed to configure start event flow: %w", err)
 	}
 
@@ -687,7 +687,7 @@ func (h *GatewayHandler) setParallelGatewayProperties(element reflect.Value) err
 
 // setGatewayProperties sets gateway specific properties.
 func (h *GatewayHandler) setGatewayProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -785,6 +785,10 @@ func (h *ActivityHandler) handleTask(processIdx int, info FieldInfo, config *Pro
 
 	if err := h.SetProperties(el, info); err != nil {
 		return fmt.Errorf("failed to set task properties: %w", err)
+	}
+
+	if err := h.configureFlow(el, info); err != nil {
+		return fmt.Errorf("failed to configure task flow: %w", err)
 	}
 
 	(*idx)++
@@ -904,7 +908,7 @@ func (h *ActivityHandler) SetProperties(element reflect.Value, info FieldInfo) e
 
 // setUserTaskProperties sets specific properties.
 func (h *ActivityHandler) setUserTaskProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -922,7 +926,7 @@ func (h *ActivityHandler) setUserTaskProperties(element reflect.Value) error {
 
 // setServiceTaskProperties sets specific properties.
 func (h *ActivityHandler) setServiceTaskProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -940,7 +944,7 @@ func (h *ActivityHandler) setServiceTaskProperties(element reflect.Value) error 
 
 // setScriptTaskProperties sets specific properties.
 func (h *ActivityHandler) setScriptTaskProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -958,7 +962,7 @@ func (h *ActivityHandler) setScriptTaskProperties(element reflect.Value) error {
 
 // setTaskProperties sets specific properties.
 func (h *ActivityHandler) setTaskProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -973,6 +977,61 @@ func (h *ActivityHandler) setTaskProperties(element reflect.Value) error {
 	return nil
 
 }
+
+// configureFlow configures the flow for a activity
+func (h *ActivityHandler) configureFlow(el reflect.Value, info FieldInfo) error {
+	if err := h.setIncomingFlowCount(el); err != nil {
+		return fmt.Errorf("failed to set outgoing flow count: %w", err)
+	}
+
+	if err := h.configureIncomingFlow(el, info.hashBefore); err != nil {
+		return fmt.Errorf("failed to configure outgoing flow: %w", err)
+	}
+
+	return nil
+
+}
+
+// setIncomingFlowCount sets the number of incoming flows for a event type
+func (h *ActivityHandler) setIncomingFlowCount(el reflect.Value) error {
+	incomingFlowCount := 1 // TODO: the incoming flow count is yet not to be determined
+
+	err := callMethod(el, "SetIncoming", []reflect.Value{
+		reflect.ValueOf(incomingFlowCount),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to set incoming flow count: %w", err)
+	}
+
+	return nil
+
+}
+
+// configureOutgoingFlow configures the outgoing flow of a activity
+func (h *ActivityHandler) configureIncomingFlow(el reflect.Value, hashBefore string) error {
+	flowIndex := 0 // TODO: the flow index is yet not to be determined
+
+	// Get the outgoing flow object
+	inFlow, err := callMethodValue(el, "GetIncoming", []reflect.Value{
+		reflect.ValueOf(flowIndex),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to get incoming flow: %w", err)
+	}
+
+	// Set the flow hash
+	err = callMethod(inFlow, "SetFlow", []reflect.Value{
+		reflect.ValueOf(hashBefore),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to set flow hash: %w", err)
+	}
+
+	return nil
+
+}
+
+// ---------------------------------------------------------- //
 
 // FlowIndices holds indices for flow elements.
 type FlowIndices struct {

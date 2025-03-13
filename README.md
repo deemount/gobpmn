@@ -1,4 +1,4 @@
-# gobpmn v0
+# gobpmn
 
 ![gobpmn](https://github.com/deemount/gobpmn/blob/main/docs/img/header.webp "a gopher in front of business model")
 
@@ -22,8 +22,6 @@ go run cmd/[dirname]/main.go
 ```
 
 ## Wiki
-
-***Wiki will be changed in the next days***
 
 Read the [documentation](https://github.com/deemount/gobpmn/wiki)
 
