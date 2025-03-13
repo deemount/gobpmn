@@ -1,5 +1,3 @@
 module github.com/deemount/gobpmn
 
-go 1.23.1
-
-require github.com/TyphonHill/go-mermaid v1.0.0
+go 1.24.0
