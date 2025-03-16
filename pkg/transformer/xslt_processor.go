@@ -1,4 +1,4 @@
-package main
+package transformer
 
 import (
 	"fmt"
@@ -19,6 +19,7 @@ func NewXSLTProcessor(saxonPath string) *XSLTProcessor {
 }
 
 // Transform applies XSLT transformation
+// saxon: https://www.saxonica.com/documentation12/index.html#!using-xsl/commandline
 func (p *XSLTProcessor) Transform(inputXML, xsltFile, outputFile string) error {
 	cmd := exec.Command(p.Saxon,
 		"-s:"+inputXML,
