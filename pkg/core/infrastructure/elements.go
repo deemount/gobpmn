@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"encoding/xml"
 	"fmt"
 	"strings"
 )
@@ -10,6 +11,7 @@ type (
 
 	// Collaboration ...
 	Collaboration struct {
+		XMLName     xml.Name      `xml:"bpmn:collaboration"`
 		ID          string        `xml:"id,attr,omitempty" json:"id"`
 		Participant []Participant `xml:"bpmn:participant" json:"participant,omitempty"`
 	}
@@ -51,9 +53,10 @@ type (
 
 	// Participant ...
 	Participant struct {
-		ID         string `xml:"id,attr,omitempty" json:"id"`
-		Name       string `xml:"name,attr,omitempty" json:"name,omitempty"`
-		ProcessRef string `xml:"processRef,attr,omitempty" json:"processRef,omitempty"`
+		XMLName    xml.Name `xml:"bpmn:participant"`
+		ID         string   `xml:"id,attr,omitempty" json:"id"`
+		Name       string   `xml:"name,attr,omitempty" json:"name,omitempty"`
+		ProcessRef string   `xml:"processRef,attr,omitempty" json:"processRef,omitempty"`
 	}
 
 	// TParticipant ...
@@ -109,6 +112,7 @@ type (
 
 	// Process ...
 	Process struct {
+		XMLName                xml.Name                 `xml:"bpmn:process"`
 		ID                     string                   `xml:"id,attr,omitempty" json:"id"`
 		Name                   string                   `xml:"name,attr,omitempty" json:"name,omitempty"`
 		IsExecutable           bool                     `xml:"isExecutable,attr" json:"isExecutable,omitempty"`
@@ -320,8 +324,9 @@ type (
 
 	// LaneSet ...
 	LaneSet struct {
-		ID   string `xml:"id,attr,omitempty" json:"id"`
-		Lane []Lane `xml:"bpmn:lane,omitempty" json:"lane,omitempty"`
+		XMLName xml.Name `xml:"bpmn:laneSet"`
+		ID      string   `xml:"id,attr,omitempty" json:"id"`
+		Lane    []Lane   `xml:"bpmn:lane,omitempty" json:"lane,omitempty"`
 	}
 
 	// TLaneSet ...
@@ -361,6 +366,7 @@ type (
 
 	// Lane ...
 	Lane struct {
+		XMLName     xml.Name      `xml:"bpmn:lane"`
 		ID          string        `xml:"id,attr,omitempty" json:"id"`
 		FlowNodeRef []FlowNodeRef `xml:"bpmn:flowNodeRef,omitempty" json:"flowNodeRef,omitempty"`
 	}
@@ -420,6 +426,7 @@ type (
 
 	// StartEvent ...
 	StartEvent struct {
+		XMLName        xml.Name   `xml:"bpmn:startEvent"`
 		ID             string     `xml:"id,attr,omitempty" json:"id"`
 		Name           string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		IsInterrupting bool       `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
@@ -490,6 +497,7 @@ type (
 
 	// EndEvent ...
 	EndEvent struct {
+		XMLName  xml.Name   `xml:"bpmn:endEvent"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -543,6 +551,7 @@ type (
 
 	// IntermediateCatchEvent ...
 	IntermediateCatchEvent struct {
+		XMLName  xml.Name   `xml:"bpmn:intermediateCatchEvent"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -608,6 +617,7 @@ type (
 
 	// IntermediateThrowEvent ...
 	IntermediateThrowEvent struct {
+		XMLName  xml.Name   `xml:"bpmn:intermediateThrowEvent"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -673,6 +683,7 @@ type (
 
 	// InclusiveGateway ...
 	InclusiveGateway struct {
+		XMLName  xml.Name   `xml:"bpmn:inclusiveGateway"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -738,6 +749,7 @@ type (
 
 	// ExclusiveGateway ...
 	ExclusiveGateway struct {
+		XMLName  xml.Name   `xml:"bpmn:exclusiveGateway"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -803,6 +815,7 @@ type (
 
 	// ParallelGateway ...
 	ParallelGateway struct {
+		XMLName  xml.Name   `xml:"bpmn:parallelGateway"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -869,6 +882,7 @@ type (
 
 	// Gateway ...
 	Gateway struct {
+		XMLName  xml.Name   `xml:"bpmn:gateway"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -934,6 +948,7 @@ type (
 
 	// Task ..
 	Task struct {
+		XMLName  xml.Name   `xml:"bpmn:task"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -999,6 +1014,7 @@ type (
 
 	// ScriptTask ..
 	ScriptTask struct {
+		XMLName  xml.Name   `xml:"bpmn:scriptTask"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -1062,6 +1078,7 @@ type (
 
 	// UserTask ...
 	UserTask struct {
+		XMLName  xml.Name   `xml:"bpmn:userTask"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -1126,6 +1143,7 @@ type (
 
 	// ServiceTask ...
 	ServiceTask struct {
+		XMLName  xml.Name   `xml:"bpmn:serviceTask"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -1190,10 +1208,11 @@ type (
 
 	// SequenceFlow ...
 	SequenceFlow struct {
-		ID        string `xml:"id,attr,omitempty" json:"id"`
-		Name      string `xml:"name,attr,omitempty" json:"name,omitempty"`
-		SourceRef string `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
-		TargetRef string `xml:"targetRef,attr" json:"targetRef,omitempty"`
+		XMLName   xml.Name `xml:"bpmn:sequenceFlow"`
+		ID        string   `xml:"id,attr,omitempty" json:"id"`
+		Name      string   `xml:"name,attr,omitempty" json:"name,omitempty"`
+		SourceRef string   `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
+		TargetRef string   `xml:"targetRef,attr" json:"targetRef,omitempty"`
 	}
 
 	// TSequenceFlow ...
