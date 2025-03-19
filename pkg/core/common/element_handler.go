@@ -819,6 +819,10 @@ func (h *ActivityHandler) handleUserTask(processIdx int, info FieldInfo, config 
 		return fmt.Errorf("failed to set user task properties: %w", err)
 	}
 
+	if err := h.configureFlow(el, info); err != nil {
+		return fmt.Errorf("failed to configure user task flow: %w", err)
+	}
+
 	(*idx)++
 
 	return nil
@@ -847,6 +851,10 @@ func (h *ActivityHandler) handleScriptTask(processIdx int, info FieldInfo, confi
 		return fmt.Errorf("failed to set script task properties: %w", err)
 	}
 
+	if err := h.configureFlow(el, info); err != nil {
+		return fmt.Errorf("failed to configure script task flow: %w", err)
+	}
+
 	(*idx)++
 
 	return nil
@@ -873,6 +881,10 @@ func (h *ActivityHandler) handleServiceTask(processIdx int, info FieldInfo, conf
 
 	if err := h.SetProperties(el, info); err != nil {
 		return fmt.Errorf("failed to set service task properties: %w", err)
+	}
+
+	if err := h.configureFlow(el, info); err != nil {
+		return fmt.Errorf("failed to configure service task flow: %w", err)
 	}
 
 	(*idx)++
