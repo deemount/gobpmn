@@ -5,8 +5,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	_ "net/http/pprof"
+	"os"
 	"time"
 
 	"github.com/deemount/gobpmn/internal/parser"
@@ -51,6 +53,10 @@ type SimpleProcess struct {
 
 func main() {
 
+	flags := log.Ldate | log.Lshortfile
+	log.SetFlags(flags)
+	errorLogger := log.New(os.Stdout, "ERROR: ", flags)
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 
@@ -59,7 +65,8 @@ func main() {
 	 */
 	simpleProcess, err := common.NewReflectDI[SimpleProcess](ctx, SimpleProcess{})
 	if err != nil {
-		log.Fatal(err)
+		errorLogger.Fatalf("\033[0;31m:\n%s", err)
+		return
 	}
 
 	// logging messages for the terminal
@@ -77,5 +84,10 @@ func main() {
 		panic(err)
 	}
 	bpmn.Marshal()
+
+	err = bpmn.Validate()
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
 
 }

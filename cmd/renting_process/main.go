@@ -5,8 +5,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	_ "net/http/pprof"
+	"os"
 	"time"
 
 	"github.com/deemount/gobpmn/internal/parser"
@@ -72,7 +74,9 @@ type (
 
 func main() {
 
-	log.SetFlags(log.LstdFlags | log.Llongfile)
+	flags := log.Ldate | log.Lshortfile
+	log.SetFlags(flags)
+	errorLogger := log.New(os.Stdout, "ERROR: ", flags)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
@@ -82,7 +86,7 @@ func main() {
 	 */
 	rentalProcess, err := common.NewReflectDI[RentingProcess](ctx, RentingProcess{})
 	if err != nil {
-		log.Fatalf("\033[0;31mError:\n%s", err)
+		errorLogger.Fatalf("\033[0;31m:\n%s", err)
 		return
 	}
 
@@ -94,12 +98,17 @@ func main() {
 	*/
 
 	// create the process model
-	rental, err := parser.NewBPMNParser(
+	bpmn, err := parser.NewBPMNParser(
 		parser.WithCounter(),
 		parser.WithDefinitions(rentalProcess.Def))
 	if err != nil {
 		panic(err)
 	}
-	rental.Marshal()
+	bpmn.Marshal()
+
+	err = bpmn.Validate()
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
 
 }
