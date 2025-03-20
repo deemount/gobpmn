@@ -29,6 +29,7 @@ type (
 	// BPMNParserRepository ...
 	BPMNParserRepository interface {
 		Marshal() error
+		Validate() error
 	}
 
 	// BPMNParser ...
@@ -94,7 +95,7 @@ func (parser *BPMNParser) save() error {
 		return fmt.Errorf("error marshaling BPMN data: %v", err)
 	}
 
-	return parser.writeFile(parser.FilePathBPMN, parser.getFilename(), bpmnData, "bpmn")
+	return parser.writeFile(parser.FilePathBPMN, parser.GetFilename(), bpmnData, "bpmn")
 
 }
 
@@ -107,14 +108,6 @@ func (parser *BPMNParser) writeFile(path, filename string, data []byte, extensio
 		return fmt.Errorf("error creating file %s: %v", fullPath, err)
 	}
 	defer f.Close()
-
-	// Validate the BPMN data against the XSD schema
-	/*err = clib.ValidateBPMNAgainstXSD(data, "xsd/BPMN20.xsd")
-	if err != nil {
-		fmt.Printf("Validation error: %v\n", err)
-	} else {
-		fmt.Println("Validation successful.")
-	}*/
 
 	if extension == "json" {
 		// Write the JSON data to the file
@@ -138,7 +131,7 @@ func (parser *BPMNParser) marshalJSON() ([]byte, error) {
 		return nil, fmt.Errorf("error marshaling JSON data: %v", err)
 	}
 
-	err = parser.writeFile(parser.FilePathJSON, parser.getFilename(), jsonData, "json")
+	err = parser.writeFile(parser.FilePathJSON, parser.GetFilename(), jsonData, "json")
 	if err != nil {
 		return nil, err
 	}
@@ -149,12 +142,12 @@ func (parser *BPMNParser) marshalJSON() ([]byte, error) {
 // GetFilename returns the current bpmn filename
 // It is a helper method to get the current bpmn filename, which
 // relies on the same instance
-func (parser BPMNParser) getFilename() string {
+func (parser BPMNParser) GetFilename() string {
 	return fmt.Sprintf("%s_%d", parser.FilenamePrefix, parser.Counter)
 }
 
-// validate validates the parser fields
-// and returns an error if the validation fails.
+// validate validates the file oath for the BPMN file
+// and returns an error if the path is empty.
 func (parser *BPMNParser) validate() error {
 	if parser.FilePathBPMN == "" {
 		return ErrEmptyFilePathBPMN
