@@ -137,6 +137,12 @@ func (v *ReflectValue) instance(m *Mapping) any {
 		v.nonAnonym(m)
 	}
 
+	// NOTE: FlowNeighbors is implemented for testing purposes.
+	// It is unclear, where it should be used.
+	// FlowNeighbors are used in the element_handler.go file,
+	// for the FlowHandler Properties.
+	v.FlowNeighbors = collectFromFieldsWithNeighbors(v.Instance.Interface())
+
 	return v.Instance.Interface()
 }
 
@@ -208,7 +214,7 @@ func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
 
 		err := v.configurePool()
 		if err != nil {
-			return fmt.Errorf("Error configuring pool: %v", err)
+			return fmt.Errorf("error configuring pool: %v", err)
 		}
 		v.multipleProcess(q)
 		if err := processor.ProcessElementsWithContext(processorCtx); err != nil {
@@ -218,7 +224,7 @@ func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
 	} else {
 
 		if err := v.configureStandalone(); err != nil {
-			return fmt.Errorf("Error processing standalone: %v", err)
+			return fmt.Errorf("error processing standalone: %v", err)
 		}
 		v.standalone(0, q)
 		if err := processor.ProcessStandalone(processorCtx); err != nil {
@@ -232,11 +238,11 @@ func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
 // finalizeModel completes the model construction
 func (v *ReflectValue) finalizeModel(ctx context.Context, q *Quantity) error {
 	if err := v.processingWithContext(ctx, q); err != nil {
-		return fmt.Errorf("failed to process: %w", err)
+		return NewError(fmt.Errorf("failed to process:\n%w", err))
 	}
 
 	if err := v.collaboration(q); err != nil {
-		return fmt.Errorf("failed to setup collaboration: %w", err)
+		return fmt.Errorf("failed to setup collaboration:\n %w", err)
 	}
 
 	return nil
@@ -244,11 +250,11 @@ func (v *ReflectValue) finalizeModel(ctx context.Context, q *Quantity) error {
 }
 
 // nonAnonym sets the IsExecutable field to true and populates the reflection fields with hash values.
-// Note: the method is used in a single process.
+// Note: the method is used in a standalone process.
 func (v *ReflectValue) nonAnonym(m *Mapping) {
 	v.setIsExecutableByField(m.Config)
 	v.populateReflectionFields(m.BPMNType)
-	v.FlowNeighbors = collectFromFieldsWithNeighbors(v.Instance.Interface())
+	//v.FlowNeighbors = collectFromFieldsWithNeighbors(v.Instance.Interface())
 }
 
 // setIsExecutableByField configures the process executable status.
@@ -389,6 +395,7 @@ func (v *ReflectValue) anonym(field string) {
 		}
 
 	}
+
 }
 
 // config sets the IsExecutable field to true if the name contains "IsExecutable" and index is 0.

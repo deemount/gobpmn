@@ -40,12 +40,12 @@ func callMethod(target reflect.Value, methodName string, args []reflect.Value) e
 
 	method := target.MethodByName(methodName)
 	if !method.IsValid() {
-		return fmt.Errorf("method %s not found", methodName)
+		return NewError(fmt.Errorf("method %s not found\n", methodName))
 	}
 
 	results := method.Call(args)
 	if len(results) > 0 && !results[0].IsNil() {
-		return fmt.Errorf("method %s failed: %v", methodName, results[0].Interface())
+		return NewError(fmt.Errorf("method %s failed: %v", methodName, results[0].Interface()))
 	}
 
 	return nil

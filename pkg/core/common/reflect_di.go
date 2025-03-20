@@ -62,7 +62,7 @@ func NewReflectDI[T any](ctx context.Context, model T) (result T, err error) {
 
 	// Finalize the model construction
 	if err := reflectVal.finalizeModel(ctx, quantity); err != nil {
-		return *new(T), fmt.Errorf("failed to finalize model: %v", err)
+		return *new(T), NewError(fmt.Errorf("failed to finalize model:\n%v", err))
 	}
 
 	return typed, nil

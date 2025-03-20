@@ -39,7 +39,7 @@ type ProcessingConfig struct {
 // NewElementProcessor creates a new ElementProcessor instance
 func NewElementProcessor(v *ReflectValue, q *Quantity) (*ElementProcessor, error) {
 	if v == nil || q == nil {
-		return nil, fmt.Errorf("invalid parameters: ReflectValue and quantity must not be nil")
+		return nil, NewError(fmt.Errorf("invalid parameters: ReflectValue and quantity must not be nil"))
 	}
 
 	ep := &ElementProcessor{
@@ -80,7 +80,7 @@ func (ep *ElementProcessor) createProcessingConfig(processIdx int, field reflect
 
 // ProcessElementsWithContext adds context support for processing multiple elements
 func (ep *ElementProcessor) ProcessElementsWithContext(ctx context.Context) error {
-	done := make(chan error, 1) // NOTE: buffered channel
+	done := make(chan error, 1) // NOTE: use a buffered channel
 
 	go func() {
 		done <- ep.processMultipleElements()
@@ -90,7 +90,7 @@ func (ep *ElementProcessor) ProcessElementsWithContext(ctx context.Context) erro
 	case err := <-done:
 		return err
 	case <-ctx.Done():
-		return fmt.Errorf("multiple elements processing cancelled: %w", ctx.Err())
+		return NewError(fmt.Errorf("multiple elements processing cancelled:\n%w", ctx.Err()))
 	}
 
 }
@@ -106,17 +106,18 @@ func (ep *ElementProcessor) processMultipleElements() error {
 		field := instanceFieldName(ep.value, processName) // NOTE: v.Instance is called once here in the whole element processor.
 
 		if !field.IsValid() {
-			errs = append(errs, fmt.Errorf("invalid field for process: %s", processName))
+			errs = append(errs, NewError(fmt.Errorf("invalid field for process:\n%s", processName)))
 			continue // silently continuing
 		}
 
+		// collect errors
 		if err := ep.processProcess(processIdx, field); err != nil {
-			errs = append(errs, fmt.Errorf("process %s: %w", processName, err))
+			errs = append(errs, NewError(fmt.Errorf("process %s:\n%w", processName, err)))
 		}
 	}
 
 	if len(errs) > 0 {
-		return fmt.Errorf("multiple errors occurred: %v", errs)
+		return NewError(fmt.Errorf("multiple errors occurred:\n%v", errs))
 	}
 
 	return nil
@@ -129,7 +130,7 @@ func (ep *ElementProcessor) processProcess(processIdx int, field reflect.Value) 
 
 	for fieldIdx := 0; fieldIdx < config.numFields; fieldIdx++ {
 		if err := ep.processField(processIdx, fieldIdx, config); err != nil {
-			return fmt.Errorf("failed to process field at index %d: %w", fieldIdx, err)
+			return NewError(fmt.Errorf("failed to process field at index %d:\n%w", fieldIdx, err))
 		}
 	}
 
@@ -149,7 +150,7 @@ func (ep *ElementProcessor) processField(processIdx, fieldIdx int, config *Proce
 
 	handler, exists := ep.handlers[elementType]
 	if !exists {
-		return fmt.Errorf("no handler found for element type: %s", elementType)
+		return NewError(fmt.Errorf("no handler found for element type:\n%s", elementType))
 	}
 
 	return handler.Handle(processIdx, info, config)
@@ -170,7 +171,7 @@ func (ep *ElementProcessor) ProcessStandalone(ctx context.Context) error {
 	case err := <-done:
 		return err
 	case <-ctx.Done():
-		return fmt.Errorf("single element processing cancelled: %w", ctx.Err())
+		return NewError(fmt.Errorf("single element processing cancelled:\n%w", ctx.Err()))
 	}
 }
 
@@ -198,7 +199,7 @@ func (ep *ElementProcessor) processElement() error {
 
 		// NOTE: somehow the first field is DEF, which is a call on a interface value. This is not handled.
 		if err := ep.processStructField(field, fieldType, fieldIdx, config); err != nil {
-			return fmt.Errorf("failed to process field %s: %w", fieldType.Name, err)
+			return NewError(fmt.Errorf("failed to process field %s:\n%w", fieldType.Name, err))
 		}
 
 	}
@@ -222,8 +223,8 @@ func (ep *ElementProcessor) processStructField(field reflect.Value, fieldType re
 		name:       fieldType.Name,
 		typ:        typ,
 		hash:       field.FieldByName("Hash").String(),
-		hashBefore: ep.value.Instance.Field(fieldIdx - 1).FieldByName("Hash").String(),
-		nextHash:   ep.nextHash(fieldIdx), // The index is NOT always 0
+		hashBefore: ep.value.Instance.Field(fieldIdx - 1).FieldByName("Hash").String(), // Note: this is maybe not always the previous field
+		nextHash:   ep.nextHash(fieldIdx),                                              // The index is NOT always 0
 		element:    matchElementType(fieldType.Name),
 	}
 
