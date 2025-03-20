@@ -33,7 +33,7 @@ func (h *StartEventHandler) Handle(processIdx int, info FieldInfo, config *Proce
 	}
 
 	if err := h.handleStartEvent(processIdx, info, config, &indices.startEvent); err != nil {
-		return fmt.Errorf("failed to handle start event: %w", err)
+		return NewError(fmt.Errorf("failed to handle start event: %w", err))
 	}
 
 	config.indices[startEvent] = indices.startEvent
@@ -59,15 +59,15 @@ func (h *StartEventHandler) handleStartEvent(processIdx int, info FieldInfo, con
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get start event: %w", err)
+		return NewError(fmt.Errorf("failed to get start event: %w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set start event properties: %w", err)
+		return NewError(fmt.Errorf("failed to set start event properties: %w", err))
 	}
 
 	if err := h.configureFlow(el, info); err != nil {
-		return fmt.Errorf("failed to configure start event flow: %w", err)
+		return NewError(fmt.Errorf("failed to configure start event flow: %w", err))
 	}
 
 	(*idx)++
@@ -100,7 +100,7 @@ func (h *StartEventHandler) setStartEventSpecificProperties(el reflect.Value) er
 		if err := callMethod(el, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s: %w", propName, err))
 		}
 	}
 
@@ -112,11 +112,11 @@ func (h *StartEventHandler) setStartEventSpecificProperties(el reflect.Value) er
 // Note: A start event always has exactly one outgoing flow and no incoming flow
 func (h *StartEventHandler) configureFlow(el reflect.Value, info FieldInfo) error {
 	if err := h.setOutgoingFlowCount(el); err != nil {
-		return fmt.Errorf("failed to set outgoing flow count: %w", err)
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
 
 	if err := h.configureOutgoingFlow(el, info.nextHash); err != nil {
-		return fmt.Errorf("failed to configure outgoing flow: %w", err)
+		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
 	}
 
 	return nil
@@ -133,7 +133,7 @@ func (h *StartEventHandler) setOutgoingFlowCount(el reflect.Value) error {
 		reflect.ValueOf(outgoingFlowCount),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to set outgoing flow count: %w", err)
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
 
 	return nil
@@ -149,7 +149,7 @@ func (h *StartEventHandler) configureOutgoingFlow(el reflect.Value, nextHash str
 		reflect.ValueOf(firstFlowIndex),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to get outgoing flow: %w", err)
+		return NewError(fmt.Errorf("failed to get outgoing flow:\n%w", err))
 	}
 
 	// Set the flow hash
@@ -157,7 +157,7 @@ func (h *StartEventHandler) configureOutgoingFlow(el reflect.Value, nextHash str
 		reflect.ValueOf(nextHash),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to set flow hash: %w", err)
+		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
 	}
 
 	return nil
@@ -205,11 +205,11 @@ func (h *EventHandler) Handle(processIdx int, info FieldInfo, config *Processing
 	case endEvent:
 		err = h.handleEndEvent(processIdx, info, config, &indices.end)
 	default:
-		return fmt.Errorf("unsupported event type: %s", info.element)
+		return NewError(fmt.Errorf("unsupported event type: %s", info.element))
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to handle event %w", err)
+		return NewError(fmt.Errorf("failed to handle event %w", err))
 	}
 
 	config.indices[intermediateCatchEvent] = indices.catch
@@ -233,11 +233,11 @@ func (h *EventHandler) handleIntermediateCatchEvent(processIndex int, info Field
 		methodName,
 		[]reflect.Value{reflect.ValueOf(*idx)})
 	if err != nil {
-		return fmt.Errorf("failed to get intermediate catch event %v", err)
+		return NewError(fmt.Errorf("failed to get intermediate catch event %v", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set intermediate catch event properties: %w", err)
+		return NewError(fmt.Errorf("failed to set intermediate catch event properties: %w", err))
 	}
 
 	(*idx)++
@@ -261,12 +261,12 @@ func (h *EventHandler) handleIntermediateThrowEvent(processIndex int, info Field
 		methodName,
 		[]reflect.Value{reflect.ValueOf(*idx)})
 	if err != nil {
-		return fmt.Errorf("failed to get intermediate throw event: %v", err)
+		return NewError(fmt.Errorf("failed to get intermediate throw event: %v", err))
 	}
 
 	// Set the element properties
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set intermediate throw event properties: %w", err)
+		return NewError(fmt.Errorf("failed to set intermediate throw event properties: %w", err))
 	}
 
 	(*idx)++
@@ -284,20 +284,16 @@ func (h *EventHandler) handleEndEvent(processIndex int, info FieldInfo, config *
 
 	methodName := fmt.Sprintf("Get%s", info.element)
 
-	element, err := callMethodValue(
+	el, err := callMethodValue(
 		h.processor.value.Process[processIndex],
 		methodName,
 		[]reflect.Value{reflect.ValueOf(*idx)})
 	if err != nil {
-		return fmt.Errorf("failed to get end event: %v", err)
+		return NewError(fmt.Errorf("failed to get end event: %v\n", err))
 	}
 
-	if err := h.SetProperties(element, info); err != nil {
-		return fmt.Errorf("failed to set end event properties: %w", err)
-	}
-
-	if err := h.configureFlow(element, info); err != nil {
-		return fmt.Errorf("failed to configure start event flow: %w", err)
+	if err := h.SetProperties(el, info); err != nil {
+		return NewError(fmt.Errorf("failed to set end event properties:\n%w", err))
 	}
 
 	(*idx)++
@@ -323,7 +319,7 @@ func (h *EventHandler) SetProperties(element reflect.Value, info FieldInfo) erro
 	case endEvent:
 		return h.setEndEventProperties(element)
 	default:
-		return fmt.Errorf("unsupported event type: %s", info.element)
+		return NewError(fmt.Errorf("unsupported event type: %s", info.element))
 	}
 
 }
@@ -338,7 +334,7 @@ func (h *EventHandler) setIntermediateCatchEventProperties(el reflect.Value) err
 		if err := callMethod(el, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -356,7 +352,7 @@ func (h *EventHandler) setIntermediateThrowEventProperties(element reflect.Value
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -374,7 +370,7 @@ func (h *EventHandler) setEndEventProperties(element reflect.Value) error {
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -385,11 +381,19 @@ func (h *EventHandler) setEndEventProperties(element reflect.Value) error {
 // configureFlow configures the flow for a event
 func (h *EventHandler) configureFlow(el reflect.Value, info FieldInfo) error {
 	if err := h.setIncomingFlowCount(el); err != nil {
-		return fmt.Errorf("failed to set outgoing flow count: %w", err)
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
 
 	if err := h.configureIncomingFlow(el, info.hashBefore); err != nil {
-		return fmt.Errorf("failed to configure outgoing flow: %w", err)
+		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
+	}
+
+	if err := h.setOutgoingFlowCount(el); err != nil {
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
+	}
+
+	if err := h.configureOutgoingFlow(el, info.nextHash); err != nil {
+		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
 	}
 
 	return nil
@@ -404,7 +408,7 @@ func (h *EventHandler) setIncomingFlowCount(element reflect.Value) error {
 		reflect.ValueOf(incomingFlowCount),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to set incoming flow count: %w", err)
+		return NewError(fmt.Errorf("failed to set incoming flow count:\n%w", err))
 	}
 
 	return nil
@@ -420,7 +424,7 @@ func (h *EventHandler) configureIncomingFlow(element reflect.Value, hashBefore s
 		reflect.ValueOf(firstFlowIndex),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to get outgoing flow: %w", err)
+		return NewError(fmt.Errorf("failed to get outgoing flow:\n%w", err))
 	}
 
 	// Set the flow hash
@@ -428,7 +432,48 @@ func (h *EventHandler) configureIncomingFlow(element reflect.Value, hashBefore s
 		reflect.ValueOf(hashBefore),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to set flow hash: %w", err)
+		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// setOutgoingFlowCount sets the number of outgoing flows for a event
+// Note: An outgoing can only be set, if there's a following known element
+// Actually, there is no check if the next element is a known element.
+func (h *EventHandler) setOutgoingFlowCount(el reflect.Value) error {
+	const outgoingFlowCount = 1 // start events always have exactly one outgoing flow
+
+	err := callMethod(el, "SetOutgoing", []reflect.Value{
+		reflect.ValueOf(outgoingFlowCount),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// configureOutgoingFlow configures the outgoing flow of a start event
+func (h *EventHandler) configureOutgoingFlow(el reflect.Value, nextHash string) error {
+	flowIndex := 0
+
+	// Get the outgoing flow object
+	outFlow, err := callMethodValue(el, "GetOutgoing", []reflect.Value{
+		reflect.ValueOf(flowIndex),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to get outgoing flow:\n%w", err))
+	}
+
+	// Set the flow hash
+	err = callMethod(outFlow, "SetFlow", []reflect.Value{
+		reflect.ValueOf(nextHash),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
 	}
 
 	return nil
@@ -480,11 +525,11 @@ func (h *GatewayHandler) Handle(processIndex int, info FieldInfo, config *Proces
 	case gateway:
 		err = h.handleGateway(processIndex, info, config, &indices.gateway)
 	default:
-		return fmt.Errorf("unsupported gateway type: %s", info.element)
+		return NewError(fmt.Errorf("unsupported gateway type: %s\n", info.element))
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to handle gateway: %w", err)
+		return NewError(fmt.Errorf("failed to handle gateway:\n%w", err))
 	}
 
 	config.indices[inclusiveGateway] = indices.inclusive
@@ -510,11 +555,15 @@ func (h *GatewayHandler) handleInclusiveGateway(processIdx int, info FieldInfo, 
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get inclusive gateway: %w", err)
+		return NewError(fmt.Errorf("failed to get inclusive gateway:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set inclusive gateway properties: %w", err)
+		return NewError(fmt.Errorf("failed to set inclusive gateway properties:\n%w", err))
+	}
+
+	if err := h.configureFlow(el, info); err != nil {
+		return NewError(fmt.Errorf("failed to configure inclusive gateway flow:\n%w", err))
 	}
 
 	(*idx)++
@@ -537,11 +586,15 @@ func (h *GatewayHandler) handleExclusiveGateway(processIdx int, info FieldInfo, 
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get exclusive gateway: %w", err)
+		return NewError(fmt.Errorf("failed to get exclusive gateway:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set exclusive gateway properties: %w", err)
+		return NewError(fmt.Errorf("failed to set exclusive gateway properties:\n%w", err))
+	}
+
+	if err := h.configureFlow(el, info); err != nil {
+		return NewError(fmt.Errorf("failed to configure exclusive event flow:\n%w", err))
 	}
 
 	(*idx)++
@@ -566,11 +619,15 @@ func (h *GatewayHandler) handleParallelGateway(processIdx int, info FieldInfo, c
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get parallel gateway: %w", err)
+		return NewError(fmt.Errorf("failed to get parallel gateway:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set parallel gateway properties: %w", err)
+		return NewError(fmt.Errorf("failed to set parallel gateway properties:\n%w", err))
+	}
+
+	if err := h.configureFlow(el, info); err != nil {
+		return NewError(fmt.Errorf("failed to configure parallel gateway flow:\n%w", err))
 	}
 
 	(*idx)++
@@ -594,11 +651,15 @@ func (h *GatewayHandler) handleGateway(processIdx int, info FieldInfo, config *P
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get gateway: %w", err)
+		return NewError(fmt.Errorf("failed to get gateway:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set gateway properties: %w", err)
+		return NewError(fmt.Errorf("failed to set gateway properties:\n%w", err))
+	}
+
+	if err := h.configureFlow(el, info); err != nil {
+		return NewError(fmt.Errorf("failed to configure gateway flow:\n%w", err))
 	}
 
 	(*idx)++
@@ -626,14 +687,14 @@ func (h *GatewayHandler) SetProperties(element reflect.Value, info FieldInfo) er
 	case gateway:
 		return h.setGatewayProperties(element)
 	default:
-		return fmt.Errorf("unsupported gateway type: %s", info.element)
+		return NewError(fmt.Errorf("unsupported gateway type: %s\n", info.element))
 	}
 
 }
 
 // setInclusiveGatewayProperties sets inclusive gateway specific properties.
 func (h *GatewayHandler) setInclusiveGatewayProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -641,7 +702,7 @@ func (h *GatewayHandler) setInclusiveGatewayProperties(element reflect.Value) er
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -651,7 +712,7 @@ func (h *GatewayHandler) setInclusiveGatewayProperties(element reflect.Value) er
 
 // setExclusiveGatewayProperties sets exclusive gateway specific properties.
 func (h *GatewayHandler) setExclusiveGatewayProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -659,7 +720,7 @@ func (h *GatewayHandler) setExclusiveGatewayProperties(element reflect.Value) er
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -669,7 +730,7 @@ func (h *GatewayHandler) setExclusiveGatewayProperties(element reflect.Value) er
 
 // setParallelGatewayProperties sets parallel gateway specific properties.
 func (h *GatewayHandler) setParallelGatewayProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -677,7 +738,7 @@ func (h *GatewayHandler) setParallelGatewayProperties(element reflect.Value) err
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -695,13 +756,117 @@ func (h *GatewayHandler) setGatewayProperties(element reflect.Value) error {
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
 	return nil
 
 }
+
+// configureFlow configures the flow for a event
+func (h *GatewayHandler) configureFlow(el reflect.Value, info FieldInfo) error {
+	if err := h.setIncomingFlowCount(el); err != nil {
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
+	}
+
+	if err := h.configureIncomingFlow(el, info.hashBefore); err != nil {
+		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
+	}
+
+	if err := h.setOutgoingFlowCount(el); err != nil {
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
+	}
+
+	if err := h.configureOutgoingFlow(el, info.nextHash); err != nil {
+		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// setIncomingFlowCount sets the number of incoming flows for a gateway
+func (h *GatewayHandler) setIncomingFlowCount(el reflect.Value) error {
+	incomingFlowCount := 1 // TODO: the incoming flow count is yet not to be determined
+
+	err := callMethod(el, "SetIncoming", []reflect.Value{
+		reflect.ValueOf(incomingFlowCount),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to set incoming flow count:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// configureOutgoingFlow configures the outgoing flow of a gateway
+func (h *GatewayHandler) configureIncomingFlow(el reflect.Value, hashBefore string) error {
+	flowIndex := 0 // TODO: the flow index is yet not to be determined
+
+	// Get the outgoing flow object
+	inFlow, err := callMethodValue(el, "GetIncoming", []reflect.Value{
+		reflect.ValueOf(flowIndex),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to get incoming flow:\n%w", err))
+	}
+
+	// Set the flow hash
+	err = callMethod(inFlow, "SetFlow", []reflect.Value{
+		reflect.ValueOf(hashBefore),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// setOutgoingFlowCount sets the number of outgoing flows for a gateway
+// Note: An outgoing can only be set, if there's a following known element
+// Actually, there is no check if the next element is a known element.
+func (h *GatewayHandler) setOutgoingFlowCount(el reflect.Value) error {
+	const outgoingFlowCount = 1 // TODO: the outgoing flow count is yet not to be determined
+
+	err := callMethod(el, "SetOutgoing", []reflect.Value{
+		reflect.ValueOf(outgoingFlowCount),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// configureOutgoingFlow configures the outgoing flow of a start event
+func (h *GatewayHandler) configureOutgoingFlow(el reflect.Value, nextHash string) error {
+	flowIndex := 0 // TODO: the flow index is yet not to be determined
+
+	// Get the outgoing flow object
+	outFlow, err := callMethodValue(el, "GetOutgoing", []reflect.Value{
+		reflect.ValueOf(flowIndex),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to get outgoing flow:\n%w", err))
+	}
+
+	// Set the flow hash
+	err = callMethod(outFlow, "SetFlow", []reflect.Value{
+		reflect.ValueOf(nextHash),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// ---------------------------------------------------------- //
 
 // ActivityIndices holds indices for different types of activities
 type ActivityIndices struct {
@@ -749,11 +914,11 @@ func (h *ActivityHandler) Handle(processIdx int, info FieldInfo, config *Process
 	case task:
 		err = h.handleTask(processIdx, info, config, &indices.task)
 	default:
-		return fmt.Errorf("unsupported activity type: %s", info.element)
+		return NewError(fmt.Errorf("unsupported activity type: %s\n", info.element))
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to handle activity: %w", err)
+		return NewError(fmt.Errorf("failed to handle activity:\n%w", err))
 	}
 
 	config.indices[task] = indices.task
@@ -780,15 +945,15 @@ func (h *ActivityHandler) handleTask(processIdx int, info FieldInfo, config *Pro
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get task: %w", err)
+		return NewError(fmt.Errorf("failed to get task:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set task properties: %w", err)
+		return NewError(fmt.Errorf("failed to set task properties:\n%w", err))
 	}
 
 	if err := h.configureFlow(el, info); err != nil {
-		return fmt.Errorf("failed to configure task flow: %w", err)
+		return NewError(fmt.Errorf("failed to configure task flow:\n%w", err))
 	}
 
 	(*idx)++
@@ -812,15 +977,15 @@ func (h *ActivityHandler) handleUserTask(processIdx int, info FieldInfo, config 
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get user task: %w", err)
+		return NewError(fmt.Errorf("failed to get user task:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set user task properties: %w", err)
+		return NewError(fmt.Errorf("failed to set user task properties:\n%w", err))
 	}
 
 	if err := h.configureFlow(el, info); err != nil {
-		return fmt.Errorf("failed to configure user task flow: %w", err)
+		return NewError(fmt.Errorf("failed to configure user task flow:\n%w", err))
 	}
 
 	(*idx)++
@@ -844,15 +1009,15 @@ func (h *ActivityHandler) handleScriptTask(processIdx int, info FieldInfo, confi
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get script task: %w", err)
+		return NewError(fmt.Errorf("failed to get script task:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set script task properties: %w", err)
+		return NewError(fmt.Errorf("failed to set script task properties:\n%w", err))
 	}
 
 	if err := h.configureFlow(el, info); err != nil {
-		return fmt.Errorf("failed to configure script task flow: %w", err)
+		return NewError(fmt.Errorf("failed to configure script task flow:\n%w", err))
 	}
 
 	(*idx)++
@@ -876,15 +1041,15 @@ func (h *ActivityHandler) handleServiceTask(processIdx int, info FieldInfo, conf
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get service task: %w", err)
+		return NewError(fmt.Errorf("failed to get service task:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set service task properties: %w", err)
+		return NewError(fmt.Errorf("failed to set service task properties:\n%w", err))
 	}
 
 	if err := h.configureFlow(el, info); err != nil {
-		return fmt.Errorf("failed to configure service task flow: %w", err)
+		return NewError(fmt.Errorf("failed to configure service task flow:\n%w", err))
 	}
 
 	(*idx)++
@@ -913,7 +1078,7 @@ func (h *ActivityHandler) SetProperties(element reflect.Value, info FieldInfo) e
 	case task:
 		return h.setTaskProperties(element)
 	default:
-		return fmt.Errorf("unsupported activity type: %s", info.element)
+		return NewError(fmt.Errorf("unsupported activity type: %s\n", info.element))
 	}
 
 }
@@ -928,7 +1093,7 @@ func (h *ActivityHandler) setUserTaskProperties(element reflect.Value) error {
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -946,7 +1111,7 @@ func (h *ActivityHandler) setServiceTaskProperties(element reflect.Value) error 
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -964,7 +1129,7 @@ func (h *ActivityHandler) setScriptTaskProperties(element reflect.Value) error {
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -982,7 +1147,7 @@ func (h *ActivityHandler) setTaskProperties(element reflect.Value) error {
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
-			return fmt.Errorf("failed to set %s: %w", propName, err)
+			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
 
@@ -993,11 +1158,19 @@ func (h *ActivityHandler) setTaskProperties(element reflect.Value) error {
 // configureFlow configures the flow for a activity
 func (h *ActivityHandler) configureFlow(el reflect.Value, info FieldInfo) error {
 	if err := h.setIncomingFlowCount(el); err != nil {
-		return fmt.Errorf("failed to set outgoing flow count: %w", err)
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
 
 	if err := h.configureIncomingFlow(el, info.hashBefore); err != nil {
-		return fmt.Errorf("failed to configure outgoing flow: %w", err)
+		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
+	}
+
+	if err := h.setOutgoingFlowCount(el); err != nil {
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
+	}
+
+	if err := h.configureOutgoingFlow(el, info.nextHash); err != nil {
+		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
 	}
 
 	return nil
@@ -1012,7 +1185,7 @@ func (h *ActivityHandler) setIncomingFlowCount(el reflect.Value) error {
 		reflect.ValueOf(incomingFlowCount),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to set incoming flow count: %w", err)
+		return NewError(fmt.Errorf("failed to set incoming flow count:\n%w", err))
 	}
 
 	return nil
@@ -1028,7 +1201,7 @@ func (h *ActivityHandler) configureIncomingFlow(el reflect.Value, hashBefore str
 		reflect.ValueOf(flowIndex),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to get incoming flow: %w", err)
+		return NewError(fmt.Errorf("failed to get incoming flow:\n%w", err))
 	}
 
 	// Set the flow hash
@@ -1036,7 +1209,48 @@ func (h *ActivityHandler) configureIncomingFlow(el reflect.Value, hashBefore str
 		reflect.ValueOf(hashBefore),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to set flow hash: %w", err)
+		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// setOutgoingFlowCount sets the number of outgoing flows for a activity
+// Note: An outgoing can only be set, if there's a following known element
+// Actually, there is no check if the next element is a known element.
+func (h *ActivityHandler) setOutgoingFlowCount(el reflect.Value) error {
+	const outgoingFlowCount = 1 // TODO: the outgoing flow count is yet not to be determined
+
+	err := callMethod(el, "SetOutgoing", []reflect.Value{
+		reflect.ValueOf(outgoingFlowCount),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
+	}
+
+	return nil
+
+}
+
+// configureOutgoingFlow configures the outgoing flow of a activity
+func (h *ActivityHandler) configureOutgoingFlow(el reflect.Value, nextHash string) error {
+	flowIndex := 0 // TODO: the flow index is yet not to be determined
+
+	// Get the outgoing flow object
+	outFlow, err := callMethodValue(el, "GetOutgoing", []reflect.Value{
+		reflect.ValueOf(flowIndex),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to get outgoing flow:\n%w", err))
+	}
+
+	// Set the flow hash
+	err = callMethod(outFlow, "SetFlow", []reflect.Value{
+		reflect.ValueOf(nextHash),
+	})
+	if err != nil {
+		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
 	}
 
 	return nil
@@ -1078,11 +1292,11 @@ func (h *FlowHandler) Handle(processIdx int, info FieldInfo, config *ProcessingC
 	case sequenceFlow:
 		err = h.handleFlow(processIdx, info, config, &indices.flow)
 	default:
-		return fmt.Errorf("unsupported flow type: %s", info.element)
+		return NewError(fmt.Errorf("unsupported flow type: %s\n", info.element))
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to handle flow: %w", err)
+		return NewError(fmt.Errorf("failed to handle flow:\n%w", err))
 	}
 
 	config.indices[sequenceFlow] = indices.flow
@@ -1105,11 +1319,11 @@ func (h *FlowHandler) handleFlow(processIdx int, info FieldInfo, config *Process
 		[]reflect.Value{reflect.ValueOf(*idx)},
 	)
 	if err != nil {
-		return fmt.Errorf("failed to get flow: %w", err)
+		return NewError(fmt.Errorf("failed to get flow:\n%w", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {
-		return fmt.Errorf("failed to set flow properties: %w", err)
+		return NewError(fmt.Errorf("failed to set flow properties:\n%w", err))
 	}
 
 	(*idx)++
@@ -1125,14 +1339,11 @@ func (h *FlowHandler) SetProperties(flow reflect.Value, info FieldInfo) error {
 	if err := h.BaseElement.SetProperties(flow, info); err != nil {
 		return err
 	}
-	//sourceRef := h.processor.value.FlowNeighbors[info.name]["SourceRef"].(map[string]interface{})
-	//targetRef := h.processor.value.FlowNeighbors[info.name]["TargetRef"].(map[string]interface{})
-	//log.Printf("SourceRef: %s, %s, %s", info.name, sourceRef["Value"].(BPMN).Hash, targetRef["Value"].(BPMN).Hash)
+
 	// Set flow-specific properties
-	// BUG: panic: reflect: Call with too few input arguments
-	/*if err := h.setFlowSpecificProperties(flow, info); err != nil {
+	if err := h.setFlowSpecificProperties(flow, info); err != nil {
 		return err
-	}*/
+	}
 	return nil
 }
 
@@ -1140,21 +1351,24 @@ func (h *FlowHandler) SetProperties(flow reflect.Value, info FieldInfo) error {
 func (h *FlowHandler) setFlowSpecificProperties(flow reflect.Value, info FieldInfo) error {
 
 	// Set source and target references if available
-	// NOTE: Don't use hash or nextHash here, as they are not set for sequence flows.
-	// TODO: Find an algorithm to set the source and target references.
+	sourceRef := h.processor.value.FlowNeighbors[info.name]["SourceRef"].(map[string]any)
+	targetRef := h.processor.value.FlowNeighbors[info.name]["TargetRef"].(map[string]any)
+
 	if info.hash != "" {
 		if err := callMethod(flow, "SetSourceRef", []reflect.Value{
-			reflect.ValueOf(info.hash),
+			reflect.ValueOf(sourceRef["Value"].(BPMN).Type),
+			reflect.ValueOf(sourceRef["Value"].(BPMN).Hash),
 		}); err != nil {
-			return fmt.Errorf("failed to set source reference: %w", err)
+			return NewError(fmt.Errorf("failed to set source reference:\n %w", err))
 		}
 	}
 
 	if info.nextHash != "" {
 		if err := callMethod(flow, "SetTargetRef", []reflect.Value{
-			reflect.ValueOf(info.nextHash),
+			reflect.ValueOf(targetRef["Value"].(BPMN).Type),
+			reflect.ValueOf(targetRef["Value"].(BPMN).Hash),
 		}); err != nil {
-			return fmt.Errorf("failed to set target reference: %w", err)
+			return NewError(fmt.Errorf("failed to set target reference:\n %w", err))
 		}
 	}
 
