@@ -62,17 +62,17 @@ func callMethodValue(v reflect.Value, methodName string, args []reflect.Value) (
 
 	method := v.MethodByName(methodName)
 	if !method.IsValid() {
-		return reflect.Value{}, fmt.Errorf("method %s not found", methodName)
+		return reflect.Value{}, NewError(fmt.Errorf("method %s not found", methodName))
 	}
 
 	results := method.Call(args)
 
 	if len(results) == 0 {
-		return reflect.Value{}, fmt.Errorf("method %s returned no value", methodName)
+		return reflect.Value{}, NewError(fmt.Errorf("method %s returned no value", methodName))
 	}
 
 	if len(results) > 1 && !results[1].IsNil() {
-		return reflect.Value{}, fmt.Errorf("method %s failed", methodName)
+		return reflect.Value{}, NewError(fmt.Errorf("method %s failed", methodName))
 	}
 
 	result = results[0]
@@ -94,7 +94,7 @@ func getMethodNames(target reflect.Value) []string {
 func targetMethodName(target reflect.Value, methodName string) (reflect.Value, error) {
 	method := target.MethodByName(methodName)
 	if !method.IsValid() {
-		return reflect.Value{}, fmt.Errorf("method %s not found", methodName)
+		return reflect.Value{}, NewError(fmt.Errorf("method %s not found", methodName))
 	}
 	return method, nil
 }
