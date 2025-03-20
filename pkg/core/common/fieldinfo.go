@@ -1,6 +1,7 @@
 package common
 
 import (
+	"maps"
 	"reflect"
 	"strings"
 )
@@ -72,76 +73,9 @@ func isValidField(info FieldInfo) bool {
 	return true
 }
 
-// collectFromFieldsWithNeighbors collects information from fields with neighbors
-// by recursively traversing the data structure.
-/*
-func collectFromFieldsWithNeighbors(data interface{}) map[string]map[string]interface{} {
-
-	results := make(map[string]map[string]interface{})
-	val := reflect.ValueOf(data)
-
-	// pointer dereferencing
-	if val.Kind() == reflect.Ptr {
-		val = val.Elem()
-	}
-
-	log.Printf("Value: %+v", val)
-
-	switch val.Kind() {
-	case reflect.Struct:
-
-		var sourceRefFieldName string
-		var sourceRefFieldValue interface{}
-
-		var targetRefFieldName string
-		var targetRefFieldValue interface{}
-
-		// iterate over all fields
-		for i := range val.NumField() {
-
-			field := val.Type().Field(i)
-			fieldValue := val.Field(i)
-			fieldName := field.Name
-
-			// find "From" fields
-			if strings.HasPrefix(fieldName, "From") {
-
-				fieldInfo := make(map[string]interface{})
-				fieldInfo["Value"] = fieldValue.Interface()
-
-				// get previous field (if any)
-				if i > 0 {
-
-					sourceRefFieldName = val.Type().Field(i - 1).Name
-					sourceRefFieldValue = val.Field(i - 1).Interface()
-					fieldInfo["SourceRef"] = map[string]interface{}{
-						"FieldName": sourceRefFieldName,
-						"Value":     sourceRefFieldValue,
-					}
-
-					targetRefFieldName = val.Type().Field(i + 1).Name
-					targetRefFieldValue = val.Field(i + 1).Interface()
-					fieldInfo["TargetRef"] = map[string]interface{}{
-						"FieldName": targetRefFieldName,
-						"Value":     targetRefFieldValue,
-					}
-
-				}
-
-				// save field information
-				results[fieldName] = fieldInfo
-
-			}
-
-		}
-	}
-
-	return results
-}
-*/
-
-func collectFromFieldsWithNeighbors(data interface{}) map[string]map[string]interface{} {
-	results := make(map[string]map[string]interface{})
+// collectFromFieldsWithNeighbors collects all fields with their neighbors
+func collectFromFieldsWithNeighbors(data any) map[string]map[string]any {
+	results := make(map[string]map[string]any)
 	val := reflect.ValueOf(data)
 
 	// pointer dereferencing
@@ -155,27 +89,27 @@ func collectFromFieldsWithNeighbors(data interface{}) map[string]map[string]inte
 	}
 
 	var sourceRefFieldName string
-	var sourceRefFieldValue interface{}
+	var sourceRefFieldValue any
 
 	var targetRefFieldName string
-	var targetRefFieldValue interface{}
+	var targetRefFieldValue any
 
 	// iterate over all fields
-	for i := 0; i < val.NumField(); i++ {
+	for i := range val.NumField() {
 		field := val.Type().Field(i)
 		fieldValue := val.Field(i)
 		fieldName := field.Name
 
 		// Fall 1: Feld beginnt mit "From" => Verbindung speichern
 		if strings.HasPrefix(fieldName, "From") {
-			fieldInfo := make(map[string]interface{})
+			fieldInfo := make(map[string]any)
 			fieldInfo["Value"] = fieldValue.Interface()
 
 			// SourceRef bestimmen (vorheriges Feld)
 			if i > 0 {
 				sourceRefFieldName = val.Type().Field(i - 1).Name
 				sourceRefFieldValue = val.Field(i - 1).Interface()
-				fieldInfo["SourceRef"] = map[string]interface{}{
+				fieldInfo["SourceRef"] = map[string]any{
 					"FieldName": sourceRefFieldName,
 					"Value":     sourceRefFieldValue,
 				}
@@ -185,7 +119,7 @@ func collectFromFieldsWithNeighbors(data interface{}) map[string]map[string]inte
 			if i+1 < val.NumField() {
 				targetRefFieldName = val.Type().Field(i + 1).Name
 				targetRefFieldValue = val.Field(i + 1).Interface()
-				fieldInfo["TargetRef"] = map[string]interface{}{
+				fieldInfo["TargetRef"] = map[string]any{
 					"FieldName": targetRefFieldName,
 					"Value":     targetRefFieldValue,
 				}
@@ -197,14 +131,10 @@ func collectFromFieldsWithNeighbors(data interface{}) map[string]map[string]inte
 		// Fall 2: Rekursion auf Nested Structs
 		if fieldValue.Kind() == reflect.Struct {
 			subResults := collectFromFieldsWithNeighbors(fieldValue.Interface())
-			for k, v := range subResults {
-				results[k] = v
-			}
+			maps.Copy(results, subResults)
 		} else if fieldValue.Kind() == reflect.Ptr && !fieldValue.IsNil() && fieldValue.Elem().Kind() == reflect.Struct {
 			subResults := collectFromFieldsWithNeighbors(fieldValue.Elem().Interface())
-			for k, v := range subResults {
-				results[k] = v
-			}
+			maps.Copy(results, subResults)
 		}
 	}
 
