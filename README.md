@@ -10,7 +10,11 @@ gobpmn is an experimental library that makes it possible to reflect structs in G
 
 ## Requirements
 
-* Go >= 1.23.1
+* Go >= 1.24
+
+Optional:
+
+* Saxon >= 12.5 (Requires Java >= 23)
 
 ## Install
 
@@ -19,6 +23,14 @@ gobpmn is an experimental library that makes it possible to reflect structs in G
 
 ```bash
 go run cmd/[dirname]/main.go
+```
+
+1. Install Saxon XSL Transformer (MacOS) with Homebrew
+2. Run the main file in the cmd/saxon/ directory
+
+```bash
+brew install saxon
+go run cmd/saxon/main.go
 ```
 
 ## Wiki
