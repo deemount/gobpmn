@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xmi="http://schema.omg.org/spec/XMI"
+<xsl:stylesheet version="3.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xmi="http://schema.omg.org/spec/XMI/2.5"
 	xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
 	xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
 	xmlns:bpmnxmi="http://www.omg.org/spec/BPMN/20100524/MODEL-XMI"
 	xmlns:bpmndixmi="http://www.omg.org/spec/BPMN/20100524/DI-XMI"
-	xmlns:dixmi="http://www.omg.org/spec/DD/20100524/DI-XMI" xmlns:dcxmi="http://www.omg.org/spec/DD/20100524/DC-XMI">
+	xmlns:dixmi="http://www.omg.org/spec/DD/20100524/DI-XMI" xmlns:dcxmi="http://www.omg.org/spec/DD/20100524/DC-XMI"
+	xmi:version="2.5">
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
 
 	<xsl:template name="concat">
@@ -22,7 +23,7 @@
 	</xsl:template>
 
 	<xsl:template match="/">
-		<xmi:XMI xmi:version="2.0">
+		<xmi:XMI xmi:version="2.5">
 			<xsl:for-each select="bpmn:definitions">
 				<bpmnxmi:Definitions>
 					<xsl:call-template name="DefinitionsTemplate" />
@@ -41,8 +42,11 @@
 			<xsl:attribute name="name"> <xsl:value-of select="@name" /> </xsl:attribute>
 		</xsl:if>
 		<xsl:if test="@implementationRef">
-			<xsl:attribute name="implementationRef"><xsl:call-template
-				name="concat"><xsl:with-param name="nodeset" select="@implementationRef" /></xsl:call-template></xsl:attribute>
+			<xsl:attribute name="implementationRef">
+				<xsl:call-template name="concat">
+					<xsl:with-param name="nodeset" select="@implementationRef" />
+				</xsl:call-template>
+			</xsl:attribute>
 		</xsl:if>
 		<xsl:for-each select="bpmn:operation">
 			<operations xmi:type="bpmnxmi:Operation">
@@ -60,8 +64,11 @@
 			<xsl:attribute name="id"> <xsl:value-of select="@id" /> </xsl:attribute>
 		</xsl:if>
 		<xsl:if test="bpmn:extensionElements">
-			<xsl:attribute name="extensionDefinitions"><xsl:call-template
-				name="concat"><xsl:with-param name="nodeset" select="bpmn:extensionElements" /></xsl:call-template></xsl:attribute>
+			<xsl:attribute name="extensionDefinitions">
+				<xsl:call-template name="concat">
+					<xsl:with-param name="nodeset" select="bpmn:extensionElements" />
+				</xsl:call-template>
+			</xsl:attribute>
 		</xsl:if>
 		<xsl:for-each select="bpmn:extensionValues">
 			<extensionValues xmi:type="bpmnxmi:ExtensionAttributeValue">
@@ -98,8 +105,11 @@
 			<xsl:attribute name="isReference"> <xsl:value-of select="bpmn:isReference" /> </xsl:attribute>
 		</xsl:if>
 		<xsl:if test="bpmn:extensionDefinition">
-			<xsl:attribute name="extensionDefinition"><xsl:call-template
-				name="concat"><xsl:with-param name="nodeset" select="bpmn:extensionDefinition" /></xsl:call-template></xsl:attribute>
+			<xsl:attribute name="extensionDefinition">
+				<xsl:call-template name="concat">
+					<xsl:with-param name="nodeset" select="bpmn:extensionDefinition" />
+				</xsl:call-template>
+			</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
 
@@ -494,7 +504,6 @@
 	<xsl:template name="ProcessTemplate">
 		<!-- Call the CallableElementTemplate first -->
 		<xsl:call-template name="CallableElementTemplate" />
-		
 		<!-- Add all attributes before any child elements -->
 		<xsl:if test="@processType">
 			<xsl:attribute name="processType">
@@ -525,10 +534,8 @@
 				</xsl:call-template>
 			</xsl:attribute>
 		</xsl:if>
-
 		<!-- Now call the FlowElementsContainerTemplate -->
 		<xsl:call-template name="FlowElementsContainerTemplate" />
-
 		<!-- Add child elements -->
 		<xsl:for-each select="bpmn:auditing">
 			<auditing xmi:type="bpmnxmi:Auditing">
