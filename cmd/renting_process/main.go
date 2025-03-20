@@ -72,6 +72,8 @@ type (
 
 func main() {
 
+	log.SetFlags(log.LstdFlags | log.Llongfile)
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 
@@ -80,7 +82,7 @@ func main() {
 	 */
 	rentalProcess, err := common.NewReflectDI[RentingProcess](ctx, RentingProcess{})
 	if err != nil {
-		log.Printf("Error: %s", err)
+		log.Fatalf("\033[0;31mError:\n%s", err)
 		return
 	}
 
