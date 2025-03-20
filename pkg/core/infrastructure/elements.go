@@ -11,7 +11,7 @@ type (
 
 	// Collaboration ...
 	Collaboration struct {
-		XMLName     xml.Name      `xml:"bpmn:collaboration"`
+		XMLName     xml.Name      `xml:"bpmn:collaboration" json:"-"`
 		ID          string        `xml:"id,attr,omitempty" json:"id"`
 		Participant []Participant `xml:"bpmn:participant" json:"participant,omitempty"`
 	}
@@ -53,7 +53,7 @@ type (
 
 	// Participant ...
 	Participant struct {
-		XMLName    xml.Name `xml:"bpmn:participant"`
+		XMLName    xml.Name `xml:"bpmn:participant,omitempty" json:"-"`
 		ID         string   `xml:"id,attr,omitempty" json:"id"`
 		Name       string   `xml:"name,attr,omitempty" json:"name,omitempty"`
 		ProcessRef string   `xml:"processRef,attr,omitempty" json:"processRef,omitempty"`
@@ -112,7 +112,7 @@ type (
 
 	// Process ...
 	Process struct {
-		XMLName                xml.Name                 `xml:"bpmn:process"`
+		XMLName                xml.Name                 `xml:"bpmn:process" json:"-"`
 		ID                     string                   `xml:"id,attr,omitempty" json:"id"`
 		Name                   string                   `xml:"name,attr,omitempty" json:"name,omitempty"`
 		IsExecutable           bool                     `xml:"isExecutable,attr" json:"isExecutable,omitempty"`
@@ -324,7 +324,7 @@ type (
 
 	// LaneSet ...
 	LaneSet struct {
-		XMLName xml.Name `xml:"bpmn:laneSet"`
+		XMLName xml.Name `xml:"bpmn:laneSet" json:"-"`
 		ID      string   `xml:"id,attr,omitempty" json:"id"`
 		Lane    []Lane   `xml:"bpmn:lane,omitempty" json:"lane,omitempty"`
 	}
@@ -366,7 +366,7 @@ type (
 
 	// Lane ...
 	Lane struct {
-		XMLName     xml.Name      `xml:"bpmn:lane"`
+		XMLName     xml.Name      `xml:"bpmn:lane,omitempty" json:"-"`
 		ID          string        `xml:"id,attr,omitempty" json:"id"`
 		FlowNodeRef []FlowNodeRef `xml:"bpmn:flowNodeRef,omitempty" json:"flowNodeRef,omitempty"`
 	}
@@ -426,7 +426,7 @@ type (
 
 	// StartEvent ...
 	StartEvent struct {
-		XMLName        xml.Name   `xml:"bpmn:startEvent"`
+		XMLName        xml.Name   `xml:"bpmn:startEvent,omitempty" json:"-"`
 		ID             string     `xml:"id,attr,omitempty" json:"id"`
 		Name           string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		IsInterrupting bool       `xml:"isInterrupting,attr,omitempty" json:"isInterrupting,omitempty"`
@@ -497,7 +497,7 @@ type (
 
 	// EndEvent ...
 	EndEvent struct {
-		XMLName  xml.Name   `xml:"bpmn:endEvent"`
+		XMLName  xml.Name   `xml:"bpmn:endEvent,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -551,7 +551,7 @@ type (
 
 	// IntermediateCatchEvent ...
 	IntermediateCatchEvent struct {
-		XMLName  xml.Name   `xml:"bpmn:intermediateCatchEvent"`
+		XMLName  xml.Name   `xml:"bpmn:intermediateCatchEvent,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -617,7 +617,7 @@ type (
 
 	// IntermediateThrowEvent ...
 	IntermediateThrowEvent struct {
-		XMLName  xml.Name   `xml:"bpmn:intermediateThrowEvent"`
+		XMLName  xml.Name   `xml:"bpmn:intermediateThrowEvent,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -683,7 +683,7 @@ type (
 
 	// InclusiveGateway ...
 	InclusiveGateway struct {
-		XMLName  xml.Name   `xml:"bpmn:inclusiveGateway"`
+		XMLName  xml.Name   `xml:"bpmn:inclusiveGateway,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -749,7 +749,7 @@ type (
 
 	// ExclusiveGateway ...
 	ExclusiveGateway struct {
-		XMLName  xml.Name   `xml:"bpmn:exclusiveGateway"`
+		XMLName  xml.Name   `xml:"bpmn:exclusiveGateway,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -815,7 +815,7 @@ type (
 
 	// ParallelGateway ...
 	ParallelGateway struct {
-		XMLName  xml.Name   `xml:"bpmn:parallelGateway"`
+		XMLName  xml.Name   `xml:"bpmn:parallelGateway,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -882,7 +882,7 @@ type (
 
 	// Gateway ...
 	Gateway struct {
-		XMLName  xml.Name   `xml:"bpmn:gateway"`
+		XMLName  xml.Name   `xml:"bpmn:gateway,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -948,7 +948,7 @@ type (
 
 	// Task ..
 	Task struct {
-		XMLName  xml.Name   `xml:"bpmn:task"`
+		XMLName  xml.Name   `xml:"bpmn:task,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -1014,7 +1014,7 @@ type (
 
 	// ScriptTask ..
 	ScriptTask struct {
-		XMLName  xml.Name   `xml:"bpmn:scriptTask"`
+		XMLName  xml.Name   `xml:"bpmn:scriptTask,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -1078,7 +1078,7 @@ type (
 
 	// UserTask ...
 	UserTask struct {
-		XMLName  xml.Name   `xml:"bpmn:userTask"`
+		XMLName  xml.Name   `xml:"bpmn:userTask,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -1095,7 +1095,7 @@ type (
 )
 
 // SetID ...
-func (ut *UserTask) SetID(typ string, suffix interface{}) {
+func (ut *UserTask) SetID(typ string, suffix any) {
 	switch typ {
 	case "activity":
 		ut.ID = fmt.Sprintf("Activity_%v", suffix)
@@ -1143,7 +1143,7 @@ type (
 
 	// ServiceTask ...
 	ServiceTask struct {
-		XMLName  xml.Name   `xml:"bpmn:serviceTask"`
+		XMLName  xml.Name   `xml:"bpmn:serviceTask,omitempty" json:"-"`
 		ID       string     `xml:"id,attr,omitempty" json:"id"`
 		Name     string     `xml:"name,attr,omitempty" json:"name,omitempty"`
 		Incoming []Incoming `xml:"bpmn:incoming,omitempty" json:"incoming,omitempty"`
@@ -1160,7 +1160,7 @@ type (
 )
 
 // SetID ...
-func (st *ServiceTask) SetID(typ string, suffix interface{}) {
+func (st *ServiceTask) SetID(typ string, suffix any) {
 	switch typ {
 	case "activity":
 		st.ID = fmt.Sprintf("Activity_%v", suffix)
@@ -1208,7 +1208,7 @@ type (
 
 	// SequenceFlow ...
 	SequenceFlow struct {
-		XMLName   xml.Name `xml:"bpmn:sequenceFlow"`
+		XMLName   xml.Name `xml:"bpmn:sequenceFlow,omitempty" json:"-"`
 		ID        string   `xml:"id,attr,omitempty" json:"id"`
 		Name      string   `xml:"name,attr,omitempty" json:"name,omitempty"`
 		SourceRef string   `xml:"sourceRef,attr" json:"sourceRef,omitempty"`
@@ -1225,7 +1225,7 @@ type (
 )
 
 // SetID ...
-func (sf *SequenceFlow) SetID(typ string, suffix interface{}) {
+func (sf *SequenceFlow) SetID(typ string, suffix any) {
 	switch typ {
 	case "flow":
 		sf.ID = fmt.Sprintf("Flow_%v", suffix)
@@ -1250,7 +1250,7 @@ func (sf SequenceFlow) GetName() *string {
 }
 
 // SetSourceRef ...
-func (sf *SequenceFlow) SetSourceRef(typ string, suffix interface{}) {
+func (sf *SequenceFlow) SetSourceRef(typ string, suffix any) {
 	switch typ {
 	case "activity":
 		sf.SourceRef = fmt.Sprintf("Activity_%s", suffix)
@@ -1269,7 +1269,7 @@ func (sf SequenceFlow) GetSourceRef() *string {
 }
 
 // SetTargetRef ...
-func (sf *SequenceFlow) SetTargetRef(typ string, suffix interface{}) {
+func (sf *SequenceFlow) SetTargetRef(typ string, suffix any) {
 	switch typ {
 	case "activity":
 		sf.TargetRef = fmt.Sprintf("Activity_%s", suffix)
@@ -1293,7 +1293,7 @@ type Incoming struct {
 }
 
 // SetFlow ...
-func (in *Incoming) SetFlow(suffix interface{}) {
+func (in *Incoming) SetFlow(suffix any) {
 	stringArg := getLastPart(suffix.(string)) // Note: using type assertion.
 	in.Flow = fmt.Sprintf("Flow_%s", stringArg)
 }
@@ -1309,7 +1309,7 @@ type Outgoing struct {
 }
 
 // SetFlow ...
-func (out *Outgoing) SetFlow(suffix interface{}) {
+func (out *Outgoing) SetFlow(suffix any) {
 	stringArg := getLastPart(suffix.(string)) // Note: using type assertion.
 	out.Flow = fmt.Sprintf("Flow_%s", stringArg)
 }
