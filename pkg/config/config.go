@@ -20,8 +20,23 @@ type ProcessConfig struct {
 	ProcessExec []bool
 }
 
+// CollaborationConfig holds collaboration-specific configuration
+type CollaborationConfig struct {
+	Type string
+	Hash string
+}
+
 // ParticipantConfig holds participant-specific configuration
 type ParticipantConfig struct {
 	ParticipantName []string
 	ParticipantHash []string
+}
+
+// ParticipantDetails contains participant-specific information
+type ParticipantDetails struct {
+	ID          string
+	Hash        string
+	Name        string
+	ProcessRef  string
+	ProcessHash string
 }
