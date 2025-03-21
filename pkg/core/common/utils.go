@@ -22,8 +22,10 @@ func typ(n string) string {
 		"InclusiveGateway":       "gateway",
 		"ExclusiveGateway":       "gateway",
 		"ParallelGateway":        "gateway",
+		"Gateway":                "gateway",
 		"ScriptTask":             "activity",
 		"UserTask":               "activity",
+		"ServiceTask":            "activity",
 		"Task":                   "activity",
 	}
 
@@ -43,7 +45,7 @@ func typ(n string) string {
 
 // hash returns a hash value of a given string.
 // It uses the FNV-1a algorithm to generate a hash value.
-// The method returns a BPMN struct with the hash value.
+// The method returns a struct, called BPMN, with the hash value.
 // The argument typ is the type of the BPMN element.
 func hash(typ string) (BPMN, error) {
 	n := 8
