@@ -38,9 +38,9 @@ func (q *Quantity) countPool(field string) {
 //   - If the reflection field contains the word "Participant", then count a participant.
 func (q *Quantity) countFieldsInPool(v *ReflectValue) {
 	if v.Pool.Kind() != reflect.Struct {
-		panic("Input data must be a struct")
+		panic("Input data must be a struct") // Note: panic or error handling?
 	}
-	for i := 0; i < v.Pool.NumField(); i++ {
+	for i := range v.Pool.NumField() {
 		field := v.Pool.Type().Field(i)
 		if strings.Contains(field.Name, "Process") {
 			v.ProcessName = append(v.ProcessName, extractPrefixBeforeProcess(field.Name))
@@ -65,10 +65,10 @@ func (q *Quantity) countFieldsInInstance(v *ReflectValue) error {
 		if q.Process > 1 {
 			if err := q.countMultipleProcessElements(v, processIdx, processName); err != nil {
 				log.Printf("Error processing multiple processes: %v", err)
-				continue
+				continue // skip the process and continue with the next one; silent error handling
 			}
 		} else {
-			q.countSingleProcessElements(v, processIdx)
+			q.countStandaloneProcessElements(v, processIdx)
 		}
 	}
 	return nil
@@ -79,15 +79,15 @@ func (q *Quantity) countFieldsInInstance(v *ReflectValue) error {
 func (q *Quantity) countMultipleProcessElements(v *ReflectValue, processIdx int, processName string) error {
 	field := instanceFieldName(v, processName)
 	if !field.IsValid() {
-		return fmt.Errorf("invalid field for process %s", processName)
+		return NewError(fmt.Errorf("invalid field for process %s", processName))
 	}
 	return q.countFieldElements(field, processIdx)
 }
 
 // countFieldElements counts elements in a reflected struct field.
 func (q *Quantity) countFieldElements(field reflect.Value, processIdx int) error {
-	for j := 0; j < field.NumField(); j++ {
-		fieldName := field.Type().Field(j).Name
+	for i := range field.NumField() {
+		fieldName := field.Type().Field(i).Name
 		// handle sequence flows first
 		if strings.HasPrefix(fieldName, "From") {
 			q.Elements[processIdx]["SequenceFlow"]++
@@ -98,10 +98,10 @@ func (q *Quantity) countFieldElements(field reflect.Value, processIdx int) error
 	return nil
 }
 
-// countSingleProcessElements handles counting for a single process
-func (q *Quantity) countSingleProcessElements(v *ReflectValue, processIdx int) {
-	for j := 0; j < len(v.Fields); j++ {
-		fieldName := v.Fields[j].Name
+// countStandaloneProcessElements handles counting for a single process
+func (q *Quantity) countStandaloneProcessElements(v *ReflectValue, processIdx int) {
+	for i := range v.Fields {
+		fieldName := v.Fields[i].Name
 		// handle sequence flows first
 		if strings.HasPrefix(fieldName, "From") {
 			q.Elements[processIdx]["SequenceFlow"]++
@@ -128,6 +128,7 @@ func (q *Quantity) matchAndCountElement(processIdx int, fieldName string) {
 	}
 }
 
+// hasParticipant checks if a process has a participant.
 func (q *Quantity) hasParticipant() bool {
 	return q.Participant > 0 && (q.Process == q.Participant)
 }
