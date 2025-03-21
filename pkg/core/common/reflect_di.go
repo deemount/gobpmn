@@ -24,12 +24,12 @@ func NewReflectDI[T any](ctx context.Context, model T) (result T, err error) {
 
 	reflectVal, err := NewReflectValue(model)
 	if err != nil {
-		return *new(T), fmt.Errorf("failed to create reflect value")
+		return *new(T), NewError(fmt.Errorf("failed to create reflect value"))
 	}
 	defer reflectVal.Cleanup()
 
 	if err := reflectVal.initialize(); err != nil {
-		return *new(T), fmt.Errorf("failed to initialize reflect value: %w", err)
+		return *new(T), NewError(fmt.Errorf("failed to initialize reflect value: %w", err))
 	}
 
 	// create a new mapping
@@ -44,23 +44,23 @@ func NewReflectDI[T any](ctx context.Context, model T) (result T, err error) {
 
 	// handle model type
 	if err := reflectVal.handleModelType(quantity, mapping); err != nil {
-		return *new(T), fmt.Errorf("failed to handle model type: %v", err)
+		return *new(T), NewError(fmt.Errorf("failed to handle model type: %v", err))
 	}
 
 	// reflect the processes in the BPMN model by given quantity.
 	// v.Process[] is a slice of reflect.Value, which represents the processes in the BPMN model.
 	if err := reflectVal.reflectProcess(quantity); err != nil {
-		return *new(T), fmt.Errorf("failed to reflect processes: %v", err)
+		return *new(T), NewError(fmt.Errorf("failed to reflect processes: %v", err))
 	}
 
-	// Get the instance of the ReflectValue.
+	// get the instance of the ReflectValue.
 	instance := reflectVal.instance(mapping)
 	typed, ok := instance.(T)
 	if !ok {
-		return *new(T), fmt.Errorf("invalid type conversion")
+		return *new(T), NewError(fmt.Errorf("invalid type conversion"))
 	}
 
-	// Finalize the model construction
+	// finalize the model construction
 	if err := reflectVal.finalizeModel(ctx, quantity); err != nil {
 		return *new(T), NewError(fmt.Errorf("failed to finalize model:\n%v", err))
 	}
