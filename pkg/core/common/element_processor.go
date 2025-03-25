@@ -167,36 +167,7 @@ func (ep *ElementProcessor[M]) ProcessStandalone(ctx context.Context) error {
 }
 
 // processElement processes elements for a standalone process
-/*func (ep *ElementProcessor[M]) processElement() error {
-
-	config := &ProcessingConfig{
-		indices: initializeIndices(),
-		counts:  ep.quantity.Elements[0],
-	}
-
-	// NOTE: the first field is DEF, which is a call on a interface value.
-	//       The second field is mostly a bool value, then the Fields with the BPMN types
-	//       are following. The first field of the bpmn types is a process itself.
-	//       These fields described above shouldn't processed here.
-	//	     Write an condition to skip these fields, if given.
-	for fieldIdx := 3; fieldIdx < ep.value.InstanceNumField; fieldIdx++ {
-
-		field := ep.value.Instance.Field(fieldIdx)
-		fieldType := ep.value.Instance.Type().Field(fieldIdx)
-
-		if field.Kind() == reflect.Bool {
-			continue // NOTE: placeholder for future implementation of configuration handling
-		}
-
-		if err := ep.processEntry(field, fieldType, fieldIdx, config); err != nil {
-			return NewError(fmt.Errorf("failed to process field %s:\n%w", fieldType.Name, err))
-		}
-
-	}
-
-	return nil
-}*/
-
+// The Pos field is used to sort the elements and process them in order.
 func (ep *ElementProcessor[M]) processElement() error {
 	config := &ProcessingConfig{
 		indices: initializeIndices(),
@@ -217,7 +188,7 @@ func (ep *ElementProcessor[M]) processElement() error {
 			fieldType := ep.value.Instance.Type().Field(fieldIdx)
 
 			if field.Kind() == reflect.Bool {
-				continue
+				continue // NOTE: placeholder for future implementation of configuration handling
 			}
 
 			if err := ep.processEntry(field, fieldType, fieldIdx, config); err != nil {
@@ -227,7 +198,7 @@ func (ep *ElementProcessor[M]) processElement() error {
 
 	case map[string]any:
 
-		// sortedEntry sorts the keys based on the `Pos` field
+		// sortedEntry sorts the keys based on the Pos field
 		type sortedEntry struct {
 			Key  string
 			Pos  int
@@ -260,7 +231,7 @@ func (ep *ElementProcessor[M]) processElement() error {
 			return sortedEntries[i].Pos < sortedEntries[j].Pos
 		})
 
-		fieldIdx := 3
+		fieldIdx := 3 // start from 3, because the first fields are DEF and bool values and the process itself
 		for _, entry := range sortedEntries {
 			fieldType := reflect.StructField{Name: entry.Key} // faking structfield for map
 
@@ -287,7 +258,6 @@ func (ep *ElementProcessor[M]) processEntry(field reflect.Value, fieldType refle
 
 	switch field.Kind() {
 	case reflect.Struct:
-		log.Printf("Field: %+v", field)
 		typ = field.FieldByName("Type").String()
 		hash = field.FieldByName("Hash").String()
 		hashBefore = ep.value.Instance.Field(fieldIdx - 1).FieldByName("Hash").String()
@@ -296,24 +266,27 @@ func (ep *ElementProcessor[M]) processEntry(field reflect.Value, fieldType refle
 	case reflect.Interface:
 
 		field = field.Elem()
-		log.Printf("Field: %+v", field)
 
-		typValue := field.MapIndex(reflect.ValueOf("Type"))
+		/*typValue := field.MapIndex(reflect.ValueOf("Type"))
 		if typValue.IsValid() {
 			typ = typValue.Interface().(string)
-		}
+		}*/
+		typ = field.FieldByName("Type").String()
 
-		hashValue := field.MapIndex(reflect.ValueOf("Hash"))
+		/*hashValue := field.MapIndex(reflect.ValueOf("Hash"))
 		if hashValue.IsValid() {
 			hash = hashValue.Interface().(string)
-		}
+		}*/
+		hash = field.FieldByName("Hash").String()
 
-		// previousField() für HashBefore
+		// previousField for hashBefore
 		prevKey := ep.previousField(fieldIdx)
+
 		if prevKey != "" {
 			prevField := ep.value.Instance.MapIndex(reflect.ValueOf(prevKey))
 			if prevField.IsValid() {
-				hashBeforeValue := prevField.MapIndex(reflect.ValueOf("Hash"))
+				hashBeforeValue := prevField.MapIndex(reflect.ValueOf("Hash")) // BUG: MapIndex is not working as expected
+				log.Fatalf("hashBeforeValue: %v", hashBeforeValue)             // BUG: hashBeforeValue is not working as expected
 				if hashBeforeValue.IsValid() {
 					hashBefore = hashBeforeValue.Interface().(string)
 				}
