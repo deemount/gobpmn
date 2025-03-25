@@ -11,41 +11,71 @@ import (
 )
 
 // ReflectValue represents the core structure for BPMN reflection
-type ReflectValue struct {
-	config.ModelConfig
+type ReflectValue[M []reflect.StructField | map[string]any] struct {
+	config.ModelConfig[M]
 	config.ProcessConfig
 	config.ParticipantConfig
 	FlowNeighbors    map[string]map[string]any
 	InstanceNumField int
 }
 
-// newReflectValue ...
-func NewReflectValue(model any) (*ReflectValue, error) {
-	if model == nil {
-		return nil, fmt.Errorf("model cannot be nil")
+// NewReflectValue ...
+func NewReflectValue[T any, M []reflect.StructField | map[string]any](model T) (*ReflectValue[M], error) {
+	if any(model) == nil {
+		return nil, NewError(fmt.Errorf("model cannot be nil"))
 	}
 
-	// reflect the type of the struct
+	// reflect the type of the struct (typeOf) and
 	typeOf := reflect.TypeOf(model)
 
-	return &ReflectValue{
-		ModelConfig: config.ModelConfig{
+	var visibleFields M
+
+	switch typeOf.Kind() {
+	case reflect.Struct:
+		// struct -> use reflect.VisibleFields()
+		fields := reflect.VisibleFields(typeOf)
+		visibleFields = any(fields).(M)
+
+	case reflect.Map:
+		// map -> extract the keys and create map[string]any
+		mapValue := reflect.ValueOf(model)
+		mapFields := make(map[string]any)
+
+		for _, key := range mapValue.MapKeys() {
+			strKey := key.String() // Map-Keys as strings
+			switch strKey {
+			case "Def":
+				mapFields[strKey] = mapValue.MapIndex(key).Interface().(any)
+			case "IsExecutable":
+				mapFields[strKey] = mapValue.MapIndex(key).Interface().(bool)
+			default:
+				mapFields[strKey] = mapValue.MapIndex(key).Interface().(BPMN)
+			}
+		}
+
+		visibleFields = any(mapFields).(M) // type assertion
+	}
+
+	return &ReflectValue[M]{
+		ModelConfig: config.ModelConfig[M]{
 			Name:     extractPrefixBeforeProcess(typeOf.Name()),
-			Fields:   reflect.VisibleFields(typeOf),
-			Instance: reflect.New(typeOf).Elem(), // create a new object of the struct
+			Type:     typeOf,
+			Wrap:     reflect.ValueOf(model),
+			Fields:   visibleFields,              // struct fields or map keys
+			Instance: reflect.New(typeOf).Elem(), // create a new object of the struct/map, which is a copy of the model
 		},
 	}, nil
 
 }
 
-// initialize sets up the initial configuration for the ReflectValue
-func (v *ReflectValue) initialize() error {
+// Setup sets up the initial configuration for the ReflectValue
+func (v *ReflectValue[M]) Setup() error {
 	if err := v.setupInstanceFields(); err != nil {
-		return fmt.Errorf("failed to setup target fields: %w", err)
+		return NewError(fmt.Errorf("failed to setup target fields:\n%w", err))
 	}
 
 	if err := v.setupDefinition(); err != nil {
-		return fmt.Errorf("failed to setup definition: %w", err)
+		return NewError(fmt.Errorf("failed to setup definition:\n%w", err))
 	}
 
 	return nil
@@ -53,12 +83,24 @@ func (v *ReflectValue) initialize() error {
 }
 
 // setupInstanceFields initializes the target fields
-func (v *ReflectValue) setupInstanceFields() error {
-	v.InstanceNumField = v.Instance.NumField()
+func (v *ReflectValue[M]) setupInstanceFields() error {
+	switch any(v.Fields).(type) {
+	case []reflect.StructField:
+		// set the number of fields, if M is a struct
+		v.InstanceNumField = v.Instance.NumField()
+		v.Def = instanceFieldName(v, "Def")
+		if !v.Def.IsValid() {
+			return NewError(fmt.Errorf("definition field is not valid"))
+		}
 
-	v.Def = instanceFieldName(v, "Def")
-	if !v.Def.IsValid() {
-		return fmt.Errorf("definition field is not valid")
+	case map[string]any:
+		// there's no NumField(), if M is a map
+		// set 0 or the number of keys
+		v.InstanceNumField = len(any(v.Fields).(map[string]any))
+		v.Def = instanceFieldName(v, "Def")
+		if !v.Def.IsValid() {
+			return NewError(fmt.Errorf("definition field is not valid"))
+		}
 	}
 
 	return nil
@@ -66,7 +108,7 @@ func (v *ReflectValue) setupInstanceFields() error {
 }
 
 // setupDefinition configures the definition field
-func (v *ReflectValue) setupDefinition() error {
+func (v *ReflectValue[M]) setupDefinition() error {
 	if !v.Def.CanSet() {
 		return nil
 	}
@@ -80,24 +122,24 @@ func (v *ReflectValue) setupDefinition() error {
 }
 
 // handleModelType determines and handles the model type (pool or single)
-func (v *ReflectValue) handleModelType(q *Quantity, m *Mapping) error {
+func (v *ReflectValue[M]) HandleModelType(q *Quantity[M], m *Mapping[M]) error {
 	if len(m.Anonym) > 0 {
 		return v.handlePool(q, m)
 	}
-	return v.handleSingle(q, m)
+	return v.handleStandalone(q, m)
 }
 
 // handlePool assigns the field Pool to v.Pool.
 // It walks through the anonymous fields in Mapping and checks
 // if the field contains the word "Pool".
 // A pool can only be set once in the BPMN model.
-func (v *ReflectValue) handlePool(q *Quantity, m *Mapping) error {
+func (v *ReflectValue[M]) handlePool(q *Quantity[M], m *Mapping[M]) error {
 	for _, field := range m.Anonym {
 		if strings.Contains(field, "Pool") {
 			v.Pool = instanceFieldName(v, field)
 			q.countFieldsInPool(v)
 			if !v.Pool.IsValid() {
-				return fmt.Errorf("invalid pool field: %s", field)
+				return NewError(fmt.Errorf("invalid pool field: %s", field))
 			}
 			q.countFieldsInInstance(v)
 			q.Pool++
@@ -107,11 +149,12 @@ func (v *ReflectValue) handlePool(q *Quantity, m *Mapping) error {
 	return nil
 }
 
-// handleSingle appends the process name to v.ProcessName.
-// The process name is extracted in newReflectValue, which is
+// handleStandalone appends the process name to v.ProcessName.
+// The process name is extracted in NewReflectValue, which is
 // the name of the data structure.
-// A single process is a process without a pool.
-func (v *ReflectValue) handleSingle(q *Quantity, m *Mapping) error {
+//
+// NOTE: A standalone process is a process without a pool.
+func (v *ReflectValue[M]) handleStandalone(q *Quantity[M], m *Mapping[M]) error {
 	for _, bpmnType := range m.BPMNType {
 		if strings.Contains(bpmnType, "Process") {
 			v.ProcessName = append(v.ProcessName, v.Name)
@@ -123,12 +166,14 @@ func (v *ReflectValue) handleSingle(q *Quantity, m *Mapping) error {
 	return fmt.Errorf("no process type found in model")
 }
 
-// instance holds the data structure of the BPMN model in the ReflectValue.
+// Instnc holds the data structure of the BPMN model in the ReflectValue.
 // the return value is then as a return value in the initial function.
+//
+// NOTE:
 // It is used as a blueprint for the BPMN model, which is then reflected into v.Def.
 // It distribute hash values and set the isExecutable field to true.
 // It uses the type declaration in the data structure to generate the hash value.
-func (v *ReflectValue) instance(m *Mapping) any {
+func (v *ReflectValue[M]) Instnc(m *Mapping[M]) any {
 	if len(m.Anonym) > 0 {
 		for _, anonymField := range m.Anonym {
 			v.anonym(anonymField)
@@ -137,36 +182,45 @@ func (v *ReflectValue) instance(m *Mapping) any {
 		v.nonAnonym(m)
 	}
 
-	// NOTE: FlowNeighbors is implemented for testing purposes.
-	// It is unclear, where it should be used.
-	// FlowNeighbors are used in the element_handler.go file,
-	// for the FlowHandler Properties.
+	// NOTE: FlowNeighbors is implemented for testing purposes?!
+	//       It is unclear, where it should be used (maybe here).
+	//       FlowNeighbors are used in the element_handler.go file,
+	//       for the FlowHandler Properties.
+	//       It works for multiple and/or standalone models.
 	v.FlowNeighbors = collectFromFieldsWithNeighbors(v.Instance.Interface())
 
 	return v.Instance.Interface()
 }
 
-// reflectProcess reflects the processes in the BPMN model.
+// ReflectProcess reflects the processes in the BPMN model.
 // v.Process[index of process] is a slice of reflect.Value, which represents the processes in the BPMN model.
-// v.Process[0] is the first process in the model and it's used also in a single process arrangement.
-func (v *ReflectValue) reflectProcess(q *Quantity) error {
+// v.Process[0] is the first process in the model and it's used also in a standalone process arrangement.
+func (v *ReflectValue[M]) ReflectProcess(q *Quantity[M]) error {
 	v.Process = make([]reflect.Value, q.Process)
-	method := v.Def.MethodByName("SetProcess")
+
+	// extract the struct, if v.Def is a struct
+	def := v.Def
+	if def.Kind() == reflect.Interface || def.Kind() == reflect.Ptr {
+		def = reflect.ValueOf(def.Interface()) // get the real value by any
+	}
+
+	method := def.MethodByName("SetProcess")
 	if !method.IsValid() {
 		return NewError(fmt.Errorf("SetProcess method not found"))
 	}
+
 	results := method.Call([]reflect.Value{reflect.ValueOf(q.Process)})
 	if len(results) > 0 && !results[0].IsNil() {
 		return NewError(fmt.Errorf("SetProcess call failed"))
 	}
-	for processIdx := 0; processIdx < q.Process; processIdx++ {
-		v.Process[processIdx] = v.Def.MethodByName("GetProcess").Call([]reflect.Value{reflect.ValueOf(processIdx)})[0]
+	for processIdx := range q.Process {
+		v.Process[processIdx] = def.MethodByName("GetProcess").Call([]reflect.Value{reflect.ValueOf(processIdx)})[0]
 	}
 	return nil
 }
 
 // processingWithContext processes the BPMN model with a cancellable context.
-func (v *ReflectValue) processingWithContext(ctx context.Context, q *Quantity) error {
+func (v *ReflectValue[M]) processingWithContext(ctx context.Context, q *Quantity[M]) error {
 	errChan := make(chan error, 1)
 	done := make(chan struct{})
 	// Run the processing in a goroutine
@@ -188,11 +242,11 @@ func (v *ReflectValue) processingWithContext(ctx context.Context, q *Quantity) e
 	}
 }
 
-// process sets the maps and process parameters in the BPMN model.
+// processing sets the maps and process parameters in the BPMN model.
 // If the pool is greater than 0, then process multiple processes.
 // It considers the pool as a collaboration.
 // It creates a cancellable context for the processor.
-func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
+func (v *ReflectValue[M]) processing(ctx context.Context, q *Quantity[M]) error {
 	// initialize the slices
 	v.ProcessExec = make([]bool, q.Process)
 	v.ProcessType = make([]string, q.Process)
@@ -202,7 +256,7 @@ func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
 	// create a new element processor
 	processor, err := NewElementProcessor(v, q)
 	if err != nil {
-		return NewError(fmt.Errorf("failed to create element processor: %w", err))
+		return NewError(fmt.Errorf("failed to create element processor:\n%w", err))
 	}
 
 	// create a cancellable context
@@ -214,7 +268,7 @@ func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
 
 		err := v.configurePool()
 		if err != nil {
-			return NewError(fmt.Errorf("error configuring pool: %v", err))
+			return NewError(fmt.Errorf("error configuring pool:\n%v", err))
 		}
 		v.multipleProcess(q)
 		if err := processor.ProcessElementsWithContext(processorCtx); err != nil {
@@ -224,7 +278,7 @@ func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
 	} else {
 
 		if err := v.configureStandalone(); err != nil {
-			return NewError(fmt.Errorf("error processing standalone: %v", err))
+			return NewError(fmt.Errorf("error processing standalone:\n%v", err))
 		}
 		v.standalone(0, q)
 		if err := processor.ProcessStandalone(processorCtx); err != nil {
@@ -235,14 +289,14 @@ func (v *ReflectValue) processing(ctx context.Context, q *Quantity) error {
 	return nil
 }
 
-// finalizeModel completes the model construction
-func (v *ReflectValue) finalizeModel(ctx context.Context, q *Quantity) error {
+// FinalizeModel completes the model construction
+func (v *ReflectValue[M]) FinalizeModel(ctx context.Context, q *Quantity[M]) error {
 	if err := v.processingWithContext(ctx, q); err != nil {
 		return NewError(fmt.Errorf("failed to process:\n%w", err))
 	}
 
 	if err := v.collaboration(q); err != nil {
-		return NewError(fmt.Errorf("failed to setup collaboration:\n %w", err))
+		return NewError(fmt.Errorf("failed to setup collaboration:\n%w", err))
 	}
 
 	return nil
@@ -250,16 +304,22 @@ func (v *ReflectValue) finalizeModel(ctx context.Context, q *Quantity) error {
 }
 
 // nonAnonym sets the IsExecutable field to true and populates the reflection fields with hash values.
-// Note: the method is used in a standalone process.
-func (v *ReflectValue) nonAnonym(m *Mapping) {
-	v.setIsExecutableByField(m.Config)
-	v.populateReflectionFields(m.BPMNType)
+// NOTE: the method is used in a standalone process.
+func (v *ReflectValue[M]) nonAnonym(m *Mapping[M]) {
+	switch v.Instance.Kind() {
+	case reflect.Struct:
+		v.setIsExecutableByField(m.Config)
+		v.populateReflectionFields(m.BPMNType)
+	case reflect.Map:
+		v.populateReflectionFields(m.BPMNType)
+	}
 }
 
 // setIsExecutableByField configures the process executable status.
 // It sets the IsExecutable field to true.
-// Note: maybe redudant; look at method config.
-func (v *ReflectValue) setIsExecutableByField(fields map[int]string) {
+// NOTE: maybe redudant; look at method config.
+// NOTE: this method makes no really sense, if M is map[string]any. IsExecutable can be set directly in the map.
+func (v *ReflectValue[M]) setIsExecutableByField(fields map[int]string) {
 	for _, field := range fields {
 		instanceFieldName(v, field).SetBool(true)
 		break
@@ -268,7 +328,7 @@ func (v *ReflectValue) setIsExecutableByField(fields map[int]string) {
 
 // setIsExecutableByMethod configures the process executable status.
 // It calls SetIsExecutable method on the process.
-func (v *ReflectValue) setIsExecutableByMethod(process reflect.Value, isExecutable bool) error {
+func (v *ReflectValue[M]) setIsExecutableByMethod(process reflect.Value, isExecutable bool) error {
 	method := process.MethodByName("SetIsExecutable")
 	if !method.IsValid() {
 		return NewError(fmt.Errorf("SetIsExecutable method not found"))
@@ -277,35 +337,66 @@ func (v *ReflectValue) setIsExecutableByMethod(process reflect.Value, isExecutab
 	return nil
 }
 
-// populateReflectionFields populates the reflection fields with hash values.
-// Note: this method is used in a single process and in usage in the method "nonAnonym".
-func (v *ReflectValue) populateReflectionFields(reflectionFields map[int]string) {
-	for _, field := range reflectionFields {
-		f := instanceFieldName(v, field)
-		fName, _ := v.Instance.Type().FieldByName(field)
-		typ := typ(fName.Name)
-		hash, _ := hash(typ)
-		f.Set(reflect.ValueOf(hash))
+func (v *ReflectValue[M]) populateReflectionFields(reflectionFields map[int]string) {
+	switch any(v.Fields).(type) {
+	case []reflect.StructField:
+		for _, field := range reflectionFields {
+			f := instanceFieldName(v, field)
+			if !f.IsValid() {
+				fmt.Printf("populateReflectionFields: field %s not found in struct\n", field)
+				continue
+			}
+			fName, _ := v.Instance.Type().FieldByName(field)
+			typ := typ(fName.Name)
+			hash, _ := inject(typ, 0)
+			f.Set(reflect.ValueOf(hash))
+		}
+
+	case map[string]any:
+		v.Instance = v.Wrap
+		for _, field := range reflectionFields {
+			f := instanceFieldName(v, field)
+			if !f.IsValid() {
+				fmt.Printf("populateReflectionFields: key %s not found in map\n", field)
+				continue
+			}
+			typ := typ(field)
+			hash, _ := inject(typ, 0)
+			v.Instance.SetMapIndex(reflect.ValueOf(field), reflect.ValueOf(hash))
+		}
 	}
 }
 
 // setProcessIdentifiers sets the process ID and name
-func (v *ReflectValue) setProcessIdentifiers(process reflect.Value, name string, field reflect.Value) error {
-	hash := field.FieldByName("Hash").String()
+func (v *ReflectValue[M]) setProcessIdentifiers(process reflect.Value, name string, field reflect.Value) error {
 
-	// set process ID
+	var hash string
+
+	switch field.Kind() {
+	case reflect.Struct:
+		hash = field.FieldByName("Hash").String()
+
+	case reflect.Map:
+		hashValue := field.MapIndex(reflect.ValueOf("Hash"))
+		if !hashValue.IsValid() {
+			return NewError(fmt.Errorf("hash field missing in map for process %s", name))
+		}
+		hash = hashValue.Interface().(string)
+	}
+
+	// set process id
 	if err := callMethod(process, "SetID",
 		[]reflect.Value{
 			reflect.ValueOf(strings.ToLower(name)),
 			reflect.ValueOf(hash),
 		}); err != nil {
-		return NewError(fmt.Errorf("failed to set process ID: %w", err))
+		return NewError(fmt.Errorf("failed to set process ID:\n%w", err))
 	}
 
 	// set process name
 	if err := callMethod(process, "SetName",
 		[]reflect.Value{reflect.ValueOf(name)}); err != nil {
-		return NewError(fmt.Errorf("failed to set process name: %w", err))
+		return NewError(fmt.Errorf("failed to set process name:\n%w", err))
 	}
 
 	return nil
@@ -313,51 +404,74 @@ func (v *ReflectValue) setProcessIdentifiers(process reflect.Value, name string,
 
 // standalone configures and initializes a single BPMN process.
 // It sets up the process properties and applies the required BPMN elements.
-// Note: this method is used for a single process and in usage in the method "process".
-func (v *ReflectValue) standalone(processIdx int, q *Quantity) error {
+// NOTE: this method is used for a single process and in usage in the method "process".
+func (v *ReflectValue[M]) standalone(processIdx int, q *Quantity[M]) error {
 	if err := v.configureStandalone(); err != nil {
-		return NewError(fmt.Errorf("failed to configure process: %w", err))
+		return NewError(fmt.Errorf("failed to configure process:\n%w", err))
 	}
 
 	if err := v.applyProcessMethods(processIdx, q); err != nil {
-		return NewError(fmt.Errorf("failed to apply process methods: %w", err))
+		return NewError(fmt.Errorf("failed to apply process methods:\n%w", err))
 	}
 
 	return nil
-
 }
 
 // configureStandalone configures a single BPMN process.
-func (v *ReflectValue) configureStandalone() error {
+func (v *ReflectValue[M]) configureStandalone() error {
 	if v.Process == nil || len(v.Process) == 0 {
 		return fmt.Errorf("invalid process: Process slice is nil or empty")
 	}
 
 	process := v.Process[0]
 
-	for i := range v.InstanceNumField {
-		field := v.Instance.Field(i)
-		fieldType := v.Instance.Type().Field(i)
+	switch any(v.Fields).(type) {
+	case []reflect.StructField:
+		// processing for structs
+		for i := range v.InstanceNumField {
+			field := v.Instance.Field(i)
+			fieldType := v.Instance.Type().Field(i)
 
-		switch {
-		case strings.Contains(fieldType.Name, "IsExecutable"):
-			if err := v.setIsExecutableByMethod(process, field.Bool()); err != nil {
-				return err
-			}
-		case fieldType.Name == "Process":
-			if err := v.setProcessIdentifiers(process, fieldType.Name, field); err != nil {
-				return err
+			switch {
+			case strings.Contains(fieldType.Name, "IsExecutable"):
+				if err := v.setIsExecutableByMethod(process, field.Bool()); err != nil {
+					return err
+				}
+			case fieldType.Name == "Process":
+				if err := v.setProcessIdentifiers(process, fieldType.Name, field); err != nil {
+					return err
+				}
 			}
 		}
 
+	case map[string]any:
+		// processing for maps
+		for key, value := range any(v.Fields).(map[string]any) {
+			field := v.Instance.MapIndex(reflect.ValueOf(key))
+
+			switch key {
+			case "IsExecutable":
+				boolValue, ok := value.(bool)
+				if !ok {
+					return fmt.Errorf("invalid type for IsExecutable, expected bool")
+				}
+				if err := v.setIsExecutableByMethod(process, boolValue); err != nil {
+					return err
+				}
+
+			case "Process":
+				if err := v.setProcessIdentifiers(process, key, field); err != nil {
+					return err
+				}
+			}
+		}
 	}
 
 	return nil
-
 }
 
 // applyProcessMethods applies all BPMN element methods to the process
-func (v *ReflectValue) applyProcessMethods(processIdx int, q *Quantity) error {
+func (v *ReflectValue[M]) applyProcessMethods(processIdx int, q *Quantity[M]) error {
 	methods := GetProcessMethods(processIdx, q)
 	for _, methodCall := range methods {
 		if methodCall.Arg <= 0 {
@@ -365,7 +479,7 @@ func (v *ReflectValue) applyProcessMethods(processIdx int, q *Quantity) error {
 		}
 		if err := callMethod(v.Process[processIdx], methodCall.Name,
 			[]reflect.Value{reflect.ValueOf(methodCall.Arg)}); err != nil {
-			return NewError(fmt.Errorf("failed to apply method %s: %w", methodCall.Name, err))
+			return NewError(fmt.Errorf("failed to apply method %s:\n%w", methodCall.Name, err))
 		}
 	}
 	return nil
@@ -376,7 +490,7 @@ func (v *ReflectValue) applyProcessMethods(processIdx int, q *Quantity) error {
  */
 
 // anonym sets the fields in the BPMN model.
-func (v *ReflectValue) anonym(field string) {
+func (v *ReflectValue[M]) anonym(field string) {
 	targetField := instanceFieldName(v, field) // must be a struct, which represents a process
 	targetNum := targetField.NumField()        // get the number of fields in the struct
 
@@ -389,6 +503,10 @@ func (v *ReflectValue) anonym(field string) {
 			v.config(name, idx, targetField)
 
 		case reflect.Struct:
+
+			// NOTE: need to have the option, which process is it.
+			// I need it for the first part of the bpmn injection:
+			// e.g.: StartEvent_HashValue -> Event_HashValue.
 			v.currentHash(idx, targetField)
 			v.nextHash(idx, targetField)
 		}
@@ -400,28 +518,32 @@ func (v *ReflectValue) anonym(field string) {
 // config sets the IsExecutable field to true if the name contains "IsExecutable" and index is 0.
 // I called it config, because it is a configuration of the field.
 // Note: the method is used in a multiple process and it's a third option call for the field IsExecutable.
-func (v *ReflectValue) config(name string, idx int, target reflect.Value) {
+func (v *ReflectValue[M]) config(name string, idx int, target reflect.Value) {
 	if strings.Contains(name, "IsExecutable") && idx == 0 {
 		target.Field(0).SetBool(true)
 	}
 }
 
 // currentHash sets the hash value of the current field if it is empty.
-func (v *ReflectValue) currentHash(idx int, target reflect.Value) {
+// It sets the values for typ and hash in the blueprint v.Instance.
+// NOTE:
+// The variable typ is the type of the BPMN element,
+// which is token by the name of the field. NOT THE BEST PRACTICE.
+func (v *ReflectValue[M]) currentHash(idx int, target reflect.Value) {
 	h := fmt.Sprintf("%s", target.Field(idx).FieldByName("Hash"))
 	if h == "" {
 		typ := typ(target.Type().Field(idx).Name)
-		hash, _ := hash(typ)
+		hash, _ := inject(typ, idx)
 		target.Field(idx).Set(reflect.ValueOf(hash))
 	}
 }
 
 // nextHash sets the hash value of the next field.
 // It sets the values for typ and hash in the blueprint v.Instance.
-func (v *ReflectValue) nextHash(idx int, target reflect.Value) {
+func (v *ReflectValue[M]) nextHash(idx int, target reflect.Value) {
 	if idx+1 < target.NumField() {
 		typ := typ(target.Type().Field(idx + 1).Name)
-		hash, _ := hash(typ)
+		hash, _ := inject(typ, idx)
 		target.Field(idx + 1).Set(reflect.ValueOf(hash))
 	}
 }
@@ -429,7 +551,7 @@ func (v *ReflectValue) nextHash(idx int, target reflect.Value) {
 // CollaborationConfig holds configuration for collaboration setup
 
 // collaboration sets up the BPMN collaboration and its participants
-func (v *ReflectValue) collaboration(q *Quantity) error {
+func (v *ReflectValue[M]) collaboration(q *Quantity[M]) error {
 	if !q.hasParticipant() {
 		return nil
 	}
@@ -452,7 +574,7 @@ func (v *ReflectValue) collaboration(q *Quantity) error {
 }
 
 // setupCollaboration initializes the collaboration
-func (v *ReflectValue) setupCollaboration() error {
+func (v *ReflectValue[M]) setupCollaboration() error {
 	method := v.Def.MethodByName("SetCollaboration")
 	if !method.IsValid() {
 		return NewError(fmt.Errorf("SetCollaboration method not found"))
@@ -465,7 +587,7 @@ func (v *ReflectValue) setupCollaboration() error {
 }
 
 // getCollaboration retrieves the collaboration object
-func (v *ReflectValue) getCollaboration() (reflect.Value, error) {
+func (v *ReflectValue[M]) getCollaboration() (reflect.Value, error) {
 	method := v.Def.MethodByName("GetCollaboration")
 	if !method.IsValid() {
 		return reflect.Value{}, NewError(fmt.Errorf("GetCollaboration method not found"))
@@ -481,7 +603,7 @@ func (v *ReflectValue) getCollaboration() (reflect.Value, error) {
 }
 
 // configureCollaboration sets up the collaboration with its participants
-func (v *ReflectValue) configureCollaboration(collaboration reflect.Value, participantCount int) error {
+func (v *ReflectValue[M]) configureCollaboration(collaboration reflect.Value, participantCount int) error {
 
 	// get the hash value of the collaboration to add it to the ID
 	collab := v.Pool.FieldByName("Collaboration").Interface().(BPMN)
@@ -499,7 +621,7 @@ func (v *ReflectValue) configureCollaboration(collaboration reflect.Value, parti
 }
 
 // setCollaborationProperties configures basic collaboration properties
-func (v *ReflectValue) setCollaborationProperties(collaboration reflect.Value, config config.CollaborationConfig, participantCount int) error {
+func (v *ReflectValue[M]) setCollaborationProperties(collaboration reflect.Value, config config.CollaborationConfig, participantCount int) error {
 
 	if err := callMethod(collaboration, "SetID",
 		[]reflect.Value{
@@ -520,7 +642,7 @@ func (v *ReflectValue) setCollaborationProperties(collaboration reflect.Value, c
 }
 
 // setupParticipants configures all participants in the collaboration
-func (v *ReflectValue) setupParticipants(collaboration reflect.Value, participantCount int) error {
+func (v *ReflectValue[M]) setupParticipants(collaboration reflect.Value, participantCount int) error {
 
 	for idx := range participantCount {
 
@@ -548,7 +670,7 @@ func (v *ReflectValue) setupParticipants(collaboration reflect.Value, participan
 }
 
 // getParticipant retrieves a specific participant by index
-func (v *ReflectValue) getParticipant(collaboration reflect.Value, index int) (reflect.Value, error) {
+func (v *ReflectValue[M]) getParticipant(collaboration reflect.Value, index int) (reflect.Value, error) {
 	result := collaboration.MethodByName("GetParticipant").Call([]reflect.Value{reflect.ValueOf(index)})
 	if len(result) == 0 {
 		return reflect.Value{}, NewError(fmt.Errorf("failed to get participant at index %d", index))
@@ -557,7 +679,7 @@ func (v *ReflectValue) getParticipant(collaboration reflect.Value, index int) (r
 }
 
 // configureParticipant sets up an individual participant
-func (v *ReflectValue) configureParticipant(participant reflect.Value, details config.ParticipantDetails) error {
+func (v *ReflectValue[M]) configureParticipant(participant reflect.Value, details config.ParticipantDetails) error {
 	if !participant.IsValid() {
 		return NewError(fmt.Errorf("invalid participant value"))
 	}
@@ -578,13 +700,13 @@ func (v *ReflectValue) configureParticipant(participant reflect.Value, details c
 }
 
 // multipleProcess processes multiple processes in the BPMN model.
-func (v *ReflectValue) multipleProcess(q *Quantity) error {
+func (v *ReflectValue[M]) multipleProcess(q *Quantity[M]) error {
 
 	q.RLock()
 	defer q.RUnlock()
 
 	if err := v.configurePool(); err != nil {
-		return fmt.Errorf("failed to configure multiple processes: %w", err)
+		return fmt.Errorf("failed to configure multiple processes:\n%w", err)
 	}
 
 	for processIdx := range q.Process {
@@ -598,7 +720,7 @@ func (v *ReflectValue) multipleProcess(q *Quantity) error {
 
 		if processIdx == 0 {
 			if err := v.setIsExecutableByMethod(process, isExecutable); err != nil {
-				return NewError(fmt.Errorf("failed to set process executable: %w", err))
+				return NewError(fmt.Errorf("failed to set process executable:\n%w", err))
 			}
 		}
 
@@ -632,7 +754,7 @@ func (v *ReflectValue) multipleProcess(q *Quantity) error {
 }
 
 // configurePool configures multiple BPMN processes, which are in pool data structure
-func (v *ReflectValue) configurePool() error {
+func (v *ReflectValue[M]) configurePool() error {
 	if v.Pool.NumField() == 0 {
 		return NewError(fmt.Errorf("invalid pool: Pool is empty"))
 	}
@@ -667,9 +789,59 @@ func (v *ReflectValue) configurePool() error {
 
 }
 
-// cleanup clears the ReflectValue slices
+// instanceFieldName returns the field value by the name in v.Instance.
+func instanceFieldName[M []reflect.StructField | map[string]any](v *ReflectValue[M], name string) reflect.Value {
+	instance := v.Instance
+	switch instance.Kind() {
+	case reflect.Struct:
+		// use FieldByName, if M is a struct
+		value := instance.FieldByName(name)
+		if !value.IsValid() {
+			fmt.Printf("instanceFieldName: field %s not found in struct instance. Available fields: %v\n", name, getFieldNames(instance))
+			return reflect.Value{}
+		}
+		return value
+
+	case reflect.Map:
+		// NOTE: I needed the wrap value, because the instance is "just" a copy of the model.
+		// I'm not sure, if it's the best practice.
+		wrapped := v.Wrap
+		// check if the key exists, if M is a map. Use MapIndex, if M is a map
+		mapValue := wrapped.MapIndex(reflect.ValueOf(name))
+		if !mapValue.IsValid() {
+			fmt.Printf("instanceFieldName: key %s not found in map instance. Available keys: %v\n", name, getMapKeys(wrapped))
+			return reflect.Value{}
+		}
+		return mapValue
+
+	default:
+		fmt.Printf("instanceFieldName: unsupported type %s for field %s\n", instance.Kind(), name)
+		return reflect.Value{}
+	}
+
+}
+
+// getFieldNames returns the names of all fields in a reflect.Value instance
+func getFieldNames(instance reflect.Value) []string {
+	var fieldNames []string
+	for i := range instance.NumField() {
+		fieldNames = append(fieldNames, instance.Type().Field(i).Name)
+	}
+	return fieldNames
+}
+
+// getMapKeys returns the keys of a map
+func getMapKeys(instance reflect.Value) []string {
+	var keys []string
+	for _, key := range instance.MapKeys() {
+		keys = append(keys, key.String())
+	}
+	return keys
+}
+
+// Cleanup clears the ReflectValue slices
 // Note: memory management
-func (v *ReflectValue) Cleanup() {
+func (v *ReflectValue[M]) Cleanup() {
 	// Clear slices
 	v.Process = nil
 	v.ProcessName = nil

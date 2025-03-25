@@ -7,13 +7,14 @@ import (
 	"log"
 	_ "net/http/pprof"
 	"reflect"
+	"sort"
 	"strings"
 	"sync"
 )
 
 // Quantity holds all the quantities of the BPMN elements
 // in the BPMN model. It is used to count the number of elements
-type Quantity struct {
+type Quantity[M []reflect.StructField | map[string]any] struct {
 	sync.RWMutex
 	Elements    map[int]map[processElement]int
 	Pool        int
@@ -22,7 +23,7 @@ type Quantity struct {
 }
 
 // countPool counts a pool in the process model.
-func (q *Quantity) countPool(field string) {
+func (q *Quantity[M]) countPool(field string) {
 	if strings.Contains(field, "Pool") {
 		q.Pool++
 	}
@@ -36,7 +37,7 @@ func (q *Quantity) countPool(field string) {
 //   - All fields of the pool interface MUST be type of struct
 //   - If the reflection field contains the word "Process", then count a process.
 //   - If the reflection field contains the word "Participant", then count a participant.
-func (q *Quantity) countFieldsInPool(v *ReflectValue) {
+func (q *Quantity[M]) countFieldsInPool(v *ReflectValue[M]) {
 	if v.Pool.Kind() != reflect.Struct {
 		panic("Input data must be a struct") // Note: panic or error handling?
 	}
@@ -54,7 +55,7 @@ func (q *Quantity) countFieldsInPool(v *ReflectValue) {
 }
 
 // countFieldsInInstance counts the fields in a process and stores them in a map.
-func (q *Quantity) countFieldsInInstance(v *ReflectValue) error {
+func (q *Quantity[M]) countFieldsInInstance(v *ReflectValue[M]) error {
 	if q.Elements == nil {
 		q.Elements = make(map[int]map[processElement]int)
 	}
@@ -76,7 +77,7 @@ func (q *Quantity) countFieldsInInstance(v *ReflectValue) error {
 
 // countMultipleProcessElements handles counting for elements in multiple processes.
 // - It counts the elements in v.Instance.
-func (q *Quantity) countMultipleProcessElements(v *ReflectValue, processIdx int, processName string) error {
+func (q *Quantity[M]) countMultipleProcessElements(v *ReflectValue[M], processIdx int, processName string) error {
 	field := instanceFieldName(v, processName)
 	if !field.IsValid() {
 		return NewError(fmt.Errorf("invalid field for process %s", processName))
@@ -85,7 +86,7 @@ func (q *Quantity) countMultipleProcessElements(v *ReflectValue, processIdx int,
 }
 
 // countFieldElements counts elements in a reflected struct field.
-func (q *Quantity) countFieldElements(field reflect.Value, processIdx int) error {
+func (q *Quantity[M]) countFieldElements(field reflect.Value, processIdx int) error {
 	for i := range field.NumField() {
 		fieldName := field.Type().Field(i).Name
 		// handle sequence flows first
@@ -99,9 +100,14 @@ func (q *Quantity) countFieldElements(field reflect.Value, processIdx int) error
 }
 
 // countStandaloneProcessElements handles counting for a single process
-func (q *Quantity) countStandaloneProcessElements(v *ReflectValue, processIdx int) {
-	for i := range v.Fields {
-		fieldName := v.Fields[i].Name
+/*func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], processIdx int) {
+	fields, ok := any(v.Fields).([]reflect.StructField)
+	if !ok {
+		return
+	}
+
+	for i := range fields {
+		fieldName := fields[i].Name
 		// handle sequence flows first
 		if strings.HasPrefix(fieldName, "From") {
 			q.Elements[processIdx]["SequenceFlow"]++
@@ -109,11 +115,61 @@ func (q *Quantity) countStandaloneProcessElements(v *ReflectValue, processIdx in
 		}
 		q.matchAndCountElement(processIdx, fieldName)
 	}
+}*/
+
+func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], processIdx int) {
+	switch fields := any(v.Fields).(type) {
+	case []reflect.StructField:
+		// run directly through the struct fields
+		for _, field := range fields {
+			fieldName := field.Name
+			// count sequence flows first
+			if strings.HasPrefix(fieldName, "From") {
+				q.Elements[processIdx]["SequenceFlow"]++
+				continue
+			}
+			q.matchAndCountElement(processIdx, fieldName)
+		}
+
+	case map[string]any:
+		// collect map fields and sort them by Pos
+		type sortedEntry struct {
+			Key string
+			Pos int
+		}
+
+		var sortedEntries []sortedEntry
+
+		for key, value := range fields {
+			if bpmnValue, ok := value.(BPMN); ok {
+				// save BPMN elements by Pos
+				sortedEntries = append(sortedEntries, sortedEntry{Key: key, Pos: bpmnValue.Pos})
+			} else {
+				// save directly, if it's not a BPMN element
+				q.matchAndCountElement(processIdx, key)
+			}
+		}
+
+		// sort by pos
+		sort.Slice(sortedEntries, func(i, j int) bool {
+			return sortedEntries[i].Pos < sortedEntries[j].Pos
+		})
+
+		// Sortierte Elemente zählen
+		for _, entry := range sortedEntries {
+			// count sequence flows first
+			if strings.HasPrefix(entry.Key, "From") {
+				q.Elements[processIdx]["SequenceFlow"]++
+				continue
+			}
+			q.matchAndCountElement(processIdx, entry.Key)
+		}
+	}
 }
 
 // matchAndCountElement matches and counts a single element using the two-pass method.
 // NOTE: seperated exact and partial matching
-func (q *Quantity) matchAndCountElement(processIdx int, fieldName string) {
+func (q *Quantity[M]) matchAndCountElement(processIdx int, fieldName string) {
 	for _, matcher := range ElementTypeList {
 		if matcher.exact && fieldName == matcher.name {
 			q.Elements[processIdx][matcher.element]++
@@ -129,6 +185,6 @@ func (q *Quantity) matchAndCountElement(processIdx int, fieldName string) {
 }
 
 // hasParticipant checks if a process has a participant.
-func (q *Quantity) hasParticipant() bool {
+func (q *Quantity[M]) hasParticipant() bool {
 	return q.Participant > 0 && (q.Process == q.Participant)
 }

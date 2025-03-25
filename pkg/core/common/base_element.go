@@ -6,12 +6,12 @@ import (
 )
 
 // BaseElement provides common functionality for element handlers
-type BaseElement struct {
-	processor *ElementProcessor
+type BaseElement[M []reflect.StructField | map[string]any] struct {
+	processor *ElementProcessor[M]
 }
 
-// Implement PropertySetter interface at the base level
-func (b *BaseElement) SetProperties(element reflect.Value, info FieldInfo) error {
+// SetProperties sets common properties for BPMN elements, like ID and Name.
+func (b *BaseElement[M]) SetProperties(element reflect.Value, info FieldInfo) error {
 	// Common property setting logic
 	if err := b.setCommonProperties(element, info); err != nil {
 		return fmt.Errorf("failed to set common properties: %w", err)
@@ -19,8 +19,8 @@ func (b *BaseElement) SetProperties(element reflect.Value, info FieldInfo) error
 	return nil
 }
 
-// setElementProperties sets common properties for BPMN elements.
-func (h *BaseElement) setCommonProperties(el reflect.Value, info FieldInfo) error {
+// setCommonProperties sets common properties for BPMN elements.
+func (h *BaseElement[M]) setCommonProperties(el reflect.Value, info FieldInfo) error {
 
 	if err := callMethod(el, "SetID", []reflect.Value{
 		reflect.ValueOf(info.typ),
@@ -37,8 +37,4 @@ func (h *BaseElement) setCommonProperties(el reflect.Value, info FieldInfo) erro
 
 	return nil
 
-}
-
-func (h *BaseElement) Cleanup() {
-	// Cleanup resources
 }

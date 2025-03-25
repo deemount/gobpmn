@@ -19,7 +19,7 @@ type (
 
 	// Interface ...
 	DefinitionsRepository interface {
-		SetID(typ string, suffix interface{})
+		SetID(typ string, suffix any)
 		GetID() *string
 		SetBpmn()
 		SetDC()
@@ -58,7 +58,7 @@ func NewDefinitions() DefinitionsRepository {
 }
 
 // SetID ...
-func (d *Definitions) SetID(typ string, suffix interface{}) {
+func (d *Definitions) SetID(typ string, suffix any) {
 	switch typ {
 	case "definitions":
 		d.ID = fmt.Sprintf("Definitions_%v", suffix)

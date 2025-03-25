@@ -3,9 +3,11 @@ package config
 import "reflect"
 
 // ModelConfig holds the configuration for model generation
-type ModelConfig struct {
+type ModelConfig[T any] struct {
 	Name     string
-	Fields   []reflect.StructField
+	Type     reflect.Type
+	Fields   T
+	Wrap     reflect.Value
 	Instance reflect.Value
 	Def      reflect.Value
 	Pool     reflect.Value

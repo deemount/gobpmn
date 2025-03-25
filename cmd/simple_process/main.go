@@ -9,9 +9,11 @@ import (
 	"log"
 	_ "net/http/pprof"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/deemount/gobpmn/internal/parser"
+	"github.com/deemount/gobpmn/pkg/core"
 	"github.com/deemount/gobpmn/pkg/core/common"
 	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
@@ -63,7 +65,7 @@ func main() {
 	/*
 	 * SimpleProcess
 	 */
-	simpleProcess, err := common.NewReflectDI[SimpleProcess](ctx, SimpleProcess{})
+	simpleProcess, err := core.NewReflectDI[SimpleProcess, []reflect.StructField](ctx, SimpleProcess{})
 	if err != nil {
 		errorLogger.Fatalf("\033[0;31m:\n%s", err)
 		return

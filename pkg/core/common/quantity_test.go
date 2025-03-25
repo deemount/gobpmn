@@ -7,7 +7,7 @@ import (
 
 // TestQuantityInitialization verifies that a new Quantity struct is properly initialized
 func TestQuantityInitialization(t *testing.T) {
-	q := Quantity{}
+	q := Quantity[[]reflect.StructField]{}
 
 	if q.Pool != 0 {
 		t.Errorf("Expected Pool to be 0, got %d", q.Pool)
@@ -40,7 +40,7 @@ func TestCountPool(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			q := Quantity{}
+			q := Quantity[[]reflect.StructField]{}
 			q.countPool(test.field)
 
 			if q.Pool != test.expected {
@@ -61,9 +61,9 @@ type MockPool struct {
 
 // TestCountFieldsInPool tests the countFieldsInPool method
 func TestCountFieldsInPool(t *testing.T) {
-	q := Quantity{}
+	q := Quantity[[]reflect.StructField]{}
 	mockPool := MockPool{}
-	v := &ReflectValue{}
+	v := &ReflectValue[[]reflect.StructField]{}
 
 	v.Pool = reflect.ValueOf(mockPool)
 	v.ParticipantName = []string{}
@@ -92,9 +92,9 @@ func TestCountFieldsInPool(t *testing.T) {
 
 // TestCountFieldsInPoolPanics tests that countFieldsInPool panics when given a non-struct
 func TestCountFieldsInPoolPanics(t *testing.T) {
-	q := Quantity{}
+	q := Quantity[[]reflect.StructField]{}
 	mockInt := 5
-	v := &ReflectValue{}
+	v := &ReflectValue[[]reflect.StructField]{}
 
 	v.Pool = reflect.ValueOf(mockInt)
 
@@ -116,7 +116,7 @@ type MockInstance struct {
 }
 
 // Helper function to create a mocked ReflectValue for single process testing
-func createSingleProcessReflectValue() *ReflectValue {
+func createSingleProcessReflectValue() *ReflectValue[[]reflect.StructField] {
 	instance := MockInstance{}
 
 	// Create Fields slice similar to what would be in a real ReflectValue
@@ -126,7 +126,7 @@ func createSingleProcessReflectValue() *ReflectValue {
 		fields[i] = instanceType.Field(i)
 	}
 
-	v := &ReflectValue{}
+	v := &ReflectValue[[]reflect.StructField]{}
 	v.Process = []reflect.Value{reflect.ValueOf(instance)}
 	v.ProcessName = []string{"TestProcess"}
 	v.Fields = fields
@@ -144,7 +144,7 @@ type elementMatcher struct {
 
 // TestCountFieldsInInstanceSingleProcess tests counting elements in a single process
 func TestCountFieldsInInstanceSingleProcess(t *testing.T) {
-	q := Quantity{}
+	q := Quantity[[]reflect.StructField]{}
 	v := createSingleProcessReflectValue()
 
 	err := q.countFieldsInInstance(v)
@@ -193,7 +193,7 @@ func TestHasParticipant(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			q := Quantity{
+			q := Quantity[[]reflect.StructField]{
 				Participant: test.participant,
 				Process:     test.process,
 			}
@@ -237,7 +237,7 @@ func TestMatchAndCountElement(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			q := Quantity{
+			q := Quantity[[]reflect.StructField]{
 				Elements: make(map[int]map[processElement]int),
 			}
 			q.Elements[0] = make(map[processElement]int)

@@ -9,9 +9,11 @@ import (
 	"log"
 	_ "net/http/pprof"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/deemount/gobpmn/internal/parser"
+	"github.com/deemount/gobpmn/pkg/core"
 	"github.com/deemount/gobpmn/pkg/core/common"
 	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
@@ -84,7 +86,7 @@ func main() {
 	/*
 	 * RentalProcess
 	 */
-	rentalProcess, err := common.NewReflectDI[RentingProcess](ctx, RentingProcess{})
+	rentalProcess, err := core.NewReflectDI[RentingProcess, []reflect.StructField](ctx, RentingProcess{})
 	if err != nil {
 		errorLogger.Fatalf("\033[0;31m:\n%s", err)
 		return

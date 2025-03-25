@@ -162,3 +162,18 @@ func matchElementType(name string) processElement {
 
 	return processElement("")
 }
+
+// ElementType represents the type of BPMN element
+type ElementType string
+
+func (et ElementType) String() string {
+	return string(et)
+}
+
+const (
+	TypeStartEvent ElementType = "startevent"
+	TypeEvent      ElementType = "event"
+	TypeFlow       ElementType = "flow"
+	TypeGateway    ElementType = "gateway"
+	TypeActivity   ElementType = "activity"
+)

@@ -32,19 +32,23 @@ func extractFieldInfo(field reflect.Value, idx int) FieldInfo {
 		element: matchElementType(field.Type().Field(idx).Name),
 	}
 
-	// Safely get the type if the field has one
+	// safely get the type if the field has one
 	typeField := field.Field(idx).FieldByName("Type")
 	if typeField.IsValid() {
 		info.typ = typeField.String()
 	}
 
-	// Safely get the hash if the field has one
+	// safely get the hash if the field has one
 	hashField := field.Field(idx).FieldByName("Hash")
 	if hashField.IsValid() {
-		info.hash = hashField.String()
+		if info.element == "StartEvent" && typeField.String() == "startevent" {
+			info.hash = "1"
+		} else {
+			info.hash = hashField.String()
+		}
 	}
 
-	// Safely get the hashBefore only if idx > 0
+	// safely get the hashBefore only if idx > 0
 	if idx > 0 {
 		prevField := field.Field(idx - 1).FieldByName("Hash")
 		if prevField.IsValid() {
@@ -52,7 +56,7 @@ func extractFieldInfo(field reflect.Value, idx int) FieldInfo {
 		}
 	}
 
-	// Get the next hash
+	// get the next hash
 	info.nextHash = getNextHash(field, idx, field.NumField())
 
 	return info
@@ -83,7 +87,7 @@ func collectFromFieldsWithNeighbors(data any) map[string]map[string]any {
 		val = val.Elem()
 	}
 
-	// Falls val kein Struct ist, abbrechen
+	// cancel, if val is not a struct
 	if val.Kind() != reflect.Struct {
 		return results
 	}
@@ -100,12 +104,12 @@ func collectFromFieldsWithNeighbors(data any) map[string]map[string]any {
 		fieldValue := val.Field(i)
 		fieldName := field.Name
 
-		// Fall 1: Feld beginnt mit "From" => Verbindung speichern
+		// case 1: field starts with "From" => save the connection
 		if strings.HasPrefix(fieldName, "From") {
 			fieldInfo := make(map[string]any)
 			fieldInfo["Value"] = fieldValue.Interface()
 
-			// SourceRef bestimmen (vorheriges Feld)
+			// get SourceRef bestimmen (previous field)
 			if i > 0 {
 				sourceRefFieldName = val.Type().Field(i - 1).Name
 				sourceRefFieldValue = val.Field(i - 1).Interface()
@@ -115,7 +119,7 @@ func collectFromFieldsWithNeighbors(data any) map[string]map[string]any {
 				}
 			}
 
-			// TargetRef bestimmen (nächstes Feld, aber mit Sicherheit prüfen)
+			// get TargetRef (next field, if available)
 			if i+1 < val.NumField() {
 				targetRefFieldName = val.Type().Field(i + 1).Name
 				targetRefFieldValue = val.Field(i + 1).Interface()
@@ -128,7 +132,7 @@ func collectFromFieldsWithNeighbors(data any) map[string]map[string]any {
 			results[fieldName] = fieldInfo
 		}
 
-		// Fall 2: Rekursion auf Nested Structs
+		// case 2: recoursion on nested Structs
 		if fieldValue.Kind() == reflect.Struct {
 			subResults := collectFromFieldsWithNeighbors(fieldValue.Interface())
 			maps.Copy(results, subResults)

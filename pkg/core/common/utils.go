@@ -43,11 +43,11 @@ func typ(n string) string {
 	return ""
 }
 
-// hash returns a hash value of a given string.
+// inject returns a hash value of a given string.
 // It uses the FNV-1a algorithm to generate a hash value.
 // The method returns a struct, called BPMN, with the hash value.
 // The argument typ is the type of the BPMN element.
-func hash(typ string) (BPMN, error) {
+func inject(typ string, idx int) (BPMN, error) {
 	n := 8
 	b := make([]byte, n)
 	c := fnv.New32a()
@@ -59,9 +59,26 @@ func hash(typ string) (BPMN, error) {
 		return BPMN{}, err
 	}
 	defer c.Reset()
+
+	var h string
+
+	/*
+	 * Note: the following code block is not clear. The first if statement is not clear.
+	 * The if statement checks if the index is 0 and the type is "startevent".
+	 * If the condition is true, the hash value is set to "1".
+	 * The else block sets the hash value to the string representation of the checksum.
+	 *
+	 * This specific handling is a mock up from the Camunda Modeler 5.2.0.
+	 */
+	if idx == 0 && typ == "startevent" {
+		h = fmt.Sprintf("%x", 1)
+	} else {
+		h = fmt.Sprintf("%x", string(c.Sum(nil)))
+	}
+
 	result := BPMN{
 		Type: typ, // Note: needs to be reconsidered. Is this the right method, to put the typ value into the Type field?
-		Hash: fmt.Sprintf("%x", string(c.Sum(nil))),
+		Hash: h,
 	}
 	return result, nil
 }
