@@ -155,7 +155,7 @@ func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], process
 			return sortedEntries[i].Pos < sortedEntries[j].Pos
 		})
 
-		// Sortierte Elemente zählen
+		// count elements after sorting
 		for _, entry := range sortedEntries {
 			// count sequence flows first
 			if strings.HasPrefix(entry.Key, "From") {
