@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"sort"
 	"strings"
 
 	"github.com/deemount/gobpmn/pkg/config"
@@ -19,7 +20,8 @@ type ReflectValue[M []reflect.StructField | map[string]any] struct {
 	InstanceNumField int
 }
 
-// NewReflectValue ...
+// NewReflectValue is the first call in the core.ReflectDI function.
+// It creates a new instance of the ReflectValue and saves it in ModelConfig.
 func NewReflectValue[T any, M []reflect.StructField | map[string]any](model T) (*ReflectValue[M], error) {
 	if any(model) == nil {
 		return nil, NewError(fmt.Errorf("model cannot be nil"))
@@ -27,42 +29,73 @@ func NewReflectValue[T any, M []reflect.StructField | map[string]any](model T) (
 
 	// reflect the type of the struct (typeOf) and
 	typeOf := reflect.TypeOf(model)
+	valueOf := reflect.ValueOf(model)
 
 	var visibleFields M
+	var instance reflect.Value
+
+	converter := &Converter{}
 
 	switch typeOf.Kind() {
 	case reflect.Struct:
 		// struct -> use reflect.VisibleFields()
 		fields := reflect.VisibleFields(typeOf)
 		visibleFields = any(fields).(M)
+		instance = reflect.New(typeOf).Elem()
 
 	case reflect.Map:
 		// map -> extract the keys and create map[string]any
-		mapValue := reflect.ValueOf(model)
-		mapFields := make(map[string]any)
+		fields := make(map[string]any)
 
-		for _, key := range mapValue.MapKeys() {
-			strKey := key.String() // Map-Keys as strings
-			switch strKey {
-			case "Def":
-				mapFields[strKey] = mapValue.MapIndex(key).Interface().(any)
-			case "IsExecutable":
-				mapFields[strKey] = mapValue.MapIndex(key).Interface().(bool)
-			default:
-				mapFields[strKey] = mapValue.MapIndex(key).Interface().(BPMN)
+		var sortedKeys []string
+
+		// Temporäre Struktur zum Sortieren der BPMN-Elemente nach Pos
+		bpmnElements := make([]struct {
+			Key string
+			Pos int
+		}, 0)
+
+		for _, key := range valueOf.MapKeys() {
+			strKey := key.String()
+			value := valueOf.MapIndex(key).Interface()
+
+			switch v := value.(type) {
+			case BPMN:
+				bpmnElements = append(bpmnElements, struct {
+					Key string
+					Pos int
+				}{strKey, v.Pos})
+				fields[strKey] = v
+			case bool, any:
+				fields[strKey] = v
 			}
 		}
 
-		visibleFields = any(mapFields).(M) // type assertion
+		// Sortieren der BPMN-Elemente nach Pos
+		sort.SliceStable(bpmnElements, func(i, j int) bool {
+			return bpmnElements[i].Pos < bpmnElements[j].Pos
+		})
+
+		// Sichtbare Reihenfolge für visibleFields herstellen
+		for _, elem := range bpmnElements {
+			sortedKeys = append(sortedKeys, elem.Key)
+		}
+		visibleFields = any(fields).(M) // type assertion
+
+		result, err := converter.ToStruct(model)
+		if err != nil {
+			return nil, NewError(fmt.Errorf("Error 1: %v\n", err))
+		}
+		instance = reflect.New(reflect.TypeOf(result.Value.Interface())).Elem()
 	}
 
 	return &ReflectValue[M]{
 		ModelConfig: config.ModelConfig[M]{
 			Name:     extractPrefixBeforeProcess(typeOf.Name()),
 			Type:     typeOf,
-			Wrap:     reflect.ValueOf(model),
-			Fields:   visibleFields,              // struct fields or map keys
-			Instance: reflect.New(typeOf).Elem(), // create a new object of the struct/map, which is a copy of the model
+			Wrap:     valueOf,
+			Fields:   visibleFields, // struct fields or map keys
+			Instance: instance,      // create a new object of the struct/map, which is a copy of the model
 		},
 	}, nil
 
@@ -83,28 +116,16 @@ func (v *ReflectValue[M]) Setup() error {
 }
 
 // setupInstanceFields initializes the target fields
+// NOTE: Actually, it setups the number of fields of the model
+// and the definition field.
 func (v *ReflectValue[M]) setupInstanceFields() error {
-	switch any(v.Fields).(type) {
-	case []reflect.StructField:
-		// set the number of fields, if M is a struct
-		v.InstanceNumField = v.Instance.NumField()
-		v.Def = instanceFieldName(v, "Def")
-		if !v.Def.IsValid() {
-			return NewError(fmt.Errorf("definition field is not valid"))
-		}
-
-	case map[string]any:
-		// there's no NumField(), if M is a map
-		// set 0 or the number of keys
-		v.InstanceNumField = len(any(v.Fields).(map[string]any))
-		v.Def = instanceFieldName(v, "Def")
-		if !v.Def.IsValid() {
-			return NewError(fmt.Errorf("definition field is not valid"))
-		}
+	// set the number of fields, if M is a struct
+	v.InstanceNumField = v.Instance.NumField()
+	v.Def = instanceFieldName(v, "Def")
+	if !v.Def.IsValid() {
+		return NewError(fmt.Errorf("definition field is not valid"))
 	}
-
 	return nil
-
 }
 
 // setupDefinition configures the definition field
@@ -182,14 +203,51 @@ func (v *ReflectValue[M]) Instnc(m *Mapping[M]) any {
 		v.nonAnonym(m)
 	}
 
-	// NOTE: FlowNeighbors is implemented for testing purposes?!
-	//       It is unclear, where it should be used (maybe here).
-	//       FlowNeighbors are used in the element_handler.go file,
-	//       for the FlowHandler Properties.
-	//       It works for multiple and/or standalone models.
+	// NOTE:
+	// FlowNeighbors are used in the element_handler.go file,
+	// for the FlowHandler Properties.
+	// It works for multiple and/or standalone models.
 	v.FlowNeighbors = collectFromFieldsWithNeighbors(v.Instance.Interface())
 
 	return v.Instance.Interface()
+}
+
+// nonAnonym sets the IsExecutable field to true and populates the reflection fields with hash values.
+// NOTE: the method is used in a standalone process.
+func (v *ReflectValue[M]) nonAnonym(m *Mapping[M]) {
+	switch v.Instance.Kind() {
+	case reflect.Struct:
+		v.setIsExecutableByField(m.Config)
+		v.populateReflectionFields(m.BPMNType)
+	case reflect.Map:
+		v.populateReflectionFields(m.BPMNType)
+	}
+}
+
+// anonym sets the fields in the BPMN model.
+func (v *ReflectValue[M]) anonym(field string) {
+	targetField := instanceFieldName(v, field) // must be a struct, which represents a process
+	targetNum := targetField.NumField()        // get the number of fields in the struct
+
+	for idx := range targetNum {
+		name := targetField.Type().Field(idx).Name
+
+		switch targetField.Field(idx).Kind() {
+
+		case reflect.Bool:
+			v.config(name, idx, targetField)
+
+		case reflect.Struct:
+
+			// NOTE: need to have the option, which process is it.
+			// I need it for the first part of the bpmn injection:
+			// e.g.: StartEvent_HashValue -> Event_HashValue.
+			v.currentHash(idx, targetField)
+			v.nextHash(idx, targetField)
+		}
+
+	}
+
 }
 
 // ReflectProcess reflects the processes in the BPMN model.
@@ -303,18 +361,6 @@ func (v *ReflectValue[M]) FinalizeModel(ctx context.Context, q *Quantity[M]) err
 
 }
 
-// nonAnonym sets the IsExecutable field to true and populates the reflection fields with hash values.
-// NOTE: the method is used in a standalone process.
-func (v *ReflectValue[M]) nonAnonym(m *Mapping[M]) {
-	switch v.Instance.Kind() {
-	case reflect.Struct:
-		v.setIsExecutableByField(m.Config)
-		v.populateReflectionFields(m.BPMNType)
-	case reflect.Map:
-		v.populateReflectionFields(m.BPMNType)
-	}
-}
-
 // setIsExecutableByField configures the process executable status.
 // It sets the IsExecutable field to true.
 // NOTE: maybe redudant; look at method config.
@@ -337,33 +383,20 @@ func (v *ReflectValue[M]) setIsExecutableByMethod(process reflect.Value, isExecu
 	return nil
 }
 
+// populateReflectionFields populates the reflection fields with hash values.
+// It sets the hash values for the BPMN elements in the model.
+// NOTE: the method is used in a standalone process.
 func (v *ReflectValue[M]) populateReflectionFields(reflectionFields map[int]string) {
-	switch any(v.Fields).(type) {
-	case []reflect.StructField:
-		for _, field := range reflectionFields {
-			f := instanceFieldName(v, field)
-			if !f.IsValid() {
-				fmt.Printf("populateReflectionFields: field %s not found in struct\n", field)
-				continue
-			}
-			fName, _ := v.Instance.Type().FieldByName(field)
-			typ := typ(fName.Name)
-			hash, _ := inject(typ, 0)
-			f.Set(reflect.ValueOf(hash))
+	for _, field := range reflectionFields {
+		f := instanceFieldName(v, field)
+		if !f.IsValid() {
+			fmt.Printf("populateReflectionFields: field %s not found in struct\n", field)
+			continue
 		}
-
-	case map[string]any:
-		v.Instance = v.Wrap
-		for _, field := range reflectionFields {
-			f := instanceFieldName(v, field)
-			if !f.IsValid() {
-				fmt.Printf("populateReflectionFields: key %s not found in map\n", field)
-				continue
-			}
-			typ := typ(field)
-			hash, _ := inject(typ, 0)
-			v.Instance.SetMapIndex(reflect.ValueOf(field), reflect.ValueOf(hash))
-		}
+		fName, _ := v.Instance.Type().FieldByName(field)
+		typ := typ(fName.Name)
+		hash, _ := inject(typ, 0)
+		f.Set(reflect.ValueOf(hash))
 	}
 }
 
@@ -372,17 +405,7 @@ func (v *ReflectValue[M]) setProcessIdentifiers(process reflect.Value, name stri
 
 	var hash string
 
-	switch field.Kind() {
-	case reflect.Struct:
-		hash = field.FieldByName("Hash").String()
-
-	case reflect.Map:
-		hashValue := field.MapIndex(reflect.ValueOf("Hash"))
-		if !hashValue.IsValid() {
-			return NewError(fmt.Errorf("hash field missing in map for process %s", name))
-		}
-		hash = hashValue.Interface().(string)
-	}
+	hash = field.FieldByName("Hash").String()
 
 	// set process id
 	if err := callMethod(process, "SetID",
@@ -425,44 +448,19 @@ func (v *ReflectValue[M]) configureStandalone() error {
 
 	process := v.Process[0]
 
-	switch any(v.Fields).(type) {
-	case []reflect.StructField:
-		// processing for structs
-		for i := range v.InstanceNumField {
-			field := v.Instance.Field(i)
-			fieldType := v.Instance.Type().Field(i)
+	// processing for structs
+	for i := range v.InstanceNumField {
+		field := v.Instance.Field(i)
+		fieldType := v.Instance.Type().Field(i)
 
-			switch {
-			case strings.Contains(fieldType.Name, "IsExecutable"):
-				if err := v.setIsExecutableByMethod(process, field.Bool()); err != nil {
-					return err
-				}
-			case fieldType.Name == "Process":
-				if err := v.setProcessIdentifiers(process, fieldType.Name, field); err != nil {
-					return err
-				}
+		switch {
+		case strings.Contains(fieldType.Name, "IsExecutable"):
+			if err := v.setIsExecutableByMethod(process, field.Bool()); err != nil {
+				return err
 			}
-		}
-
-	case map[string]any:
-		// processing for maps
-		for key, value := range any(v.Fields).(map[string]any) {
-			field := v.Instance.MapIndex(reflect.ValueOf(key))
-
-			switch key {
-			case "IsExecutable":
-				boolValue, ok := value.(bool)
-				if !ok {
-					return fmt.Errorf("invalid type for IsExecutable, expected bool")
-				}
-				if err := v.setIsExecutableByMethod(process, boolValue); err != nil {
-					return err
-				}
-
-			case "Process":
-				if err := v.setProcessIdentifiers(process, key, field); err != nil {
-					return err
-				}
+		case fieldType.Name == "Process":
+			if err := v.setProcessIdentifiers(process, fieldType.Name, field); err != nil {
+				return err
 			}
 		}
 	}
@@ -488,32 +486,6 @@ func (v *ReflectValue[M]) applyProcessMethods(processIdx int, q *Quantity[M]) er
 /*
  * @ multiple processes
  */
-
-// anonym sets the fields in the BPMN model.
-func (v *ReflectValue[M]) anonym(field string) {
-	targetField := instanceFieldName(v, field) // must be a struct, which represents a process
-	targetNum := targetField.NumField()        // get the number of fields in the struct
-
-	for idx := range targetNum {
-		name := targetField.Type().Field(idx).Name
-
-		switch targetField.Field(idx).Kind() {
-
-		case reflect.Bool:
-			v.config(name, idx, targetField)
-
-		case reflect.Struct:
-
-			// NOTE: need to have the option, which process is it.
-			// I need it for the first part of the bpmn injection:
-			// e.g.: StartEvent_HashValue -> Event_HashValue.
-			v.currentHash(idx, targetField)
-			v.nextHash(idx, targetField)
-		}
-
-	}
-
-}
 
 // config sets the IsExecutable field to true if the name contains "IsExecutable" and index is 0.
 // I called it config, because it is a configuration of the field.
@@ -791,34 +763,12 @@ func (v *ReflectValue[M]) configurePool() error {
 
 // instanceFieldName returns the field value by the name in v.Instance.
 func instanceFieldName[M []reflect.StructField | map[string]any](v *ReflectValue[M], name string) reflect.Value {
-	instance := v.Instance
-	switch instance.Kind() {
-	case reflect.Struct:
-		// use FieldByName, if M is a struct
-		value := instance.FieldByName(name)
-		if !value.IsValid() {
-			fmt.Printf("instanceFieldName: field %s not found in struct instance. Available fields: %v\n", name, getFieldNames(instance))
-			return reflect.Value{}
-		}
-		return value
-
-	case reflect.Map:
-		// NOTE: I needed the wrap value, because the instance is "just" a copy of the model.
-		// I'm not sure, if it's the best practice.
-		wrapped := v.Wrap
-		// check if the key exists, if M is a map. Use MapIndex, if M is a map
-		mapValue := wrapped.MapIndex(reflect.ValueOf(name))
-		if !mapValue.IsValid() {
-			fmt.Printf("instanceFieldName: key %s not found in map instance. Available keys: %v\n", name, getMapKeys(wrapped))
-			return reflect.Value{}
-		}
-		return mapValue
-
-	default:
-		fmt.Printf("instanceFieldName: unsupported type %s for field %s\n", instance.Kind(), name)
+	value := v.Instance.FieldByName(name)
+	if !value.IsValid() {
+		fmt.Printf("instanceFieldName: field %s not found in struct instance. Available fields: %v\n", name, getFieldNames(v.Instance))
 		return reflect.Value{}
 	}
-
+	return value
 }
 
 // getFieldNames returns the names of all fields in a reflect.Value instance
@@ -828,15 +778,6 @@ func getFieldNames(instance reflect.Value) []string {
 		fieldNames = append(fieldNames, instance.Type().Field(i).Name)
 	}
 	return fieldNames
-}
-
-// getMapKeys returns the keys of a map
-func getMapKeys(instance reflect.Value) []string {
-	var keys []string
-	for _, key := range instance.MapKeys() {
-		keys = append(keys, key.String())
-	}
-	return keys
 }
 
 // Cleanup clears the ReflectValue slices

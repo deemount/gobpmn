@@ -1351,8 +1351,8 @@ func (h *FlowHandler[M]) SetProperties(flow reflect.Value, info FieldInfo) error
 func (h *FlowHandler[M]) setFlowSpecificProperties(flow reflect.Value, info FieldInfo) error {
 
 	// Set source and target references if available
-	sourceRef := h.processor.value.FlowNeighbors[info.name]["SourceRef"].(map[string]any)
-	targetRef := h.processor.value.FlowNeighbors[info.name]["TargetRef"].(map[string]any)
+	sourceRef := h.processor.value.FlowNeighbors[info.Name]["SourceRef"].(map[string]any)
+	targetRef := h.processor.value.FlowNeighbors[info.Name]["TargetRef"].(map[string]any)
 
 	if info.hash != "" {
 		if err := callMethod(flow, "SetSourceRef", []reflect.Value{

@@ -1,6 +1,7 @@
 package common
 
 import (
+	"log"
 	"maps"
 	"reflect"
 	"strings"
@@ -8,7 +9,7 @@ import (
 
 // FieldInfo holds information about a field being processed
 type FieldInfo struct {
-	name string
+	Name string
 
 	// extName is the last two words of the field name in a CamelCase string
 	extName string
@@ -21,13 +22,18 @@ type FieldInfo struct {
 	hash       string
 	hashBefore string
 	nextHash   string
+
+	// used for converter
+	Type  reflect.Type
+	Value any
+	Pos   int
 }
 
 // extractFieldInfo gathers all necessary field information.
 func extractFieldInfo(field reflect.Value, idx int) FieldInfo {
 
 	info := FieldInfo{
-		name:    field.Type().Field(idx).Name,
+		Name:    field.Type().Field(idx).Name,
 		extName: extractLastTwoWords(field.Type().Field(idx).Name),
 		element: matchElementType(field.Type().Field(idx).Name),
 	}
@@ -65,7 +71,7 @@ func extractFieldInfo(field reflect.Value, idx int) FieldInfo {
 
 // isValidField checks if a field is valid
 func isValidField(info FieldInfo) bool {
-	if info.name == "" {
+	if info.Name == "" {
 		return false
 	}
 	if info.typ == "" {
@@ -89,6 +95,7 @@ func collectFromFieldsWithNeighbors(data any) map[string]map[string]any {
 
 	// cancel, if val is not a struct
 	if val.Kind() != reflect.Struct {
+		log.Printf("Data is not a struct: %v", val)
 		return results
 	}
 

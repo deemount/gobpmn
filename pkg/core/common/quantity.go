@@ -55,6 +55,8 @@ func (q *Quantity[M]) countFieldsInPool(v *ReflectValue[M]) {
 }
 
 // countFieldsInInstance counts the fields in a process and stores them in a map.
+// NOTE: Works correctly for standalone and multiple processes designed by struct,
+// as well as a standalone mapped processes
 func (q *Quantity[M]) countFieldsInInstance(v *ReflectValue[M]) error {
 	if q.Elements == nil {
 		q.Elements = make(map[int]map[processElement]int)
@@ -100,23 +102,6 @@ func (q *Quantity[M]) countFieldElements(field reflect.Value, processIdx int) er
 }
 
 // countStandaloneProcessElements handles counting for a single process
-/*func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], processIdx int) {
-	fields, ok := any(v.Fields).([]reflect.StructField)
-	if !ok {
-		return
-	}
-
-	for i := range fields {
-		fieldName := fields[i].Name
-		// handle sequence flows first
-		if strings.HasPrefix(fieldName, "From") {
-			q.Elements[processIdx]["SequenceFlow"]++
-			continue
-		}
-		q.matchAndCountElement(processIdx, fieldName)
-	}
-}*/
-
 func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], processIdx int) {
 	switch fields := any(v.Fields).(type) {
 	case []reflect.StructField:

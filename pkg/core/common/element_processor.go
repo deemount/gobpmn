@@ -3,10 +3,8 @@ package common
 import (
 	"context"
 	"fmt"
-	"log"
 	"reflect"
 	"sort"
-	"strings"
 )
 
 type ElementHandler interface {
@@ -174,74 +172,74 @@ func (ep *ElementProcessor[M]) processElement() error {
 		counts:  ep.quantity.Elements[0],
 	}
 
-	switch fields := any(ep.value.Fields).(type) {
-	case []reflect.StructField:
+	/*
+		switch fields := any(ep.value.Fields).(type) {
+		case []reflect.StructField:
+	*/
+	// NOTE: the first field is DEF, which is a call on a interface value.
+	//       The second field is mostly a bool value, then the Fields with the BPMN types
+	//       are following. The first field of the bpmn types is a process itself.
+	//       These fields described above shouldn't processed here.
+	//	     Write an condition to skip these fields, if given.
+	for fieldIdx := 3; fieldIdx < ep.value.InstanceNumField; fieldIdx++ {
+		field := ep.value.Instance.Field(fieldIdx)
+		fieldType := ep.value.Instance.Type().Field(fieldIdx)
 
-		// NOTE: the first field is DEF, which is a call on a interface value.
-		//       The second field is mostly a bool value, then the Fields with the BPMN types
-		//       are following. The first field of the bpmn types is a process itself.
-		//       These fields described above shouldn't processed here.
-		//	     Write an condition to skip these fields, if given.
-
-		for fieldIdx := 3; fieldIdx < ep.value.InstanceNumField; fieldIdx++ {
-			field := ep.value.Instance.Field(fieldIdx)
-			fieldType := ep.value.Instance.Type().Field(fieldIdx)
-
-			if field.Kind() == reflect.Bool {
-				continue // NOTE: placeholder for future implementation of configuration handling
-			}
-
-			if err := ep.processEntry(field, fieldType, fieldIdx, config); err != nil {
-				return NewError(fmt.Errorf("failed to process field %s:\n%w", fieldType.Name, err))
-			}
+		if field.Kind() == reflect.Bool {
+			continue // NOTE: placeholder for future implementation of configuration handling
 		}
 
-	case map[string]any:
-
-		// sortedEntry sorts the keys based on the Pos field
-		type sortedEntry struct {
-			Key  string
-			Pos  int
-			Data reflect.Value
-		}
-
-		var sortedEntries []sortedEntry
-		for key, value := range fields {
-			// skio DEF and bool values
-			if key == "Def" || strings.Contains("Process", key) || reflect.TypeOf(value).Kind() == reflect.Bool {
-				continue
-			}
-
-			field := ep.value.Instance.MapIndex(reflect.ValueOf(key))
-			if !field.IsValid() {
-				continue
-			}
-
-			// extract Pos, if type BPMN
-			pos := 0
-			if bpmnValue, ok := value.(BPMN); ok {
-				pos = bpmnValue.Pos
-			}
-
-			sortedEntries = append(sortedEntries, sortedEntry{Key: key, Pos: pos, Data: field})
-		}
-
-		// sort by POS
-		sort.Slice(sortedEntries, func(i, j int) bool {
-			return sortedEntries[i].Pos < sortedEntries[j].Pos
-		})
-
-		fieldIdx := 3 // start from 3, because the first fields are DEF and bool values and the process itself
-		for _, entry := range sortedEntries {
-			fieldType := reflect.StructField{Name: entry.Key} // faking structfield for map
-
-			// NOTE: entry.Data is a reflect.Value
-			if err := ep.processEntry(entry.Data, fieldType, fieldIdx, config); err != nil {
-				return NewError(fmt.Errorf("failed to process field %s:\n%w", entry.Key, err))
-			}
-			fieldIdx++
+		if err := ep.processEntry(field, fieldType, fieldIdx, config); err != nil {
+			return NewError(fmt.Errorf("failed to process field %s:\n%w", fieldType.Name, err))
 		}
 	}
+	/*
+		case map[string]any:
+
+			// sortedEntry sorts the keys based on the Pos field
+			type sortedEntry struct {
+				Key  string
+				Pos  int
+				Data reflect.Value
+			}
+
+			var sortedEntries []sortedEntry
+			for key, value := range fields {
+				// skio DEF and bool values
+				if key == "Def" || strings.Contains("Process", key) || reflect.TypeOf(value).Kind() == reflect.Bool {
+					continue
+				}
+
+				field := ep.value.Instance.MapIndex(reflect.ValueOf(key))
+				if !field.IsValid() {
+					continue
+				}
+
+				// extract Pos, if type BPMN
+				pos := 0
+				if bpmnValue, ok := value.(BPMN); ok {
+					pos = bpmnValue.Pos
+				}
+
+				sortedEntries = append(sortedEntries, sortedEntry{Key: key, Pos: pos, Data: field})
+			}
+
+			// sort by POS
+			sort.Slice(sortedEntries, func(i, j int) bool {
+				return sortedEntries[i].Pos < sortedEntries[j].Pos
+			})
+
+			fieldIdx := 3 // start from 3, because the first fields are DEF, a bool value and the process itself
+			for _, entry := range sortedEntries {
+				fieldType := reflect.StructField{Name: entry.Key} // faking the structfield for map
+				// NOTE: entry.Data is a reflect.Value
+				if err := ep.processEntry(entry.Data, fieldType, fieldIdx, config); err != nil {
+					return NewError(fmt.Errorf("failed to process field %s:\n%w", entry.Key, err))
+				}
+				fieldIdx++
+			}
+		}
+	*/
 
 	return nil
 }
@@ -256,56 +254,64 @@ func (ep *ElementProcessor[M]) processEntry(field reflect.Value, fieldType refle
 		field = field.Elem()
 	}*/
 
-	switch field.Kind() {
-	case reflect.Struct:
-		typ = field.FieldByName("Type").String()
-		hash = field.FieldByName("Hash").String()
-		hashBefore = ep.value.Instance.Field(fieldIdx - 1).FieldByName("Hash").String()
-		nextHash = ep.nextHash(fieldIdx)
+	/*
+		switch field.Kind() {
+		case reflect.Struct:
+	*/
+	typ = field.FieldByName("Type").String()
+	hash = field.FieldByName("Hash").String()
+	hashBefore = ep.value.Instance.Field(fieldIdx - 1).FieldByName("Hash").String()
+	nextHash = ep.nextHash(fieldIdx)
 
-	case reflect.Interface:
+	// NOTE: this case has a Interface, instead of map[string]any
+	//       It's working, but I'm not happy with this workaround.
+	//       At least, I want to switch to map[string]any.
+	//	     One of the workarounds is to dereference the interface (e.g. above; commented)
+	/*
+		case reflect.Interface:
 
-		field = field.Elem()
+			field = field.Elem()
 
-		/*typValue := field.MapIndex(reflect.ValueOf("Type"))
-		if typValue.IsValid() {
-			typ = typValue.Interface().(string)
-		}*/
-		typ = field.FieldByName("Type").String()
+			//typValue := field.MapIndex(reflect.ValueOf("Type"))
+			//if typValue.IsValid() {
+			//	typ = typValue.Interface().(string)
+			//}
+			typ = field.FieldByName("Type").String()
 
-		/*hashValue := field.MapIndex(reflect.ValueOf("Hash"))
-		if hashValue.IsValid() {
-			hash = hashValue.Interface().(string)
-		}*/
-		hash = field.FieldByName("Hash").String()
+			//hashValue := field.MapIndex(reflect.ValueOf("Hash"))
+			//if hashValue.IsValid() {
+			//	hash = hashValue.Interface().(string)
+			//}
+			hash = field.FieldByName("Hash").String()
 
-		// previousField for hashBefore
-		prevKey := ep.previousField(fieldIdx)
+			// previousField for hashBefore
+			prevKey := ep.previousField(fieldIdx)
 
-		if prevKey != "" {
-			prevField := ep.value.Instance.MapIndex(reflect.ValueOf(prevKey))
-			if prevField.IsValid() {
-				hashBeforeValue := prevField.MapIndex(reflect.ValueOf("Hash")) // BUG: MapIndex is not working as expected
-				log.Fatalf("hashBeforeValue: %v", hashBeforeValue)             // BUG: hashBeforeValue is not working as expected
-				if hashBeforeValue.IsValid() {
-					hashBefore = hashBeforeValue.Interface().(string)
+			if prevKey != "" {
+				prevField := ep.value.Instance.MapIndex(reflect.ValueOf(prevKey))
+				if prevField.IsValid() {
+					hashBeforeValue := prevField.MapIndex(reflect.ValueOf("Hash")) // BUG: MapIndex is not working as expected
+					log.Fatalf("hashBeforeValue: %v", hashBeforeValue)             // BUG: hashBeforeValue is not working as expected
+					if hashBeforeValue.IsValid() {
+						hashBefore = hashBeforeValue.Interface().(string)
+					}
 				}
 			}
-		}
 
-		nextHash = ep.nextHash(fieldIdx)
-	}
+			nextHash = ep.nextHash(fieldIdx)
+		}
+	*/
 
 	// get the element type
 	elementType := ElementType(typ)
 	handler, exists := ep.handlers[elementType]
 	if !exists {
-		return fmt.Errorf("no handler found for element type: %s", elementType)
+		return NewError(fmt.Errorf("no handler found for element type:\n%s", elementType))
 	}
 
 	// create FieldInfo
 	info := FieldInfo{
-		name:       fieldType.Name,
+		Name:       fieldType.Name,
 		typ:        typ,
 		hash:       hash,
 		hashBefore: hashBefore,
@@ -344,7 +350,7 @@ func (ep *ElementProcessor[M]) previousField(fieldIdx int) string {
 	})
 
 	// find the previous key based on fieldIdx
-	for i, _ := range sortedEntries {
+	for i := range sortedEntries {
 		if i == fieldIdx {
 			// there's no previous key, if fieldIdx is the first entry
 			if i == 0 {

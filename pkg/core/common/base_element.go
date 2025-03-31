@@ -30,7 +30,7 @@ func (h *BaseElement[M]) setCommonProperties(el reflect.Value, info FieldInfo) e
 	}
 
 	if err := callMethod(el, "SetName", []reflect.Value{
-		reflect.ValueOf(info.name),
+		reflect.ValueOf(info.Name),
 	}); err != nil {
 		return fmt.Errorf("failed to set name: %w", err)
 	}

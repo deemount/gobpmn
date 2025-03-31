@@ -56,6 +56,7 @@ func (m *Mapping[M]) Assign(v *ReflectValue[M]) {
 		}
 
 	case map[string]any:
+
 		// sort by Pos
 		type sortedEntry struct {
 			Key string
@@ -97,9 +98,10 @@ func (m *Mapping[M]) Assign(v *ReflectValue[M]) {
 		})
 
 		// save in m.BPMNType after sorting
-		for i, entry := range sortedEntries {
-			m.BPMNType[i] = entry.Key
+		for _, entry := range sortedEntries {
+			m.BPMNType[entry.Pos] = entry.Key
 		}
+
 	}
 }
 
