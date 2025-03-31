@@ -73,22 +73,22 @@ func main() {
 		return
 	}
 
-	// Assuming process contains dynamic struct
+	// assuming process contains dynamic struct
 	value := reflect.ValueOf(process)
 
-	// If process is an interface{}, get the underlying value
+	// if process is an interface{}, get the underlying value
 	if value.Kind() == reflect.Interface {
 		value = value.Elem()
 	}
 
-	// Get the Def field
+	// get the Def field
 	defField := value.FieldByName("Def")
 	if !defField.IsValid() {
 		fmt.Println("Def field not found")
 		return
 	}
 
-	// Convert to *foundation.Definitions
+	// convert to *foundation.Definitions
 	def, ok := defField.Interface().(*foundation.Definitions)
 	if !ok {
 		fmt.Println("Def field is not of type *foundation.Definitions")

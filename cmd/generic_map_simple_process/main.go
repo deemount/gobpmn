@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
+	"reflect"
 	"time"
 
+	"github.com/deemount/gobpmn/internal/parser"
 	"github.com/deemount/gobpmn/pkg/core"
 	"github.com/deemount/gobpmn/pkg/core/common"
 	"github.com/deemount/gobpmn/pkg/core/foundation"
@@ -62,6 +65,40 @@ func main() {
 		return
 	}
 
-	debugLogger.Printf("GenericMapSimpleProcess: %+v", process)
+	// assuming process contains dynamic struct
+	value := reflect.ValueOf(process)
+
+	// if process is an interface{}, get the underlying value
+	if value.Kind() == reflect.Interface {
+		value = value.Elem()
+	}
+
+	// get the Def field
+	defField := value.FieldByName("Def")
+	if !defField.IsValid() {
+		fmt.Println("Def field not found")
+		return
+	}
+
+	// convert to *foundation.Definitions
+	def, ok := defField.Interface().(*foundation.Definitions)
+	if !ok {
+		fmt.Println("Def field is not of type *foundation.Definitions")
+		return
+	}
+
+	// create the process model
+	bpmn, err := parser.NewBPMNParser(
+		parser.WithCounter(),
+		parser.WithDefinitions(def))
+	if err != nil {
+		panic(err)
+	}
+	bpmn.Marshal()
+
+	err = bpmn.Validate()
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
 
 }
