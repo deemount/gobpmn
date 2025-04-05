@@ -13,12 +13,12 @@ type StartEventIndices struct {
 }
 
 // StartEventHandler handles start events
-type StartEventHandler[M []reflect.StructField | map[string]any] struct {
+type StartEventHandler[M BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewStartEventHandler creates a new StartEventHandler instance
-func NewStartEventHandler[M []reflect.StructField | map[string]any](ep *ElementProcessor[M]) *StartEventHandler[M] {
+func NewStartEventHandler[M BPMNGeneric](ep *ElementProcessor[M]) *StartEventHandler[M] {
 	return &StartEventHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -31,13 +31,10 @@ func (h *StartEventHandler[M]) Handle(processIdx int, info FieldInfo, config *Pr
 	indices := &StartEventIndices{
 		startEvent: config.indices[startEvent],
 	}
-
 	if err := h.handleStartEvent(processIdx, info, config, &indices.startEvent); err != nil {
 		return NewError(fmt.Errorf("failed to handle start event: %w", err))
 	}
-
 	config.indices[startEvent] = indices.startEvent
-
 	return nil
 }
 
@@ -46,13 +43,11 @@ func (h *StartEventHandler[M]) handleStartEvent(processIdx int, info FieldInfo, 
 	if *idx >= config.counts[info.element] {
 		return nil
 	}
-
 	// if it's NOT the first start event in the process,
 	// then a start event get the "event"-prefix for the id
 	if processIdx > 0 && int(*idx) == 0 {
 		info.typ = "event"
 	}
-
 	el, err := callMethodValue(
 		h.processor.value.Process[processIdx],
 		"GetStartEvent",
@@ -61,41 +56,31 @@ func (h *StartEventHandler[M]) handleStartEvent(processIdx int, info FieldInfo, 
 	if err != nil {
 		return NewError(fmt.Errorf("failed to get start event: %w", err))
 	}
-
 	if err := h.SetProperties(el, info); err != nil {
 		return NewError(fmt.Errorf("failed to set start event properties: %w", err))
 	}
-
 	if err := h.configureFlow(el, info); err != nil {
 		return NewError(fmt.Errorf("failed to configure start event flow: %w", err))
 	}
-
 	(*idx)++
-
 	return nil
-
 }
 
 // SetProperties sets basic properties and additional specific properties for start events.
 func (h *StartEventHandler[M]) SetProperties(el reflect.Value, info FieldInfo) error {
-
 	// first call base implementation
 	if err := h.BaseElement.SetProperties(el, info); err != nil {
 		return err
 	}
-
 	// start event specific properties
 	return h.setStartEventSpecificProperties(el)
-
 }
 
 // setStartEventSpecificProperties sets start event specific properties.
 func (h *StartEventHandler[M]) setStartEventSpecificProperties(el reflect.Value) error {
-	properties := map[string]interface{}{
-		// TODO: IsInterrupting needs a more generic handling. It's not always true.
-		"IsInterrupting": true,
+	properties := map[string]any{
+		"IsInterrupting": true, // TODO: IsInterrupting needs a more generic handling. It's not always true.
 	}
-
 	for propName, propValue := range properties {
 		if err := callMethod(el, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
@@ -114,13 +99,10 @@ func (h *StartEventHandler[M]) configureFlow(el reflect.Value, info FieldInfo) e
 	if err := h.setOutgoingFlowCount(el); err != nil {
 		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
-
 	if err := h.configureOutgoingFlow(el, info.nextHash); err != nil {
 		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // setOutgoingFlowCount sets the number of outgoing flows for a start event
@@ -128,22 +110,18 @@ func (h *StartEventHandler[M]) configureFlow(el reflect.Value, info FieldInfo) e
 // Actually, there is no check if the next element is a known element.
 func (h *StartEventHandler[M]) setOutgoingFlowCount(el reflect.Value) error {
 	const outgoingFlowCount = 1 // start events always have exactly one outgoing flow
-
 	err := callMethod(el, "SetOutgoing", []reflect.Value{
 		reflect.ValueOf(outgoingFlowCount),
 	})
 	if err != nil {
 		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // configureOutgoingFlow configures the outgoing flow of a start event
 func (h *StartEventHandler[M]) configureOutgoingFlow(el reflect.Value, nextHash string) error {
 	const firstFlowIndex = 0
-
 	// Get the outgoing flow object
 	outFlow, err := callMethodValue(el, "GetOutgoing", []reflect.Value{
 		reflect.ValueOf(firstFlowIndex),
@@ -151,7 +129,6 @@ func (h *StartEventHandler[M]) configureOutgoingFlow(el reflect.Value, nextHash 
 	if err != nil {
 		return NewError(fmt.Errorf("failed to get outgoing flow:\n%w", err))
 	}
-
 	// Set the flow hash
 	err = callMethod(outFlow, "SetFlow", []reflect.Value{
 		reflect.ValueOf(nextHash),
@@ -159,9 +136,7 @@ func (h *StartEventHandler[M]) configureOutgoingFlow(el reflect.Value, nextHash 
 	if err != nil {
 		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // ---------------------------------------------------------- //
@@ -174,12 +149,12 @@ type EventIndices struct {
 }
 
 // EventHandler handles different types of events
-type EventHandler[M []reflect.StructField | map[string]any] struct {
+type EventHandler[M BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewEventHandler creates a new EventHandler instance
-func NewEventHandler[M []reflect.StructField | map[string]any](ep *ElementProcessor[M]) *EventHandler[M] {
+func NewEventHandler[M BPMNGeneric](ep *ElementProcessor[M]) *EventHandler[M] {
 	return &EventHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -344,10 +319,9 @@ func (h *EventHandler[M]) setIntermediateCatchEventProperties(el reflect.Value) 
 
 // setIntermediateThrowEventProperties sets start event specific properties.
 func (h *EventHandler[M]) setIntermediateThrowEventProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
-
 	for propName, propValue := range properties {
 		if err := callMethod(element, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
@@ -355,14 +329,12 @@ func (h *EventHandler[M]) setIntermediateThrowEventProperties(element reflect.Va
 			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
 		}
 	}
-
 	return nil
-
 }
 
 // setEndEventProperties sets start event specific properties.
 func (h *EventHandler[M]) setEndEventProperties(element reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -383,83 +355,67 @@ func (h *EventHandler[M]) configureFlow(el reflect.Value, info FieldInfo) error 
 	if err := h.setIncomingFlowCount(el); err != nil {
 		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
-
 	if err := h.configureIncomingFlow(el, info.hashBefore); err != nil {
 		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
 	}
-
 	if err := h.setOutgoingFlowCount(el); err != nil {
 		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
-
 	if err := h.configureOutgoingFlow(el, info.nextHash); err != nil {
 		return NewError(fmt.Errorf("failed to configure outgoing flow:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // setIncomingFlowCount sets the number of incoming flows for a event type
 func (h *EventHandler[M]) setIncomingFlowCount(element reflect.Value) error {
-	const incomingFlowCount = 1 // start events always have exactly one outgoing flow
-
+	const incomingFlowCount = 1 // TODO:  incoming flow count can be more than 1
 	err := callMethod(element, "SetIncoming", []reflect.Value{
 		reflect.ValueOf(incomingFlowCount),
 	})
 	if err != nil {
 		return NewError(fmt.Errorf("failed to set incoming flow count:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // configureOutgoingFlow configures the outgoing flow of a start event
 func (h *EventHandler[M]) configureIncomingFlow(el reflect.Value, hashBefore string) error {
 	const firstFlowIndex = 0
-
-	// Get the outgoing flow object
+	// get the outgoing flow object
 	inFlow, err := callMethodValue(el, "GetIncoming", []reflect.Value{
 		reflect.ValueOf(firstFlowIndex),
 	})
 	if err != nil {
 		return NewError(fmt.Errorf("failed to get outgoing flow:\n%w", err))
 	}
-
-	// Set the flow hash
+	// set the flow hash
 	err = callMethod(inFlow, "SetFlow", []reflect.Value{
 		reflect.ValueOf(hashBefore),
 	})
 	if err != nil {
 		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // setOutgoingFlowCount sets the number of outgoing flows for a event
 // Note: An outgoing can only be set, if there's a following known element
 // Actually, there is no check if the next element is a known element.
 func (h *EventHandler[M]) setOutgoingFlowCount(el reflect.Value) error {
-	const outgoingFlowCount = 1 // start events always have exactly one outgoing flow
-
+	const outgoingFlowCount = 1 // TODO:  outgoing flow count can be more than 1
 	err := callMethod(el, "SetOutgoing", []reflect.Value{
 		reflect.ValueOf(outgoingFlowCount),
 	})
 	if err != nil {
 		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // configureOutgoingFlow configures the outgoing flow of a start event
 func (h *EventHandler[M]) configureOutgoingFlow(el reflect.Value, nextHash string) error {
 	flowIndex := 0
-
 	// Get the outgoing flow object
 	outFlow, err := callMethodValue(el, "GetOutgoing", []reflect.Value{
 		reflect.ValueOf(flowIndex),
@@ -467,7 +423,6 @@ func (h *EventHandler[M]) configureOutgoingFlow(el reflect.Value, nextHash strin
 	if err != nil {
 		return NewError(fmt.Errorf("failed to get outgoing flow:\n%w", err))
 	}
-
 	// Set the flow hash
 	err = callMethod(outFlow, "SetFlow", []reflect.Value{
 		reflect.ValueOf(nextHash),
@@ -475,9 +430,7 @@ func (h *EventHandler[M]) configureOutgoingFlow(el reflect.Value, nextHash strin
 	if err != nil {
 		return NewError(fmt.Errorf("failed to set flow hash:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // ---------------------------------------------------------- //
@@ -491,12 +444,12 @@ type GatewayIndices struct {
 }
 
 // GatewayHandler handles different types of gateways
-type GatewayHandler[M []reflect.StructField | map[string]any] struct {
+type GatewayHandler[M BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewGatewayHandler creates a new GatewayHandler instance
-func NewGatewayHandler[M []reflect.StructField | map[string]any](ep *ElementProcessor[M]) *GatewayHandler[M] {
+func NewGatewayHandler[M BPMNGeneric](ep *ElementProcessor[M]) *GatewayHandler[M] {
 	return &GatewayHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -877,12 +830,12 @@ type ActivityIndices struct {
 }
 
 // ActivityHandler handles different types of activities
-type ActivityHandler[M []reflect.StructField | map[string]any] struct {
+type ActivityHandler[M BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewActivityHandler creates a new ActivityHandler instance
-func NewActivityHandler[M []reflect.StructField | map[string]any](ep *ElementProcessor[M]) *ActivityHandler[M] {
+func NewActivityHandler[M BPMNGeneric](ep *ElementProcessor[M]) *ActivityHandler[M] {
 	return &ActivityHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -1221,16 +1174,13 @@ func (h *ActivityHandler[M]) configureIncomingFlow(el reflect.Value, hashBefore 
 // Actually, there is no check if the next element is a known element.
 func (h *ActivityHandler[M]) setOutgoingFlowCount(el reflect.Value) error {
 	const outgoingFlowCount = 1 // TODO: the outgoing flow count is yet not to be determined
-
 	err := callMethod(el, "SetOutgoing", []reflect.Value{
 		reflect.ValueOf(outgoingFlowCount),
 	})
 	if err != nil {
 		return NewError(fmt.Errorf("failed to set outgoing flow count:\n%w", err))
 	}
-
 	return nil
-
 }
 
 // configureOutgoingFlow configures the outgoing flow of a activity
@@ -1265,12 +1215,12 @@ type FlowIndices struct {
 }
 
 // FlowHandler handles flow elements
-type FlowHandler[M []reflect.StructField | map[string]any] struct {
+type FlowHandler[M BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewFlowHandler creates a new FlowHandler instance
-func NewFlowHandler[M []reflect.StructField | map[string]any](ep *ElementProcessor[M]) *FlowHandler[M] {
+func NewFlowHandler[M BPMNGeneric](ep *ElementProcessor[M]) *FlowHandler[M] {
 	handler := &FlowHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -1281,7 +1231,6 @@ func NewFlowHandler[M []reflect.StructField | map[string]any](ep *ElementProcess
 
 // Handle processes a flow element
 func (h *FlowHandler[M]) Handle(processIdx int, info FieldInfo, config *ProcessingConfig) error {
-
 	indices := FlowIndices{
 		flow: config.indices[sequenceFlow],
 	}
@@ -1334,12 +1283,10 @@ func (h *FlowHandler[M]) handleFlow(processIdx int, info FieldInfo, config *Proc
 
 // SetProperties sets properties for flow elements
 func (h *FlowHandler[M]) SetProperties(flow reflect.Value, info FieldInfo) error {
-
 	// call base implementation
 	if err := h.BaseElement.SetProperties(flow, info); err != nil {
 		return err
 	}
-
 	// Set flow-specific properties
 	if err := h.setFlowSpecificProperties(flow, info); err != nil {
 		return err
@@ -1349,11 +1296,9 @@ func (h *FlowHandler[M]) SetProperties(flow reflect.Value, info FieldInfo) error
 
 // setFlowSpecificProperties sets properties specific to sequence flows
 func (h *FlowHandler[M]) setFlowSpecificProperties(flow reflect.Value, info FieldInfo) error {
-
 	// Set source and target references if available
 	sourceRef := h.processor.value.FlowNeighbors[info.Name]["SourceRef"].(map[string]any)
 	targetRef := h.processor.value.FlowNeighbors[info.Name]["TargetRef"].(map[string]any)
-
 	if info.hash != "" {
 		if err := callMethod(flow, "SetSourceRef", []reflect.Value{
 			reflect.ValueOf(sourceRef["Value"].(BPMN).Type),
@@ -1362,7 +1307,6 @@ func (h *FlowHandler[M]) setFlowSpecificProperties(flow reflect.Value, info Fiel
 			return NewError(fmt.Errorf("failed to set source reference:\n %w", err))
 		}
 	}
-
 	if info.nextHash != "" {
 		if err := callMethod(flow, "SetTargetRef", []reflect.Value{
 			reflect.ValueOf(targetRef["Value"].(BPMN).Type),
@@ -1371,7 +1315,5 @@ func (h *FlowHandler[M]) setFlowSpecificProperties(flow reflect.Value, info Fiel
 			return NewError(fmt.Errorf("failed to set target reference:\n %w", err))
 		}
 	}
-
 	return nil
-
 }

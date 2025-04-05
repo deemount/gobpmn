@@ -14,7 +14,7 @@ type ProcessMethod struct {
 // GetProcessMethods returns the standard BPMN process methods with their quantities.
 // Each method represents a BPMN element type and its required quantity.
 // Note: q Quantity for a single process should be used in the Arg field.
-func GetProcessMethods[M []reflect.StructField | map[string]any](processIdx int, q *Quantity[M]) []ProcessMethod {
+func GetProcessMethods[M BPMNGeneric](processIdx int, q *Quantity[M]) []ProcessMethod {
 	process := q.Elements[processIdx]
 	return []ProcessMethod{
 		{Name: "SetStartEvent", Arg: process[startEvent]},

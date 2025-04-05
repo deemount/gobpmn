@@ -11,7 +11,7 @@ type ElementHandler interface {
 }
 
 // ElementProcessor handles BPMN element processing
-type ElementProcessor[M []reflect.StructField | map[string]any] struct {
+type ElementProcessor[M BPMNGeneric] struct {
 	value    *ReflectValue[M]
 	quantity *Quantity[M]
 	handlers map[ElementType]ElementHandler
@@ -26,7 +26,7 @@ type ProcessingConfig struct {
 }
 
 // NewElementProcessor creates a new ElementProcessor instance
-func NewElementProcessor[M []reflect.StructField | map[string]any](v *ReflectValue[M], q *Quantity[M]) (*ElementProcessor[M], error) {
+func NewElementProcessor[M BPMNGeneric](v *ReflectValue[M], q *Quantity[M]) (*ElementProcessor[M], error) {
 	if v == nil || q == nil {
 		return nil, NewError(fmt.Errorf("invalid parameters: ReflectValue and quantity must not be nil"))
 	}

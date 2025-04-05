@@ -5,7 +5,6 @@ package core
 import (
 	"context"
 	"fmt"
-	"reflect"
 	"time"
 
 	"github.com/deemount/gobpmn/pkg/core/common"
@@ -16,7 +15,7 @@ const DefaultTimeout = 1 * time.Second
 // NewReflectDI ...
 // If a error occurs, the function returns a new instance of the model and the error.
 // The new instance is then a zero value of T by the model.
-func NewReflectDI[T any, M []reflect.StructField | map[string]any](ctx context.Context, model T) (result T, err error) {
+func NewReflectDI[T any, M common.BPMNGeneric](ctx context.Context, model T, genericType M) (result T, err error) {
 
 	if ctx == nil {
 		var cancel context.CancelFunc
@@ -24,7 +23,7 @@ func NewReflectDI[T any, M []reflect.StructField | map[string]any](ctx context.C
 		defer cancel()
 	}
 
-	reflectVal, err := common.NewReflectValue[T, M](model)
+	reflectVal, err := common.NewReflectValue(model, genericType)
 	if err != nil {
 		return *new(T), common.NewError(fmt.Errorf("failed to create reflect value:\n%w", err))
 	}

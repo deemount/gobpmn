@@ -65,7 +65,7 @@ func main() {
 	/*
 	 * SimpleProcess
 	 */
-	simpleProcess, err := core.NewReflectDI[SimpleProcess, []reflect.StructField](ctx, SimpleProcess{})
+	simpleProcess, err := core.NewReflectDI(ctx, SimpleProcess{}, []reflect.StructField{})
 	if err != nil {
 		errorLogger.Fatalf("\033[0;31m:\n%s", err)
 		return

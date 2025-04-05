@@ -20,27 +20,23 @@ type DynamicStruct struct {
 
 // ToStruct converts a map[string]any to a struct
 func (c *Converter) ToStruct(input any) (*DynamicStruct, error) {
-	// Convert input to map[string]interface{}
+	// convert input to map[string]interface{}
 	inputMap, err := c.normalizeToMap(input)
 	if err != nil {
 		return nil, err
 	}
-
-	// Extract and order fields
+	// extract and order fields
 	fields, err := c.getOrderedFields(inputMap)
 	if err != nil {
 		return nil, err
 	}
-
-	// Generate struct type dynamically
+	// generate struct type dynamically
 	structType := c.createStructType(fields)
-
-	// Create new instance and populate values
+	// create new instance and populate values
 	structValue := reflect.New(structType).Elem()
 	if err := c.populateStruct(structValue, fields); err != nil {
 		return nil, err
 	}
-
 	return &DynamicStruct{
 		Type:   structType,
 		Value:  structValue,
@@ -54,11 +50,9 @@ func (c *Converter) normalizeToMap(input any) (map[string]any, error) {
 	if val.Kind() != reflect.Map {
 		return nil, fmt.Errorf("input must be a map")
 	}
-
 	if val.Type().Key().Kind() != reflect.String {
 		return nil, fmt.Errorf("map keys must be strings")
 	}
-
 	result := make(map[string]any)
 	for _, key := range val.MapKeys() {
 		result[key.String()] = val.MapIndex(key).Interface()
@@ -69,34 +63,28 @@ func (c *Converter) normalizeToMap(input any) (map[string]any, error) {
 // getOrderedFields extracts and orders fields from a map
 func (c *Converter) getOrderedFields(m map[string]any) ([]FieldInfo, error) {
 	var fields []FieldInfo
-
 	for name, value := range m {
 		pos := 0
 		if bpmn, ok := value.(BPMN); ok {
 			pos = bpmn.Pos
 		}
-
 		fields = append(fields, FieldInfo{
 			Name:  name,
 			Type:  reflect.TypeOf(value),
 			Value: value,
 			Pos:   pos,
 		})
-
 	}
-
-	// Sort by position
+	// sort by pos
 	sort.Slice(fields, func(i, j int) bool {
 		return fields[i].Pos < fields[j].Pos
 	})
-
 	return fields, nil
 }
 
 // createStructType generates a struct type from a list of fields
 func (c *Converter) createStructType(fields []FieldInfo) reflect.Type {
 	var structFields []reflect.StructField
-
 	for _, field := range fields {
 		structFields = append(structFields, reflect.StructField{
 			Name: field.Name,
@@ -104,7 +92,6 @@ func (c *Converter) createStructType(fields []FieldInfo) reflect.Type {
 			Tag:  reflect.StructTag(fmt.Sprintf(`map:"%s"`, field.Name)),
 		})
 	}
-
 	return reflect.StructOf(structFields)
 }
 
@@ -119,7 +106,6 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 		if fields[j].Name == "Def" {
 			return false
 		}
-
 		// IsExecutable comes second
 		if fields[i].Name == "IsExecutable" {
 			return true
@@ -127,29 +113,23 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 		if fields[j].Name == "IsExecutable" {
 			return false
 		}
-
 		// Then sort BPMN fields by Pos
 		_, iIsBPMN := fields[i].Value.(BPMN)
 		_, jIsBPMN := fields[j].Value.(BPMN)
-
 		if iIsBPMN && jIsBPMN {
 			return fields[i].Pos < fields[j].Pos
 		}
-
 		// non-BPMN fields come before BPMN fields
 		return !iIsBPMN && jIsBPMN
 	})
-
 	// now populate the struct fields in sorted order
 	for i, field := range fields {
 		fieldValue := structValue.Field(i)
-
 		// handle BPMN fields with position preservation
 		if bpmn, ok := field.Value.(BPMN); ok {
 			fieldValue.Set(reflect.ValueOf(BPMN{Pos: bpmn.Pos}))
 			continue
 		}
-
 		// handle special cases with proper type checking
 		switch field.Name {
 		case "Def":
@@ -161,7 +141,6 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 				}
 			}
 			return fmt.Errorf("Def must be *foundation.Definitions or convertible to DefinitionsRepository")
-
 		case "IsExecutable":
 			if b, ok := field.Value.(bool); ok {
 				fieldValue.SetBool(b)
@@ -169,7 +148,6 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 			}
 			return fmt.Errorf("IsExecutable must be bool, got %T", field.Value)
 		}
-
 		// normal field assignment with type conversion
 		value := reflect.ValueOf(field.Value)
 		if value.Type().ConvertibleTo(fieldValue.Type()) {

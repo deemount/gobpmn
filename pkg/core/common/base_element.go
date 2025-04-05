@@ -6,7 +6,7 @@ import (
 )
 
 // BaseElement provides common functionality for element handlers
-type BaseElement[M []reflect.StructField | map[string]any] struct {
+type BaseElement[M BPMNGeneric] struct {
 	processor *ElementProcessor[M]
 }
 

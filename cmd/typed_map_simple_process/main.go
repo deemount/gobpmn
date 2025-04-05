@@ -67,7 +67,7 @@ func main() {
 	defer cancel()
 
 	type T any
-	process, err := core.NewReflectDI[T, map[string]any](ctx, typedMapSimpleProcess)
+	process, err := core.NewReflectDI[T](ctx, typedMapSimpleProcess, map[string]any{})
 	if err != nil {
 		errorLogger.Fatalf("\033[0;31m\n%s", err)
 		return

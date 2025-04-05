@@ -14,7 +14,7 @@ import (
 
 // Quantity holds all the quantities of the BPMN elements
 // in the BPMN model. It is used to count the number of elements
-type Quantity[M []reflect.StructField | map[string]any] struct {
+type Quantity[M BPMNGeneric] struct {
 	sync.RWMutex
 	Elements    map[int]map[processElement]int
 	Pool        int

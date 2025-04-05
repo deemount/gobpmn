@@ -6,7 +6,7 @@ import (
 )
 
 // Mapping ...
-type Mapping[M []reflect.StructField | map[string]any] struct {
+type Mapping[M BPMNGeneric] struct {
 	Anonym,
 	Config,
 	BPMNType map[int]string
