@@ -5,12 +5,9 @@ package core
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/deemount/gobpmn/pkg/core/common"
 )
-
-const DefaultTimeout = 1 * time.Second
 
 // NewReflectDI ...
 // If a error occurs, the function returns a new instance of the model and the error.
@@ -19,7 +16,7 @@ func NewReflectDI[T any, M common.BPMNGeneric](ctx context.Context, model T, gen
 
 	if ctx == nil {
 		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(context.Background(), DefaultTimeout)
+		ctx, cancel = context.WithTimeout(context.Background(), common.DefaultTimeout)
 		defer cancel()
 	}
 

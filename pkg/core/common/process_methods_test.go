@@ -25,7 +25,7 @@ func TestProcessMethodStruct(t *testing.T) {
 // TestGetProcessMethods tests the GetProcessMethods function
 func TestGetProcessMethods(t *testing.T) {
 	// Setup test data
-	q := &Quantity[StructF]{
+	q := &Quantity[[]reflect.StructField]{
 		Elements: make(map[int]map[processElement]int),
 	}
 	processIdx := 0

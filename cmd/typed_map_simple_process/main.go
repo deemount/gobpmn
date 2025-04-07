@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/deemount/gobpmn/internal/parser"
@@ -16,10 +15,11 @@ import (
 
 type TypedMapSimpleProcess map[string]any
 
-/*func (s TypedMapSimpleProcess) Has(key string) bool {
+// Has is a helper function to check if a key exists in the map.
+func (s TypedMapSimpleProcess) Has(key string) bool {
 	_, ok := s[key]
 	return ok
-}*/
+}
 
 // Testing some logging
 var (
@@ -31,8 +31,14 @@ var (
 
 func main() {
 
+	start := time.Now()
+
 	flags := log.Ldate | log.Ltime | log.Llongfile
 	log.SetFlags(flags)
+
+	logFile, _ := os.Create("files/log/build.log")
+	defer logFile.Close()
+	log.SetOutput(logFile)
 
 	debugLogger = log.New(os.Stdout, "DEBUG: ", flags)
 	errorLogger = log.New(os.Stdout, "ERROR: ", flags)
@@ -73,25 +79,10 @@ func main() {
 		return
 	}
 
-	// assuming process contains dynamic struct
-	value := reflect.ValueOf(process)
-
-	// if process is an interface{}, get the underlying value
-	if value.Kind() == reflect.Interface {
-		value = value.Elem()
-	}
-
-	// get the Def field
-	defField := value.FieldByName("Def")
-	if !defField.IsValid() {
-		fmt.Println("Def field not found")
-		return
-	}
-
-	// convert to *foundation.Definitions
-	def, ok := defField.Interface().(*foundation.Definitions)
-	if !ok {
-		fmt.Println("Def field is not of type *foundation.Definitions")
+	// convert the dynamic struct to definitions
+	def, err := common.ConvertDynamicStructToDefinitions(ctx, process)
+	if err != nil {
+		errorLogger.Fatalf("\033[0;31m\n%s", err)
 		return
 	}
 
@@ -108,5 +99,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
+	log.Println("total time:", time.Since(start))
 
 }

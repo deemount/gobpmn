@@ -33,11 +33,9 @@ func NewReflectValue[T any, M BPMNGeneric](model T, genericType M) (*ReflectValu
 	valueOf := reflect.ValueOf(model)
 	switch typeOf.Kind() {
 	case reflect.Struct:
-
 		fields := reflect.VisibleFields(typeOf)
 		visibleFields = any(fields).(M)
 		instance = reflect.New(typeOf).Elem()
-
 		return &ReflectValue[M]{
 			ModelConfig: config.ModelConfig[M]{
 				Name:     extractPrefixBeforeProcess(typeOf.Name()),
@@ -47,7 +45,6 @@ func NewReflectValue[T any, M BPMNGeneric](model T, genericType M) (*ReflectValu
 				Instance: instance,      // create a new object of the struct/map, which is a copy of the model
 			},
 		}, nil
-
 	case reflect.Map:
 		fields := make(map[string]any)
 		var sortedKeys []string
@@ -84,10 +81,9 @@ func NewReflectValue[T any, M BPMNGeneric](model T, genericType M) (*ReflectValu
 		converter := &Converter{}
 		result, err := converter.ToStruct(model)
 		if err != nil {
-			return nil, NewError(fmt.Errorf("Error 1: %v\n", err))
+			return nil, NewError(fmt.Errorf("%v\n", err))
 		}
 		instance = reflect.New(reflect.TypeOf(result.Value.Interface())).Elem()
-
 		return &ReflectValue[M]{
 			ModelConfig: config.ModelConfig[M]{
 				Name:     extractPrefixBeforeProcess(typeOf.Name()),

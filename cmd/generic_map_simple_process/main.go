@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/deemount/gobpmn/internal/parser"
@@ -23,6 +22,8 @@ var (
 )
 
 func main() {
+
+	start := time.Now()
 
 	flags := log.Ldate | log.Ltime | log.Llongfile
 	log.SetFlags(flags)
@@ -59,31 +60,16 @@ func main() {
 	defer cancel()
 
 	type T any
-	process, err := core.NewReflectDI(ctx, genericMapSimpleProcess, map[string]any{})
+	process, err := core.NewReflectDI[T](ctx, genericMapSimpleProcess, map[string]any{})
 	if err != nil {
 		errorLogger.Fatalf("\033[0;31m\n%s", err)
 		return
 	}
 
-	// assuming process contains dynamic struct
-	value := reflect.ValueOf(process)
-
-	// if process is an interface{}, get the underlying value
-	if value.Kind() == reflect.Interface {
-		value = value.Elem()
-	}
-
-	// get the Def field
-	defField := value.FieldByName("Def")
-	if !defField.IsValid() {
-		fmt.Println("Def field not found")
-		return
-	}
-
-	// convert to *foundation.Definitions
-	def, ok := defField.Interface().(*foundation.Definitions)
-	if !ok {
-		fmt.Println("Def field is not of type *foundation.Definitions")
+	// convert the dynamic struct to definitions
+	def, err := common.ConvertDynamicStructToDefinitions(ctx, process)
+	if err != nil {
+		errorLogger.Fatalf("\033[0;31m\n%s", err)
 		return
 	}
 
@@ -100,5 +86,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
+	log.Println("total time:", time.Since(start))
 
 }

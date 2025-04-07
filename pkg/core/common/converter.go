@@ -1,9 +1,11 @@
 package common
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 	"sort"
+	"time"
 
 	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
@@ -140,20 +142,20 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 					continue
 				}
 			}
-			return fmt.Errorf("Def must be *foundation.Definitions or convertible to DefinitionsRepository")
+			return NewError(fmt.Errorf("Def must be *foundation.Definitions or convertible to DefinitionsRepository"))
 		case "IsExecutable":
 			if b, ok := field.Value.(bool); ok {
 				fieldValue.SetBool(b)
 				continue
 			}
-			return fmt.Errorf("IsExecutable must be bool, got %T", field.Value)
+			return NewError(fmt.Errorf("IsExecutable must be bool, got %T", field.Value))
 		}
 		// normal field assignment with type conversion
 		value := reflect.ValueOf(field.Value)
 		if value.Type().ConvertibleTo(fieldValue.Type()) {
 			fieldValue.Set(value.Convert(fieldValue.Type()))
 		} else {
-			return fmt.Errorf("cannot assign %v to %v", value.Type(), fieldValue.Type())
+			return NewError(fmt.Errorf("cannot assign %v to %v", value.Type(), fieldValue.Type()))
 		}
 	}
 	return nil
@@ -165,4 +167,35 @@ func convertDefinitions(def *foundation.Definitions) foundation.DefinitionsRepos
 		return foundation.NewDefinitions()
 	}
 	return def
+}
+
+const DefaultTimeout = 20 * time.Millisecond
+
+func ConvertDynamicStructToDefinitions(ctx context.Context, process any) (*foundation.Definitions, error) {
+
+	if ctx == nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, DefaultTimeout)
+		defer cancel()
+		return ConvertDynamicStructToDefinitions(ctx, process)
+	}
+
+	// assuming process contains dynamic struct
+	value := reflect.ValueOf(process)
+	// if process is an interface{}, get the underlying value
+	if value.Kind() == reflect.Interface {
+		value = value.Elem()
+	}
+	// get the Def field
+	defField := value.FieldByName("Def")
+	if !defField.IsValid() {
+		fmt.Println("Def field not found")
+		return nil, fmt.Errorf("Def field not found")
+	}
+	// convert to *foundation.Definitions
+	def, ok := defField.Interface().(*foundation.Definitions)
+	if !ok {
+		return nil, fmt.Errorf("Def field is not of type *foundation.Definitions")
+	}
+	return def, nil
 }

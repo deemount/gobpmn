@@ -1,29 +1,28 @@
-on:
-    push:
-      branches:
-        - main
-    pull_request:
-      branches:
-        - main
-name: Code Coverage
+name: coverage
+on: [push, pull_request]
+
 jobs:
-    coverage:
-      runs-on: "ubuntu-latest"
-      steps:
-      - name: Install Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.24.x
+  coverage:
+    strategy:
+      matrix:
+        go-version: [^1]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      GO111MODULE: "on"
+    steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Calc coverage
-        run: |
-          go test -v -covermode=atomic -coverprofile=coverage.out
-      - uses: codecov/codecov-action@v1
+        uses: actions/checkout@v3
+
+      - name: Install Go
+        uses: actions/setup-go@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          files: coverage.out
-          flags: unittests # optional
-          name: codecov-gorgonia # optional
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
+          go-version: ${{ matrix.go-version }}
+
+      - name: Coverage
+        run: go test -race -covermode atomic -coverprofile=profile.cov ./...
+
+      - name: Send coverage
+        uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: profile.cov

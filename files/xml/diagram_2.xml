@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <definitions   id="Definitions_2c99f7f7" >
+   <process id="Process_d117d879" name="Process" isExecutable="true">
+     <startEvent id="StartEvent_1" name="StartEvent" isInterrupting="true">
+       <outgoing>Flow_0c03e252</outgoing>
+     </startEvent>
+     <endEvent id="Event_7d8e654b" name="EndEvent"></endEvent>
+     <userTask id="Activity_5702e0ac" name="UserTask">
+       <incoming>Flow_4d5ce0d5</incoming>
+       <outgoing>Flow_d8351715</outgoing>
+     </userTask>
+     <userTask id="Activity_c556a0a2" name="SpecialUserTask">
+       <incoming>Flow_d8351715</incoming>
+       <outgoing>Flow_671f2003</outgoing>
+     </userTask>
+     <scriptTask id="Activity_04e9e356" name="ScriptTask">
+       <incoming>Flow_8efe3091</incoming>
+       <outgoing>Flow_e7cd009a</outgoing>
+     </scriptTask>
+     <scriptTask id="Activity_6563a603" name="OtherScriptTask">
+       <incoming>Flow_e7cd009a</incoming>
+       <outgoing>Flow_4d5ce0d5</outgoing>
+     </scriptTask>
+     <task id="Activity_5874bb74" name="Task">
+       <incoming>Flow_0c03e252</incoming>
+       <outgoing>Flow_a3cd972c</outgoing>
+     </task>
+     <task id="Activity_308be64e" name="SecondTask">
+       <incoming>Flow_a3cd972c</incoming>
+       <outgoing>Flow_8efe3091</outgoing>
+     </task>
+     <sequenceFlow id="Flow_0c03e252" name="FromStartEvent" sourceRef="StartEvent_1" targetRef="Activity_5874bb74"></sequenceFlow>
+     <sequenceFlow id="Flow_a3cd972c" name="FromTask" sourceRef="Activity_5874bb74" targetRef="Activity_308be64e"></sequenceFlow>
+     <sequenceFlow id="Flow_8efe3091" name="FromSecondTask" sourceRef="Activity_308be64e" targetRef="Activity_04e9e356"></sequenceFlow>
+     <sequenceFlow id="Flow_e7cd009a" name="FromScriptTask" sourceRef="Activity_04e9e356" targetRef="Activity_6563a603"></sequenceFlow>
+     <sequenceFlow id="Flow_4d5ce0d5" name="FromOtherScriptTask" sourceRef="Activity_6563a603" targetRef="Activity_5702e0ac"></sequenceFlow>
+     <sequenceFlow id="Flow_d8351715" name="FromUserTask" sourceRef="Activity_5702e0ac" targetRef="Activity_c556a0a2"></sequenceFlow>
+     <sequenceFlow id="Flow_671f2003" name="FromSpecialUserTask" sourceRef="Activity_c556a0a2" targetRef="Event_7d8e654b"></sequenceFlow>
+   </process>
+ </definitions>

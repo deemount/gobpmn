@@ -18,6 +18,7 @@ var (
 	DefaultFilenamePrefix = "diagram"    // DefaultFilenamePrefix is the default filename prefix
 	DefaultPathBPMN       = "files/bpmn" // DefaultPathBPMN is the default path to the bpmn files
 	DefaultPathJSON       = "files/json" // DefaultPathJSON is the default path to the json files
+	DefaultPathXML        = "files/xml"  // DefaultPathXML is the default path to the xml files
 
 	// Errors
 	ErrPathNotFound      = errors.New("path not found")           // ErrPathNotFound is the error for the path not found
@@ -38,6 +39,7 @@ type (
 		FilenamePrefix string                           // FilenamePrefix is a part of the name of the current file
 		FilePathBPMN   string                           // FilePathBPMN is the path to the bpmn files
 		FilePathJSON   string                           // FilePathJSON is the path to the json files
+		FilePathXML    string                           // FilePathXML is the path to the xml files
 		Def            *foundation.Definitions          // Def is the pointer definition of the model
 		Repo           foundation.DefinitionsRepository // Repo is the repository of the model
 	}
@@ -51,16 +53,17 @@ type (
 // The method sets the default values and applies the options
 // to the parser.
 func NewBPMNParser(opts ...Option) (BPMNParserRepository, error) {
-	// Set the default values
+	// set the default values
 	parser := &BPMNParser{
 		Counter:        DefaultCounter,
 		FilenamePrefix: DefaultFilenamePrefix,
 		FilePathBPMN:   DefaultPathBPMN,
 		FilePathJSON:   DefaultPathJSON,
+		FilePathXML:    DefaultPathXML,
 		Def:            nil,
 		Repo:           nil,
 	}
-	// Apply the options to the parser
+	// apply the options to the parser
 	for _, opt := range opts {
 		opt(parser)
 	}
@@ -70,21 +73,26 @@ func NewBPMNParser(opts ...Option) (BPMNParserRepository, error) {
 	return parser, nil
 }
 
-// Marshal builds the bpmn and json files and returns the BPMNParser
-// and an error if an error occurs during the process.
+// Marshal builds the bpmn, json and xml files and returns an error,
+// if an error occurs during the process.
 // The method calls the MarshalBPMN and MarshalJSON methods.
+// NOTE: Actually no option pattern is used here. Should be done later.
 func (parser BPMNParser) Marshal() error {
 	if err := parser.save(); err != nil {
 		return err
 	}
-	_, err := parser.marshalJSON()
+	_, err := parser.MarshalJSON()
+	if err != nil {
+		return err
+	}
+	_, err = parser.ToXML()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// Save ...
+// save ...
 func (parser *BPMNParser) save() error {
 
 	if parser.FilePathBPMN == "" {
@@ -110,33 +118,60 @@ func (parser *BPMNParser) writeFile(path, filename string, data []byte, extensio
 	defer f.Close()
 
 	if extension == "json" {
-		// Write the JSON data to the file
+		// write the json data to the file
 		if _, err := f.Write(data); err != nil {
 			return fmt.Errorf("error writing to file %s: %v", fullPath, err)
 		}
 		return f.Sync()
 	}
 
+	// check if the file is a BPMN file
+	if extension == "xml" {
+		d := []byte(fmt.Sprintf("%v", xml.Header+string(data)))
+		// replace xsd prefixes with empty strings
+		plain := ToPlainXML(d)
+		// write the xml data to the file
+		if _, err := f.Write(plain); err != nil {
+			return fmt.Errorf("error writing to file %s: %v", fullPath, err)
+		}
+		return f.Sync()
+	}
+
+	// write the xml data to the file
 	if _, err := f.Write([]byte(xml.Header + string(data))); err != nil {
 		return fmt.Errorf("error writing to file %s: %v", fullPath, err)
 	}
-
 	return f.Sync()
 }
 
 // MarshalJSON marshals the repository data to JSON and saves it as a file.
-func (parser *BPMNParser) marshalJSON() ([]byte, error) {
-	jsonData, err := json.MarshalIndent(parser.Repo, " ", "  ")
+func (parser *BPMNParser) MarshalJSON() ([]byte, error) {
+	data, err := json.MarshalIndent(parser.Repo, " ", "  ")
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling JSON data: %v", err)
 	}
 
-	err = parser.writeFile(parser.FilePathJSON, parser.GetFilename(), jsonData, "json")
+	err = parser.writeFile(parser.FilePathJSON, parser.GetFilename(), data, "json")
 	if err != nil {
 		return nil, err
 	}
 
-	return jsonData, nil
+	return data, nil
+}
+
+// MarshalXML marshals the repository data to xml and saves it as a file.
+func (parser *BPMNParser) ToXML() ([]byte, error) {
+	data, err := xml.MarshalIndent(parser.Repo, " ", "  ")
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling xml data: %v", err)
+	}
+
+	err = parser.writeFile(parser.FilePathXML, parser.GetFilename(), data, "xml")
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
 // GetFilename returns the current bpmn filename

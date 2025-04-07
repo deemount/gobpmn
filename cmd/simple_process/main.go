@@ -1,5 +1,5 @@
-//go:build go1.23
-// +build go1.23
+//go:build go1.24
+// +build go1.24
 
 package main
 
@@ -19,6 +19,14 @@ import (
 )
 
 var bpmnParser parser.BPMNParser
+
+// Testing some logging
+var (
+	debugLogger,
+	errorLogger,
+	infoLogger,
+	warningLogger *log.Logger
+)
 
 // SimpleProcess is a struct that represents a process model
 // with BPMN elements, with named fields.
@@ -55,9 +63,19 @@ type SimpleProcess struct {
 
 func main() {
 
+	start := time.Now()
+
 	flags := log.Ldate | log.Lshortfile
 	log.SetFlags(flags)
-	errorLogger := log.New(os.Stdout, "ERROR: ", flags)
+
+	logFile, _ := os.Create("files/log/build.log")
+	defer logFile.Close()
+	log.SetOutput(logFile)
+
+	debugLogger = log.New(os.Stdout, "DEBUG: ", flags)
+	errorLogger = log.New(os.Stdout, "ERROR: ", flags)
+	infoLogger = log.New(os.Stdout, "INFO: ", flags)
+	warningLogger = log.New(os.Stdout, "WARNING: ", flags)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
@@ -91,5 +109,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
+	log.Println("total time:", time.Since(start))
 
 }
