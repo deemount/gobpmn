@@ -11,6 +11,7 @@ import (
 
 var (
 	schemaOMGBpmnModel = "http://www.omg.org/spec/BPMN/20100524/MODEL"
+	schemaBpmnDI       = "http://www.omg.org/spec/BPMN/20100524/DI"
 	schemaOMGDC        = "http://www.omg.org/spec/DD/20100524/DC"
 	schemaBpmnIOSchema = "http://bpmn.io/schema/bpmn"
 )
@@ -22,6 +23,7 @@ type (
 		SetID(typ string, suffix any)
 		GetID() *string
 		SetBpmn()
+		SetBpmnDI()
 		SetDC()
 		SetTargetNamespace()
 		SetProcess(num int)
@@ -36,11 +38,13 @@ type (
 	Definitions struct {
 		XMLName         xml.Name                       `xml:"bpmn:definitions" json:"-"`
 		Bpmn            string                         `xml:"xmlns:bpmn,attr" json:"-"`
+		BpmnDI          string                         `xml:"xmlns:bpmndi,attr" json:"-"`
 		DC              string                         `xml:"xmlns:dc,attr,omitempty" json:"-"`
 		ID              string                         `xml:"id,attr" json:"id"`
 		TargetNamespace string                         `xml:"targetNamespace,attr" json:"-"`
 		Collaboration   []infrastructure.Collaboration `xml:"bpmn:collaboration,omitempty" json:"collaboration,omitempty"`
 		Process         []infrastructure.Process       `xml:"bpmn:process,omitempty" json:"process"`
+		Diagram         []infrastructure.Diagram       `xml:"bpmndi:BPMNDiagram,omitempty" json:"diagram,omitempty"`
 	}
 
 	// TDefinitions ...
@@ -77,6 +81,11 @@ func (d *Definitions) SetBpmn() {
 	d.Bpmn = schemaOMGBpmnModel
 }
 
+// SetBpmnDI ...
+func (d *Definitions) SetBpmnDI() {
+	d.BpmnDI = schemaBpmnDI
+}
+
 // SetDC ...
 func (d *Definitions) SetDC() {
 	d.DC = schemaOMGDC
@@ -110,10 +119,21 @@ func (d Definitions) GetProcess(num int) *infrastructure.Process {
 	return &d.Process[num]
 }
 
+// SetDiagram ...
+func (d *Definitions) SetDiagram(num int) {
+	d.Diagram = make([]infrastructure.Diagram, num)
+}
+
+// SetDiagram ...
+func (d Definitions) GetDiagram(num int) *infrastructure.Diagram {
+	return &d.Diagram[num]
+}
+
 // SetDefaultAttributes ...
 func (d *Definitions) SetDefaultAttributes() {
 	h := GenerateHash()
 	d.SetBpmn()
+	d.SetBpmnDI()
 	d.SetDC()
 	d.SetID("definitions", h)
 	d.SetTargetNamespace()
