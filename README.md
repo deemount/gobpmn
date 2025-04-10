@@ -4,7 +4,14 @@
 
 ## Description
 
-gobpmn is an experimental library that makes it possible to reflect structs in Go and create business process models with it.
+gobpmn is an experimental library that makes it possible to reflect
+
+* structs,
+* anonymous fields,
+* typed and
+* generic maps
+
+in Go and create business process models with it.
 
 ***STILL IN DEVELOPMENT***
 
@@ -22,7 +29,10 @@ Optional:
 2. To run the app, copy and paste this into your terminal
 
 ```bash
-go run cmd/[dirname]/main.go
+go run examples/generic_map_simple_process/main.go
+go run examples/typed_map_simple_process/main.go
+go run examples/renting_process/main.go
+go run examples/simple_process/main.go
 ```
 
 1. Install Saxon XSL Transformer (MacOS) with Homebrew
