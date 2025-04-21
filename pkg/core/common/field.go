@@ -8,11 +8,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/deemount/gobpmn/pkg/config"
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // extractOrderedFields extracts ordered fields from a struct or map.
-func extractOrderedFields[T any](model T) ([]config.OrderedField, error) {
+func extractOrderedFields[T any](model T) ([]types.OrderedField, error) {
 
 	typeOf := reflect.TypeOf(model)
 	valueOf := reflect.ValueOf(model)
@@ -20,10 +20,10 @@ func extractOrderedFields[T any](model T) ([]config.OrderedField, error) {
 	switch typeOf.Kind() {
 	case reflect.Struct:
 		fields := reflect.VisibleFields(typeOf)
-		ordered := make([]config.OrderedField, 0, len(fields))
+		ordered := make([]types.OrderedField, 0, len(fields))
 		for _, field := range fields {
 			val := valueOf.FieldByIndex(field.Index)
-			ordered = append(ordered, config.OrderedField{
+			ordered = append(ordered, types.OrderedField{
 				Name:  field.Name,
 				Value: val.Interface(),
 				Meta:  field,
@@ -42,7 +42,7 @@ func extractOrderedFields[T any](model T) ([]config.OrderedField, error) {
 			strKey := key.String()
 			value := valueOf.MapIndex(key).Interface()
 			switch v := value.(type) {
-			case BPMN:
+			case types.BPMN:
 				bpmnElements = append(bpmnElements, struct {
 					Key string
 					Pos int
@@ -58,9 +58,9 @@ func extractOrderedFields[T any](model T) ([]config.OrderedField, error) {
 		for _, elem := range bpmnElements {
 			sortedKeys = append(sortedKeys, elem.Key)
 		}
-		ordered := make([]config.OrderedField, 0, len(sortedKeys))
+		ordered := make([]types.OrderedField, 0, len(sortedKeys))
 		for _, key := range sortedKeys {
-			ordered = append(ordered, config.OrderedField{
+			ordered = append(ordered, types.OrderedField{
 				Name:  key,
 				Value: fields[key],
 				Meta:  nil,
@@ -218,7 +218,7 @@ func collectFromFieldsWithNeighbors(data any) map[string]map[string]any {
 }
 
 // instanceFieldName returns the field value by the name in v.Instance.
-func instanceFieldName[M BPMNGeneric](v *ReflectValue[M], name string) reflect.Value {
+func instanceFieldName[M types.BPMNGeneric](v *ReflectValue[M], name string) reflect.Value {
 	value := v.Instance.FieldByName(name)
 	if !value.IsValid() {
 		fmt.Printf("instanceFieldName: field %s not found in struct instance. Available fields: %v\n", name, getFieldNames(v.Instance))

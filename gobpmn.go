@@ -12,7 +12,29 @@ import (
 	"github.com/deemount/gobpmn/pkg/core"
 	"github.com/deemount/gobpmn/pkg/core/common"
 	"github.com/deemount/gobpmn/pkg/core/foundation"
+	"github.com/deemount/gobpmn/pkg/types"
 )
+
+// BPMN is a re-exported type from the types package
+type BPMN = types.BPMN
+
+// DefRepo is a re-exported type from the foundation package
+type Repository = foundation.DefinitionsRepository
+
+// NewDefinitions creates a new DefinitionsRepository
+// with a new Definitions struct.
+// This is a convenience function to create a new DefinitionsRepository
+// without having to create a new Definitions struct manually.
+func Definitions() Repository {
+	return foundation.NewDefinitions()
+}
+
+// HasDefinitions is an interface for types that have a GetDefinitions method
+// that returns a DefinitionsRepository.
+// This is used to create a BPMN model from a static struct definition.
+type HasDefinitions interface {
+	GetDefinitions() Repository
+}
 
 // Options defines global optional parameters for model creation
 type Options struct {
@@ -26,10 +48,6 @@ func DefaultOptions() Options {
 		Timeout:  time.Second * 60,
 		Validate: true,
 	}
-}
-
-type HasDefinitions interface {
-	GetDefinitions() foundation.DefinitionsRepository
 }
 
 // FromStruct creates a BPMN model from a static struct definition

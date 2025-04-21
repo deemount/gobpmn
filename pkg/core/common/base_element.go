@@ -3,10 +3,12 @@ package common
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // BaseElement provides common functionality for element handlers
-type BaseElement[M BPMNGeneric] struct {
+type BaseElement[M types.BPMNGeneric] struct {
 	processor *ElementProcessor[M]
 }
 

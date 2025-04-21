@@ -8,6 +8,8 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // typ ...
@@ -48,16 +50,16 @@ func typ(n string) string {
 // It uses the FNV-1a algorithm to generate a hash value.
 // The method returns a struct, called BPMN, with the hash value.
 // The argument typ is the type of the BPMN element.
-func inject(typ string, idx int) (BPMN, error) {
+func inject(typ string, idx int) (types.BPMN, error) {
 	n := 8
 	b := make([]byte, n)
 	c := fnv.New32a()
 	if _, err := rand.Read(b); err != nil {
-		return BPMN{}, err
+		return types.BPMN{}, err
 	}
 	s := fmt.Sprintf("%x", b)
 	if _, err := c.Write([]byte(s)); err != nil {
-		return BPMN{}, err
+		return types.BPMN{}, err
 	}
 	defer c.Reset()
 
@@ -77,7 +79,7 @@ func inject(typ string, idx int) (BPMN, error) {
 		h = fmt.Sprintf("%x", string(c.Sum(nil)))
 	}
 
-	result := BPMN{
+	result := types.BPMN{
 		Type: typ, // Note: needs to be reconsidered. Is this the right method, to put the typ value into the Type field?
 		Hash: h,
 	}
@@ -133,7 +135,7 @@ func sortedKeys(fields map[string]any, valueOf reflect.Value) []string {
 		strKey := key.String()
 		value := valueOf.MapIndex(key).Interface()
 		switch v := value.(type) {
-		case BPMN:
+		case types.BPMN:
 			bpmnElements = append(bpmnElements, struct {
 				Key string
 				Pos int

@@ -9,12 +9,7 @@ import (
 	"os"
 
 	"github.com/deemount/gobpmn"
-	"github.com/deemount/gobpmn/internal/parser"
-	"github.com/deemount/gobpmn/pkg/core/common"
-	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
-
-var bpmnParser parser.BPMNParser
 
 // RentingProcess is a struct that represents a collaborative process model
 // with anonymous fields. It is a composition of two processes without a laneset.
@@ -24,7 +19,7 @@ type (
 	RentingProcess struct {
 
 		// The first field must be set to a DefinitionsRepository.
-		Def foundation.DefinitionsRepository // Refers to the DefinitionsRepository
+		Def gobpmn.Repository // Refers to the DefinitionsRepository
 
 		// The second field must be set to a pool.
 		// A pool must have the name Pool in itself to become identified as such and should/can
@@ -40,37 +35,37 @@ type (
 	RentingPool struct {
 		TenantIsExecutable   bool        // Process Configuration
 		LandlordIsExecutable bool        // Process Configuration
-		Collaboration        common.BPMN // BPMN Element
-		TenantProcess        common.BPMN // BPMN Element
-		TenantParticipant    common.BPMN // BPMN Element
-		LandlordProcess      common.BPMN // BPMN Element
-		LandlordParticipant  common.BPMN // BPMN Element
+		Collaboration        gobpmn.BPMN // BPMN Element
+		TenantProcess        gobpmn.BPMN // BPMN Element
+		TenantParticipant    gobpmn.BPMN // BPMN Element
+		LandlordProcess      gobpmn.BPMN // BPMN Element
+		LandlordParticipant  gobpmn.BPMN // BPMN Element
 	}
 
 	// Tenant
 	Tenant struct {
-		StartEvent     common.BPMN // BPMN Element
-		FromStartEvent common.BPMN // Flow Element
-		Task           common.BPMN // BPMN Element
-		FromTask       common.BPMN // Flow Element
-		EndEvent       common.BPMN // BPMN Element
+		StartEvent     gobpmn.BPMN // BPMN Element
+		FromStartEvent gobpmn.BPMN // Flow Element
+		Task           gobpmn.BPMN // BPMN Element
+		FromTask       gobpmn.BPMN // Flow Element
+		EndEvent       gobpmn.BPMN // BPMN Element
 	}
 
 	// Landlord
 	Landlord struct {
-		StartEvent     common.BPMN // BPMN Element
-		FromStartEvent common.BPMN // Flow Element
-		FirstTask      common.BPMN // BPMN Element
-		FromFirstTask  common.BPMN // Flow Element
-		SecondTask     common.BPMN // BPMN Element
-		FromSecondTask common.BPMN // Flow Element
-		ScriptTask     common.BPMN // BPMN Element
-		FromScriptTask common.BPMN // Flow Element
-		EndEvent       common.BPMN // BPMN Element
+		StartEvent     gobpmn.BPMN // BPMN Element
+		FromStartEvent gobpmn.BPMN // Flow Element
+		FirstTask      gobpmn.BPMN // BPMN Element
+		FromFirstTask  gobpmn.BPMN // Flow Element
+		SecondTask     gobpmn.BPMN // BPMN Element
+		FromSecondTask gobpmn.BPMN // Flow Element
+		ScriptTask     gobpmn.BPMN // BPMN Element
+		FromScriptTask gobpmn.BPMN // Flow Element
+		EndEvent       gobpmn.BPMN // BPMN Element
 	}
 )
 
-func (rp RentingProcess) GetDefinitions() foundation.DefinitionsRepository {
+func (rp RentingProcess) GetDefinitions() gobpmn.Repository {
 	return rp.Def
 }
 
@@ -80,9 +75,6 @@ func main() {
 	log.SetFlags(flags)
 	errorLogger := log.New(os.Stdout, "ERROR: ", flags)
 
-	/*
-	 * RentalProcess
-	 */
 	_, err := gobpmn.FromStruct(RentingProcess{})
 	if err != nil {
 		errorLogger.Fatalf("\033[0;31m:\n%s", err)

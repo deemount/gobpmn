@@ -3,6 +3,8 @@ package common
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // ProcessMethod represents a BPMN process method with its argument
@@ -14,7 +16,7 @@ type ProcessMethod struct {
 // GetProcessMethods returns the standard BPMN process methods with their quantities.
 // Each method represents a BPMN element type and its required quantity.
 // Note: q Quantity for a single process should be used in the Arg field.
-func GetProcessMethods[M BPMNGeneric](processIdx int, q *Quantity[M]) []ProcessMethod {
+func GetProcessMethods[M types.BPMNGeneric](processIdx int, q *Quantity[M]) []ProcessMethod {
 	process := q.Elements[processIdx]
 	return []ProcessMethod{
 		{Name: "SetStartEvent", Arg: process[startEvent]},

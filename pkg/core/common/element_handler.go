@@ -5,6 +5,8 @@ package common
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // StartEventIndices holds indices for start events
@@ -13,12 +15,12 @@ type StartEventIndices struct {
 }
 
 // StartEventHandler handles start events
-type StartEventHandler[M BPMNGeneric] struct {
+type StartEventHandler[M types.BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewStartEventHandler creates a new StartEventHandler instance
-func NewStartEventHandler[M BPMNGeneric](ep *ElementProcessor[M]) *StartEventHandler[M] {
+func NewStartEventHandler[M types.BPMNGeneric](ep *ElementProcessor[M]) *StartEventHandler[M] {
 	return &StartEventHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -149,12 +151,12 @@ type EventIndices struct {
 }
 
 // EventHandler handles different types of events
-type EventHandler[M BPMNGeneric] struct {
+type EventHandler[M types.BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewEventHandler creates a new EventHandler instance
-func NewEventHandler[M BPMNGeneric](ep *ElementProcessor[M]) *EventHandler[M] {
+func NewEventHandler[M types.BPMNGeneric](ep *ElementProcessor[M]) *EventHandler[M] {
 	return &EventHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -444,12 +446,12 @@ type GatewayIndices struct {
 }
 
 // GatewayHandler handles different types of gateways
-type GatewayHandler[M BPMNGeneric] struct {
+type GatewayHandler[M types.BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewGatewayHandler creates a new GatewayHandler instance
-func NewGatewayHandler[M BPMNGeneric](ep *ElementProcessor[M]) *GatewayHandler[M] {
+func NewGatewayHandler[M types.BPMNGeneric](ep *ElementProcessor[M]) *GatewayHandler[M] {
 	return &GatewayHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -830,12 +832,12 @@ type ActivityIndices struct {
 }
 
 // ActivityHandler handles different types of activities
-type ActivityHandler[M BPMNGeneric] struct {
+type ActivityHandler[M types.BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewActivityHandler creates a new ActivityHandler instance
-func NewActivityHandler[M BPMNGeneric](ep *ElementProcessor[M]) *ActivityHandler[M] {
+func NewActivityHandler[M types.BPMNGeneric](ep *ElementProcessor[M]) *ActivityHandler[M] {
 	return &ActivityHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -1215,12 +1217,12 @@ type FlowIndices struct {
 }
 
 // FlowHandler handles flow elements
-type FlowHandler[M BPMNGeneric] struct {
+type FlowHandler[M types.BPMNGeneric] struct {
 	*BaseElement[M]
 }
 
 // NewFlowHandler creates a new FlowHandler instance
-func NewFlowHandler[M BPMNGeneric](ep *ElementProcessor[M]) *FlowHandler[M] {
+func NewFlowHandler[M types.BPMNGeneric](ep *ElementProcessor[M]) *FlowHandler[M] {
 	handler := &FlowHandler[M]{
 		BaseElement: &BaseElement[M]{
 			processor: ep,
@@ -1301,16 +1303,16 @@ func (h *FlowHandler[M]) setFlowSpecificProperties(flow reflect.Value, info Fiel
 	targetRef := h.processor.value.FlowNeighbors[info.Name]["TargetRef"].(map[string]any)
 	if info.hash != "" {
 		if err := callMethod(flow, "SetSourceRef", []reflect.Value{
-			reflect.ValueOf(sourceRef["Value"].(BPMN).Type),
-			reflect.ValueOf(sourceRef["Value"].(BPMN).Hash),
+			reflect.ValueOf(sourceRef["Value"].(types.BPMN).Type),
+			reflect.ValueOf(sourceRef["Value"].(types.BPMN).Hash),
 		}); err != nil {
 			return NewError(fmt.Errorf("failed to set source reference:\n %w", err))
 		}
 	}
 	if info.nextHash != "" {
 		if err := callMethod(flow, "SetTargetRef", []reflect.Value{
-			reflect.ValueOf(targetRef["Value"].(BPMN).Type),
-			reflect.ValueOf(targetRef["Value"].(BPMN).Hash),
+			reflect.ValueOf(targetRef["Value"].(types.BPMN).Type),
+			reflect.ValueOf(targetRef["Value"].(types.BPMN).Hash),
 		}); err != nil {
 			return NewError(fmt.Errorf("failed to set target reference:\n %w", err))
 		}

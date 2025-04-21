@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 type ElementHandler interface {
@@ -11,7 +13,7 @@ type ElementHandler interface {
 }
 
 // ElementProcessor handles BPMN element processing
-type ElementProcessor[M BPMNGeneric] struct {
+type ElementProcessor[M types.BPMNGeneric] struct {
 	value    *ReflectValue[M]
 	quantity *Quantity[M]
 	handlers map[ElementType]ElementHandler
@@ -26,7 +28,7 @@ type ProcessingConfig struct {
 }
 
 // NewElementProcessor creates a new ElementProcessor instance
-func NewElementProcessor[M BPMNGeneric](v *ReflectValue[M], q *Quantity[M]) (*ElementProcessor[M], error) {
+func NewElementProcessor[M types.BPMNGeneric](v *ReflectValue[M], q *Quantity[M]) (*ElementProcessor[M], error) {
 	if v == nil || q == nil {
 		return nil, NewError(fmt.Errorf("invalid parameters: ReflectValue and quantity must not be nil"))
 	}

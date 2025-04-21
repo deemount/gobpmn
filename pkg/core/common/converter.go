@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/deemount/gobpmn/pkg/core/foundation"
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // Converter is a struct
@@ -67,7 +68,7 @@ func (c *Converter) getOrderedFields(m map[string]any) ([]FieldInfo, error) {
 	var fields []FieldInfo
 	for name, value := range m {
 		pos := 0
-		if bpmn, ok := value.(BPMN); ok {
+		if bpmn, ok := value.(types.BPMN); ok {
 			pos = bpmn.Pos
 		}
 		fields = append(fields, FieldInfo{
@@ -116,8 +117,8 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 			return false
 		}
 		// Then sort BPMN fields by Pos
-		_, iIsBPMN := fields[i].Value.(BPMN)
-		_, jIsBPMN := fields[j].Value.(BPMN)
+		_, iIsBPMN := fields[i].Value.(types.BPMN)
+		_, jIsBPMN := fields[j].Value.(types.BPMN)
 		if iIsBPMN && jIsBPMN {
 			return fields[i].Pos < fields[j].Pos
 		}
@@ -129,8 +130,8 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 	for i, field := range fields {
 		fieldValue := structValue.Field(i)
 		// handle BPMN fields with position preservation
-		if bpmn, ok := field.Value.(BPMN); ok {
-			fieldValue.Set(reflect.ValueOf(BPMN{Pos: bpmn.Pos}))
+		if bpmn, ok := field.Value.(types.BPMN); ok {
+			fieldValue.Set(reflect.ValueOf(types.BPMN{Pos: bpmn.Pos}))
 			continue
 		}
 		// handle special cases with proper type checking

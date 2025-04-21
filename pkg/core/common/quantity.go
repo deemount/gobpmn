@@ -10,11 +10,13 @@ import (
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // Quantity holds all the quantities of the BPMN elements
 // in the BPMN model. It is used to count the number of elements
-type Quantity[M BPMNGeneric] struct {
+type Quantity[M types.BPMNGeneric] struct {
 	sync.RWMutex
 	Elements    map[int]map[processElement]int
 	Pool        int
@@ -126,7 +128,7 @@ func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], process
 		var sortedEntries []sortedEntry
 
 		for key, value := range fields {
-			if bpmnValue, ok := value.(BPMN); ok {
+			if bpmnValue, ok := value.(types.BPMN); ok {
 				// save BPMN elements by Pos
 				sortedEntries = append(sortedEntries, sortedEntry{Key: key, Pos: bpmnValue.Pos})
 			} else {

@@ -36,6 +36,79 @@ go get github.com/deemount/gobpmn@latest
 go install github.com/deemount/gobpmn@latest
 ```
 
+## Examples
+
+```bash
+go run examples/generic_map_simple_process/main.go
+go run examples/typed_map_simple_process/main.go
+go run examples/renting_process/main.go
+go run examples/simple_process/main.go
+go run examples/small_process/main.go
+```
+
+## How To
+
+```go
+package main
+
+import (
+    "log"
+    "github.com/deemount/gobpmn"
+)
+
+type Process struct {
+    Def             gobpmn.Repository
+    IsExecutable    bool
+    Process         gobpmn.BPMN
+    StartEvent      gobpmn.BPMN
+    FromStartEvent  gobpmn.BPMN
+    Task            gobpmn.BPMN
+    FromTask        gobpmn.BPMN
+    EndEvent        gobpmn.BPMN
+}
+
+func (p Process) GetDefinitions() gobpmn.Repository {
+    return p.Def
+}
+
+func main() {
+    _, err := gobpmn.FromStruct(Process{})
+    if err != nil {
+        log.Fatalf("ERROR: %s", err)
+        return
+    }
+}
+```
+
+```go
+package main
+
+import (
+    "log"
+    "github.com/deemount/gobpmn"
+)
+
+var Process = map[string]any{
+    "Def":                 gobpmn.Definitions(),
+    "IsExecutable":        true,
+    "Process":             gobpmn.BPMN{Pos: 1},
+    "StartEvent":          gobpmn.BPMN{Pos: 2},
+    "FromStartEvent":      gobpmn.BPMN{Pos: 3},
+    "Task":                gobpmn.BPMN{Pos: 4},
+    "FromTask":            gobpmn.BPMN{Pos: 5},
+    "EndEvent":            gobpmn.BPMN{Pos: 6},
+}
+
+func main() {
+    type T any
+    _, err := gobpmn.FromMap[T](Process)
+    if err != nil {
+        log.Fatalf("ERROR: %s", err)
+        return
+    }
+}
+```
+
 ## Wiki
 
 Read the [documentation](https://github.com/deemount/gobpmn/wiki)

@@ -3,10 +3,12 @@ package common
 import (
 	"reflect"
 	"sort"
+
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // Mapping ...
-type Mapping[M BPMNGeneric] struct {
+type Mapping[M types.BPMNGeneric] struct {
 	Anonym,
 	Config,
 	BPMNType map[int]string
@@ -75,7 +77,7 @@ func (m *Mapping[M]) Assign(v *ReflectValue[M]) {
 
 			// extract the Pos-value, if the value is BPMN
 			if valueType.Name() == "BPMN" {
-				bpmnValue, ok := any(value).(BPMN)
+				bpmnValue, ok := any(value).(types.BPMN)
 				if ok {
 					sortedEntries = append(sortedEntries, sortedEntry{Key: key, Pos: bpmnValue.Pos})
 				}

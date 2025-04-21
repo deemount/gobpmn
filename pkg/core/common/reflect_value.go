@@ -8,10 +8,11 @@ import (
 
 	"github.com/deemount/gobpmn/pkg/config"
 	"github.com/deemount/gobpmn/pkg/core/foundation"
+	"github.com/deemount/gobpmn/pkg/types"
 )
 
 // ReflectValue represents the core structure for BPMN reflection
-type ReflectValue[M BPMNGeneric] struct {
+type ReflectValue[M types.BPMNGeneric] struct {
 	// config.ModelConfig // NOTE: New Version (commented out)
 	config.ModelConfig[M]
 	config.ProcessConfig
@@ -22,7 +23,7 @@ type ReflectValue[M BPMNGeneric] struct {
 
 // NewReflectValue is the first call in the core.ReflectDI function.
 // It creates a new instance of the ReflectValue and saves it in ModelConfig.
-func NewReflectValue[T any, M BPMNGeneric](model T, genericType M) (*ReflectValue[M], error) {
+func NewReflectValue[T any, M types.BPMNGeneric](model T, genericType M) (*ReflectValue[M], error) {
 	if any(model) == nil {
 		return nil, NewError(fmt.Errorf("model cannot be nil"))
 	}
@@ -48,7 +49,7 @@ func NewReflectValue[T any, M BPMNGeneric](model T, genericType M) (*ReflectValu
 			strKey := key.String()
 			value := valueOf.MapIndex(key).Interface()
 			switch v := value.(type) {
-			case BPMN:
+			case types.BPMN:
 				visibleFields[strKey] = v
 			case bool, any:
 				visibleFields[strKey] = v
@@ -563,7 +564,7 @@ func (v *ReflectValue[M]) getCollaboration() (reflect.Value, error) {
 // configureCollaboration sets up the collaboration with its participants
 func (v *ReflectValue[M]) configureCollaboration(collaboration reflect.Value, participantCount int) error {
 	// get the hash value of the collaboration to add it to the ID
-	collab := v.Pool.FieldByName("Collaboration").Interface().(BPMN)
+	collab := v.Pool.FieldByName("Collaboration").Interface().(types.BPMN)
 	config := config.CollaborationConfig{
 		Type: "collaboration", // Note: reconsider the value
 		Hash: collab.Hash,

@@ -56,7 +56,6 @@ type (
 	}
 )
 
-// NewDefinitions ...
 func NewDefinitions() DefinitionsRepository {
 	return &Definitions{}
 }
