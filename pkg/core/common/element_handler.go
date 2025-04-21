@@ -278,21 +278,21 @@ func (h *EventHandler[M]) handleEndEvent(processIndex int, info FieldInfo, confi
 }
 
 // SetProperties sets properties for events.
-func (h *EventHandler[M]) SetProperties(element reflect.Value, info FieldInfo) error {
+func (h *EventHandler[M]) SetProperties(el reflect.Value, info FieldInfo) error {
 
 	// first call base implementation
-	if err := h.BaseElement.SetProperties(element, info); err != nil {
+	if err := h.BaseElement.SetProperties(el, info); err != nil {
 		return err
 	}
 
 	// event specific properties based on type
 	switch info.element {
 	case intermediateCatchEvent:
-		return h.setIntermediateCatchEventProperties(element)
+		return h.setIntermediateCatchEventProperties(el)
 	case intermediateThrowEvent:
-		return h.setIntermediateThrowEventProperties(element)
+		return h.setIntermediateThrowEventProperties(el)
 	case endEvent:
-		return h.setEndEventProperties(element)
+		return h.setEndEventProperties(el)
 	default:
 		return NewError(fmt.Errorf("unsupported event type: %s", info.element))
 	}
@@ -301,7 +301,7 @@ func (h *EventHandler[M]) SetProperties(element reflect.Value, info FieldInfo) e
 
 // setIntermediateCatchEventProperties sets start event specific properties.
 func (h *EventHandler[M]) setIntermediateCatchEventProperties(el reflect.Value) error {
-	properties := map[string]interface{}{
+	properties := map[string]any{
 		// Add more properties as needed
 	}
 
@@ -318,12 +318,12 @@ func (h *EventHandler[M]) setIntermediateCatchEventProperties(el reflect.Value) 
 }
 
 // setIntermediateThrowEventProperties sets start event specific properties.
-func (h *EventHandler[M]) setIntermediateThrowEventProperties(element reflect.Value) error {
+func (h *EventHandler[M]) setIntermediateThrowEventProperties(el reflect.Value) error {
 	properties := map[string]any{
 		// Add more properties as needed
 	}
 	for propName, propValue := range properties {
-		if err := callMethod(element, "Set"+propName, []reflect.Value{
+		if err := callMethod(el, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
 			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
@@ -333,13 +333,13 @@ func (h *EventHandler[M]) setIntermediateThrowEventProperties(element reflect.Va
 }
 
 // setEndEventProperties sets start event specific properties.
-func (h *EventHandler[M]) setEndEventProperties(element reflect.Value) error {
+func (h *EventHandler[M]) setEndEventProperties(el reflect.Value) error {
 	properties := map[string]any{
 		// Add more properties as needed
 	}
 
 	for propName, propValue := range properties {
-		if err := callMethod(element, "Set"+propName, []reflect.Value{
+		if err := callMethod(el, "Set"+propName, []reflect.Value{
 			reflect.ValueOf(propValue),
 		}); err != nil {
 			return NewError(fmt.Errorf("failed to set %s:\n%w", propName, err))
@@ -368,9 +368,9 @@ func (h *EventHandler[M]) configureFlow(el reflect.Value, info FieldInfo) error 
 }
 
 // setIncomingFlowCount sets the number of incoming flows for a event type
-func (h *EventHandler[M]) setIncomingFlowCount(element reflect.Value) error {
+func (h *EventHandler[M]) setIncomingFlowCount(el reflect.Value) error {
 	const incomingFlowCount = 1 // TODO:  incoming flow count can be more than 1
-	err := callMethod(element, "SetIncoming", []reflect.Value{
+	err := callMethod(el, "SetIncoming", []reflect.Value{
 		reflect.ValueOf(incomingFlowCount),
 	})
 	if err != nil {

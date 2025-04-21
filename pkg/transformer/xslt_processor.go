@@ -22,14 +22,15 @@ func NewXSLTProcessor(saxonPath string) *XSLTProcessor {
 // saxon: https://www.saxonica.com/documentation12/index.html#!using-xsl/commandline
 func (p *XSLTProcessor) Transform(inputXML, xsltFile, outputFile string) error {
 	cmd := exec.Command(p.Saxon,
-		"-s:"+inputXML,     // Source XML file
-		"-xsl:"+xsltFile,   // XSLT file
-		"-o:"+outputFile,   // Output file
-		"-explain:out.txt", // Explain the transformation
-		"-t",               // Trace the transformation, useful for debugging
-		"-warnings:silent", // Suppress warnings
-		"-ext:on",          // Enable extension functions
+		"-s:"+inputXML,     // source XML file
+		"-xsl:"+xsltFile,   // xslt file
+		"-o:"+outputFile,   // output file
+		"-explain:out.txt", // explain the transformation
+		"-t",               // trace the transformation, useful for debugging
+		"-warnings:silent", // suppress warnings
+		"-ext:on",          // enable extension functions
 	)
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("XSLT transformation failed: %v\nOutput: %s", err, output)

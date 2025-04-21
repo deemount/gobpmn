@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"sort"
 	"strings"
 
 	"github.com/deemount/gobpmn/pkg/config"
@@ -13,6 +12,7 @@ import (
 
 // ReflectValue represents the core structure for BPMN reflection
 type ReflectValue[M BPMNGeneric] struct {
+	// config.ModelConfig // NOTE: New Version (commented out)
 	config.ModelConfig[M]
 	config.ProcessConfig
 	config.ParticipantConfig
@@ -26,77 +26,112 @@ func NewReflectValue[T any, M BPMNGeneric](model T, genericType M) (*ReflectValu
 	if any(model) == nil {
 		return nil, NewError(fmt.Errorf("model cannot be nil"))
 	}
-	var visibleFields M
-	var instance reflect.Value
+
 	// reflect the type of the struct (typeOf) and
 	typeOf := reflect.TypeOf(model)
 	valueOf := reflect.ValueOf(model)
+
+	var fields M
+	var copy reflect.Value
+
 	switch typeOf.Kind() {
 	case reflect.Struct:
-		fields := reflect.VisibleFields(typeOf)
-		visibleFields = any(fields).(M)
-		instance = reflect.New(typeOf).Elem()
-		return &ReflectValue[M]{
-			ModelConfig: config.ModelConfig[M]{
-				Name:     extractPrefixBeforeProcess(typeOf.Name()),
-				Type:     typeOf,
-				Wrap:     valueOf,
-				Fields:   visibleFields, // struct fields or map keys
-				Instance: instance,      // create a new object of the struct/map, which is a copy of the model
-			},
-		}, nil
+		visibleFields := reflect.VisibleFields(typeOf)
+		fields = any(visibleFields).(M)
+		copy = reflect.New(typeOf).Elem()
+
 	case reflect.Map:
-		fields := make(map[string]any)
-		var sortedKeys []string
-		// temporary struct to store BPMN elements
-		bpmnElements := make([]struct {
-			Key string
-			Pos int
-		}, 0)
+
+		visibleFields := make(map[string]any)
 		// iterate over the map keys
 		for _, key := range valueOf.MapKeys() {
 			strKey := key.String()
 			value := valueOf.MapIndex(key).Interface()
 			switch v := value.(type) {
 			case BPMN:
-				bpmnElements = append(bpmnElements, struct {
-					Key string
-					Pos int
-				}{strKey, v.Pos})
-				fields[strKey] = v
+				visibleFields[strKey] = v
 			case bool, any:
-				fields[strKey] = v
+				visibleFields[strKey] = v
 			}
 		}
-		// sort BPMN elements by Pos
-		sort.SliceStable(bpmnElements, func(i, j int) bool {
-			return bpmnElements[i].Pos < bpmnElements[j].Pos
-		})
-		// create sorted keys
-		for _, elem := range bpmnElements {
-			sortedKeys = append(sortedKeys, elem.Key)
-		}
-		visibleFields := fields // type assertion
+		fields = any(visibleFields).(M)
 
+		// convert the map to a struct
+		converter := &Converter{}
+		result, err := converter.ToStruct(model)
+		if err != nil {
+			return nil, NewError(fmt.Errorf("%v\n", err))
+		}
+		copy = reflect.New(reflect.TypeOf(result.Value.Interface())).Elem()
+
+	default:
+		return nil, NewError(fmt.Errorf("unsupported type: %s", typeOf.Kind()))
+	}
+
+	return &ReflectValue[M]{
+		ModelConfig: config.ModelConfig[M]{
+			Name:     extractPrefixBeforeProcess(typeOf.Name()),
+			Type:     typeOf,
+			Wrap:     valueOf,
+			Fields:   fields, // struct fields or map keys
+			Instance: copy,   // create a new object of the struct/map, which is a copy of the model
+		},
+	}, nil
+
+}
+
+// NewReflectValue is the first call in the core.ReflectDI function.
+// It creates a new instance of the ReflectValue and saves it in ModelConfig.
+// NOTE: New Version (commented out)
+/*
+func NewReflectValue[T any, M BPMNGeneric](model T, genericType M) (*ReflectValue[M], error) {
+	if any(model) == nil {
+		return nil, NewError(fmt.Errorf("model cannot be nil"))
+	}
+
+	// reflect the type of the struct (typeOf) and
+	typeOf := reflect.TypeOf(model)
+	valueOf := reflect.ValueOf(model)
+
+	var orderedFields []config.OrderedField
+	var instance reflect.Value
+	var err error
+
+	orderedFields, err = extractOrderedFields(model)
+	if err != nil {
+		return nil, NewError(err)
+	}
+
+	switch typeOf.Kind() {
+	case reflect.Struct:
+		fields := reflect.VisibleFields(typeOf)
+		visibleFields = any(fields).(M)
+		instance = reflect.New(typeOf).Elem()
+
+	case reflect.Map:
 		converter := &Converter{}
 		result, err := converter.ToStruct(model)
 		if err != nil {
 			return nil, NewError(fmt.Errorf("%v\n", err))
 		}
 		instance = reflect.New(reflect.TypeOf(result.Value.Interface())).Elem()
-		return &ReflectValue[M]{
-			ModelConfig: config.ModelConfig[M]{
-				Name:     extractPrefixBeforeProcess(typeOf.Name()),
-				Type:     typeOf,
-				Wrap:     valueOf,
-				Fields:   any(visibleFields).(M), // struct fields or map keys
-				Instance: instance,               // create a new object of the struct/map, which is a copy of the model
-			},
-		}, nil
+
+	default:
+		return nil, NewError(fmt.Errorf("unsupported type: %s", typeOf.Kind()))
 	}
-	return nil, NewError(fmt.Errorf("unsupported type: %s", typeOf.Kind()))
+
+	return &ReflectValue[M]{
+		ModelConfig: config.ModelConfig{
+			Name: extractPrefixBeforeProcess(typeOf.Name()),
+			Type: typeOf,
+			Wrap: valueOf,
+			Fields: orderedFields, // struct fields or map keys
+			Instance: instance,    // create a new object of the struct/map, which is a copy of the model
+		},
+	}, nil
 
 }
+*/
 
 // Setup sets up the initial configuration for the ReflectValue
 func (v *ReflectValue[M]) Setup() error {
@@ -115,6 +150,7 @@ func (v *ReflectValue[M]) Setup() error {
 func (v *ReflectValue[M]) setupInstanceFields() error {
 	// set the number of fields, if M is a struct
 	v.InstanceNumField = v.Instance.NumField()
+	// v.Def is connected to the BPMN model, which is a pointer
 	v.Def = instanceFieldName(v, "Def")
 	if !v.Def.IsValid() {
 		return NewError(fmt.Errorf("definition field is not valid"))
@@ -144,6 +180,9 @@ func (v *ReflectValue[M]) HandleModelType(q *Quantity[M], m *Mapping[M]) error {
 // handlePool assigns the field Pool to v.Pool.
 // It walks through the anonymous fields in Mapping and checks
 // if the field contains the word "Pool".
+// A pool belongs to a process and is used for collaboration.
+// It sets the pool field in the BPMN model, which are
+// lanesets, lanes, and participants.
 // A pool can only be set once in the BPMN model.
 func (v *ReflectValue[M]) handlePool(q *Quantity[M], m *Mapping[M]) error {
 	for _, field := range m.Anonym {
@@ -178,14 +217,14 @@ func (v *ReflectValue[M]) handleStandalone(q *Quantity[M], m *Mapping[M]) error 
 	return fmt.Errorf("no process type found in model")
 }
 
-// Instnc holds the data structure of the BPMN model in the ReflectValue.
+// CurrentValue holds the data structure of the BPMN model in the ReflectValue.
 // the return value is then as a return value in the initial function.
 //
 // NOTE:
 // It is used as a blueprint for the BPMN model, which is then reflected into v.Def.
 // It distribute hash values and set the isExecutable field to true.
 // It uses the type declaration in the data structure to generate the hash value.
-func (v *ReflectValue[M]) Instnc(m *Mapping[M]) any {
+func (v *ReflectValue[M]) CurrentValue(m *Mapping[M]) any {
 	if len(m.Anonym) > 0 {
 		for _, anonymField := range m.Anonym {
 			v.anonym(anonymField)
@@ -675,25 +714,6 @@ func (v *ReflectValue[M]) configurePool() error {
 		}
 	}
 	return nil
-}
-
-// instanceFieldName returns the field value by the name in v.Instance.
-func instanceFieldName[M BPMNGeneric](v *ReflectValue[M], name string) reflect.Value {
-	value := v.Instance.FieldByName(name)
-	if !value.IsValid() {
-		fmt.Printf("instanceFieldName: field %s not found in struct instance. Available fields: %v\n", name, getFieldNames(v.Instance))
-		return reflect.Value{}
-	}
-	return value
-}
-
-// getFieldNames returns the names of all fields in a reflect.Value instance
-func getFieldNames(instance reflect.Value) []string {
-	var fieldNames []string
-	for i := range instance.NumField() {
-		fieldNames = append(fieldNames, instance.Type().Field(i).Name)
-	}
-	return fieldNames
 }
 
 // Cleanup clears the ReflectValue slices

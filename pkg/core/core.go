@@ -20,6 +20,7 @@ func NewReflectDI[T any, M common.BPMNGeneric](ctx context.Context, model T, gen
 		defer cancel()
 	}
 
+	// create a new reflect value
 	reflectVal, err := common.NewReflectValue(model, genericType)
 	if err != nil {
 		return *new(T), common.NewError(fmt.Errorf("failed to create reflect value:\n%w", err))
@@ -51,8 +52,8 @@ func NewReflectDI[T any, M common.BPMNGeneric](ctx context.Context, model T, gen
 		return *new(T), common.NewError(fmt.Errorf("failed to reflect processes:\n%w", err))
 	}
 
-	// get the instance of the ReflectValue.
-	instance := reflectVal.Instnc(mapping)
+	// get the current value of the ReflectValue.
+	instance := reflectVal.CurrentValue(mapping)
 	typed, ok := instance.(T)
 	if !ok {
 		return *new(T), common.NewError(fmt.Errorf("invalid type conversion"))

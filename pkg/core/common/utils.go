@@ -6,6 +6,7 @@ import (
 	"hash/fnv"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -113,4 +114,39 @@ func extractLastTwoWords(input string) string {
 	}
 	lastTwo := words[len(words)-2:]
 	return strings.Join(lastTwo, "")
+}
+
+// sortedKeys returns the sorted keys of a map[string]any.
+// It sorts the keys by the BPMN element position (Pos).
+// The BPMN elements are stored in a temporary struct.
+// Note: the method is not used actually. There is an another solution in the
+// mapping.go file, which is used to sort the BPMN elements by their position.
+func sortedKeys(fields map[string]any, valueOf reflect.Value) []string {
+	var sortedKeys []string
+	// temporary struct to store BPMN elements
+	bpmnElements := make([]struct {
+		Key string
+		Pos int
+	}, 0)
+	// iterate over the map keys
+	for _, key := range valueOf.MapKeys() {
+		strKey := key.String()
+		value := valueOf.MapIndex(key).Interface()
+		switch v := value.(type) {
+		case BPMN:
+			bpmnElements = append(bpmnElements, struct {
+				Key string
+				Pos int
+			}{strKey, v.Pos})
+		}
+	}
+	// sort BPMN elements by Pos
+	sort.SliceStable(bpmnElements, func(i, j int) bool {
+		return bpmnElements[i].Pos < bpmnElements[j].Pos
+	})
+	// create sorted keys
+	for _, elem := range bpmnElements {
+		sortedKeys = append(sortedKeys, elem.Key)
+	}
+	return sortedKeys
 }

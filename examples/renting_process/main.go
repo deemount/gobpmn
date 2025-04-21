@@ -4,16 +4,12 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
 	_ "net/http/pprof"
 	"os"
-	"reflect"
-	"time"
 
+	"github.com/deemount/gobpmn"
 	"github.com/deemount/gobpmn/internal/parser"
-	"github.com/deemount/gobpmn/pkg/core"
 	"github.com/deemount/gobpmn/pkg/core/common"
 	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
@@ -21,7 +17,7 @@ import (
 var bpmnParser parser.BPMNParser
 
 // RentingProcess is a struct that represents a collaborative process model
-// with anonymous fields. It is a composition of two processes.
+// with anonymous fields. It is a composition of two processes without a laneset.
 type (
 
 	// RentingProcess structure
@@ -54,25 +50,29 @@ type (
 	// Tenant
 	Tenant struct {
 		StartEvent     common.BPMN // BPMN Element
-		FromStartEvent common.BPMN // BPMN Element
+		FromStartEvent common.BPMN // Flow Element
 		Task           common.BPMN // BPMN Element
-		FromTask       common.BPMN // BPMN Element
+		FromTask       common.BPMN // Flow Element
 		EndEvent       common.BPMN // BPMN Element
 	}
 
 	// Landlord
 	Landlord struct {
 		StartEvent     common.BPMN // BPMN Element
-		FromStartEvent common.BPMN // BPMN Element
+		FromStartEvent common.BPMN // Flow Element
 		FirstTask      common.BPMN // BPMN Element
-		FromFirstTask  common.BPMN // BPMN Element
+		FromFirstTask  common.BPMN // Flow Element
 		SecondTask     common.BPMN // BPMN Element
-		FromSecondTask common.BPMN // BPMN Element
+		FromSecondTask common.BPMN // Flow Element
 		ScriptTask     common.BPMN // BPMN Element
-		FromScriptTask common.BPMN // BPMN Element
+		FromScriptTask common.BPMN // Flow Element
 		EndEvent       common.BPMN // BPMN Element
 	}
 )
+
+func (rp RentingProcess) GetDefinitions() foundation.DefinitionsRepository {
+	return rp.Def
+}
 
 func main() {
 
@@ -80,37 +80,13 @@ func main() {
 	log.SetFlags(flags)
 	errorLogger := log.New(os.Stdout, "ERROR: ", flags)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
-	defer cancel()
-
 	/*
 	 * RentalProcess
 	 */
-	rentalProcess, err := core.NewReflectDI(ctx, RentingProcess{}, []reflect.StructField{})
+	_, err := gobpmn.FromStruct(RentingProcess{})
 	if err != nil {
 		errorLogger.Fatalf("\033[0;31m:\n%s", err)
 		return
-	}
-
-	// logging messages for the terminal
-	/*
-		log.Printf("rentalProcess.Target: %+#v", rentalProcess) // represents the Target
-		log.Print("-------------------------")
-		log.Printf("rentalProcess.Def: %+#v", rentalProcess.Def) // represents the model to create
-	*/
-
-	// create the process model
-	bpmn, err := parser.NewBPMNParser(
-		parser.WithCounter(),
-		parser.WithDefinitions(rentalProcess.Def))
-	if err != nil {
-		panic(err)
-	}
-	bpmn.Marshal()
-
-	err = bpmn.Validate()
-	if err != nil {
-		fmt.Println("Error:", err)
 	}
 
 }

@@ -41,6 +41,21 @@ func (parser BPMNParser) Validate() error {
 		for _, el := range process.EndEvent {
 			elementIDs[el.ID] = true
 		}
+		for _, el := range process.IntermediateCatchEvent {
+			elementIDs[el.ID] = true
+		}
+		for _, el := range process.IntermediateThrowEvent {
+			elementIDs[el.ID] = true
+		}
+		for _, el := range process.ExclusiveGateway {
+			elementIDs[el.ID] = true
+		}
+		for _, el := range process.ParallelGateway {
+			elementIDs[el.ID] = true
+		}
+		for _, el := range process.InclusiveGateway {
+			elementIDs[el.ID] = true
+		}
 		for _, el := range process.UserTask {
 			elementIDs[el.ID] = true
 		}
@@ -62,10 +77,28 @@ func (parser BPMNParser) Validate() error {
 
 	// validation of incoming & outgoing flows
 	for _, process := range definitions.Process {
+		for _, el := range process.IntermediateCatchEvent {
+			validateFlow("IntermediateCatchEvent", el.ID, el.Incoming, el.Outgoing, flowIDs, elementIDs)
+		}
+		for _, el := range process.IntermediateThrowEvent {
+			validateFlow("IntermediateThrowEvent", el.ID, el.Incoming, el.Outgoing, flowIDs, elementIDs)
+		}
+		for _, el := range process.ExclusiveGateway {
+			validateFlow("ExclusiveGateway", el.ID, el.Incoming, el.Outgoing, flowIDs, elementIDs)
+		}
+		for _, el := range process.ParallelGateway {
+			validateFlow("ParallelGateway", el.ID, el.Incoming, el.Outgoing, flowIDs, elementIDs)
+		}
+		for _, el := range process.InclusiveGateway {
+			validateFlow("InclusiveGateway", el.ID, el.Incoming, el.Outgoing, flowIDs, elementIDs)
+		}
 		for _, el := range process.UserTask {
 			validateFlow("UserTask", el.ID, el.Incoming, el.Outgoing, flowIDs, elementIDs)
 		}
 		for _, el := range process.ScriptTask {
+			validateFlow("ScriptTask", el.ID, el.Incoming, el.Outgoing, flowIDs, elementIDs)
+		}
+		for _, el := range process.ServiceTask {
 			validateFlow("ScriptTask", el.ID, el.Incoming, el.Outgoing, flowIDs, elementIDs)
 		}
 		for _, el := range process.Task {

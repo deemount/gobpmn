@@ -25,9 +25,9 @@ func (m *Mapping[M]) Assign(v *ReflectValue[M]) {
 		reflect.Struct: m.BPMNType,
 	}
 
-	fields := v.Fields
-
-	switch typedFields := any(fields).(type) {
+	// Check the type of v.Fields and handle accordingly.
+	// If it's a slice of reflect.StructField, I need to handle it as a struct.
+	switch typedFields := any(v.Fields).(type) {
 	case []reflect.StructField:
 		// Handle struct fields.
 		anonymIndex := 0

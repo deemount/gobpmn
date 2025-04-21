@@ -29,7 +29,7 @@ It is based on the BPMN 2.0 standard and it is designed to be used in the contex
 of the Go programming language.
 
 The tool consists of a set of modules that can be used to create a business process model.
-The model can be exported to various formats, such as XML or JSON.
+The model can be exported to various formats, such as BPMN, XML or JSON.
 
 */
 

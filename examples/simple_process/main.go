@@ -89,13 +89,6 @@ func main() {
 		return
 	}
 
-	// logging messages for the terminal
-	/*
-		log.Printf("simpleProcess.Target: %+#v", simpleProcess) // represents the Target
-		log.Print("-------------------------")
-		log.Printf("simpleProcess.Def: %+#v", simpleProcess.Def) // represents the model to create
-	*/
-
 	// create the process model
 	bpmn, err := parser.NewBPMNParser(
 		parser.WithCounter(),

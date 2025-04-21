@@ -1,37 +1,20 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
-	"os"
-	"time"
 
-	"github.com/deemount/gobpmn/internal/parser"
-	"github.com/deemount/gobpmn/pkg/core"
+	"github.com/deemount/gobpmn"
 	"github.com/deemount/gobpmn/pkg/core/common"
 	"github.com/deemount/gobpmn/pkg/core/foundation"
 )
 
 // Testing some logging
-var (
-	debugLogger,
-	errorLogger,
-	infoLogger,
-	warningLogger *log.Logger
-)
+var errorLogger *log.Logger
 
 func main() {
 
-	start := time.Now()
-
 	flags := log.Ldate | log.Ltime | log.Llongfile
 	log.SetFlags(flags)
-
-	debugLogger = log.New(os.Stdout, "DEBUG: ", flags)
-	errorLogger = log.New(os.Stdout, "ERROR: ", flags)
-	infoLogger = log.New(os.Stdout, "INFO: ", flags)
-	warningLogger = log.New(os.Stdout, "WARNING: ", flags)
 
 	// GenericMapSimpleProcess is a generic map that represents a process model
 	// with BPMN elements, with named fields.
@@ -56,37 +39,11 @@ func main() {
 		"EndEvent":            common.BPMN{Pos: 16},
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
-	defer cancel()
-
 	type T any
-	process, err := core.NewReflectDI[T](ctx, genericMapSimpleProcess, map[string]any{})
+	_, err := gobpmn.FromMap[T](genericMapSimpleProcess)
 	if err != nil {
-		errorLogger.Fatalf("\033[0;31m\n%s", err)
+		errorLogger.Fatalf("\033[0;31m:\n%s", err)
 		return
 	}
-
-	// convert the dynamic struct to definitions
-	def, err := common.ConvertDynamicStructToDefinitions(ctx, process)
-	if err != nil {
-		errorLogger.Fatalf("\033[0;31m\n%s", err)
-		return
-	}
-
-	// create the process model
-	bpmn, err := parser.NewBPMNParser(
-		parser.WithCounter(),
-		parser.WithDefinitions(def))
-	if err != nil {
-		panic(err)
-	}
-	bpmn.Marshal()
-
-	err = bpmn.Validate()
-	if err != nil {
-		fmt.Println("Error:", err)
-	}
-
-	log.Println("total time:", time.Since(start))
 
 }

@@ -21,8 +21,10 @@ var (
 	DefaultPathXML        = "files/xml"  // DefaultPathXML is the default path to the xml files
 
 	// Errors
-	ErrPathNotFound      = errors.New("path not found")           // ErrPathNotFound is the error for the path not found
-	ErrEmptyFilePathBPMN = errors.New("empty file path for bpmn") // ErrEmptyFilePathBPMN is the error for the empty file path for bpmn
+	ErrPathNotFound        = errors.New("path not found")                                   // ErrPathNotFound is the error for the path not found
+	ErrEmptyFilePathBPMN   = errors.New("empty file path for bpmn")                         // ErrEmptyFilePathBPMN is the error for the empty file path for bpmn
+	ErrUnsupportedFileType = errors.New("unsupported file type")                            // ErrUnsupportedFileType is the error for the unsupported file type
+	ErrInvalidDefinitions  = errors.New("invalid DefinitionsRepository: repository is nil") // ErrInvalidDefinitions is the error for the invalid definitions
 )
 
 type (
@@ -67,9 +69,6 @@ func NewBPMNParser(opts ...Option) (BPMNParserRepository, error) {
 	for _, opt := range opts {
 		opt(parser)
 	}
-	if err := parser.validate(); err != nil {
-		return nil, err
-	}
 	return parser, nil
 }
 
@@ -78,14 +77,14 @@ func NewBPMNParser(opts ...Option) (BPMNParserRepository, error) {
 // The method calls the MarshalBPMN and MarshalJSON methods.
 // NOTE: Actually no option pattern is used here. Should be done later.
 func (parser BPMNParser) Marshal() error {
-	if err := parser.save(); err != nil {
+	if err := parser.marshal(); err != nil {
 		return err
 	}
-	_, err := parser.MarshalJSON()
+	_, err := parser.MarshalJson()
 	if err != nil {
 		return err
 	}
-	_, err = parser.ToXML()
+	_, err = parser.MarshalXml()
 	if err != nil {
 		return err
 	}
@@ -93,8 +92,7 @@ func (parser BPMNParser) Marshal() error {
 }
 
 // save ...
-func (parser *BPMNParser) save() error {
-
+func (parser *BPMNParser) marshal() error {
 	if parser.FilePathBPMN == "" {
 		return ErrEmptyFilePathBPMN
 	}
@@ -102,9 +100,7 @@ func (parser *BPMNParser) save() error {
 	if err != nil {
 		return fmt.Errorf("error marshaling BPMN data: %v", err)
 	}
-
 	return parser.writeFile(parser.FilePathBPMN, parser.GetFilename(), bpmnData, "bpmn")
-
 }
 
 // writeFile handles the file writing process and error handling.
@@ -117,16 +113,20 @@ func (parser *BPMNParser) writeFile(path, filename string, data []byte, extensio
 	}
 	defer f.Close()
 
-	if extension == "json" {
+	switch extension {
+	case "bpmn":
+		// write the xml data to the file
+		if _, err := f.Write([]byte(xml.Header + string(data))); err != nil {
+			return fmt.Errorf("error writing to file %s: %v", fullPath, err)
+		}
+		return f.Sync()
+	case "json":
 		// write the json data to the file
 		if _, err := f.Write(data); err != nil {
 			return fmt.Errorf("error writing to file %s: %v", fullPath, err)
 		}
 		return f.Sync()
-	}
-
-	// check if the file is a BPMN file
-	if extension == "xml" {
+	case "xml":
 		d := []byte(fmt.Sprintf("%v", xml.Header+string(data)))
 		// replace xsd prefixes with empty strings
 		plain := ToPlainXML(d)
@@ -135,42 +135,36 @@ func (parser *BPMNParser) writeFile(path, filename string, data []byte, extensio
 			return fmt.Errorf("error writing to file %s: %v", fullPath, err)
 		}
 		return f.Sync()
+	default:
+		// unsupported file extension
+		return fmt.Errorf("unsupported file extension: %s", extension)
 	}
 
-	// write the xml data to the file
-	if _, err := f.Write([]byte(xml.Header + string(data))); err != nil {
-		return fmt.Errorf("error writing to file %s: %v", fullPath, err)
-	}
-	return f.Sync()
 }
 
 // MarshalJSON marshals the repository data to JSON and saves it as a file.
-func (parser *BPMNParser) MarshalJSON() ([]byte, error) {
+func (parser *BPMNParser) MarshalJson() ([]byte, error) {
 	data, err := json.MarshalIndent(parser.Repo, " ", "  ")
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling JSON data: %v", err)
 	}
-
 	err = parser.writeFile(parser.FilePathJSON, parser.GetFilename(), data, "json")
 	if err != nil {
 		return nil, err
 	}
-
 	return data, nil
 }
 
 // MarshalXML marshals the repository data to xml and saves it as a file.
-func (parser *BPMNParser) ToXML() ([]byte, error) {
+func (parser *BPMNParser) MarshalXml() ([]byte, error) {
 	data, err := xml.MarshalIndent(parser.Repo, " ", "  ")
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling xml data: %v", err)
 	}
-
 	err = parser.writeFile(parser.FilePathXML, parser.GetFilename(), data, "xml")
 	if err != nil {
 		return nil, err
 	}
-
 	return data, nil
 }
 
@@ -181,28 +175,17 @@ func (parser BPMNParser) GetFilename() string {
 	return fmt.Sprintf("%s_%d", parser.FilenamePrefix, parser.Counter)
 }
 
-// validate validates the file oath for the BPMN file
-// and returns an error if the path is empty.
-func (parser *BPMNParser) validate() error {
-	if parser.FilePathBPMN == "" {
-		return ErrEmptyFilePathBPMN
-	}
-	return nil
-}
-
-// WithPath validates and sets paths for BPMN and JSON files
+// WithPath validates and sets paths for bpmn, json and xml files
 func WithPath(paths ...string) Option {
 	return func(parser *BPMNParser) error {
-		if len(paths) == 0 || len(paths) > 2 {
+		if len(paths) == 0 || len(paths) > 3 {
 			return fmt.Errorf("invalid number of paths provided; expected 1 or 2, got %d", len(paths))
 		}
-
 		for _, path := range paths {
 			if !isValidPath(path) {
 				return fmt.Errorf("invalid path provided: %s", path)
 			}
 		}
-
 		parser.FilePathBPMN = paths[0]
 		if len(paths) == 2 {
 			parser.FilePathJSON = paths[1]
@@ -227,13 +210,11 @@ func WithCounter() Option {
 		if parser.FilePathBPMN == "" {
 			return ErrEmptyFilePathBPMN
 		}
-
 		count, err := countBPMNFiles(parser.FilePathBPMN)
 		if err != nil {
 			return fmt.Errorf("error counting BPMN files: %v", err)
 		}
-
-		parser.Counter = count + 1 // Next file will use this counter
+		parser.Counter = count + 1 // next file will use this counter
 		return nil
 	}
 }
@@ -244,7 +225,6 @@ func countBPMNFiles(dir string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-
 	count := 0
 	for _, file := range files {
 		if !file.IsDir() && filepath.Ext(file.Name()) == ".bpmn" {
@@ -275,7 +255,7 @@ func isValidFilenamePrefix(prefix string) bool {
 func WithDefinitions(repo foundation.DefinitionsRepository) Option {
 	return func(parser *BPMNParser) error {
 		if repo == nil {
-			return errors.New("invalid DefinitionsRepository: repository is nil")
+			return ErrInvalidDefinitions
 		}
 		parser.Repo = repo
 		return nil

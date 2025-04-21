@@ -1,6 +1,10 @@
 package common
 
-import "reflect"
+import (
+	"reflect"
+
+	"github.com/deemount/gobpmn/pkg/config"
+)
 
 // BPMN ...
 type BPMN struct {
@@ -14,10 +18,11 @@ type BPMN struct {
  */
 
 type BPMNStructField []reflect.StructField
+type BPMNOrderedField []config.OrderedField
 type BPMNMap map[string]any
 
 // BPMNGeneric is a generic interface that can be used to represent
 // either a slice of reflect.StructField or a map[string]any.
 type BPMNGeneric interface {
-	[]reflect.StructField | map[string]any
+	[]config.OrderedField | []reflect.StructField | map[string]any
 }

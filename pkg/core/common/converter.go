@@ -72,9 +72,9 @@ func (c *Converter) getOrderedFields(m map[string]any) ([]FieldInfo, error) {
 		}
 		fields = append(fields, FieldInfo{
 			Name:  name,
+			Pos:   pos,
 			Type:  reflect.TypeOf(value),
 			Value: value,
-			Pos:   pos,
 		})
 	}
 	// sort by pos
@@ -124,6 +124,7 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 		// non-BPMN fields come before BPMN fields
 		return !iIsBPMN && jIsBPMN
 	})
+
 	// now populate the struct fields in sorted order
 	for i, field := range fields {
 		fieldValue := structValue.Field(i)
@@ -137,6 +138,7 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 		case "Def":
 			if defPtr, ok := field.Value.(*foundation.Definitions); ok {
 				converted := convertDefinitions(defPtr)
+				// check if converted is nil and assign a new Definitions
 				if converted != nil && reflect.TypeOf(converted).AssignableTo(fieldValue.Type()) {
 					fieldValue.Set(reflect.ValueOf(converted))
 					continue
@@ -171,6 +173,7 @@ func convertDefinitions(def *foundation.Definitions) foundation.DefinitionsRepos
 
 const DefaultTimeout = 20 * time.Millisecond
 
+// ConvertDynamicStructToDefinitions ...
 func ConvertDynamicStructToDefinitions(ctx context.Context, process any) (*foundation.Definitions, error) {
 
 	if ctx == nil {

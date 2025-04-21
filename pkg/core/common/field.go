@@ -1,15 +1,85 @@
 package common
 
 import (
+	"fmt"
 	"log"
 	"maps"
 	"reflect"
+	"sort"
 	"strings"
+
+	"github.com/deemount/gobpmn/pkg/config"
 )
+
+// extractOrderedFields extracts ordered fields from a struct or map.
+func extractOrderedFields[T any](model T) ([]config.OrderedField, error) {
+
+	typeOf := reflect.TypeOf(model)
+	valueOf := reflect.ValueOf(model)
+
+	switch typeOf.Kind() {
+	case reflect.Struct:
+		fields := reflect.VisibleFields(typeOf)
+		ordered := make([]config.OrderedField, 0, len(fields))
+		for _, field := range fields {
+			val := valueOf.FieldByIndex(field.Index)
+			ordered = append(ordered, config.OrderedField{
+				Name:  field.Name,
+				Value: val.Interface(),
+				Meta:  field,
+			})
+		}
+		return ordered, nil
+
+	case reflect.Map:
+		fields := make(map[string]any)
+		var sortedKeys []string
+		bpmnElements := make([]struct {
+			Key string
+			Pos int
+		}, 0)
+		for _, key := range valueOf.MapKeys() {
+			strKey := key.String()
+			value := valueOf.MapIndex(key).Interface()
+			switch v := value.(type) {
+			case BPMN:
+				bpmnElements = append(bpmnElements, struct {
+					Key string
+					Pos int
+				}{strKey, v.Pos})
+				fields[strKey] = v
+			case bool, any:
+				fields[strKey] = v
+			}
+		}
+		sort.SliceStable(bpmnElements, func(i, j int) bool {
+			return bpmnElements[i].Pos < bpmnElements[j].Pos
+		})
+		for _, elem := range bpmnElements {
+			sortedKeys = append(sortedKeys, elem.Key)
+		}
+		ordered := make([]config.OrderedField, 0, len(sortedKeys))
+		for _, key := range sortedKeys {
+			ordered = append(ordered, config.OrderedField{
+				Name:  key,
+				Value: fields[key],
+				Meta:  nil,
+			})
+		}
+		return ordered, nil
+	default:
+		return nil, fmt.Errorf("unsupported kind: %s", typeOf.Kind())
+	}
+}
 
 // FieldInfo holds information about a field being processed
 type FieldInfo struct {
 	Name string
+
+	// used for converter
+	Pos   int // position of the field in the struct (maybe redudant)
+	Type  reflect.Type
+	Value any
 
 	// extName is the last two words of the field name in a CamelCase string
 	extName string
@@ -22,11 +92,6 @@ type FieldInfo struct {
 	hash       string
 	hashBefore string
 	nextHash   string
-
-	// used for converter
-	Type  reflect.Type
-	Value any
-	Pos   int
 }
 
 // extractFieldInfo gathers all necessary field information.
@@ -150,4 +215,23 @@ func collectFromFieldsWithNeighbors(data any) map[string]map[string]any {
 	}
 
 	return results
+}
+
+// instanceFieldName returns the field value by the name in v.Instance.
+func instanceFieldName[M BPMNGeneric](v *ReflectValue[M], name string) reflect.Value {
+	value := v.Instance.FieldByName(name)
+	if !value.IsValid() {
+		fmt.Printf("instanceFieldName: field %s not found in struct instance. Available fields: %v\n", name, getFieldNames(v.Instance))
+		return reflect.Value{}
+	}
+	return value
+}
+
+// getFieldNames returns the names of all fields in a reflect.Value instance
+func getFieldNames(instance reflect.Value) []string {
+	var fieldNames []string
+	for i := range instance.NumField() {
+		fieldNames = append(fieldNames, instance.Type().Field(i).Name)
+	}
+	return fieldNames
 }
