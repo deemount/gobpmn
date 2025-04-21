@@ -13,6 +13,8 @@ gobpmn is an experimental library that makes it possible to reflect
 
 in Go and create business process models with it.
 
+As a modeler with a CLI, gobpmn is a monorepo with clear encapsulation.
+
 ***STILL IN DEVELOPMENT***
 
 ## Requirements
@@ -26,21 +28,12 @@ Optional:
 ## Install
 
 1. Clone the repository or the download the .zip-File of the repository
-2. To run the app, copy and paste this into your terminal
+2. Install the latest gobpmn version as a package within a module with **go get**
+3. Install the latest gobpmn version as a package outside of a module with **go install**
 
 ```bash
-go run examples/generic_map_simple_process/main.go
-go run examples/typed_map_simple_process/main.go
-go run examples/renting_process/main.go
-go run examples/simple_process/main.go
-```
-
-1. Install Saxon XSL Transformer (MacOS) with Homebrew
-2. Run the main file in the cmd/saxon/ directory
-
-```bash
-brew install saxon
-go run cmd/saxon/main.go
+go get github.com/deemount/gobpmn@latest
+go install github.com/deemount/gobpmn@latest
 ```
 
 ## Wiki
