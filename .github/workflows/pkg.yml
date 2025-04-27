@@ -1,0 +1,12 @@
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    name: Renew documentation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pull new module version
+      uses: deemount/gobpmn@main
