@@ -2,6 +2,8 @@
 
 ![gobpmn](https://github.com/deemount/gobpmn/blob/main/docs/img/header.webp "a gopher in front of business model")
 
+[![Coverage Status](https://coveralls.io/repos/github/deemount/gobpmn/badge.svg?branch=main)](https://coveralls.io/github/deemount/gobpmn?branch=main)
+
 ## Description
 
 gobpmn is an experimental library that makes it possible to reflect
