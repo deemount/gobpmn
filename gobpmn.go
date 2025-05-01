@@ -18,10 +18,10 @@ import (
 // BPMN is a re-exported type from the types package
 type BPMN = types.BPMN
 
-// DefRepo is a re-exported type from the foundation package
+// Repository is a re-exported type from the foundation package
 type Repository = foundation.DefinitionsRepository
 
-// NewDefinitions creates a new DefinitionsRepository
+// Definitions creates a new DefinitionsRepository
 // with a new Definitions struct.
 // This is a convenience function to create a new DefinitionsRepository
 // without having to create a new Definitions struct manually.
@@ -65,12 +65,12 @@ func FromStruct[T HasDefinitions](model T, opts ...Options) (parser.BPMNParserRe
 	ctx, cancel := context.WithTimeout(context.Background(), opt.Timeout)
 	defer cancel()
 
-	process, err := core.Core(ctx, model, []reflect.StructField{})
+	core, err := core.Core(ctx, model, []reflect.StructField{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize reflect DI: %w", err)
+		return nil, fmt.Errorf("failed to initialize core: %w", err)
 	}
 
-	def := process.GetDefinitions()
+	def := core.GetDefinitions()
 
 	bpmn, err := parser.NewBPMNParser(
 		parser.WithCounter(),
@@ -112,12 +112,12 @@ func FromMap[T any](model T, opts ...Options) (parser.BPMNParserRepository, erro
 	ctx, cancel := context.WithTimeout(context.Background(), opt.Timeout)
 	defer cancel()
 
-	process, err := core.Core(ctx, model, map[string]any{})
+	core, err := core.Core(ctx, model, map[string]any{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize reflect DI: %w", err)
 	}
 
-	def, err := common.ConvertDynamicStructToDefinitions(ctx, process)
+	def, err := common.ConvertDynamicStructToDefinitions(ctx, core)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert to definitions: %w", err)
 	}
@@ -138,7 +138,7 @@ func FromMap[T any](model T, opts ...Options) (parser.BPMNParserRepository, erro
 	// validate bpmn
 	if opt.Validate {
 		if err := bpmn.Validate(); err != nil {
-			return nil, fmt.Errorf("BPMN model validation failed: %w", err)
+			return nil, fmt.Errorf("bpmn model validation failed: %w", err)
 		}
 	}
 
