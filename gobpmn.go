@@ -65,7 +65,7 @@ func FromStruct[T HasDefinitions](model T, opts ...Options) (parser.BPMNParserRe
 	ctx, cancel := context.WithTimeout(context.Background(), opt.Timeout)
 	defer cancel()
 
-	process, err := core.NewReflectDI(ctx, model, []reflect.StructField{})
+	process, err := core.Core(ctx, model, []reflect.StructField{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize reflect DI: %w", err)
 	}
@@ -112,7 +112,7 @@ func FromMap[T any](model T, opts ...Options) (parser.BPMNParserRepository, erro
 	ctx, cancel := context.WithTimeout(context.Background(), opt.Timeout)
 	defer cancel()
 
-	process, err := core.NewReflectDI(ctx, model, map[string]any{})
+	process, err := core.Core(ctx, model, map[string]any{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize reflect DI: %w", err)
 	}

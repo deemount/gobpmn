@@ -10,10 +10,10 @@ import (
 	"github.com/deemount/gobpmn/pkg/types"
 )
 
-// NewReflectDI ...
+// Core ...
 // If a error occurs, the function returns a new instance of the model and the error.
 // The new instance is then a zero value of T by the model.
-func NewReflectDI[T any, M types.BPMNGeneric](ctx context.Context, model T, genericType M) (result T, err error) {
+func Core[T any, M types.BPMNGeneric](ctx context.Context, model T, genericType M) (result T, err error) {
 
 	if ctx == nil {
 		var cancel context.CancelFunc
