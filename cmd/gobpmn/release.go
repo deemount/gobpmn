@@ -18,5 +18,5 @@ func runShowReleaseInfo() {
 	fmt.Println("  Name:      ", release.Name)
 	fmt.Println("  Published: ", release.PublishedAt.Format("2006-01-02"))
 	fmt.Println()
-	fmt.Println("📝 Changelog:\n", release.Body)
+	fmt.Println("Changelog:\n", release.Body)
 }
