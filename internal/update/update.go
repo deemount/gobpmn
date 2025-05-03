@@ -66,7 +66,7 @@ func CheckForUpdate(currentVersion string) (string, bool, error) {
 func RunUpdate(version string) error {
 	modulePath, err := GetModulePath()
 	if err != nil {
-		return fmt.Errorf("Module path not found: %v", err)
+		return fmt.Errorf("module path not found: %v", err)
 	}
 
 	if version == "" {
@@ -110,17 +110,17 @@ func fetchLatestRelease(repo string) (*GitHubRelease, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("HTTP-Error: %w", err)
+		return nil, fmt.Errorf("http-error: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("GitHub API returned: %s", resp.Status)
+		return nil, fmt.Errorf("gitHub api returned: %s", resp.Status)
 	}
 
 	var release GitHubRelease
 	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
-		return nil, fmt.Errorf("Fehler beim Parsen: %w", err)
+		return nil, fmt.Errorf("parsing failed with error: %w", err)
 	}
 
 	return &release, nil
