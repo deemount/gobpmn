@@ -1,7 +1,5 @@
 package common
 
-// go:build 1.23
-
 import (
 	"fmt"
 	"reflect"
@@ -266,7 +264,7 @@ func (h *EventHandler[M]) handleEndEvent(processIndex int, info FieldInfo, confi
 		methodName,
 		[]reflect.Value{reflect.ValueOf(*idx)})
 	if err != nil {
-		return NewError(fmt.Errorf("failed to get end event: %v\n", err))
+		return NewError(fmt.Errorf("failed to get end event: %v", err))
 	}
 
 	if err := h.SetProperties(el, info); err != nil {

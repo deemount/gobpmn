@@ -1,7 +1,5 @@
 package common
 
-// go:build 1.23
-
 import (
 	"fmt"
 	"log"
