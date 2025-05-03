@@ -8,12 +8,10 @@
 
 gobpmn is an experimental library that makes it possible to reflect
 
-* structs,
-* anonymous fields,
-* typed and
-* generic maps
+* static structs,
+* typed and generic maps
 
-in Go and create business process models with it.
+in Go and create business process models out of it.
 
 As a modeler with a CLI, gobpmn is a monorepo with clear encapsulation.
 
@@ -110,6 +108,12 @@ func main() {
     }
 }
 ```
+
+## Command Line Interface (CLI)
+
+![gobpmncli](https://github.com/deemount/gobpmn/blob/main/docs/img/cli_preview.png "preview of gobpmn cli")
+
+gobpmn has now a command line interface to better inrtoduce some use cases.
 
 ## Wiki
 
