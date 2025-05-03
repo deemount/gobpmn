@@ -111,7 +111,7 @@ func main() {
 
 ## Command Line Interface (CLI)
 
-<img src="https://github.com/deemount/gobpmn/blob/main/docs/img/cli_preview.png" alt="Preview of gobpmn CLI" width="300" height="200">
+![gobpmncli](https://github.com/deemount/gobpmn/blob/main/docs/img/cli_preview.png "preview of gobpmn cli")
 
 gobpmn has now a command line interface to better inrtoduce some use cases.
 
