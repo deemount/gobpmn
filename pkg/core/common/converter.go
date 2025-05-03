@@ -145,13 +145,13 @@ func (c *Converter) populateStruct(structValue reflect.Value, fields []FieldInfo
 					continue
 				}
 			}
-			return NewError(fmt.Errorf("Def must be *foundation.Definitions or convertible to DefinitionsRepository"))
+			return NewError(fmt.Errorf("def must be *foundation.Definitions or convertible to DefinitionsRepository"))
 		case "IsExecutable":
 			if b, ok := field.Value.(bool); ok {
 				fieldValue.SetBool(b)
 				continue
 			}
-			return NewError(fmt.Errorf("IsExecutable must be bool, got %T", field.Value))
+			return NewError(fmt.Errorf("is executable must be bool, got %T", field.Value))
 		}
 		// normal field assignment with type conversion
 		value := reflect.ValueOf(field.Value)
@@ -193,13 +193,12 @@ func ConvertDynamicStructToDefinitions(ctx context.Context, process any) (*found
 	// get the Def field
 	defField := value.FieldByName("Def")
 	if !defField.IsValid() {
-		fmt.Println("Def field not found")
-		return nil, fmt.Errorf("Def field not found")
+		return nil, fmt.Errorf("def field not found")
 	}
 	// convert to *foundation.Definitions
 	def, ok := defField.Interface().(*foundation.Definitions)
 	if !ok {
-		return nil, fmt.Errorf("Def field is not of type *foundation.Definitions")
+		return nil, fmt.Errorf("def field is not of type *foundation.Definitions")
 	}
 	return def, nil
 }
