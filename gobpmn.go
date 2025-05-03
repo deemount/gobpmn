@@ -4,7 +4,6 @@ package gobpmn
 import (
 	"context"
 	"fmt"
-	"log"
 	"reflect"
 	"time"
 
@@ -31,7 +30,7 @@ func Definitions() Repository {
 
 // HasDefinitions is an interface for types that have a GetDefinitions method
 // that returns a DefinitionsRepository.
-// This is used to create a BPMN model from a static struct definition.
+// This is used to create a bpmn model from a static struct definition.
 type HasDefinitions interface {
 	GetDefinitions() Repository
 }
@@ -53,14 +52,14 @@ func DefaultOptions() Options {
 // FromStruct creates a BPMN model from a static struct definition
 func FromStruct[T HasDefinitions](model T, opts ...Options) (parser.BPMNParserRepository, error) {
 
-	start := time.Now()
-
 	var opt Options
 	if len(opts) > 0 {
 		opt = opts[0]
 	} else {
 		opt = DefaultOptions()
 	}
+
+	start := time.Now()
 
 	ctx, cancel := context.WithTimeout(context.Background(), opt.Timeout)
 	defer cancel()
@@ -72,6 +71,9 @@ func FromStruct[T HasDefinitions](model T, opts ...Options) (parser.BPMNParserRe
 
 	def := core.GetDefinitions()
 
+	// create a new BPMN parser
+	// with the given definitions
+	// and a counter to count the number of files
 	bpmn, err := parser.NewBPMNParser(
 		parser.WithCounter(),
 		parser.WithDefinitions(def),
@@ -82,7 +84,7 @@ func FromStruct[T HasDefinitions](model T, opts ...Options) (parser.BPMNParserRe
 
 	// marshal bpmn
 	if err := bpmn.Marshal(); err != nil {
-		return nil, fmt.Errorf("failed to marshal BPMN model: %w", err)
+		return nil, fmt.Errorf("failed to marshal bpmn model: %w", err)
 	}
 
 	// validate bpmn
@@ -92,7 +94,7 @@ func FromStruct[T HasDefinitions](model T, opts ...Options) (parser.BPMNParserRe
 		}
 	}
 
-	log.Println("total time:", time.Since(start))
+	fmt.Println("total time:", time.Since(start))
 
 	return bpmn, nil
 }
@@ -100,14 +102,14 @@ func FromStruct[T HasDefinitions](model T, opts ...Options) (parser.BPMNParserRe
 // FromMap creates a BPMN model from a generic or typed map definition
 func FromMap[T any](model T, opts ...Options) (parser.BPMNParserRepository, error) {
 
-	start := time.Now()
-
 	var opt Options
 	if len(opts) > 0 {
 		opt = opts[0]
 	} else {
 		opt = DefaultOptions()
 	}
+
+	start := time.Now()
 
 	ctx, cancel := context.WithTimeout(context.Background(), opt.Timeout)
 	defer cancel()
@@ -122,6 +124,9 @@ func FromMap[T any](model T, opts ...Options) (parser.BPMNParserRepository, erro
 		return nil, fmt.Errorf("failed to convert to definitions: %w", err)
 	}
 
+	// create a new BPMN parser
+	// with the given definitions
+	// and a counter to count the number of files
 	bpmn, err := parser.NewBPMNParser(
 		parser.WithCounter(),
 		parser.WithDefinitions(def),
@@ -132,7 +137,7 @@ func FromMap[T any](model T, opts ...Options) (parser.BPMNParserRepository, erro
 
 	// marshal bpmn
 	if err := bpmn.Marshal(); err != nil {
-		return nil, fmt.Errorf("failed to marshal BPMN model: %w", err)
+		return nil, fmt.Errorf("failed to marshal bpmn model: %w", err)
 	}
 
 	// validate bpmn
@@ -142,7 +147,7 @@ func FromMap[T any](model T, opts ...Options) (parser.BPMNParserRepository, erro
 		}
 	}
 
-	log.Println("total time:", time.Since(start))
+	fmt.Println("total time:", time.Since(start))
 
 	return bpmn, nil
 }
