@@ -1,7 +1,5 @@
 package core
 
-// go:build 1.24
-
 import (
 	"context"
 	"fmt"
