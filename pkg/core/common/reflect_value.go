@@ -451,7 +451,7 @@ func (v *ReflectValue[M]) standalone(processIdx int, q *Quantity[M]) error {
 
 // configureStandalone configures a single BPMN process.
 func (v *ReflectValue[M]) configureStandalone() error {
-	if v.Process == nil || len(v.Process) == 0 {
+	if len(v.Process) == 0 {
 		return fmt.Errorf("invalid process: Process slice is nil or empty")
 	}
 	process := v.Process[0] // get the first process
