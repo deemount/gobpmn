@@ -113,7 +113,7 @@ func main() {
 
 ![gobpmncli](https://github.com/deemount/gobpmn/blob/main/docs/img/cli_preview.png "preview of gobpmn cli")
 
-gobpmn has now a command line interface to better inrtoduce some use cases.
+gobpmn has now a command line interface to better introduce some use cases in the future, like updating, configuration, debugging, running tests, modelling, parsing models to bpmn, json or xml and using saxon to transform.
 
 ## Wiki
 
