@@ -2,6 +2,32 @@
 # https://github.com/golangci/golangci-lint/blob/master/.golangci.reference.yml
 
 version: "2"
+
+formatters:
+  enable:
+    - goimports # checks if the code and import statements are formatted according to the 'goimports' command
+    - golines # checks if code is formatted, and fixes long lines
+
+    ## you may want to enable
+    #- gci # checks if code and import statements are formatted, with additional rules
+    #- gofmt # checks if the code is formatted according to 'gofmt' command
+
+    ## disabled
+    #- gofumpt # [replaced by goimports, gofumports is not available yet] checks if code and import statements are formatted, with additional rules
+
+  settings:
+    goimports:
+      # A list of prefixes, which, if set, checks import paths
+      # with the given prefixes are grouped after 3rd-party packages.
+      # Default: []
+      local-prefixes:
+        - github.com/deemount/gobpmn
+
+    golines:
+      # Target maximum line length.
+      # Default: 100
+      max-len: 120
+
 # Options for analysis running.
 run:
   timeout: 5m
