@@ -193,7 +193,9 @@ func (v *ReflectValue[M]) handlePool(q *Quantity[M], m *Mapping[M]) error {
 			if !v.Pool.IsValid() {
 				return NewError(fmt.Errorf("invalid pool field: %s", field))
 			}
-			q.countFieldsInInstance(v)
+			if err := q.countFieldsInInstance(v); err != nil {
+				return NewError(fmt.Errorf("failed to count fields in instance:\n%w", err))
+			}
 			q.Pool++
 			break
 		}
@@ -210,7 +212,9 @@ func (v *ReflectValue[M]) handleStandalone(q *Quantity[M], m *Mapping[M]) error 
 	for _, bpmnType := range m.BPMNType {
 		if strings.Contains(bpmnType, "Process") {
 			v.ProcessName = append(v.ProcessName, v.Name)
-			q.countFieldsInInstance(v)
+			if err := q.countFieldsInInstance(v); err != nil {
+				return NewError(fmt.Errorf("failed to count fields in instance:\n%w", err))
+			}
 			q.Process++
 			return nil
 		}
@@ -339,19 +343,22 @@ func (v *ReflectValue[M]) processing(ctx context.Context, q *Quantity[M]) error 
 	defer cancel()
 	// a pool is detected
 	if q.Pool > 0 {
-		err := v.configurePool()
-		if err != nil {
+		if err := v.configurePool(); err != nil {
 			return NewError(fmt.Errorf("error configuring pool:\n%v", err))
 		}
-		v.multipleProcess(q)
+		if err := v.multipleProcess(q); err != nil {
+			return NewError(fmt.Errorf("error processing multiple processes:\n%v", err))
+		}
 		if err := processor.ProcessElementsWithContext(processorCtx); err != nil {
 			return err
 		}
 	} else {
 		if err := v.configureStandalone(); err != nil {
-			return NewError(fmt.Errorf("error processing standalone:\n%v", err))
+			return NewError(fmt.Errorf("error configure standalone:\n%v", err))
 		}
-		v.standalone(0, q)
+		if err := v.standalone(0, q); err != nil {
+			return NewError(fmt.Errorf("error initializing standalone:\n%v", err))
+		}
 		if err := processor.ProcessStandalone(processorCtx); err != nil {
 			return err
 		}
