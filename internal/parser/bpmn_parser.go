@@ -129,7 +129,7 @@ func (parser *BPMNParser) writeFile(path, filename string, data []byte, extensio
 		}
 		return f.Sync()
 	case "xml":
-		d := []byte(fmt.Sprintf("%v", xml.Header+string(data)))
+		d := fmt.Appendf(nil, "%v", xml.Header+string(data))
 		// replace xsd prefixes with empty strings
 		plain := ToPlainXML(d)
 		// write the xml data to the file
