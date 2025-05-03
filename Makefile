@@ -39,4 +39,7 @@ clean:
 	@echo "Clean up build directory..."
 	rm -rf ./bin
 
-.PHONY: all build install goinstall update-pkg-cache clean
+run:
+	go run ./cmd/gobpmn
+
+.PHONY: all build install goinstall update-pkg-cache clean run
