@@ -67,7 +67,9 @@ func NewBPMNParser(opts ...Option) (BPMNParserRepository, error) {
 	}
 	// apply the options to the parser
 	for _, opt := range opts {
-		opt(parser)
+		if err := opt(parser); err != nil {
+			return nil, fmt.Errorf("error applying option: %v", err)
+		}
 	}
 	return parser, nil
 }
