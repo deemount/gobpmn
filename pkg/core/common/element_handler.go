@@ -640,7 +640,7 @@ func (h *GatewayHandler[M]) SetProperties(el reflect.Value, info FieldInfo) erro
 	case gateway:
 		return h.setGatewayProperties(el)
 	default:
-		return NewError(fmt.Errorf("unsupported gateway type: %s\n", info.element))
+		return NewError(fmt.Errorf("unsupported gateway type: %s", info.element))
 	}
 
 }
@@ -867,7 +867,7 @@ func (h *ActivityHandler[M]) Handle(processIdx int, info FieldInfo, config *Proc
 	case task:
 		err = h.handleTask(processIdx, info, config, &indices.task)
 	default:
-		return NewError(fmt.Errorf("unsupported activity type: %s\n", info.element))
+		return NewError(fmt.Errorf("unsupported activity type: %s", info.element))
 	}
 
 	if err != nil {
@@ -1031,7 +1031,7 @@ func (h *ActivityHandler[M]) SetProperties(el reflect.Value, info FieldInfo) err
 	case task:
 		return h.setTaskProperties(el)
 	default:
-		return NewError(fmt.Errorf("unsupported activity type: %s\n", info.element))
+		return NewError(fmt.Errorf("unsupported activity type: %s", info.element))
 	}
 
 }
@@ -1241,7 +1241,7 @@ func (h *FlowHandler[M]) Handle(processIdx int, info FieldInfo, config *Processi
 	case sequenceFlow:
 		err = h.handleFlow(processIdx, info, config, &indices.flow)
 	default:
-		return NewError(fmt.Errorf("unsupported flow type: %s\n", info.element))
+		return NewError(fmt.Errorf("unsupported flow type: %s", info.element))
 	}
 
 	if err != nil {
@@ -1304,7 +1304,7 @@ func (h *FlowHandler[M]) setFlowSpecificProperties(flow reflect.Value, info Fiel
 			reflect.ValueOf(sourceRef["Value"].(types.BPMN).Type),
 			reflect.ValueOf(sourceRef["Value"].(types.BPMN).Hash),
 		}); err != nil {
-			return NewError(fmt.Errorf("failed to set source reference:\n %w", err))
+			return NewError(fmt.Errorf("failed to set source reference:\n%w", err))
 		}
 	}
 	if info.nextHash != "" {
@@ -1312,7 +1312,7 @@ func (h *FlowHandler[M]) setFlowSpecificProperties(flow reflect.Value, info Fiel
 			reflect.ValueOf(targetRef["Value"].(types.BPMN).Type),
 			reflect.ValueOf(targetRef["Value"].(types.BPMN).Hash),
 		}); err != nil {
-			return NewError(fmt.Errorf("failed to set target reference:\n %w", err))
+			return NewError(fmt.Errorf("failed to set target reference:\n%w", err))
 		}
 	}
 	return nil
