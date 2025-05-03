@@ -13,7 +13,7 @@ import (
 	"github.com/deemount/gobpmn/internal/config"
 )
 
-var version = "v0.1.0-alpha" // overwritten during build
+var version = "v0.2.0-dev" // overwritten during build
 
 var AppConfig config.Config
 
@@ -28,7 +28,9 @@ func init() {
 func main() {
 
 	log.Printf("gobpmn %s starting ...\n", version)
-	EnsureConfigExists()
+	if err := EnsureConfigExists(); err != nil {
+		log.Fatalf("Error creating config directory: %v", err)
+	}
 	args := os.Args[1:]
 
 	// force manual check
@@ -69,7 +71,9 @@ func main() {
 		case "config":
 
 			configCmd := flag.NewFlagSet("config", flag.ExitOnError)
-			configCmd.Parse(os.Args[2:])
+			if err := configCmd.Parse(os.Args[2:]); err != nil {
+				log.Fatalf("Error parsing config command: %v", err)
+			}
 			return
 
 		case "changelog":
@@ -85,21 +89,27 @@ func main() {
 		case "model":
 
 			modelerCmd := flag.NewFlagSet("model", flag.ExitOnError)
-			modelerCmd.Parse(os.Args[2:])
+			if err := modelerCmd.Parse(os.Args[2:]); err != nil {
+				log.Fatalf("Error parsing model command: %v", err)
+			}
 			//modeler.Start()
 			return
 
 		case "test":
 
 			testCmd := flag.NewFlagSet("test", flag.ExitOnError)
-			testCmd.Parse(os.Args[2:])
+			if err := testCmd.Parse(os.Args[2:]); err != nil {
+				log.Fatalf("Error parsing test command: %v", err)
+			}
 			//runner.RunTests()
 			return
 
 		case "debug":
 
 			debugCmd := flag.NewFlagSet("debug", flag.ExitOnError)
-			debugCmd.Parse(os.Args[2:])
+			if err := debugCmd.Parse(os.Args[2:]); err != nil {
+				log.Fatalf("Error parsing debug command: %v", err)
+			}
 			//debug.Start()
 			return
 
@@ -127,7 +137,7 @@ func ShowMainMenu() {
 			[6] Show changelog
 			[7] Show config
 			[8] Show version
-			[9] Show release fnfo
+			[9] Show release info
 			[0] Exit
 		`)
 

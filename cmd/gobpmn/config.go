@@ -53,7 +53,9 @@ func EnsureConfigExists() error {
 	configPath := filepath.Join(configDir, "config.json")
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		os.MkdirAll(configDir, 0755)
+		if err := os.MkdirAll(configDir, 0755); err != nil {
+			return err
+		}
 		data, _ := json.MarshalIndent(config.DefaultConfig, "", "  ")
 		return os.WriteFile(configPath, data, 0644)
 	}
