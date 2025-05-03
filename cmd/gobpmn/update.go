@@ -12,10 +12,15 @@ import (
 )
 
 func handleUpdate(args []string) {
+
+	// check if update command is called
 	updateCmd := flag.NewFlagSet("update", flag.ExitOnError)
 	manualVersion := updateCmd.String("version", "", "Update to certain version")
 	check := updateCmd.Bool("check", false, "Check if new version is available")
-	updateCmd.Parse(args)
+	if err := updateCmd.Parse(args); err != nil {
+		fmt.Println("Error parsing update command:", err)
+		return
+	}
 
 	if *check {
 		latest, newer, err := update.CheckForUpdate(version)

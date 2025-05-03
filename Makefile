@@ -28,7 +28,7 @@ goinstall:
 	go install $(LDFLAGS) ./cmd/$(APP_NAME)
 	@echo "Installed globally via go install"
 
-
+# Update package cache (for go get)
 update-pkg-cache:
 	@echo "Update package cache..."
     GOPROXY=https://proxy.golang.org GO111MODULE=on \
