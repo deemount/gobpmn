@@ -24,7 +24,7 @@ type (
 )
 
 // SetID ...
-func (c *Collaboration) SetID(typ string, suffix interface{}) {
+func (c *Collaboration) SetID(typ string, suffix any) {
 	switch typ {
 	case "collaboration":
 		c.ID = fmt.Sprintf("Collaboration_%v", suffix)

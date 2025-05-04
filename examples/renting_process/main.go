@@ -1,12 +1,8 @@
-//go:build go1.23
-// +build go1.23
-
 package main
 
 import (
-	"log"
-	_ "net/http/pprof"
 	"os"
+	"time"
 
 	"github.com/deemount/gobpmn"
 )
@@ -71,14 +67,23 @@ func (rp RentingProcess) GetDefinitions() gobpmn.Repository {
 
 func main() {
 
-	flags := log.Ldate | log.Lshortfile
-	log.SetFlags(flags)
-	errorLogger := log.New(os.Stdout, "ERROR: ", flags)
-
-	_, err := gobpmn.FromStruct(RentingProcess{})
-	if err != nil {
-		errorLogger.Fatalf("\033[0;31m:\n%s", err)
-		return
+	log := gobpmn.NewLogger("renting", gobpmn.DebugLevel, os.Stdout)
+	if err := log.SetOutputFile("files/log/renting_process.log"); err != nil {
+		log.Errorf("could not open log file: %v", err)
 	}
+
+	opts := gobpmn.Options{
+		Timeout:  60 * time.Second,
+		Validate: true,
+		Logger:   log,
+	}
+
+	model, err := gobpmn.FromStruct(RentingProcess{}, opts)
+	if err != nil {
+		log.Errorf("bpmn generation failed: %v", err)
+		os.Exit(1)
+	}
+
+	log.Infof("bpmn model generated successfully: %+v", model)
 
 }

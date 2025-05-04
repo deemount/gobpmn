@@ -11,12 +11,32 @@ import (
 	"github.com/deemount/gobpmn/pkg/types"
 )
 
+// used methods as constants
+const (
+	SetID            = "SetID"
+	SetName          = "SetName"
+	SetProcessRef    = "SetProcessRef"
+	SetIsExecutable  = "SetIsExecutable"
+	SetProcess       = "SetProcess"
+	GetProcess       = "GetProcess"
+	SetCollaboration = "SetCollaboration"
+	GetCollaboration = "GetCollaboration"
+	SetDiagram       = "SetDiagram"
+	GetDiagram       = "GetDiagram"
+	SetParticipant   = "SetParticipant"
+	GetParticipant   = "GetParticipant"
+	SetPlane         = "SetPlane"
+	GetPlane         = "GetPlane"
+	SetElement       = "SetElement"
+)
+
 // ReflectValue represents the core structure for BPMN reflection
 type ReflectValue[M types.BPMNGeneric] struct {
 	// config.ModelConfig // NOTE: New Version (commented out)
 	config.ModelConfig[M]
 	config.ProcessConfig
 	config.ParticipantConfig
+	config.DiagramConfig
 	FlowNeighbors    map[string]map[string]any
 	InstanceNumField int
 }
@@ -304,21 +324,17 @@ func (v *ReflectValue[M]) ReflectProcess(q *Quantity[M]) error {
 	return nil
 }
 
-// ReflectDiagram reflects the BPMN diagram.
-func (v *ReflectValue[M]) ReflectDiagram() error {
-	def := v.Def
-	if def.Kind() == reflect.Interface || def.Kind() == reflect.Ptr {
-		def = reflect.ValueOf(def.Interface()) // get the real value by any
+// getProcessID retrieves the process ID
+func (v *ReflectValue[M]) getProcessID(processIdx int) any {
+	process := v.Process[processIdx]
+	if !process.IsValid() {
+		return ""
 	}
-	method := def.MethodByName("SetDiagram")
-	if !method.IsValid() {
-		return NewError(fmt.Errorf("SetDiagram method not found"))
+	id := process.MethodByName("GetID").Call([]reflect.Value{})[0]
+	if !id.IsValid() {
+		return ""
 	}
-	results := method.Call([]reflect.Value{reflect.ValueOf(1)})
-	if len(results) > 0 && !results[0].IsNil() {
-		return NewError(fmt.Errorf("SetDiagram call failed"))
-	}
-	return nil
+	return id.Elem().Interface()
 }
 
 // processingWithContext processes the BPMN model with a cancellable context.
@@ -395,6 +411,9 @@ func (v *ReflectValue[M]) FinalizeModel(ctx context.Context, q *Quantity[M]) err
 	if err := v.collaboration(q); err != nil {
 		return NewError(fmt.Errorf("failed to setup collaboration:\n%w", err))
 	}
+	if err := v.diagram(q); err != nil {
+		return NewError(fmt.Errorf("failed to reflect diagram:\n%w", err))
+	}
 	return nil
 }
 
@@ -442,7 +461,7 @@ func (v *ReflectValue[M]) setProcessIdentifiers(process reflect.Value, name stri
 	var hash string
 	hash = field.FieldByName("Hash").String()
 	// set process id
-	if err := callMethod(process, "SetID",
+	if err := callMethod(process, SetID,
 		[]reflect.Value{
 			reflect.ValueOf(strings.ToLower(name)),
 			reflect.ValueOf(hash),
@@ -450,7 +469,7 @@ func (v *ReflectValue[M]) setProcessIdentifiers(process reflect.Value, name stri
 		return NewError(fmt.Errorf("failed to set process ID:\n%w", err))
 	}
 	// set process name
-	if err := callMethod(process, "SetName",
+	if err := callMethod(process, SetName,
 		[]reflect.Value{reflect.ValueOf(name)}); err != nil {
 		return NewError(fmt.Errorf("failed to set process name:\n%w", err))
 	}
@@ -576,7 +595,7 @@ func (v *ReflectValue[M]) collaboration(q *Quantity[M]) error {
 
 // setupCollaboration initializes the collaboration
 func (v *ReflectValue[M]) setupCollaboration() error {
-	method := v.Def.MethodByName("SetCollaboration")
+	method := v.Def.MethodByName(SetCollaboration)
 	if !method.IsValid() {
 		return NewError(fmt.Errorf("SetCollaboration method not found"))
 	}
@@ -586,7 +605,7 @@ func (v *ReflectValue[M]) setupCollaboration() error {
 
 // getCollaboration retrieves the collaboration object
 func (v *ReflectValue[M]) getCollaboration() (reflect.Value, error) {
-	method := v.Def.MethodByName("GetCollaboration")
+	method := v.Def.MethodByName(GetCollaboration)
 	if !method.IsValid() {
 		return reflect.Value{}, NewError(fmt.Errorf("GetCollaboration method not found"))
 	}
@@ -596,6 +615,24 @@ func (v *ReflectValue[M]) getCollaboration() (reflect.Value, error) {
 	}
 	return result[0], nil
 }
+
+// getCollaborationID retrieves the collaboration ID
+func (v ReflectValue[M]) getCollaborationID() string {
+	collaboration := v.Pool.FieldByName("Collaboration").Interface().(types.BPMN)
+	return collaboration.Hash
+}
+
+// getFullCollaborationId retrieves the full collaboration ID from the definition
+// NOTE: This method is unused actually
+/*func (v ReflectValue[M]) getFullCollaborationId() (any, error) {
+	collaboration := v.Def.MethodByName("GetCollaboration").Call([]reflect.Value{})[0]
+	if !collaboration.IsValid() {
+		return reflect.Value{}, NewError(fmt.Errorf("getFullCollaborationId returned no value"))
+	}
+	c := v.Def.MethodByName("GetCollaboration").Call([]reflect.Value{})[0]
+	cid := c.MethodByName("GetID").Call([]reflect.Value{})[0]
+	return cid.Elem().Interface(), nil
+}*/
 
 // configureCollaboration sets up the collaboration with its participants
 func (v *ReflectValue[M]) configureCollaboration(collaboration reflect.Value, participantCount int) error {
@@ -613,7 +650,7 @@ func (v *ReflectValue[M]) configureCollaboration(collaboration reflect.Value, pa
 
 // setCollaborationProperties configures basic collaboration properties
 func (v *ReflectValue[M]) setCollaborationProperties(collaboration reflect.Value, config config.CollaborationConfig, participantCount int) error {
-	if err := callMethod(collaboration, "SetID",
+	if err := callMethod(collaboration, SetID,
 		[]reflect.Value{
 			reflect.ValueOf(config.Type),
 			reflect.ValueOf(config.Hash),
@@ -621,7 +658,7 @@ func (v *ReflectValue[M]) setCollaborationProperties(collaboration reflect.Value
 		return NewError(fmt.Errorf("failed to set collaboration ID: %w", err))
 	}
 	// Set participant count
-	if err := callMethod(collaboration, "SetParticipant",
+	if err := callMethod(collaboration, SetParticipant,
 		[]reflect.Value{reflect.ValueOf(participantCount)}); err != nil {
 		return NewError(fmt.Errorf("failed to set participant count: %w", err))
 	}
@@ -651,7 +688,7 @@ func (v *ReflectValue[M]) setupParticipants(collaboration reflect.Value, partici
 
 // getParticipant retrieves a specific participant by index
 func (v *ReflectValue[M]) getParticipant(collaboration reflect.Value, index int) (reflect.Value, error) {
-	result := collaboration.MethodByName("GetParticipant").Call([]reflect.Value{reflect.ValueOf(index)})
+	result := collaboration.MethodByName(GetParticipant).Call([]reflect.Value{reflect.ValueOf(index)})
 	if len(result) == 0 {
 		return reflect.Value{}, NewError(fmt.Errorf("failed to get participant at index %d", index))
 	}
@@ -667,9 +704,9 @@ func (v *ReflectValue[M]) configureParticipant(participant reflect.Value, detail
 		return NewError(fmt.Errorf("invalid participant details"))
 	}
 	methods := map[string][]reflect.Value{
-		"SetID":         {reflect.ValueOf(details.ID), reflect.ValueOf(details.Hash)},
-		"SetName":       {reflect.ValueOf(details.Name)},
-		"SetProcessRef": {reflect.ValueOf(details.ProcessRef), reflect.ValueOf(details.ProcessHash)},
+		SetID:         {reflect.ValueOf(details.ID), reflect.ValueOf(details.Hash)},
+		SetName:       {reflect.ValueOf(details.Name)},
+		SetProcessRef: {reflect.ValueOf(details.ProcessRef), reflect.ValueOf(details.ProcessHash)},
 	}
 	for methodName, args := range methods {
 		if err := callMethod(participant, methodName, args); err != nil {
@@ -699,14 +736,14 @@ func (v *ReflectValue[M]) multipleProcess(q *Quantity[M]) error {
 			}
 		}
 		// set the process id
-		if err := callMethod(process, "SetID",
+		if err := callMethod(process, SetID,
 			[]reflect.Value{reflect.ValueOf(typ), reflect.ValueOf(hash)}); err != nil {
-			return NewError(fmt.Errorf("failed to apply method %s: %w", "SetID", err))
+			return NewError(fmt.Errorf("failed to apply method %s: %w", SetID, err))
 		}
 		// set the process name
-		if err := callMethod(process, "SetName",
+		if err := callMethod(process, SetName,
 			[]reflect.Value{reflect.ValueOf(name)}); err != nil {
-			return NewError(fmt.Errorf("failed to apply method %s: %w", "SetName", err))
+			return NewError(fmt.Errorf("failed to apply method %s: %w", SetName, err))
 		}
 		// set the process elements
 		for method, arg := range elements {
@@ -749,6 +786,59 @@ func (v *ReflectValue[M]) configurePool() error {
 				n++
 			}
 		}
+	}
+	return nil
+}
+
+// diagram reflects the BPMN diagram.
+func (v *ReflectValue[M]) diagram(q *Quantity[M]) error {
+	v.Diagram = make([]reflect.Value, 1)
+	def := v.Def
+	if def.Kind() == reflect.Interface || def.Kind() == reflect.Ptr {
+		def = reflect.ValueOf(def.Interface()) // get the real value by any
+	}
+	method := def.MethodByName(SetDiagram)
+	if !method.IsValid() {
+		return NewError(fmt.Errorf("%s method not found", SetDiagram))
+	}
+	results := method.Call([]reflect.Value{reflect.ValueOf(1)})
+	if len(results) > 0 && !results[0].IsNil() {
+		return NewError(fmt.Errorf("SetDiagram call failed"))
+	}
+	v.Diagram[0] = def.MethodByName("GetDiagram").Call([]reflect.Value{reflect.ValueOf(0)})[0]
+	v.Diagram[0].MethodByName(SetID).Call(
+		[]reflect.Value{
+			reflect.ValueOf("diagram"),
+			reflect.ValueOf(1),
+		})
+	// set plane
+	plane := v.Diagram[0].MethodByName(SetPlane)
+	if !plane.IsValid() {
+		return NewError(fmt.Errorf("SetPlane method not found"))
+	}
+	plane.Call([]reflect.Value{})
+	p := v.Diagram[0].MethodByName(GetPlane).Call([]reflect.Value{})[0]
+	p.MethodByName(SetID).Call(
+		[]reflect.Value{
+			reflect.ValueOf("plane"),
+			reflect.ValueOf(1),
+		})
+	if q.Pool > 0 {
+		// collaboration process
+		// set the collaboration id
+		p.MethodByName(SetElement).Call(
+			[]reflect.Value{
+				reflect.ValueOf("collaboration"),
+				reflect.ValueOf(v.getCollaborationID()),
+			})
+	} else {
+		// standalone process
+		// set the process id
+		p.MethodByName(SetElement).Call(
+			[]reflect.Value{
+				reflect.ValueOf("id"),
+				reflect.ValueOf(v.getProcessID(0)),
+			})
 	}
 	return nil
 }

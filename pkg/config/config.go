@@ -57,3 +57,21 @@ type ParticipantDetails struct {
 	ProcessRef  string
 	ProcessHash string
 }
+
+// DiagramConfig holds diagram-specific configuration
+type DiagramConfig struct {
+	Diagram     []reflect.Value
+	Plane       []reflect.Value
+	Shape       []reflect.Value
+	Edge        []reflect.Value
+	DiagramName []string
+	DiagramType []string
+	DiagramHash []string
+}
+
+// DiagramDetails contains diagram-specific information
+type DiagramDetails struct {
+	ID   string
+	Hash string
+	Name string
+}

@@ -59,11 +59,6 @@ func Core[T any, M types.BPMNGeneric](ctx context.Context, model T, genericType 
 		return *new(T), common.NewError(fmt.Errorf("failed to reflect processes:\n%w", err))
 	}
 
-	// reflect the diagram in the bpmn model.
-	if err := value.ReflectDiagram(); err != nil {
-		return *new(T), common.NewError(fmt.Errorf("failed to reflect diagram:\n%w", err))
-	}
-
 	// get the current value of the reflected value.
 	instance := value.CurrentValue(mapping)
 	// convert the instance to the type T

@@ -26,14 +26,14 @@ func (diagram *Diagram) SetID(typ string, suffix any) {
 	}
 }
 
-// SetPlane ...
-func (diagram *Diagram) SetPlane() {
-	diagram.Plane = make([]Plane, 1)
-}
-
 // GetID ...
 func (diagram Diagram) GetID() *string {
 	return &diagram.ID
+}
+
+// SetPlane ...
+func (diagram *Diagram) SetPlane() {
+	diagram.Plane = make([]Plane, 1)
 }
 
 // GetPlane ...
@@ -80,7 +80,7 @@ func (plane *Plane) SetElement(typ string, suffix any) {
 		plane.Element = fmt.Sprintf("Process_%s", suffix)
 		break
 	case "collaboration":
-		plane.Element = fmt.Sprintf("Collaboration_%s", suffix)
+		plane.Element = fmt.Sprintf("Collaboration_%v", suffix)
 		break
 	case "id":
 		plane.Element = fmt.Sprintf("%s", suffix)
