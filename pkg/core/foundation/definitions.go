@@ -123,7 +123,7 @@ func (d *Definitions) SetDiagram(num int) {
 	d.Diagram = make([]infrastructure.Diagram, num)
 }
 
-// SetDiagram ...
+// GetDiagram ...
 func (d Definitions) GetDiagram(num int) *infrastructure.Diagram {
 	return &d.Diagram[num]
 }
@@ -141,6 +141,7 @@ func (d *Definitions) SetDefaultAttributes() {
 // SetMainElements ...
 func (d *Definitions) SetMainElements(num int) {
 	d.SetProcess(num)
+	d.SetDiagram(1)
 }
 
 // GenerateHash ...

@@ -1,9 +1,26 @@
 {
-   "id": "Definitions_aa98261b",
+   "id": "Definitions_7a350181",
+   "collaboration": [
+     {
+       "id": "Collaboration_21b47c3b",
+       "participant": [
+         {
+           "id": "Participant_8bdd09ef",
+           "name": "TenantParticipant",
+           "processRef": "Process_ebcb2501"
+         },
+         {
+           "id": "Participant_a5192790",
+           "name": "LandlordParticipant",
+           "processRef": "Process_d72f2881"
+         }
+       ]
+     }
+   ],
    "process": [
      {
-       "id": "Process_11b0a5e1",
-       "name": "Process",
+       "id": "Process_ebcb2501",
+       "name": "Tenant",
        "isExecutable": true,
        "startEvent": [
          {
@@ -12,151 +29,144 @@
            "isInterrupting": true,
            "outgoing": [
              {
-               "flow": "Flow_32ff3bfb"
+               "flow": "Flow_3b1f70d9"
              }
            ]
          }
        ],
        "endEvent": [
          {
-           "id": "Event_c7d30090",
+           "id": "Event_8763c790",
            "name": "EndEvent"
-         }
-       ],
-       "userTask": [
-         {
-           "id": "Activity_750e53de",
-           "name": "UserTask",
-           "incoming": [
-             {
-               "flow": "Flow_516e124d"
-             }
-           ],
-           "outgoing": [
-             {
-               "flow": "Flow_74d28880"
-             }
-           ]
-         },
-         {
-           "id": "Activity_c99c0dce",
-           "name": "SpecialUserTask",
-           "incoming": [
-             {
-               "flow": "Flow_74d28880"
-             }
-           ],
-           "outgoing": [
-             {
-               "flow": "Flow_696611e6"
-             }
-           ]
-         }
-       ],
-       "scriptTask": [
-         {
-           "id": "Activity_06d44e49",
-           "name": "ScriptTask",
-           "incoming": [
-             {
-               "flow": "Flow_ab6a1127"
-             }
-           ],
-           "outgoing": [
-             {
-               "flow": "Flow_3a239658"
-             }
-           ]
-         },
-         {
-           "id": "Activity_0edd0916",
-           "name": "OtherScriptTask",
-           "incoming": [
-             {
-               "flow": "Flow_3a239658"
-             }
-           ],
-           "outgoing": [
-             {
-               "flow": "Flow_516e124d"
-             }
-           ]
          }
        ],
        "task": [
          {
-           "id": "Activity_b82d6d7d",
+           "id": "Activity_3a51ebcf",
            "name": "Task",
            "incoming": [
              {
-               "flow": "Flow_32ff3bfb"
+               "flow": "Flow_3b1f70d9"
              }
            ],
            "outgoing": [
              {
-               "flow": "Flow_b7ad88e0"
-             }
-           ]
-         },
-         {
-           "id": "Activity_9533af7f",
-           "name": "SecondTask",
-           "incoming": [
-             {
-               "flow": "Flow_b7ad88e0"
-             }
-           ],
-           "outgoing": [
-             {
-               "flow": "Flow_ab6a1127"
+               "flow": "Flow_d358199c"
              }
            ]
          }
        ],
        "sequenceFlow": [
          {
-           "id": "Flow_32ff3bfb",
+           "id": "Flow_3b1f70d9",
            "name": "FromStartEvent",
            "sourceRef": "StartEvent_1",
-           "targetRef": "Activity_b82d6d7d"
+           "targetRef": "Activity_98897eeb"
          },
          {
-           "id": "Flow_b7ad88e0",
+           "id": "Flow_d358199c",
            "name": "FromTask",
-           "sourceRef": "Activity_b82d6d7d",
-           "targetRef": "Activity_9533af7f"
+           "sourceRef": "Activity_3a51ebcf",
+           "targetRef": "Event_8763c790"
+         }
+       ]
+     },
+     {
+       "id": "Process_d72f2881",
+       "name": "Landlord",
+       "startEvent": [
+         {
+           "id": "Event_1",
+           "name": "StartEvent",
+           "isInterrupting": true,
+           "outgoing": [
+             {
+               "flow": "Flow_6a7c6131"
+             }
+           ]
+         }
+       ],
+       "endEvent": [
+         {
+           "id": "Event_d0b8abc6",
+           "name": "EndEvent"
+         }
+       ],
+       "scriptTask": [
+         {
+           "id": "Activity_e9ebae96",
+           "name": "ScriptTask",
+           "incoming": [
+             {
+               "flow": "Flow_50a08c75"
+             }
+           ],
+           "outgoing": [
+             {
+               "flow": "Flow_accbc74b"
+             }
+           ]
+         }
+       ],
+       "task": [
+         {
+           "id": "Activity_98897eeb",
+           "name": "FirstTask",
+           "incoming": [
+             {
+               "flow": "Flow_6a7c6131"
+             }
+           ],
+           "outgoing": [
+             {
+               "flow": "Flow_9f874413"
+             }
+           ]
          },
          {
-           "id": "Flow_ab6a1127",
+           "id": "Activity_f57a8faf",
+           "name": "SecondTask",
+           "incoming": [
+             {
+               "flow": "Flow_9f874413"
+             }
+           ],
+           "outgoing": [
+             {
+               "flow": "Flow_50a08c75"
+             }
+           ]
+         }
+       ],
+       "sequenceFlow": [
+         {
+           "id": "Flow_6a7c6131",
+           "name": "FromStartEvent",
+           "sourceRef": "StartEvent_1",
+           "targetRef": "Activity_98897eeb"
+         },
+         {
+           "id": "Flow_9f874413",
+           "name": "FromFirstTask",
+           "sourceRef": "Activity_98897eeb",
+           "targetRef": "Activity_f57a8faf"
+         },
+         {
+           "id": "Flow_50a08c75",
            "name": "FromSecondTask",
-           "sourceRef": "Activity_9533af7f",
-           "targetRef": "Activity_06d44e49"
+           "sourceRef": "Activity_f57a8faf",
+           "targetRef": "Activity_e9ebae96"
          },
          {
-           "id": "Flow_3a239658",
+           "id": "Flow_accbc74b",
            "name": "FromScriptTask",
-           "sourceRef": "Activity_06d44e49",
-           "targetRef": "Activity_0edd0916"
-         },
-         {
-           "id": "Flow_516e124d",
-           "name": "FromOtherScriptTask",
-           "sourceRef": "Activity_0edd0916",
-           "targetRef": "Activity_750e53de"
-         },
-         {
-           "id": "Flow_74d28880",
-           "name": "FromUserTask",
-           "sourceRef": "Activity_750e53de",
-           "targetRef": "Activity_c99c0dce"
-         },
-         {
-           "id": "Flow_696611e6",
-           "name": "FromSpecialUserTask",
-           "sourceRef": "Activity_c99c0dce",
-           "targetRef": "Event_c7d30090"
+           "sourceRef": "Activity_e9ebae96",
+           "targetRef": "Event_d0b8abc6"
          }
        ]
      }
+   ],
+   "diagram": [
+     {}
    ]
  }

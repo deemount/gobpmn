@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <definitions   id="Definitions_aa98261b" >
-   <process id="Process_11b0a5e1" name="Process" isExecutable="true">
-     <startEvent id="StartEvent_1" name="StartEvent" isInterrupting="true">
-       <outgoing>Flow_32ff3bfb</outgoing>
-     </startEvent>
-     <endEvent id="Event_c7d30090" name="EndEvent"></endEvent>
-     <userTask id="Activity_750e53de" name="UserTask">
-       <incoming>Flow_516e124d</incoming>
-       <outgoing>Flow_74d28880</outgoing>
-     </userTask>
-     <userTask id="Activity_c99c0dce" name="SpecialUserTask">
-       <incoming>Flow_74d28880</incoming>
-       <outgoing>Flow_696611e6</outgoing>
-     </userTask>
-     <scriptTask id="Activity_06d44e49" name="ScriptTask">
-       <incoming>Flow_ab6a1127</incoming>
-       <outgoing>Flow_3a239658</outgoing>
-     </scriptTask>
-     <scriptTask id="Activity_0edd0916" name="OtherScriptTask">
-       <incoming>Flow_3a239658</incoming>
-       <outgoing>Flow_516e124d</outgoing>
-     </scriptTask>
-     <task id="Activity_b82d6d7d" name="Task">
-       <incoming>Flow_32ff3bfb</incoming>
-       <outgoing>Flow_b7ad88e0</outgoing>
-     </task>
-     <task id="Activity_9533af7f" name="SecondTask">
-       <incoming>Flow_b7ad88e0</incoming>
-       <outgoing>Flow_ab6a1127</outgoing>
-     </task>
-     <sequenceFlow id="Flow_32ff3bfb" name="FromStartEvent" sourceRef="StartEvent_1" targetRef="Activity_b82d6d7d"></sequenceFlow>
-     <sequenceFlow id="Flow_b7ad88e0" name="FromTask" sourceRef="Activity_b82d6d7d" targetRef="Activity_9533af7f"></sequenceFlow>
-     <sequenceFlow id="Flow_ab6a1127" name="FromSecondTask" sourceRef="Activity_9533af7f" targetRef="Activity_06d44e49"></sequenceFlow>
-     <sequenceFlow id="Flow_3a239658" name="FromScriptTask" sourceRef="Activity_06d44e49" targetRef="Activity_0edd0916"></sequenceFlow>
-     <sequenceFlow id="Flow_516e124d" name="FromOtherScriptTask" sourceRef="Activity_0edd0916" targetRef="Activity_750e53de"></sequenceFlow>
-     <sequenceFlow id="Flow_74d28880" name="FromUserTask" sourceRef="Activity_750e53de" targetRef="Activity_c99c0dce"></sequenceFlow>
-     <sequenceFlow id="Flow_696611e6" name="FromSpecialUserTask" sourceRef="Activity_c99c0dce" targetRef="Event_c7d30090"></sequenceFlow>
-   </process>
+ <definitions  id="Definitions_7a350181">
+ <collaboration id="Collaboration_21b47c3b">
+   <participant id="Participant_8bdd09ef" name="TenantParticipant" processRef="Process_ebcb2501"></participant>
+   <participant id="Participant_a5192790" name="LandlordParticipant" processRef="Process_d72f2881"></participant>
+ </collaboration>
+ <process id="Process_ebcb2501" name="Tenant" isExecutable="true">
+   <startEvent id="StartEvent_1" name="StartEvent" isInterrupting="true">
+   <outgoing>Flow_3b1f70d9</outgoing>
+   </startEvent>
+   <endEvent id="Event_8763c790" name="EndEvent"></endEvent>
+   <task id="Activity_3a51ebcf" name="Task">
+   <incoming>Flow_3b1f70d9</incoming>
+   <outgoing>Flow_d358199c</outgoing>
+   </task>
+   <sequenceFlow id="Flow_3b1f70d9" name="FromStartEvent" sourceRef="StartEvent_1" targetRef="Activity_98897eeb"></sequenceFlow>
+   <sequenceFlow id="Flow_d358199c" name="FromTask" sourceRef="Activity_3a51ebcf" targetRef="Event_8763c790"></sequenceFlow>
+ </process>
+ <process id="Process_d72f2881" name="Landlord" isExecutable="false">
+   <startEvent id="Event_1" name="StartEvent" isInterrupting="true">
+   <outgoing>Flow_6a7c6131</outgoing>
+   </startEvent>
+   <endEvent id="Event_d0b8abc6" name="EndEvent"></endEvent>
+   <scriptTask id="Activity_e9ebae96" name="ScriptTask">
+   <incoming>Flow_50a08c75</incoming>
+   <outgoing>Flow_accbc74b</outgoing>
+   </scriptTask>
+   <task id="Activity_98897eeb" name="FirstTask">
+   <incoming>Flow_6a7c6131</incoming>
+   <outgoing>Flow_9f874413</outgoing>
+   </task>
+   <task id="Activity_f57a8faf" name="SecondTask">
+   <incoming>Flow_9f874413</incoming>
+   <outgoing>Flow_50a08c75</outgoing>
+   </task>
+   <sequenceFlow id="Flow_6a7c6131" name="FromStartEvent" sourceRef="StartEvent_1" targetRef="Activity_98897eeb"></sequenceFlow>
+   <sequenceFlow id="Flow_9f874413" name="FromFirstTask" sourceRef="Activity_98897eeb" targetRef="Activity_f57a8faf"></sequenceFlow>
+   <sequenceFlow id="Flow_50a08c75" name="FromSecondTask" sourceRef="Activity_f57a8faf" targetRef="Activity_e9ebae96"></sequenceFlow>
+   <sequenceFlow id="Flow_accbc74b" name="FromScriptTask" sourceRef="Activity_e9ebae96" targetRef="Event_d0b8abc6"></sequenceFlow>
+ </process>
+ <BPMNDiagram id=""></BPMNDiagram>
  </definitions>

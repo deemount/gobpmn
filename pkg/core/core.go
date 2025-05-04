@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/deemount/gobpmn/internal/logger"
 	"github.com/deemount/gobpmn/pkg/core/common"
 	"github.com/deemount/gobpmn/pkg/types"
 )
@@ -21,16 +22,21 @@ func Core[T any, M types.BPMNGeneric](ctx context.Context, model T, genericType 
 		defer cancel()
 	}
 
+	l := logger.FromContext(ctx)
+	l.Debugf("entering core with model type %T", model)
+
 	// create a new reflect value
 	value, err := common.NewReflectValue(model, genericType)
 	if err != nil {
 		return *new(T), common.NewError(fmt.Errorf("failed to create reflect value:\n%w", err))
 	}
 	defer value.Cleanup()
+	l.Debugf("reflect value created successfully")
 
 	if err := value.Setup(); err != nil {
 		return *new(T), common.NewError(fmt.Errorf("failed to setup reflect value:\n%w", err))
 	}
+	l.Debugf("value setup completed")
 
 	// create a new mapping
 	mapping := new(common.Mapping[M]) // NOTE: Mapping and Quantity is a helper structure and can be put together in a single structure?
@@ -47,10 +53,15 @@ func Core[T any, M types.BPMNGeneric](ctx context.Context, model T, genericType 
 		return *new(T), common.NewError(fmt.Errorf("failed to handle model type:\n%w", err))
 	}
 
-	// reflect the processes in the bpmnmodel by given quantity.
+	// reflect the processes in the bpmn model by given quantity.
 	// v.Process[] is a slice of reflect.Value, which represents the processes in the bpmn model.
 	if err := value.ReflectProcess(quantity); err != nil {
 		return *new(T), common.NewError(fmt.Errorf("failed to reflect processes:\n%w", err))
+	}
+
+	// reflect the diagram in the bpmn model.
+	if err := value.ReflectDiagram(); err != nil {
+		return *new(T), common.NewError(fmt.Errorf("failed to reflect diagram:\n%w", err))
 	}
 
 	// get the current value of the reflected value.
@@ -72,6 +83,10 @@ func Core[T any, M types.BPMNGeneric](ctx context.Context, model T, genericType 
 	if err := value.FinalizeModel(ctx, quantity); err != nil {
 		return *new(T), common.NewError(fmt.Errorf("failed to finalize model:\n%w", err))
 	}
+	l.Debugf("finalizing model completed, returning result")
 
+	// return the converted instance and nil error
+	// convertedInstance is of type T, which is the expected return type.
+	// nil error indicates that the function completed successfully.
 	return convertedInstance, nil
 }

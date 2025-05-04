@@ -1,0 +1,12 @@
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mFromStruct called for model type main.RentingProcess with opts {Timeout:1m0s Validate:true Logger:0x1400010a3c0}[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mcalling core.Core[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mentering core with model type main.RentingProcess[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mreflect value created successfully[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mvalue setup completed[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mfinalizing model completed, returning result[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mcalling core.GetDefinitions[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mcreating bpmn parser[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mmarshalling bpmn model[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mvalidating bpmn model[0m
+renting DEBUG: 2025/05/04 12:40:06 logger.go:103: [0;32mbpmn model created in 28.919584ms[0m
+renting INFO:  2025/05/04 12:40:06 logger.go:103: [0;34mbpmn model generated successfully: &{Counter:1 FilenamePrefix:diagram FilePathBPMN:files/bpmn FilePathJSON:files/json FilePathXML:files/xml Def:<nil> Repo:0x1400012c180}[0m

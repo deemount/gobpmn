@@ -137,7 +137,7 @@ type Shape struct {
 type TShape struct {
 	ID              string   `xml:"id,attr" json:"id,omitempty"`
 	Element         string   `xml:"bpmnElement,attr" json:"bpmnElement,omitempty"`
-	IsHorizontal    bool     `xml:"isHorizontal,attr,omitempty" json:"isHorizontal,omitemptyy"`
+	IsHorizontal    bool     `xml:"isHorizontal,attr,omitempty" json:"isHorizontal,omitempty"`
 	IsMarkerVisible bool     `xml:"isMarkerVisible,attr,omitempty" json:"isMarkerVisible,omitempty"`
 	Bounds          []Bounds `xml:"Bounds" json:"bounds,omitempty"`
 	Label           []TLabel `xml:"BPMNLabel" json:"label,omitempty"`

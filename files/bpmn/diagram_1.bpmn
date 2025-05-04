@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Definitions_aa98261b" targetNamespace="http://bpmn.io/schema/bpmn">
-   <bpmn:process id="Process_11b0a5e1" name="Process" isExecutable="true">
+ <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Definitions_7a350181" targetNamespace="http://bpmn.io/schema/bpmn">
+   <bpmn:collaboration id="Collaboration_21b47c3b">
+     <bpmn:participant id="Participant_8bdd09ef" name="TenantParticipant" processRef="Process_ebcb2501"></bpmn:participant>
+     <bpmn:participant id="Participant_a5192790" name="LandlordParticipant" processRef="Process_d72f2881"></bpmn:participant>
+   </bpmn:collaboration>
+   <bpmn:process id="Process_ebcb2501" name="Tenant" isExecutable="true">
      <bpmn:startEvent id="StartEvent_1" name="StartEvent" isInterrupting="true">
-       <bpmn:outgoing>Flow_32ff3bfb</bpmn:outgoing>
+       <bpmn:outgoing>Flow_3b1f70d9</bpmn:outgoing>
      </bpmn:startEvent>
-     <bpmn:endEvent id="Event_c7d30090" name="EndEvent"></bpmn:endEvent>
-     <bpmn:userTask id="Activity_750e53de" name="UserTask">
-       <bpmn:incoming>Flow_516e124d</bpmn:incoming>
-       <bpmn:outgoing>Flow_74d28880</bpmn:outgoing>
-     </bpmn:userTask>
-     <bpmn:userTask id="Activity_c99c0dce" name="SpecialUserTask">
-       <bpmn:incoming>Flow_74d28880</bpmn:incoming>
-       <bpmn:outgoing>Flow_696611e6</bpmn:outgoing>
-     </bpmn:userTask>
-     <bpmn:scriptTask id="Activity_06d44e49" name="ScriptTask">
-       <bpmn:incoming>Flow_ab6a1127</bpmn:incoming>
-       <bpmn:outgoing>Flow_3a239658</bpmn:outgoing>
-     </bpmn:scriptTask>
-     <bpmn:scriptTask id="Activity_0edd0916" name="OtherScriptTask">
-       <bpmn:incoming>Flow_3a239658</bpmn:incoming>
-       <bpmn:outgoing>Flow_516e124d</bpmn:outgoing>
-     </bpmn:scriptTask>
-     <bpmn:task id="Activity_b82d6d7d" name="Task">
-       <bpmn:incoming>Flow_32ff3bfb</bpmn:incoming>
-       <bpmn:outgoing>Flow_b7ad88e0</bpmn:outgoing>
+     <bpmn:endEvent id="Event_8763c790" name="EndEvent"></bpmn:endEvent>
+     <bpmn:task id="Activity_3a51ebcf" name="Task">
+       <bpmn:incoming>Flow_3b1f70d9</bpmn:incoming>
+       <bpmn:outgoing>Flow_d358199c</bpmn:outgoing>
      </bpmn:task>
-     <bpmn:task id="Activity_9533af7f" name="SecondTask">
-       <bpmn:incoming>Flow_b7ad88e0</bpmn:incoming>
-       <bpmn:outgoing>Flow_ab6a1127</bpmn:outgoing>
-     </bpmn:task>
-     <bpmn:sequenceFlow id="Flow_32ff3bfb" name="FromStartEvent" sourceRef="StartEvent_1" targetRef="Activity_b82d6d7d"></bpmn:sequenceFlow>
-     <bpmn:sequenceFlow id="Flow_b7ad88e0" name="FromTask" sourceRef="Activity_b82d6d7d" targetRef="Activity_9533af7f"></bpmn:sequenceFlow>
-     <bpmn:sequenceFlow id="Flow_ab6a1127" name="FromSecondTask" sourceRef="Activity_9533af7f" targetRef="Activity_06d44e49"></bpmn:sequenceFlow>
-     <bpmn:sequenceFlow id="Flow_3a239658" name="FromScriptTask" sourceRef="Activity_06d44e49" targetRef="Activity_0edd0916"></bpmn:sequenceFlow>
-     <bpmn:sequenceFlow id="Flow_516e124d" name="FromOtherScriptTask" sourceRef="Activity_0edd0916" targetRef="Activity_750e53de"></bpmn:sequenceFlow>
-     <bpmn:sequenceFlow id="Flow_74d28880" name="FromUserTask" sourceRef="Activity_750e53de" targetRef="Activity_c99c0dce"></bpmn:sequenceFlow>
-     <bpmn:sequenceFlow id="Flow_696611e6" name="FromSpecialUserTask" sourceRef="Activity_c99c0dce" targetRef="Event_c7d30090"></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_3b1f70d9" name="FromStartEvent" sourceRef="StartEvent_1" targetRef="Activity_98897eeb"></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_d358199c" name="FromTask" sourceRef="Activity_3a51ebcf" targetRef="Event_8763c790"></bpmn:sequenceFlow>
    </bpmn:process>
+   <bpmn:process id="Process_d72f2881" name="Landlord" isExecutable="false">
+     <bpmn:startEvent id="Event_1" name="StartEvent" isInterrupting="true">
+       <bpmn:outgoing>Flow_6a7c6131</bpmn:outgoing>
+     </bpmn:startEvent>
+     <bpmn:endEvent id="Event_d0b8abc6" name="EndEvent"></bpmn:endEvent>
+     <bpmn:scriptTask id="Activity_e9ebae96" name="ScriptTask">
+       <bpmn:incoming>Flow_50a08c75</bpmn:incoming>
+       <bpmn:outgoing>Flow_accbc74b</bpmn:outgoing>
+     </bpmn:scriptTask>
+     <bpmn:task id="Activity_98897eeb" name="FirstTask">
+       <bpmn:incoming>Flow_6a7c6131</bpmn:incoming>
+       <bpmn:outgoing>Flow_9f874413</bpmn:outgoing>
+     </bpmn:task>
+     <bpmn:task id="Activity_f57a8faf" name="SecondTask">
+       <bpmn:incoming>Flow_9f874413</bpmn:incoming>
+       <bpmn:outgoing>Flow_50a08c75</bpmn:outgoing>
+     </bpmn:task>
+     <bpmn:sequenceFlow id="Flow_6a7c6131" name="FromStartEvent" sourceRef="StartEvent_1" targetRef="Activity_98897eeb"></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_9f874413" name="FromFirstTask" sourceRef="Activity_98897eeb" targetRef="Activity_f57a8faf"></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_50a08c75" name="FromSecondTask" sourceRef="Activity_f57a8faf" targetRef="Activity_e9ebae96"></bpmn:sequenceFlow>
+     <bpmn:sequenceFlow id="Flow_accbc74b" name="FromScriptTask" sourceRef="Activity_e9ebae96" targetRef="Event_d0b8abc6"></bpmn:sequenceFlow>
+   </bpmn:process>
+   <bpmndi:BPMNDiagram id=""></bpmndi:BPMNDiagram>
  </bpmn:definitions>

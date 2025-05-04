@@ -14,6 +14,7 @@ import (
 const GitHubRepo = "deemount/gobpmn" // GitHub repository for the project
 const GitHubAPIURL = "https://api.github.com/repos/%s/releases/latest"
 
+// GitHubRelease represents the structure of a GitHub release
 type GitHubRelease struct {
 	TagName     string    `json:"tag_name"`
 	Name        string    `json:"name"`

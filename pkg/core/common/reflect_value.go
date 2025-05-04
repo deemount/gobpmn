@@ -165,6 +165,10 @@ func (v *ReflectValue[M]) setupDefinition() error {
 		return nil
 	}
 	definitions := foundation.NewDefinitions()
+	// set the default attributes for the definitions
+	// NOTE: This is a workaround, because the default attributes are not set in the constructor.
+	//       Also, bpmndi is set here, but I want to have the option, building a process without an diagram.
+	//       So, a option pattern is needed.
 	definitions.SetDefaultAttributes()
 	v.Def.Set(reflect.ValueOf(definitions))
 	return nil
@@ -223,7 +227,7 @@ func (v *ReflectValue[M]) handleStandalone(q *Quantity[M], m *Mapping[M]) error 
 }
 
 // CurrentValue holds the data structure of the BPMN model in the ReflectValue.
-// the return value is then as a return value in the initial function.
+// The return value is then as a return value in the initial function.
 //
 // NOTE:
 // It is used as a blueprint for the BPMN model, which is then reflected into v.Def.
@@ -296,6 +300,23 @@ func (v *ReflectValue[M]) ReflectProcess(q *Quantity[M]) error {
 	}
 	for processIdx := range q.Process {
 		v.Process[processIdx] = def.MethodByName("GetProcess").Call([]reflect.Value{reflect.ValueOf(processIdx)})[0]
+	}
+	return nil
+}
+
+// ReflectDiagram reflects the BPMN diagram.
+func (v *ReflectValue[M]) ReflectDiagram() error {
+	def := v.Def
+	if def.Kind() == reflect.Interface || def.Kind() == reflect.Ptr {
+		def = reflect.ValueOf(def.Interface()) // get the real value by any
+	}
+	method := def.MethodByName("SetDiagram")
+	if !method.IsValid() {
+		return NewError(fmt.Errorf("SetDiagram method not found"))
+	}
+	results := method.Call([]reflect.Value{reflect.ValueOf(1)})
+	if len(results) > 0 && !results[0].IsNil() {
+		return NewError(fmt.Errorf("SetDiagram call failed"))
 	}
 	return nil
 }
@@ -526,7 +547,14 @@ func (v *ReflectValue[M]) nextHash(idx int, target reflect.Value) {
 	}
 }
 
-// CollaborationConfig holds configuration for collaboration setup
+/*
+ * @ collaboration
+ *
+ * The collaboration is a BPMN element that represents the interaction between two or more processes.
+ * It is used to model the communication between different participants in a process.
+ * The collaboration is represented by a pool in the BPMN model.
+ * The pool is a container for the processes and their interactions.
+ */
 
 // collaboration sets up the BPMN collaboration and its participants
 func (v *ReflectValue[M]) collaboration(q *Quantity[M]) error {
@@ -653,8 +681,8 @@ func (v *ReflectValue[M]) configureParticipant(participant reflect.Value, detail
 
 // multipleProcess processes multiple processes in the BPMN model.
 func (v *ReflectValue[M]) multipleProcess(q *Quantity[M]) error {
-	q.RLock()
-	defer q.RUnlock()
+	q.RLock()         // lock the quantity for reading
+	defer q.RUnlock() // unlock the quantity
 	if err := v.configurePool(); err != nil {
 		return fmt.Errorf("failed to configure multiple processes:\n%w", err)
 	}
