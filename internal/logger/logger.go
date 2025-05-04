@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-// Level definiert die Schweregrade
+// Level defines the degrees of severity
 type Level int
 
 const (
@@ -19,7 +19,7 @@ const (
 	ErrorLevel
 )
 
-// LoggerRepository ist das Interface, das überall im Code verwendet wird
+// LoggerRepository is the interface that is used everywhere in the code
 type LoggerRepository interface {
 	Debugf(format string, v ...any)
 	Infof(format string, v ...any)
@@ -30,7 +30,7 @@ type LoggerRepository interface {
 	SetOutputFile(path string) error
 }
 
-// Logger ist die Standard-Implementierung mit std log.Logger
+// Logger is the standard implementation with std log.Logger
 type Logger struct {
 	mu    sync.RWMutex
 	level Level
@@ -40,7 +40,7 @@ type Logger struct {
 	Error *log.Logger
 }
 
-// NewLogger erstellt einen Logger mit Name-Prefix, Level und Writer
+// NewLogger creates a logger with Name-Prefix, Level and Writer
 func NewLogger(name string, level Level, out io.Writer) *Logger {
 	flags := log.Ldate | log.Ltime | log.Lshortfile
 	return &Logger{
@@ -52,14 +52,14 @@ func NewLogger(name string, level Level, out io.Writer) *Logger {
 	}
 }
 
-// SetLevel ändert den Minimal-Level
+// SetLevel changes the minimum level
 func (l *Logger) SetLevel(level Level) {
 	l.mu.Lock()
 	l.level = level
 	l.mu.Unlock()
 }
 
-// SetOutput setzt den Writer für alle Level
+// SetOutput sets the writer for all levels
 func (l *Logger) SetOutput(w io.Writer) {
 	l.Debug.SetOutput(w)
 	l.Info.SetOutput(w)
@@ -68,9 +68,9 @@ func (l *Logger) SetOutput(w io.Writer) {
 }
 
 // SetOutputFile opens (or creates) the named file (append-modus)
-// und nutzt es für alle Level-Logger
+// and uses it for all level loggers
 func (l *Logger) SetOutputFile(path string) error {
-	// Datei zum Schreiben öffnen (Append, Create, Write-Only)
+	// Open file for writing (Append, Create, Write-Only)
 	file, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
 	if err != nil {
 		return fmt.Errorf("could not open log file %q: %w", path, err)
@@ -79,14 +79,14 @@ func (l *Logger) SetOutputFile(path string) error {
 	return nil
 }
 
-// interne Hilfsfunktion mit Level-Filter und optionalen Farben
+// Internal auxiliary function with level filter and optional colors
 func (l *Logger) logf(lvl Level, logger *log.Logger, format string, v ...any) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 	if lvl < l.level {
 		return
 	}
-	// farbige Ausgabe
+	// color edition
 	var wrapped string
 	switch lvl {
 	case DebugLevel:
@@ -109,7 +109,7 @@ func (l *Logger) Warnf(format string, v ...any)  { l.logf(WarnLevel, l.Warn, for
 func (l *Logger) Errorf(format string, v ...any) { l.logf(ErrorLevel, l.Error, format, v...) }
 
 // ------------------------------------------------
-// Kontext-Funktionen, um Logger im Context weiterzugeben
+// Context functions to pass on loggers in context
 // ------------------------------------------------
 type ctxKey struct{}
 
@@ -121,6 +121,6 @@ func FromContext(ctx context.Context) LoggerRepository {
 	if l, ok := ctx.Value(ctxKey{}).(LoggerRepository); ok {
 		return l
 	}
-	// Fallback auf ein Default-Info-Logger
+	// Fallback to a default info logger
 	return NewLogger("gobpmn", InfoLevel, os.Stdout)
 }
