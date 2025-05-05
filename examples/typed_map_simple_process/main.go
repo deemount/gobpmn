@@ -12,7 +12,7 @@ var errorLogger *log.Logger
 
 type TypedMap map[string]any
 
-// TypedMapSimpleProcess is a typed map that represents a process model
+// TypedMap is a typed map that represents a process model
 // with BPMN elements, with named fields.
 var Process = TypedMap{
 	"Def":                 gobpmn.Definitions(),
