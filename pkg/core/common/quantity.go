@@ -20,6 +20,9 @@ type Quantity[M types.BPMNGeneric] struct {
 	Pool        int
 	Process     int
 	Participant int
+	// related fields to diagram
+	Shape int
+	Edge  int
 }
 
 // countPool counts a pool in the process model.
@@ -94,6 +97,7 @@ func (q *Quantity[M]) countFieldElements(field reflect.Value, processIdx int) er
 		// handle sequence flows first
 		if strings.HasPrefix(fieldName, "From") {
 			q.Elements[processIdx]["SequenceFlow"]++
+			q.Edge++
 			continue
 		}
 		q.matchAndCountElement(processIdx, fieldName)
@@ -111,6 +115,7 @@ func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], process
 			// count sequence flows first
 			if strings.HasPrefix(fieldName, "From") {
 				q.Elements[processIdx]["SequenceFlow"]++
+				q.Edge++
 				continue
 			}
 			q.matchAndCountElement(processIdx, fieldName)
@@ -158,12 +163,14 @@ func (q *Quantity[M]) matchAndCountElement(processIdx int, fieldName string) {
 	for _, matcher := range ElementTypeList {
 		if matcher.exact && fieldName == matcher.name {
 			q.Elements[processIdx][matcher.element]++
+			q.Shape++
 			return // found an exact match, no need to continue; early return
 		}
 	}
 	for _, matcher := range ElementTypeList {
 		if !matcher.exact && strings.Contains(fieldName, matcher.name) {
 			q.Elements[processIdx][matcher.element]++
+			q.Shape++
 			return // found a partial match, no need to continue; early return
 		}
 	}
