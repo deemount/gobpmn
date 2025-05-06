@@ -3,7 +3,6 @@ package common
 import (
 	"context"
 	"fmt"
-	"log"
 	"reflect"
 	"strings"
 
@@ -838,7 +837,6 @@ func (v *ReflectValue[M]) plane(q *Quantity[M]) error {
 			return NewError(fmt.Errorf("failed to apply method %s: %w", SetElement, err))
 		}
 	}
-	log.Printf("%#v, %#v", v.Instance.Interface(), q)
 	return nil
 }
 
