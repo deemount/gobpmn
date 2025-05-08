@@ -34,6 +34,12 @@ const (
 	GetPlane         = "GetPlane"
 	SetShape         = "SetShape"
 	GetShape         = "GetShape"
+	SetEdge          = "SetEdge"
+	GetEdge          = "GetEdge"
+	SetBounds        = "SetBounds"
+	GetBounds        = "GetBounds"
+	SetCoordinates   = "SetCoordinates"
+	SetSize          = "SetSize"
 )
 
 // ReflectValue represents the core structure for BPMN reflection
@@ -853,7 +859,7 @@ func (v *ReflectValue[M]) plane(q *Quantity[M]) error {
 	 * From here on there is a significant difference to the
 	 * arrangement of the shapes and edges in Camunda Modeler 5.2.x
 	 * gobpmn sets all the shapes, then follows a programmatical order,
-	 * e.g. the participants are set first, then all the rest of the elements, which are shapes.
+	 * e.g. a participant is set first, then all the rest of the elements, which are shapes.
 	 * The edges comes after the shapes.
 	 * The Camunda Modeler sets the shapes in a different order.
 	 * It sets the shapes in the order of the elements, which are set in the bpmn model.
@@ -866,24 +872,54 @@ func (v *ReflectValue[M]) plane(q *Quantity[M]) error {
 		return NewError(fmt.Errorf("failed to apply method %s: %w", SetShape, err))
 	}
 
+	if err := callMethod(p, SetEdge, []reflect.Value{reflect.ValueOf(q.Edge)}); err != nil {
+		return NewError(fmt.Errorf("failed to apply method %s: %w", SetEdge, err))
+	}
+
 	if q.Participant > 0 {
 		// set the participant shapes
 		for idx := range q.Participant {
+			sidx := idx
+			if idx > 0 {
+				sidx = q.DiagramElements[idx-1]["Shape"] + 1
+			}
 			// get the shape and set the attributes
 			// Note: the shape is called from a slice of shapes
-			// and the index is the same as the participant index
-			participantShape, err := callMethodValue(p, GetShape, []reflect.Value{reflect.ValueOf(idx)})
+			// and the index is not the same as the participant index
+			participantShape, err := callMethodValue(p, GetShape, []reflect.Value{reflect.ValueOf(sidx)})
 			if err != nil {
 				return NewError(fmt.Errorf("failed to get shape: %w", err))
 			}
-			if err := callMethod(participantShape, SetID, []reflect.Value{reflect.ValueOf("participant"), reflect.ValueOf(v.ParticipantHash[idx])}); err != nil {
-				return NewError(fmt.Errorf("failed to set id: %w", err))
+			methods := map[string][]reflect.Value{
+				SetID:           {reflect.ValueOf("participant"), reflect.ValueOf(v.ParticipantHash[idx])},
+				SetElement:      {reflect.ValueOf("participant"), reflect.ValueOf(v.ParticipantHash[idx])},
+				SetIsHorizontal: {reflect.ValueOf(true)},
 			}
-			if err := callMethod(participantShape, SetElement, []reflect.Value{reflect.ValueOf("participant"), reflect.ValueOf(v.ParticipantHash[idx])}); err != nil {
-				return NewError(fmt.Errorf("failed to set element: %w", err))
+			for methodName, args := range methods {
+				if err := callMethod(participantShape, methodName, args); err != nil {
+					return NewError(fmt.Errorf("failed to call %s: %w", methodName, err))
+				}
 			}
-			if err := callMethod(participantShape, SetIsHorizontal, []reflect.Value{reflect.ValueOf(true)}); err != nil {
-				return NewError(fmt.Errorf("failed to set is horizontal: %w", err))
+			if err := callMethod(participantShape, SetBounds, []reflect.Value{}); err != nil {
+				return NewError(fmt.Errorf("failed to apply method %s: %w", SetBounds, err))
+			}
+			participantBounds, err := callMethodValue(participantShape, GetBounds, []reflect.Value{})
+			if err != nil {
+				return NewError(fmt.Errorf("failed to apply method %s: %w", GetBounds, err))
+			}
+			var x, y, width, height int
+			if idx == 0 {
+				// set the coordinates of the first participant
+				x = 119
+				y = 152
+				width = 600
+				height = 250
+			}
+			if err := callMethod(participantBounds, SetCoordinates, []reflect.Value{reflect.ValueOf(x), reflect.ValueOf(y)}); err != nil {
+				return NewError(fmt.Errorf("failed to apply method %s: %w", SetCoordinates, err))
+			}
+			if err := callMethod(participantBounds, SetSize, []reflect.Value{reflect.ValueOf(width), reflect.ValueOf(height)}); err != nil {
+				return NewError(fmt.Errorf("failed to apply method %s: %w", SetCoordinates, err))
 			}
 		}
 	}
