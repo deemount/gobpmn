@@ -60,7 +60,7 @@ func (ep *ElementProcessor[M]) createProcessingConfig(processIdx int, field refl
 		field:     field,
 		numFields: field.NumField(),
 		indices:   initializeIndices(),
-		counts:    ep.quantity.Elements[processIdx],
+		counts:    ep.quantity.ProcessElements[processIdx],
 	}
 }
 
@@ -170,7 +170,7 @@ func (ep *ElementProcessor[M]) ProcessStandalone(ctx context.Context) error {
 func (ep *ElementProcessor[M]) processElement() error {
 	config := &ProcessingConfig{
 		indices: initializeIndices(),
-		counts:  ep.quantity.Elements[0],
+		counts:  ep.quantity.ProcessElements[0],
 	}
 
 	/*

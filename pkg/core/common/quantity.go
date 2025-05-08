@@ -16,10 +16,11 @@ import (
 // in the BPMN model. It is used to count the number of elements
 type Quantity[M types.BPMNGeneric] struct {
 	sync.RWMutex
-	Elements    map[int]map[processElement]int
-	Pool        int
-	Process     int
-	Participant int
+	ProcessElements map[int]map[processElement]int
+	DiagramElements map[int]map[diagramElement]int
+	Pool            int
+	Process         int
+	Participant     int
 	// related fields to diagram
 	Shape int
 	Edge  int
@@ -53,6 +54,7 @@ func (q *Quantity[M]) countFieldsInPool(v *ReflectValue[M]) {
 		if strings.Contains(field.Name, "Participant") {
 			v.ParticipantName = append(v.ParticipantName, field.Name)
 			q.Participant++
+			q.Shape++
 		}
 	}
 }
@@ -61,12 +63,18 @@ func (q *Quantity[M]) countFieldsInPool(v *ReflectValue[M]) {
 // NOTE: Works correctly for standalone and multiple processes designed by struct,
 // as well as a standalone mapped processes
 func (q *Quantity[M]) countFieldsInInstance(v *ReflectValue[M]) error {
-	if q.Elements == nil {
-		q.Elements = make(map[int]map[processElement]int)
+	if q.ProcessElements == nil {
+		q.ProcessElements = make(map[int]map[processElement]int)
+	}
+	if q.DiagramElements == nil {
+		q.DiagramElements = make(map[int]map[diagramElement]int)
 	}
 	for processIdx, processName := range v.ProcessName {
-		if q.Elements[processIdx] == nil {
-			q.Elements[processIdx] = make(map[processElement]int)
+		if q.ProcessElements[processIdx] == nil {
+			q.ProcessElements[processIdx] = make(map[processElement]int)
+		}
+		if q.DiagramElements[processIdx] == nil {
+			q.DiagramElements[processIdx] = make(map[diagramElement]int)
 		}
 		if q.Process > 1 {
 			if err := q.countMultipleProcessElements(v, processIdx, processName); err != nil {
@@ -96,7 +104,8 @@ func (q *Quantity[M]) countFieldElements(field reflect.Value, processIdx int) er
 		fieldName := field.Type().Field(i).Name
 		// handle sequence flows first
 		if strings.HasPrefix(fieldName, "From") {
-			q.Elements[processIdx]["SequenceFlow"]++
+			q.ProcessElements[processIdx]["SequenceFlow"]++
+			q.DiagramElements[processIdx]["Edge"]++
 			q.Edge++
 			continue
 		}
@@ -114,7 +123,8 @@ func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], process
 			fieldName := field.Name
 			// count sequence flows first
 			if strings.HasPrefix(fieldName, "From") {
-				q.Elements[processIdx]["SequenceFlow"]++
+				q.ProcessElements[processIdx]["SequenceFlow"]++
+				q.DiagramElements[processIdx]["Edge"]++
 				q.Edge++
 				continue
 			}
@@ -149,7 +159,9 @@ func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], process
 		for _, entry := range sortedEntries {
 			// count sequence flows first
 			if strings.HasPrefix(entry.Key, "From") {
-				q.Elements[processIdx]["SequenceFlow"]++
+				q.ProcessElements[processIdx]["SequenceFlow"]++
+				q.DiagramElements[processIdx]["Edge"]++
+				q.Edge++
 				continue
 			}
 			q.matchAndCountElement(processIdx, entry.Key)
@@ -162,14 +174,16 @@ func (q *Quantity[M]) countStandaloneProcessElements(v *ReflectValue[M], process
 func (q *Quantity[M]) matchAndCountElement(processIdx int, fieldName string) {
 	for _, matcher := range ElementTypeList {
 		if matcher.exact && fieldName == matcher.name {
-			q.Elements[processIdx][matcher.element]++
+			q.ProcessElements[processIdx][matcher.element]++
+			q.DiagramElements[processIdx]["Shape"]++
 			q.Shape++
 			return // found an exact match, no need to continue; early return
 		}
 	}
 	for _, matcher := range ElementTypeList {
 		if !matcher.exact && strings.Contains(fieldName, matcher.name) {
-			q.Elements[processIdx][matcher.element]++
+			q.ProcessElements[processIdx][matcher.element]++
+			q.DiagramElements[processIdx]["Shape"]++
 			q.Shape++
 			return // found a partial match, no need to continue; early return
 		}

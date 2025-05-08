@@ -26,16 +26,16 @@ func TestProcessMethodStruct(t *testing.T) {
 func TestGetProcessMethods(t *testing.T) {
 	// Setup test data
 	q := &Quantity[[]reflect.StructField]{
-		Elements: make(map[int]map[processElement]int),
+		ProcessElements: make(map[int]map[processElement]int),
 	}
 	processIdx := 0
-	q.Elements[processIdx] = make(map[processElement]int)
+	q.ProcessElements[processIdx] = make(map[processElement]int)
 
 	// Set some element counts
-	q.Elements[processIdx][startEvent] = 1
-	q.Elements[processIdx][endEvent] = 2
-	q.Elements[processIdx][userTask] = 3
-	q.Elements[processIdx][sequenceFlow] = 4
+	q.ProcessElements[processIdx][startEvent] = 1
+	q.ProcessElements[processIdx][endEvent] = 2
+	q.ProcessElements[processIdx][userTask] = 3
+	q.ProcessElements[processIdx][sequenceFlow] = 4
 
 	// Call the function
 	methods := GetProcessMethods(processIdx, q)

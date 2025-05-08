@@ -17,7 +17,7 @@ type ProcessMethod struct {
 // Each method represents a BPMN element type and its required quantity.
 // Note: q Quantity for a single process should be used in the Arg field.
 func GetProcessMethods[M types.BPMNGeneric](processIdx int, q *Quantity[M]) []ProcessMethod {
-	process := q.Elements[processIdx]
+	process := q.ProcessElements[processIdx]
 	return []ProcessMethod{
 		{Name: "SetStartEvent", Arg: process[startEvent]},
 		{Name: "SetEndEvent", Arg: process[endEvent]},

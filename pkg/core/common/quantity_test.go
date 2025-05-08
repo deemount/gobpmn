@@ -21,8 +21,8 @@ func TestQuantityInitialization(t *testing.T) {
 		t.Errorf("Expected Participant to be 0, got %d", q.Participant)
 	}
 
-	if q.Elements != nil {
-		t.Errorf("Expected Elements to be nil, got %v", q.Elements)
+	if q.ProcessElements != nil {
+		t.Errorf("Expected Elements to be nil, got %v", q.ProcessElements)
 	}
 }
 
@@ -153,13 +153,13 @@ func TestCountFieldsInInstanceSingleProcess(t *testing.T) {
 	}
 
 	// Check that elements map is created with the right process index
-	if q.Elements[0] == nil {
+	if q.ProcessElements[0] == nil {
 		t.Fatalf("Expected Elements[0] to be initialized")
 	}
 
 	// Check sequence flow count
-	if q.Elements[0]["SequenceFlow"] != 1 {
-		t.Errorf("Expected 1 SequenceFlow, got %d", q.Elements[0]["SequenceFlow"])
+	if q.ProcessElements[0]["SequenceFlow"] != 1 {
+		t.Errorf("Expected 1 SequenceFlow, got %d", q.ProcessElements[0]["SequenceFlow"])
 	}
 
 	// Check other element counts
@@ -171,8 +171,8 @@ func TestCountFieldsInInstanceSingleProcess(t *testing.T) {
 	}
 
 	for element, count := range expected {
-		if q.Elements[0][element] != count {
-			t.Errorf("Expected %d %s, got %d", count, element, q.Elements[0][element])
+		if q.ProcessElements[0][element] != count {
+			t.Errorf("Expected %d %s, got %d", count, element, q.ProcessElements[0][element])
 		}
 	}
 }
@@ -238,21 +238,21 @@ func TestMatchAndCountElement(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			q := Quantity[[]reflect.StructField]{
-				Elements: make(map[int]map[processElement]int),
+				ProcessElements: make(map[int]map[processElement]int),
 			}
-			q.Elements[0] = make(map[processElement]int)
+			q.ProcessElements[0] = make(map[processElement]int)
 
 			q.matchAndCountElement(0, test.fieldName)
 
 			for element, expectedCount := range test.expected {
-				if q.Elements[0][element] != expectedCount {
+				if q.ProcessElements[0][element] != expectedCount {
 					t.Errorf("Expected %d %s, got %d",
-						expectedCount, element, q.Elements[0][element])
+						expectedCount, element, q.ProcessElements[0][element])
 				}
 			}
 
 			// Also check that we don't have unexpected elements
-			for element, count := range q.Elements[0] {
+			for element, count := range q.ProcessElements[0] {
 				if count > 0 && test.expected[element] != count {
 					t.Errorf("Unexpected element count: %s = %d", element, count)
 				}

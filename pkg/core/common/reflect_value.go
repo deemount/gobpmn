@@ -20,17 +20,20 @@ const (
 	SetProcessRef   = "SetProcessRef"
 	SetIsExecutable = "SetIsExecutable"
 	SetElement      = "SetElement"
+	SetIsHorizontal = "SetIsHorizontal"
 	// Elements
 	SetProcess       = "SetProcess"
 	GetProcess       = "GetProcess"
 	SetCollaboration = "SetCollaboration"
 	GetCollaboration = "GetCollaboration"
-	SetDiagram       = "SetDiagram"
-	GetDiagram       = "GetDiagram"
 	SetParticipant   = "SetParticipant"
 	GetParticipant   = "GetParticipant"
+	SetDiagram       = "SetDiagram"
+	GetDiagram       = "GetDiagram"
 	SetPlane         = "SetPlane"
 	GetPlane         = "GetPlane"
+	SetShape         = "SetShape"
+	GetShape         = "GetShape"
 )
 
 // ReflectValue represents the core structure for BPMN reflection
@@ -594,11 +597,9 @@ func (v *ReflectValue[M]) collaboration(q *Quantity[M]) error {
 
 // setupCollaboration initializes the collaboration
 func (v *ReflectValue[M]) setupCollaboration() error {
-	method := v.Def.MethodByName(SetCollaboration)
-	if !method.IsValid() {
-		return NewError(fmt.Errorf("%s method not found", SetCollaboration))
+	if err := callMethod(v.Def, SetCollaboration, []reflect.Value{}); err != nil {
+		return NewError(fmt.Errorf("failed to set collaboration: %w", err))
 	}
-	method.Call([]reflect.Value{})
 	return nil
 }
 
@@ -662,6 +663,16 @@ func (v *ReflectValue[M]) setCollaborationProperties(collaboration reflect.Value
 	}
 	return nil
 }
+
+/*
+ * @ participant
+ *
+ * The participant is a BPMN element that represents a participant in the collaboration.
+ * It is used to model the communication between different participants in a process.
+ * The participant is represented by a lane in the BPMN model.
+ * The lane is a container for the activities and events in the process.
+ * The participant can be a pool or a lane.
+ */
 
 // setupParticipants configures all participants in the collaboration
 func (v *ReflectValue[M]) setupParticipants(collaboration reflect.Value, participantCount int) error {
@@ -727,7 +738,7 @@ func (v *ReflectValue[M]) multipleProcess(q *Quantity[M]) error {
 		typ := v.ProcessType[processIdx]
 		hash := v.ProcessHash[processIdx]
 		name := v.ProcessName[processIdx]
-		elements := q.Elements[processIdx]
+		processElements := q.ProcessElements[processIdx]
 		if processIdx == 0 {
 			if err := v.setIsExecutableByMethod(process, isExecutable); err != nil {
 				return NewError(fmt.Errorf("failed to set process executable:\n%w", err))
@@ -742,7 +753,7 @@ func (v *ReflectValue[M]) multipleProcess(q *Quantity[M]) error {
 			return NewError(fmt.Errorf("failed to apply method %s: %w", SetName, err))
 		}
 		// set the process elements
-		for method, arg := range elements {
+		for method, arg := range processElements {
 			methodName := fmt.Sprintf("Set%s", method)
 			if arg > 0 {
 				if err := callMethod(process, methodName, []reflect.Value{reflect.ValueOf(arg)}); err != nil {
@@ -814,10 +825,10 @@ func (v *ReflectValue[M]) diagram(q *Quantity[M]) error {
 func (v *ReflectValue[M]) plane(q *Quantity[M]) error {
 	var err error
 	// set plane
-	if err = callMethod(v.Diagram[0], SetPlane, []reflect.Value{}); err != nil {
-		return NewError(fmt.Errorf("failed to apply method %s: %w", SetPlane, err))
+	if err = v.setupPlane(); err != nil {
+		return NewError(fmt.Errorf("failed to set up plane:\n%w", err))
 	}
-	p, err := callMethodValue(v.Diagram[0], GetPlane, []reflect.Value{})
+	p, err := v.getPlane()
 	if err != nil {
 		return NewError(fmt.Errorf("failed to apply method %s: %w", GetPlane, err))
 	}
@@ -828,7 +839,7 @@ func (v *ReflectValue[M]) plane(q *Quantity[M]) error {
 		// collaboration process
 		// set the collaboration id
 		if err = callMethod(p, SetElement, []reflect.Value{reflect.ValueOf("collaboration"), reflect.ValueOf(v.getCollaborationID())}); err != nil {
-			return err
+			return NewError(fmt.Errorf("failed to apply method %s: %w", SetElement, err))
 		}
 	} else {
 		// standalone process
@@ -837,7 +848,65 @@ func (v *ReflectValue[M]) plane(q *Quantity[M]) error {
 			return NewError(fmt.Errorf("failed to apply method %s: %w", SetElement, err))
 		}
 	}
+
+	/*
+	 * From here on there is a significant difference to the
+	 * arrangement of the shapes and edges in Camunda Modeler 5.2.x
+	 * gobpmn sets all the shapes, then follows a programmatical order,
+	 * e.g. the participants are set first, then all the rest of the elements, which are shapes.
+	 * The edges comes after the shapes.
+	 * The Camunda Modeler sets the shapes in a different order.
+	 * It sets the shapes in the order of the elements, which are set in the bpmn model.
+	 * Also, the edges are set after a participant is set.
+	 * So, the edges are set in the order of the elements.
+	 */
+
+	// set all the counted shapes
+	if err = callMethod(p, SetShape, []reflect.Value{reflect.ValueOf(q.Shape)}); err != nil {
+		return NewError(fmt.Errorf("failed to apply method %s: %w", SetShape, err))
+	}
+
+	if q.Participant > 0 {
+		// set the participant shapes
+		for idx := range q.Participant {
+			// get the shape and set the attributes
+			// Note: the shape is called from a slice of shapes
+			// and the index is the same as the participant index
+			participantShape, err := callMethodValue(p, GetShape, []reflect.Value{reflect.ValueOf(idx)})
+			if err != nil {
+				return NewError(fmt.Errorf("failed to get shape: %w", err))
+			}
+			if err := callMethod(participantShape, SetID, []reflect.Value{reflect.ValueOf("participant"), reflect.ValueOf(v.ParticipantHash[idx])}); err != nil {
+				return NewError(fmt.Errorf("failed to set id: %w", err))
+			}
+			if err := callMethod(participantShape, SetElement, []reflect.Value{reflect.ValueOf("participant"), reflect.ValueOf(v.ParticipantHash[idx])}); err != nil {
+				return NewError(fmt.Errorf("failed to set element: %w", err))
+			}
+			if err := callMethod(participantShape, SetIsHorizontal, []reflect.Value{reflect.ValueOf(true)}); err != nil {
+				return NewError(fmt.Errorf("failed to set is horizontal: %w", err))
+			}
+		}
+	}
+	//
 	return nil
+}
+
+// setupPlane sets up the BPMN plane in the diagram
+func (v *ReflectValue[M]) setupPlane() error {
+	// set plane
+	if err := callMethod(v.Diagram[0], SetPlane, []reflect.Value{}); err != nil {
+		return NewError(fmt.Errorf("failed to apply method %s: %w", SetPlane, err))
+	}
+	return nil
+}
+
+// getPlane retrieves the BPMN plane from the diagram
+func (v *ReflectValue[M]) getPlane() (reflect.Value, error) {
+	p, err := callMethodValue(v.Diagram[0], GetPlane, []reflect.Value{})
+	if err != nil {
+		return reflect.Value{}, NewError(fmt.Errorf("failed to apply method %s: %w", GetPlane, err))
+	}
+	return p, nil
 }
 
 // Cleanup clears the ReflectValue slices
